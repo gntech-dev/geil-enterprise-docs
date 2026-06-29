@@ -1,0 +1,117 @@
+---
+title: Document Index
+document_id: GEIL-PRJ-INDEX-001
+owner: Infrastructure Engineering
+status: Draft
+version: 1.0
+last_reviewed: 2026-06-29
+review_cycle: Quarterly
+classification: Internal Confidential
+---
+
+# Document Index
+
+## Document Control
+
+| Field | Value |
+|---|---|
+| Document ID | GEIL-PRJ-INDEX-001 |
+| Owner | Infrastructure Engineering |
+| Status | Draft |
+| Version | 1.0 |
+| Last Reviewed | 2026-06-29 |
+| Review Cycle | Quarterly |
+| Classification | Internal Confidential |
+
+## Purpose
+
+The document index is the authoritative register of GEIL documents, their ownership, status, and primary cross-references.
+
+## Status definitions
+
+| Status | Meaning |
+|---|---|
+| Approved | Ready for production use |
+| Draft | Usable but still requires review or expansion |
+| Retired | Superseded and no longer authoritative |
+
+## Project documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-PRJ-CHARTER-001 | GEIL Project Charter | Approved | `docs/project/project-charter.md` | Scope, roles, quality rules |
+| GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
+| GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
+| GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Phase sequencing |
+
+## Platform documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-PLT-INDEX | Platform | Draft | `docs/platform/index.md` | Documentation delivery platform section |
+| GEIL-PLT-CFPAGES-001 | Cloudflare Pages Deployment Runbook | Draft | `docs/platform/cloudflare-pages-deployment.md` | Private MkDocs deployment to Cloudflare Pages |
+
+## Governance documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-GOV-DOC-001 | Documentation Standard | Draft | `docs/governance/documentation-standard.md` | Authoring requirements |
+| GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
+| GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
+
+## Architecture documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/architecture/reference-architecture.md` | Overall platform architecture |
+| GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/architecture/environment-tiers.md` | Lab, pilot, production, DR |
+| GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/architecture/identity-architecture.md` | Identity authorities and admin tiers |
+| GEIL-ARCH-NET-001 | Network Architecture | Draft | `docs/architecture/network-architecture.md` | VLAN and firewall model |
+
+## Foundation documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-FND-P0-001 | Phase 0 Prerequisites | Draft | `docs/foundation/phase-0-prerequisites.md` | Pre-implementation checklist |
+| GEIL-FND-PVE-001 | Proxmox VE Baseline | Draft | `docs/foundation/proxmox-ve-baseline.md` | Virtualization baseline |
+| GEIL-FND-OPN-001 | OPNsense Edge Firewall | Draft | `docs/foundation/opnsense-edge-firewall.md` | Edge segmentation baseline |
+
+## Microsoft Core documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
+| GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | AD DS forest and DC deployment |
+| GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Name and address services |
+| GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model |
+| GEIL-MSC-PKI-001 | AD CS PKI | Draft | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI architecture |
+| GEIL-MSC-NPS-001 | NPS RADIUS 802.1X | Draft | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication |
+| GEIL-MSC-WAC-001 | Windows Admin Center | Draft | `docs/microsoft-core/windows-admin-center.md` | Management gateway |
+| GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
+
+## Cloud and Endpoint documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-CLD-M365-001 | Microsoft 365 Tenant Foundation | Draft | `docs/cloud-endpoint/microsoft-365-tenant-foundation.md` | Tenant baseline |
+| GEIL-CLD-ENTRA-001 | Entra ID Hybrid Identity | Draft | `docs/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync |
+| GEIL-CLD-INTUNE-001 | Intune Windows 11 Enterprise | Draft | `docs/cloud-endpoint/intune-windows11-enterprise.md` | Endpoint management |
+| GEIL-CLD-WHFB-001 | Windows Hello for Business | Draft | `docs/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in |
+| GEIL-CLD-DEF-001 | Microsoft Defender | Draft | `docs/cloud-endpoint/microsoft-defender.md` | Endpoint protection |
+
+## Operations documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-OPS-MON-001 | Monitoring and Alerting | Draft | `docs/operations/monitoring-alerting.md` | Required monitoring coverage |
+| GEIL-OPS-BACKUP-001 | Backup and Recovery | Draft | `docs/operations/backup-recovery.md` | Recovery requirements |
+| GEIL-OPS-TS-001 | Troubleshooting | Draft | `docs/operations/troubleshooting.md` | Incident triage workflow |
+| GEIL-OPS-SCALE-001 | Scaling Model | Draft | `docs/operations/scaling-model.md` | Growth triggers |
+| GEIL-OPS-SEC-001 | Security Operations | Draft | `docs/operations/security-operations.md` | Security checks and response |
+
+## Index maintenance procedure
+
+1. Add a row for every new production document.
+2. Update status when a document moves from Draft to Approved or Retired.
+3. Keep the path exact and relative to the repository root.
+4. Keep related backlog and roadmap entries synchronized.

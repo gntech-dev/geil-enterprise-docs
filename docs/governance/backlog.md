@@ -25,30 +25,18 @@ classification: Internal Confidential
 
 ## Purpose
 
-The backlog tracks missing or future documentation work. Items are documentation work, not infrastructure tasks.
+This legacy governance backlog page is retained for navigation continuity. The authoritative documentation backlog is now maintained in the Project section.
 
-## Priority definitions
+## Authoritative backlog
 
-| Priority | Meaning |
-|---|---|
-| P0 | Blocks safe production implementation |
-| P1 | Required before broad rollout |
-| P2 | Improves operations or scale |
-| P3 | Enhancement or optional depth |
+Use [Documentation Backlog](../project/documentation-backlog.md) for current priorities, status, target paths, and acceptance criteria.
 
-## Current backlog
+## Current highest-priority open item
 
-| ID | Priority | Item | Acceptance Criteria |
-|---|---:|---|---|
-| DOC-001 | P0 | Add Cloudflare Pages deployment runbook | Repository connected, build command documented, rollback documented |
-| DOC-002 | P0 | Add privileged access model | Tier 0/1/2 OU, group, workstation, and sign-in controls documented |
-| DOC-003 | P1 | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, and emergency revocation included |
-| DOC-004 | P1 | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, and risk policies documented |
-| DOC-005 | P2 | Add multinational data residency model | Region ownership, tenant strategy, naming, and compliance assumptions documented |
+The next highest-priority open item is `DOC-002`, the privileged access model.
 
 ## Backlog maintenance procedure
 
-1. Add new documentation gaps immediately when discovered.
-2. Reference affected pages.
-3. Promote P0/P1 items to the roadmap.
-4. Remove items only after merged documentation satisfies acceptance criteria.
+1. Update `docs/project/documentation-backlog.md` in the same change set as any production documentation addition or retirement.
+2. Keep roadmap and changelog updates synchronized.
+3. Do not create documentation pages that are shallow or placeholder-only.

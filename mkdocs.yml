@@ -48,6 +48,15 @@ plugins:
   - search
 nav:
   - Home: index.md
+  - Project:
+      - project/index.md
+      - Project Charter: project/project-charter.md
+      - Document Index: project/document-index.md
+      - Documentation Backlog: project/documentation-backlog.md
+      - Documentation Roadmap: project/documentation-roadmap.md
+  - Platform:
+      - platform/index.md
+      - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
   - Governance:
       - governance/index.md
       - Documentation Standard: governance/documentation-standard.md

@@ -25,49 +25,18 @@ classification: Internal Confidential
 
 ## Purpose
 
-The roadmap sequences GEIL from first usable internal documentation to full enterprise operating model.
+This legacy governance roadmap page is retained for navigation continuity. The authoritative documentation roadmap is now maintained in the Project section.
 
-## Phase 1: Documentation platform and baseline architecture
+## Authoritative roadmap
 
-- MkDocs Material repository.
-- Document standard, naming standard, ADR template.
-- Reference network and identity architecture.
-- Cloudflare Pages deployment procedure.
-
-## Phase 2: Core on-premises foundation
-
-- Proxmox VE hardened baseline.
-- OPNsense WAN/LAN/VLAN/firewall/VPN baseline.
-- Windows Server 2025 baseline.
-- AD DS, DNS, DHCP, GPO implementation.
-
-## Phase 3: Security services
-
-- AD CS enterprise PKI.
-- NPS RADIUS and 802.1X.
-- Tiered administration model.
-- Defender baseline.
-
-## Phase 4: Microsoft cloud integration
-
-- Microsoft 365 tenant foundation.
-- Entra ID hybrid identity.
-- Intune Windows 11 Enterprise enrollment.
-- Windows Hello for Business.
-
-## Phase 5: Operations and scale
-
-- Monitoring and alerting.
-- Backup and recovery.
-- Troubleshooting runbooks.
-- Multisite and multinational scaling model.
+Use [Documentation Roadmap](../project/documentation-roadmap.md) for phase sequencing, current state, and evidence links.
 
 ## Roadmap governance
 
-Each phase must exit with:
+Each phase exits only when:
 
-1. Published docs.
-2. Change evidence.
-3. Validation results.
-4. Backlog updates.
-5. ADRs for deviations.
+1. Published documents are linked in navigation.
+2. Validation evidence exists.
+3. Backlog rows are updated.
+4. Required ADRs are created or explicitly deferred.
+5. `mkdocs build --strict` succeeds.
