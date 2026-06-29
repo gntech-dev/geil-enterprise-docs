@@ -7,6 +7,12 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-PLAT-PVE-HQ-LLD-001` Proxmox HQ Foundation LLD.
+- Added `GEIL-PLAT-OPN-HQ-LLD-001` OPNsense HQ Foundation LLD.
+- Added `GEIL-PLAT-PH1-BUILD-001` Phase 1 Build Plan.
+- Added `GEIL-PLAT-PH1-VAL-001` Phase 1 Validation Plan.
+- Added Mermaid diagrams for Proxmox bridge topology, OPNsense interface/VLAN topology, Phase 1 deployment sequence, rollback checkpoints, and management access flow.
+
 - Added `GEIL-ARCH-LAB-001` Enterprise Lab Blueprint HLD for Phase 1.
 - Added `GEIL-ARCH-LAB-NET-001` Enterprise Lab Network HLD.
 - Added `GEIL-ARCH-LAB-ID-001` Enterprise Lab Identity HLD.
@@ -30,6 +36,10 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Added release `E02.R03 HQ Foundation Low-Level Design and Build Plan` to roadmap, backlog, document index, and release assignment register.
+- Updated MASTER_PLAN with Phase 1 LLD reference requirements.
+- Updated MkDocs navigation with Phase 1 HQ foundation LLD and validation documents.
 
 - Added release `E02.R02 Enterprise Lab Blueprint` to roadmap, backlog, document index, and release assignment register.
 - Updated MASTER_PLAN with Phase 1 HLD reference requirements.

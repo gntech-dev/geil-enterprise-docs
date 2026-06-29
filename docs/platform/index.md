@@ -47,3 +47,13 @@ This section documents the platforms used to publish, protect, and operate GEIL 
 ## Documents
 
 - [Cloudflare Pages Deployment Runbook](cloudflare-pages-deployment.md)
+
+
+## HQ Foundation Low-Level Design
+
+Release `E02.R03` translates the Enterprise Lab Blueprint HLD into deployable Phase 1 specifications:
+
+- [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
+- [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
+- [Phase 1 Build Plan](phase-1-build-plan.md)
+- [Phase 1 Validation Plan](phase-1-validation-plan.md)

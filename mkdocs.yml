@@ -60,6 +60,10 @@ nav:
   - Platform:
       - platform/index.md
       - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
+      - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
+      - OPNsense HQ Foundation LLD: platform/opnsense-hq-foundation-lld.md
+      - Phase 1 Build Plan: platform/phase-1-build-plan.md
+      - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
   - Governance:
       - governance/index.md
       - Documentation Standard: governance/documentation-standard.md

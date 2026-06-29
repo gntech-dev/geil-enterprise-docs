@@ -203,3 +203,15 @@ The full philosophy is defined in [Implementation Philosophy](../architecture/im
 ## Phase 1 High-Level Design
 
 GEIL Phase 1 is governed by the [Enterprise Lab Blueprint HLD](docs/architecture/enterprise-lab-blueprint.md) and its supporting Network, Identity, and Operations HLDs. Future implementation documents must reference the HLD before defining product-specific configuration.
+
+
+## Phase 1 Low-Level Design
+
+Release `E02.R03 HQ Foundation Low-Level Design and Build Plan` translates the Enterprise Lab Blueprint HLD into deployable specifications for the initial HQ environment. It defines the `PVE-HQ01` Proxmox baseline, `HQ-FW01` OPNsense design, Phase 1 VM specifications, routing and DHCP relay decisions, management access path, rollback checkpoints, deployment sequence, and validation checklist.
+
+Authoritative E02.R03 documents:
+
+- [Proxmox HQ Foundation LLD](docs/platform/proxmox-hq-foundation-lld.md)
+- [OPNsense HQ Foundation LLD](docs/platform/opnsense-hq-foundation-lld.md)
+- [Phase 1 Build Plan](docs/platform/phase-1-build-plan.md)
+- [Phase 1 Validation Plan](docs/platform/phase-1-validation-plan.md)

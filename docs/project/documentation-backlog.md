@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 4.0
+version: 5.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 4.0 |
+| Version | 5.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -55,6 +55,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-012 | P0 | E00 | E00.R01 | Done | Add capability-first epic/release architecture | Epics, releases, document assignments, capability dependency graph, and document dependency graph documented | [Epic and Release Architecture](epic-release-architecture.md) |
 | DOC-015 | P0 | E01 | E01.R02 | Done | Add enterprise architecture vision foundation | Master Plan, capability model, reference architecture, technology matrix, implementation philosophy, and architecture principles documented with diagrams and cross-references | [GEIL Master Plan](master-plan.md) |
 | DOC-016 | P0 | E02 | E02.R02 | Done | Add Enterprise Lab Blueprint HLD | Physical, logical, site, datacenter, AD site, forest, domain, DNS, DHCP, PKI, WiFi, identity, storage, backup, monitoring, security zone, VLAN, IP addressing, naming, regional expansion, DR, and cloud integration architecture documented | [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md) |
+| DOC-017 | P0 | E02 | E02.R03 | Done | Add HQ Foundation LLD and Phase 1 build plan | Proxmox bridge/VLAN design, OPNsense VM/interfaces/gateways/rules, HQ VM specifications, routing/DHCP relay decisions, management access path, rollback checkpoints, deployment sequence, and validation checklist documented | [Phase 1 Build Plan](../platform/phase-1-build-plan.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |

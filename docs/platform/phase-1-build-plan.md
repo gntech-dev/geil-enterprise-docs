@@ -1,0 +1,251 @@
+---
+title: Phase 1 Build Plan
+document_id: GEIL-PLAT-PH1-BUILD-001
+owner: Infrastructure Engineering
+status: Approved
+version: 1.0
+last_reviewed: 2026-06-29
+review_cycle: Quarterly
+classification: Internal Confidential
+---
+
+# Phase 1 Build Plan
+
+## Document Control
+
+| Field | Value |
+|---|---|
+| Document ID | GEIL-PLAT-PH1-BUILD-001 |
+| Owner | Infrastructure Engineering |
+| Status | Approved |
+| Version | 1.0 |
+| Last Reviewed | 2026-06-29 |
+| Review Cycle | Quarterly |
+| Classification | Internal Confidential |
+
+## Purpose
+
+This document defines the implementation-ready Phase 1 deployment sequence for the initial HQ environment. It translates the E02.R03 LLD into an ordered build plan with checkpoints, dependencies, and rollback gates.
+
+
+## Required HLD references
+
+This LLD is derived from and subordinate to the E02.R02 High-Level Design baseline:
+
+- [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md)
+- [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md)
+- [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md)
+- [Enterprise Lab Operations HLD](../architecture/enterprise-lab-operations-hld.md)
+- [Environment Specification](../project/environment-specification.md)
+
+
+## Build scope
+
+Phase 1 deploys the initial HQ foundation:
+
+- `PVE-HQ01` Proxmox bridge/VLAN baseline.
+- `HQ-FW01` OPNsense VM, interfaces, VLAN gateways, and baseline rules.
+- `HQ-DC01` VM shell and static network settings.
+- `HQ-MGMT01` management workstation VM.
+- `HQ-W11-001` first Windows client VM.
+- Initial routing and DHCP relay decisions.
+- Snapshot and rollback checkpoints.
+
+Phase 1 does not start Certificate Lifecycle Management and does not introduce additional Microsoft services beyond initial VM/network readiness.
+
+## Phase 1 deployment sequence
+
+```mermaid
+sequenceDiagram
+    participant Eng as Infrastructure Engineer
+    participant PVE as PVE-HQ01
+    participant FW as HQ-FW01
+    participant DC as HQ-DC01
+    participant MGMT as HQ-MGMT01
+    participant W11 as HQ-W11-001
+
+    Eng->>PVE: Configure host baseline and bridges
+    Eng->>PVE: Capture CP-PVE-BASELINE
+    Eng->>FW: Create and install OPNsense VM
+    Eng->>FW: Capture CP-FW-INSTALLED
+    Eng->>FW: Configure VLAN gateways and baseline routes
+    Eng->>FW: Capture CP-FW-VLANS
+    Eng->>FW: Apply baseline firewall rules
+    Eng->>FW: Export baseline configuration
+    Eng->>DC: Create HQ-DC01 VM and apply static IP
+    Eng->>DC: Capture CP-DC01-OS
+    Eng->>MGMT: Create HQ-MGMT01 VM and apply static IP
+    Eng->>MGMT: Capture CP-MGMT01-OS
+    Eng->>W11: Create HQ-W11-001 VM
+    Eng->>W11: Capture CP-W11-001-OS
+    Eng->>MGMT: Run Phase 1 validation checks
+```
+
+## Deployment gates
+
+| Gate | Exit Criteria | Rollback if Failed |
+|---|---|---|
+| G1 Host Network Baseline | `PVE-HQ01` reachable on `172.20.100.11`; bridges match LLD | Restore previous Proxmox network config from console |
+| G2 Firewall Install | `HQ-FW01` boots with WAN and LAN adapters | Revert or recreate `HQ-FW01` VM |
+| G3 VLAN Gateways | VLAN gateways exist and respond on expected addresses | Revert to `CP-FW-INSTALLED` |
+| G4 Baseline Firewall Policy | Management, server, workstation, guest, backup, hypervisor zones follow baseline rules | Revert to `CP-FW-VLANS` |
+| G5 Server VM Shell | `HQ-DC01` has static `172.20.20.11` and uses expected gateway | Revert `HQ-DC01` to clean OS snapshot |
+| G6 Management Workstation | `HQ-MGMT01` has static `172.20.30.10` and reaches approved management targets | Revert `HQ-MGMT01` to clean OS snapshot |
+| G7 Client VM | `HQ-W11-001` exists on VLAN 30 and can obtain/reach expected network path when DHCP is available | Revert `HQ-W11-001` to clean OS snapshot |
+
+## Detailed build plan
+
+### Step 1: Prepare `PVE-HQ01`
+
+Design inputs:
+
+- Hostname: `PVE-HQ01`.
+- Management IP: `172.20.100.11/24`.
+- Gateway: `172.20.100.1`.
+- Bridges: `vmbr0`, `vmbr1`, `vmbr100`.
+
+Expected result:
+
+- Proxmox host management is available only through the approved management path.
+- `vmbr1` is VLAN-aware.
+- No inter-VLAN routing is performed by Proxmox.
+
+Checkpoint:
+
+- Record host bridge configuration.
+- Capture `CP-PVE-BASELINE` as configuration evidence.
+
+### Step 2: Deploy `HQ-FW01`
+
+Design inputs:
+
+- VM name: `HQ-FW01`.
+- WAN: `vmbr0`.
+- LAN trunk: `vmbr1`.
+- Management gateway: `172.20.10.1`.
+
+Expected result:
+
+- OPNsense boots and presents separate WAN and LAN/trunk interfaces.
+
+Checkpoint:
+
+- Snapshot `CP-FW-INSTALLED` before VLAN configuration.
+
+### Step 3: Configure VLAN gateways on `HQ-FW01`
+
+Configure gateways from the Environment Specification:
+
+| VLAN | Gateway |
+|---:|---|
+| 10 | `172.20.10.1` |
+| 20 | `172.20.20.1` |
+| 30 | `172.20.30.1` |
+| 40 | `172.20.40.1` |
+| 50 | `172.20.50.1` |
+| 60 | `172.20.60.1` |
+| 70 | `172.20.70.1` |
+| 80 | `172.20.80.1` |
+| 90 | `172.20.90.1` |
+| 100 | `172.20.100.1` |
+
+Checkpoint:
+
+- Snapshot `CP-FW-VLANS`.
+
+### Step 4: Apply baseline firewall policy
+
+Apply the policy from [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md). Default posture is deny between zones unless explicitly allowed.
+
+Checkpoint:
+
+- Snapshot `CP-FW-BASELINE-RULES`.
+- Export `HQ-FW01-baseline.xml` to protected storage.
+
+### Step 5: Create `HQ-DC01`
+
+VM specification:
+
+| Item | Value |
+|---|---|
+| VM name | `HQ-DC01` |
+| OS | Windows Server 2025 |
+| VLAN | 20 Servers |
+| IP | `172.20.20.11/24` |
+| Gateway | `172.20.20.1` |
+| DNS before AD DS | Temporary upstream resolver through `HQ-FW01` |
+| DNS after AD DS | `172.20.20.11`; future `172.20.20.12` |
+
+Checkpoint:
+
+- Snapshot `CP-DC01-OS` after OS installation, updates, VMware/virtio tools as applicable, and static IP configuration.
+
+### Step 6: Create `HQ-MGMT01`
+
+VM specification:
+
+| Item | Value |
+|---|---|
+| VM name | `HQ-MGMT01` |
+| OS | Windows 11 Enterprise |
+| VLAN | 30 Workstations |
+| IP | `172.20.30.10/24` |
+| Gateway | `172.20.30.1` |
+| DNS before AD DS | Temporary upstream resolver through `HQ-FW01` |
+| DNS after AD DS | `172.20.20.11`; future `172.20.20.12` |
+
+Checkpoint:
+
+- Snapshot `CP-MGMT01-OS` after OS installation, updates, and management tooling baseline.
+
+### Step 7: Create `HQ-W11-001`
+
+VM specification:
+
+| Item | Value |
+|---|---|
+| VM name | `HQ-W11-001` |
+| OS | Windows 11 Enterprise |
+| VLAN | 30 Workstations |
+| Addressing | DHCP reservation or dynamic lease in `172.20.30.0/24` after DHCP exists |
+| Gateway | `172.20.30.1` |
+| DNS after DHCP | `172.20.20.11`; future `172.20.20.12` |
+
+Checkpoint:
+
+- Snapshot `CP-W11-001-OS` after OS installation and updates.
+
+## Phase 1 rollback checkpoints
+
+```mermaid
+flowchart LR
+    Start[Start]
+    PVE[CP-PVE-BASELINE]
+    FWI[CP-FW-INSTALLED]
+    FWV[CP-FW-VLANS]
+    FWR[CP-FW-BASELINE-RULES]
+    DC[CP-DC01-OS]
+    MGMT[CP-MGMT01-OS]
+    W11[CP-W11-001-OS]
+    Validated[Validated Foundation]
+
+    Start --> PVE --> FWI --> FWV --> FWR --> DC --> MGMT --> W11 --> Validated
+```
+
+## Initial routing decision
+
+- `HQ-FW01` performs all routing for Phase 1 VLANs.
+- Proxmox and guest systems do not route between VLANs.
+- Default gateway per VLAN is the `.1` address on `HQ-FW01`.
+- Future routing changes require architecture review and may require an ADR.
+
+## Initial DHCP relay decision
+
+- DHCP relay is deferred until `HQ-DC01` hosts DHCP scopes.
+- VLAN 30, 40, and 60 will relay to `172.20.20.11` when DHCP exists.
+- VLAN 70 uses isolated guest DHCP and must not relay to AD DHCP.
+- Infrastructure VLANs use static addressing.
+
+## Handoff to validation
+
+After build steps are complete, execute [Phase 1 Validation Plan](phase-1-validation-plan.md). Do not proceed to E03 implementation work until validation passes or exceptions are captured.

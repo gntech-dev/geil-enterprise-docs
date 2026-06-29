@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 3.0
+version: 4.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 3.0 |
+| Version | 4.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -92,6 +92,7 @@ flowchart TD
     R102[E01.R02 Enterprise Architecture Vision]
     R201[E02.R01 Site foundation]
     R202[E02.R02 Enterprise Lab Blueprint]
+    R203[E02.R03 HQ Foundation LLD and Build Plan]
     R301[E03.R01 Directory services]
     R302[E03.R02 Trust and network authentication]
     R303[E03.R03 Privileged access]
@@ -108,7 +109,7 @@ flowchart TD
     R601[E06.R01 Security assurance evidence]
     R702[E07.R02 Regional operations model]
 
-    R001 --> R002 --> R101 --> R102 --> R201 --> R202 --> R301
+    R001 --> R002 --> R101 --> R102 --> R201 --> R202 --> R203 --> R301
     R301 --> R302
     R301 --> R303
     R302 --> R304
@@ -141,6 +142,14 @@ flowchart TD
     NET[Network Architecture]
     IDARCH[Identity Architecture]
     P0[Phase 0 Prerequisites]
+    LAB[Enterprise Lab Blueprint HLD]
+    LABNET[Enterprise Lab Network HLD]
+    LABID[Enterprise Lab Identity HLD]
+    LABOPS[Enterprise Lab Operations HLD]
+    PVELLD[Proxmox HQ Foundation LLD]
+    OPNLLD[OPNsense HQ Foundation LLD]
+    BUILD[Phase 1 Build Plan]
+    VAL[Phase 1 Validation Plan]
     NAME[Naming and Addressing Standard]
     PVE[Proxmox VE Baseline]
     FW[OPNsense Edge Firewall]
@@ -160,6 +169,16 @@ flowchart TD
     BACKUP[Backup and Recovery]
     TS[Troubleshooting]
 
+    ENV --> LAB
+    LAB --> LABNET
+    LAB --> LABID
+    LAB --> LABOPS
+    LABNET --> PVELLD
+    LABNET --> OPNLLD
+    LABOPS --> BUILD
+    PVELLD --> BUILD
+    OPNLLD --> BUILD
+    BUILD --> VAL
     ENV --> CHARTER
     CHARTER --> STD
     STD --> INDEX
@@ -238,6 +257,10 @@ The following register assigns every current published document to exactly one r
 | E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-network-hld.md` |
 | E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-identity-hld.md` |
 | E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-operations-hld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/proxmox-hq-foundation-lld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/opnsense-hq-foundation-lld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-build-plan.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-validation-plan.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/index.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-server-2025-baseline.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-implementation.md` |
@@ -267,6 +290,7 @@ The following register assigns every current published document to exactly one r
 | Release | Epic | Planned Capability | Primary Backlog Items |
 |---|---|---|---|
 | E02.R02 | E02 | Enterprise Lab Blueprint | Done |
+| E02.R03 | E02 | HQ Foundation Low-Level Design and Build Plan | Done |
 | E03.R04 | E03 | Certificate lifecycle management | DOC-003 |
 | E04.R02 | E04 | Conditional Access and device compliance | DOC-004 |
 | E03.R05 | E03 | Privileged access operations | DOC-007, DOC-008, DOC-009 |
