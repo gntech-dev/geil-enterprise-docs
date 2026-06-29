@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 This standard creates consistent names for sites, servers, clients, service accounts, groups, VLANs, DNS records, and certificates.
@@ -40,15 +44,15 @@ Use three to five uppercase characters per site.
 
 ## Server names
 
-Format: `<SITE>-<ROLE><NN>`
+Format: `{SITE}-{ROLE}{NN}` where GEIL uses the canonical site code `HQ` unless the environment specification is updated.
 
 Examples:
 
 - `HQ-DC01` domain controller
 - `HQ-DC02` domain controller
-- `HQ-PKI01` certificate authority
-- `HQ-NPS01` RADIUS server
-- `HQ-WAC01` Windows Admin Center gateway
+- `HQ-DC01` certificate authority
+- `HQ-DC01` initial RADIUS/NPS role during bootstrap until a dedicated NPS host is added to the environment specification
+- `HQ-MGMT01` Windows Admin Center gateway
 
 ## Administrative accounts
 
@@ -62,17 +66,20 @@ Examples:
 
 | VLAN | Name | Example CIDR | Purpose |
 |---:|---|---|---|
-| 10 | MGMT | `10.10.10.0/24` | Proxmox, OPNsense management, switch management |
-| 20 | SERVER | `10.10.20.0/24` | Windows servers |
-| 30 | CLIENT | `10.10.30.0/24` | Windows 11 clients |
-| 40 | VOICE | `10.10.40.0/24` | Voice devices |
-| 50 | WIFI-CORP | `10.10.50.0/24` | 802.1X corporate wireless |
-| 60 | WIFI-GUEST | `10.10.60.0/24` | Internet-only guest wireless |
-| 70 | IOT | `10.10.70.0/24` | Printers, scanners, non-domain devices |
+| 10 | Management | `172.20.10.0/24` | Firewall, switch, and management interfaces |
+| 20 | Servers | `172.20.20.0/24` | Windows servers and infrastructure services |
+| 30 | Workstations | `172.20.30.0/24` | Windows 11 Enterprise clients |
+| 40 | Printers | `172.20.40.0/24` | Printers and MFPs |
+| 50 | Voice | `172.20.50.0/24` | Voice devices |
+| 60 | Corporate WiFi | `172.20.60.0/24` | 802.1X corporate wireless |
+| 70 | Guest WiFi | `172.20.70.0/24` | Internet-only guest wireless |
+| 80 | DMZ | `172.20.80.0/24` | Public-facing or isolated services |
+| 90 | Backup | `172.20.90.0/24` | Backup transport and storage services |
+| 100 | Hypervisors | `172.20.100.0/24` | Proxmox VE host management and cluster traffic |
 
 ## DNS names
 
-- Internal AD DNS: `<AD_DOMAIN_FQDN>` such as `corp.<TENANT_NAME>.internal`.
+- Internal AD DNS: `corp.gntech.me`.
 - Public DNS: managed separately in Cloudflare.
 - Avoid using the same DNS zone internally and externally unless split-brain DNS is intentionally documented.
 
@@ -81,7 +88,7 @@ Examples:
 Before implementation, confirm that names are unique:
 
 ```powershell
-Resolve-DnsName HQ-DC01.<AD_DOMAIN_FQDN> -ErrorAction SilentlyContinue
+Resolve-DnsName HQ-DC01.corp.gntech.me -ErrorAction SilentlyContinue
 Get-ADComputer -Filter "Name -eq 'HQ-DC01'"
 ```
 

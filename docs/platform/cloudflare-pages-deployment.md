@@ -29,6 +29,10 @@ Deploy the private GEIL MkDocs Material site from a GitHub repository to Cloudfl
 
 This runbook covers initial deployment, validation, routine operations, rollback, and troubleshooting. It is written for production internal documentation, not a public marketing site.
 
+!!! note "Adaptation"
+
+    This runbook uses the canonical GEIL documentation hostname **docs.gntechlabs.me** and repository **geil-enterprise-docs**. Organizations adapting this design should replace those values in their own environment specification before updating deployment commands, Cloudflare Access policies, DNS records, and repository settings.
+
 ## Scope
 
 In scope:
@@ -68,8 +72,8 @@ flowchart LR
 | GitHub repository | Private repository exists for GEIL |
 | Branch protection | `main` requires pull request review before merge |
 | Local build | `mkdocs build --strict` succeeds locally |
-| Cloudflare account | Administrative access to the Cloudflare account that owns `<PUBLIC_DOMAIN>` |
-| DNS zone | `<PUBLIC_DOMAIN>` is active in Cloudflare DNS |
+| Cloudflare account | Administrative access to the Cloudflare account that owns `gntech.me` |
+| DNS zone | `gntech.me` is active in Cloudflare DNS |
 | Access identity provider | Cloudflare Access has an approved identity provider, such as Microsoft Entra ID |
 | Emergency access | At least two Cloudflare administrators can recover access |
 
@@ -154,7 +158,7 @@ Expected result:
 3. Select Create application.
 4. Select Pages.
 5. Connect to Git.
-6. Authorize the GitHub organization that owns `<ORG_NAME>/<REPO_NAME>`.
+6. Authorize the GitHub organization that owns `gntech-dev/geil-enterprise-docs`.
 7. Select the GEIL repository.
 8. Configure the production branch as `main`.
 
@@ -180,25 +184,25 @@ If Python version pinning is required, set an environment variable only after ve
 
 ## Custom domain configuration
 
-Recommended hostname:
+Canonical hostname:
 
 ```text
-geil.<PUBLIC_DOMAIN>
+docs.gntechlabs.me
 ```
 
 Procedure:
 
 1. Open the Pages project.
 2. Select Custom domains.
-3. Add `geil.<PUBLIC_DOMAIN>`.
+3. Add `docs.gntechlabs.me`.
 4. Allow Cloudflare to create the required DNS record.
 5. Confirm SSL/TLS certificate issuance.
 
 Validation from an admin workstation:
 
 ```powershell
-Resolve-DnsName geil.<PUBLIC_DOMAIN>
-Test-NetConnection geil.<PUBLIC_DOMAIN> -Port 443
+Resolve-DnsName docs.gntechlabs.me
+Test-NetConnection docs.gntechlabs.me -Port 443
 ```
 
 Expected result:
@@ -216,7 +220,7 @@ Minimum Access policy:
 | Setting | Required Value |
 |---|---|
 | Application type | Self-hosted or Pages application, depending on Cloudflare dashboard flow |
-| Application domain | `geil.<PUBLIC_DOMAIN>` |
+| Application domain | `docs.gntechlabs.me` |
 | Session duration | 8 to 12 hours for normal users |
 | Identity provider | Microsoft Entra ID or approved IdP |
 | Allow policy | Approved infrastructure/security groups only |
@@ -234,7 +238,7 @@ Recommended group model:
 Validation:
 
 1. Open a private browser session as an authorized user.
-2. Browse to `https://geil.<PUBLIC_DOMAIN>`.
+2. Browse to `https://docs.gntechlabs.me`.
 3. Confirm Cloudflare Access authentication is required.
 4. Confirm documentation loads after successful authentication.
 5. Open a second private browser session as an unauthorized user.
@@ -310,7 +314,7 @@ Use when the repository must reflect the rollback immediately.
 ```bash
 git checkout main
 git pull --ff-only
-git revert <BAD_MERGE_COMMIT_SHA>
+git revert 0123456789abcdef0123456789abcdef01234567
 git push origin main
 ```
 

@@ -62,7 +62,7 @@ Create implementation-ready documentation that allows GNTECH Infrastructure Engi
 2. No placeholder-only pages.
 3. Every production document must be implementation-ready.
 4. Every production document must include Document Control.
-5. Unknown real values must use explicit placeholders such as `<TENANT_NAME>`, `<PUBLIC_IP>`, `<ADMIN_USER>`, and `<AD_DOMAIN_FQDN>`.
+5. Known GNTECH values must come from the [Environment Specification](environment-specification.md); placeholders are allowed only for approved unknown or secret values such as `<PUBLIC_IP>`, `<AZURE_TENANT_ID>`, `<CLIENT_SECRET>`, `<PASSWORD>`, `<CERTIFICATE_THUMBPRINT>`, `<SERIAL_NUMBER>`, and `<API_KEY>`.
 6. PowerShell examples must include explanation, expected result, validation, and rollback where practical.
 7. Microsoft best practices are the default; deviations require an ADR recommendation or approved ADR.
 8. Related index, backlog, roadmap, navigation, and changelog files must be updated in the same change set.
@@ -96,6 +96,8 @@ A GEIL documentation change is complete only when:
 - Unapproved production changes outside the documented change process.
 
 ## Related documents
+
+- [Environment Specification](environment-specification.md)
 
 - [Documentation Standard](../governance/documentation-standard.md)
 - [Documentation Backlog](documentation-backlog.md)

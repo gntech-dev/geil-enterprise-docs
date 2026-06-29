@@ -38,7 +38,7 @@ Standardize safe PowerShell execution for GEIL operations.
 ## Change transcript pattern
 
 ```powershell
-$Transcript = "C:\ChangeLogs\CHG-<CHANGE_ID>-$(Get-Date -Format yyyyMMdd-HHmmss).log"
+$Transcript = "C:\ChangeLogs\CHG-20260629-001-$(Get-Date -Format yyyyMMdd-HHmmss).log"
 Start-Transcript -Path $Transcript
 # Run approved commands here.
 Stop-Transcript
@@ -65,7 +65,7 @@ catch {
 Record pre-change state before modifying objects:
 
 ```powershell
-Get-ADUser <USER> -Properties * | Export-Clixml C:\ChangeLogs\<USER>-before.xml
+Get-ADUser j.smith -Properties * | Export-Clixml C:\ChangeLogs\j.smith-before.xml
 ```
 
 If rollback is needed, use the exported state to restore changed attributes manually or via reviewed script.

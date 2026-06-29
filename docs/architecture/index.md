@@ -35,4 +35,4 @@ Before implementing changes in this area, read the applicable standard, confirm 
 
 - Implementation steps must include expected results.
 - PowerShell must include validation and rollback where practical.
-- Unknown tenant-specific values must remain explicit placeholders such as `<TENANT_NAME>`.
+- Known GNTECH values must use the canonical values in the [Environment Specification](../project/environment-specification.md); only approved secret or deployment-unknown placeholders are permitted.

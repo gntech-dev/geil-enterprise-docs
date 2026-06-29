@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Implement certificate-backed network authentication for wired and wireless access.
@@ -46,10 +50,10 @@ Expected result: NPS role is installed and registered in Active Directory.
 ## Add RADIUS clients
 
 ```powershell
-netsh nps add client name="HQ-SW01" address="10.10.10.21" sharedsecret="<RADIUS_SHARED_SECRET>" vendor=RADIUS_Standard
+netsh nps add client name="HQ-FW01" address="172.20.10.1" sharedsecret="<PASSWORD>" vendor=RADIUS_Standard
 ```
 
-Store `<RADIUS_SHARED_SECRET>` in the password manager, not in Git.
+Replace `<PASSWORD>` with the generated RADIUS shared secret for HQ-FW01. Store the value in the approved password manager, not in Git.
 
 ## Policy model
 

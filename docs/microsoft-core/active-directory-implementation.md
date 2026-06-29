@@ -23,13 +23,17 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Deploy a production Active Directory forest for GEIL environments.
 
 ## Prerequisites
 
-- Approved AD DNS namespace `<AD_DOMAIN_FQDN>`.
+- Approved AD DNS namespace `corp.gntech.me`.
 - Static IP addresses for at least two domain controllers.
 - Windows Server 2025 baseline complete.
 - Time source identified.
@@ -42,8 +46,8 @@ Run only on the first domain controller.
 ```powershell
 Install-WindowsFeature AD-Domain-Services,DNS -IncludeManagementTools
 Install-ADDSForest `
-  -DomainName "<AD_DOMAIN_FQDN>" `
-  -DomainNetbiosName "<NETBIOS_NAME>" `
+  -DomainName "corp.gntech.me" `
+  -DomainNetbiosName "CORP" `
   -ForestMode WinThreshold `
   -DomainMode WinThreshold `
   -InstallDNS `
@@ -57,7 +61,7 @@ Expected result: server reboots as the first domain controller and hosts AD-inte
 ```powershell
 Install-WindowsFeature AD-Domain-Services,DNS -IncludeManagementTools
 Install-ADDSDomainController `
-  -DomainName "<AD_DOMAIN_FQDN>" `
+  -DomainName "corp.gntech.me" `
   -InstallDns `
   -NoGlobalCatalog:$false `
   -NoRebootOnCompletion:$false
@@ -66,7 +70,7 @@ Install-ADDSDomainController `
 ## Organizational unit baseline
 
 ```powershell
-$Base = "DC=<DOMAIN_COMPONENTS>"
+$Base = "DC=corp,DC=gntech,DC=me"
 "Admin","Servers","Workstations","Groups","Service Accounts","Disabled Objects" | ForEach-Object {
     New-ADOrganizationalUnit -Name $_ -Path $Base -ProtectedFromAccidentalDeletion $true
 }

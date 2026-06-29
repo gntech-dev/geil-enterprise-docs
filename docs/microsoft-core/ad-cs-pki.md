@@ -41,7 +41,7 @@ A single-tier enterprise CA requires an ADR and is acceptable only for constrain
 1. Build offline root CA VM, disconnected except during ceremonies.
 2. Install standalone root CA.
 3. Publish root certificate and CRL to documented locations.
-4. Build issuing CA `HQ-PKI01`.
+4. Build issuing CA `HQ-DC01`.
 5. Install enterprise subordinate CA.
 6. Configure certificate templates.
 7. Enable autoenrollment by GPO.
@@ -49,7 +49,7 @@ A single-tier enterprise CA requires an ADR and is acceptable only for constrain
 ## Validation PowerShell
 
 ```powershell
-certutil -config "HQ-PKI01\<ISSUING_CA_NAME>" -ping
+certutil -config "HQ-DC01\GNTECH-CORP-Issuing-CA01" -ping
 certutil -urlfetch -verify C:\Temp\issued-test.cer
 Get-CertificationAuthority | Select Name,ComputerName
 ```

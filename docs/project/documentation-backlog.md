@@ -51,6 +51,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 |---|---:|---|---|---|---|
 | DOC-001 | P0 | Done | Add Cloudflare Pages deployment runbook | Repository connected, build command documented, private access documented, rollback documented | [Cloudflare Pages Deployment Runbook](../platform/cloudflare-pages-deployment.md) |
 | DOC-002 | P0 | Done | Add privileged access model | Tier 0/1/2 OU, group, workstation, sign-in, and emergency access controls documented | [Privileged Access Model](../security/privileged-access-model.md) |
+| DOC-011 | P0 | Done | Add canonical GNTECH environment specification | Domains, forest, NetBIOS, server names, VLANs, IP addressing, DNS, certificate naming, share naming, repository, and documentation URLs documented | [Environment Specification](environment-specification.md) |
 | DOC-003 | P1 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-005 | P2 | Open | Add multinational data residency model | Region ownership, tenant strategy, naming, compliance assumptions, and ADR triggers documented | Target: `docs/architecture/multinational-data-residency.md` |

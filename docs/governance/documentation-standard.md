@@ -45,7 +45,7 @@ Every production document must include:
 
 Use this format:
 
-`GEIL-<AREA>-<TOPIC>-<NNN>`
+`GEIL-{AREA}-{TOPIC}-{NNN}`
 
 Examples:
 
@@ -55,16 +55,20 @@ Examples:
 
 ## Placeholder rules
 
-Use placeholders only for intentionally unknown real values:
+Known GNTECH values must come from the [Environment Specification](../project/environment-specification.md). Do not use placeholders for canonical values such as `gntech.me`, `corp.gntech.me`, `CORP`, `HQ-DC01`, VLAN IDs, or `172.20.0.0/16` network ranges.
 
-- `<TENANT_NAME>`
+Allowed placeholders are limited to values that cannot be known before deployment or must not be committed:
+
 - `<PUBLIC_IP>`
-- `<ADMIN_USER>`
-- `<DOMAIN_FQDN>`
-- `<SITE_CODE>`
-- `<SUBNET_CIDR>`
+- `<AZURE_TENANT_ID>`
+- `<SUBSCRIPTION_ID>`
+- `<CLIENT_SECRET>`
+- `<PASSWORD>`
+- `<CERTIFICATE_THUMBPRINT>`
+- `<SERIAL_NUMBER>`
+- `<API_KEY>`
 
-Never use vague placeholders such as `your stuff`, `some server`, or `example setting`.
+Whenever a placeholder is used, the document must explain exactly what replaces it and where the real value must be stored. Never use vague placeholders such as undocumented server aliases, non-canonical domain names, or informal example settings.
 
 ## Review workflow
 

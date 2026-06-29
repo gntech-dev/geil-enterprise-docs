@@ -1,9 +1,9 @@
 site_name: GEIL - GNTECH Enterprise Infrastructure Library
 site_description: Private enterprise implementation guide for Microsoft-centered infrastructure
 site_author: GNTECH Infrastructure Engineering
-site_url: https://<CLOUDFLARE_PAGES_HOSTNAME>/
-repo_url: https://github.com/<ORG_NAME>/<REPO_NAME>
-repo_name: <ORG_NAME>/<REPO_NAME>
+site_url: https://docs.gntechlabs.me/
+repo_url: https://github.com/gntech-dev/geil-enterprise-docs
+repo_name: gntech-dev/geil-enterprise-docs
 edit_uri: edit/main/docs/
 theme:
   name: material
@@ -51,6 +51,7 @@ nav:
   - Project:
       - project/index.md
       - Project Charter: project/project-charter.md
+      - Environment Specification: project/environment-specification.md
       - Document Index: project/document-index.md
       - Documentation Backlog: project/documentation-backlog.md
       - Documentation Roadmap: project/documentation-roadmap.md

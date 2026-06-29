@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Implement baseline Group Policy for security, operations, and Windows client consistency.
@@ -41,7 +45,7 @@ Implement baseline Group Policy for security, operations, and Windows client con
 
 ```powershell
 New-GPO -Name "GEIL-Workstation-Security-Baseline"
-New-GPLink -Name "GEIL-Workstation-Security-Baseline" -Target "OU=Workstations,DC=<DOMAIN_COMPONENTS>"
+New-GPLink -Name "GEIL-Workstation-Security-Baseline" -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
 Set-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
   -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
   -ValueName EnableScriptBlockLogging -Type DWord -Value 1
@@ -63,5 +67,5 @@ Expected result: GPO appears in applied policies for a test workstation.
 Unlink first; do not delete until impact is understood.
 
 ```powershell
-Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" -Target "OU=Workstations,DC=<DOMAIN_COMPONENTS>"
+Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
 ```

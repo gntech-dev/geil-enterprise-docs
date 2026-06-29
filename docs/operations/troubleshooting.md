@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Provide first-response troubleshooting workflow for GEIL infrastructure incidents.
@@ -46,8 +50,8 @@ Get-ADReplicationFailure -Scope Forest
 ## DNS commands
 
 ```powershell
-Resolve-DnsName <AD_DOMAIN_FQDN>
-Resolve-DnsName _ldap._tcp.dc._msdcs.<AD_DOMAIN_FQDN> -Type SRV
+Resolve-DnsName corp.gntech.me
+Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
 ipconfig /displaydns
 ```
 

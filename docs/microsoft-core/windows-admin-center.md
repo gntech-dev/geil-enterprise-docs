@@ -23,13 +23,17 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Deploy Windows Admin Center as a controlled management gateway for Windows infrastructure.
 
 ## Baseline
 
-- Install on dedicated server `HQ-WAC01`.
+- Install on dedicated server `HQ-MGMT01`.
 - Require TLS certificate from enterprise PKI.
 - Restrict access to admin workstations and VPN.
 - Use role-based access where feasible.
@@ -39,13 +43,13 @@ Deploy Windows Admin Center as a controlled management gateway for Windows infra
 Download the current Windows Admin Center MSI from Microsoft and install in gateway mode.
 
 ```powershell
-msiexec /i WindowsAdminCenter.msi /qn /L*v C:\Temp\WACInstall.log SME_PORT=443 SSL_CERTIFICATE_OPTION=installed SME_THUMBPRINT=<CERT_THUMBPRINT>
+msiexec /i WindowsAdminCenter.msi /qn /L*v C:\Temp\WACInstall.log SME_PORT=443 SSL_CERTIFICATE_OPTION=installed SME_THUMBPRINT=<CERTIFICATE_THUMBPRINT>
 ```
 
 ## Validation
 
 ```powershell
-Test-NetConnection HQ-WAC01.<AD_DOMAIN_FQDN> -Port 443
+Test-NetConnection HQ-MGMT01.corp.gntech.me -Port 443
 Get-Service ServerManagementGateway
 ```
 

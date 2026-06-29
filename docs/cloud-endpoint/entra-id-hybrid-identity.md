@@ -46,7 +46,7 @@ Synchronize approved Active Directory identities to Microsoft Entra ID.
 
 ```powershell
 Connect-MgGraph -Scopes "User.Read.All"
-Get-MgUser -UserId "<USER_UPN>" | Select Id,UserPrincipalName,OnPremisesSyncEnabled
+Get-MgUser -UserId "j.smith@gntech.me" | Select Id,UserPrincipalName,OnPremisesSyncEnabled
 ```
 
 Expected result: pilot users show `OnPremisesSyncEnabled=True`.

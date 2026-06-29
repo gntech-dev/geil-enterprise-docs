@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Standardize Windows Server 2025 build settings before installing infrastructure roles.
@@ -40,8 +44,8 @@ Standardize Windows Server 2025 build settings before installing infrastructure 
 
 ```powershell
 Rename-Computer -NewName "HQ-DC01" -Restart
-New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "10.10.20.11" -PrefixLength 24 -DefaultGateway "10.10.20.1"
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "10.10.20.11","10.10.20.12"
+New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "172.20.20.11" -PrefixLength 24 -DefaultGateway "172.20.20.1"
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "172.20.20.11","172.20.20.12"
 Install-WindowsFeature -Name RSAT-AD-PowerShell,RSAT-DNS-Server -IncludeAllSubFeature
 ```
 

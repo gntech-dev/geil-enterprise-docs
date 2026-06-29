@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Define identity boundaries, authority, synchronization, and administrative tiers.
@@ -51,7 +55,7 @@ Use Microsoft Entra Connect Cloud Sync or Entra Connect Sync only after document
 ```powershell
 Get-ADGroupMember "Domain Admins"
 Get-ADGroupMember "Enterprise Admins"
-Get-ADUser -Filter 'Enabled -eq $true' -SearchBase "OU=Admin,DC=<DOMAIN_COMPONENTS>" | Select Name,SamAccountName
+Get-ADUser -Filter 'Enabled -eq $true' -SearchBase "OU=Admin,DC=corp,DC=gntech,DC=me" | Select Name,SamAccountName
 ```
 
 Expected result: only named Tier 0 administrative users appear in Tier 0 groups.

@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Define the standard segmented network design for GEIL deployments.
@@ -31,12 +35,16 @@ Define the standard segmented network design for GEIL deployments.
 
 | VLAN | Name | Gateway Example | Internet | Server Access |
 |---:|---|---|---|---|
-| 10 | MGMT | `10.10.10.1` | Restricted | Admin only |
-| 20 | SERVER | `10.10.20.1` | Restricted | Required services |
-| 30 | CLIENT | `10.10.30.1` | Allowed | AD/DNS/DHCP/PKI/NPS only |
-| 50 | WIFI-CORP | `10.10.50.1` | Allowed | Same as CLIENT after 802.1X |
-| 60 | WIFI-GUEST | `10.10.60.1` | Allowed | Denied |
-| 70 | IOT | `10.10.70.1` | Restricted | Print and update services only |
+| 10 | Management | `172.20.10.1` | Restricted | Admin only |
+| 20 | Servers | `172.20.20.1` | Restricted | Infrastructure services |
+| 30 | Workstations | `172.20.30.1` | Allowed | AD/DNS/DHCP/PKI/NPS only |
+| 40 | Printers | `172.20.40.1` | Restricted | Print services only |
+| 50 | Voice | `172.20.50.1` | Restricted | Voice services only |
+| 60 | Corporate WiFi | `172.20.60.1` | Allowed | Same as Workstations after 802.1X |
+| 70 | Guest WiFi | `172.20.70.1` | Allowed | Denied |
+| 80 | DMZ | `172.20.80.1` | Restricted | Explicit published services only |
+| 90 | Backup | `172.20.90.1` | Denied by default | Backup targets only |
+| 100 | Hypervisors | `172.20.100.1` | Restricted | Management and cluster services only |
 
 ## Required firewall policy
 
@@ -54,9 +62,9 @@ Default deny between VLANs. Add explicit rules for:
 From a Windows client:
 
 ```powershell
-Test-NetConnection HQ-DC01.<AD_DOMAIN_FQDN> -Port 53
-Test-NetConnection HQ-DC01.<AD_DOMAIN_FQDN> -Port 88
-Test-NetConnection HQ-DC01.<AD_DOMAIN_FQDN> -Port 445
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 53
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 88
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 445
 ```
 
 Expected result: required ports succeed; unrelated server ports fail from client VLANs.

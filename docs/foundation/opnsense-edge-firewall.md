@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Implement OPNsense as the segmented edge firewall, router, VPN endpoint, and DHCP relay where required.
@@ -52,8 +56,8 @@ From each VLAN:
 
 ```powershell
 Test-NetConnection 1.1.1.1 -Port 443
-Test-NetConnection HQ-DC01.<AD_DOMAIN_FQDN> -Port 53
-Test-NetConnection HQ-NPS01.<AD_DOMAIN_FQDN> -Port 1812
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 53
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 1812
 ```
 
 Expected result: only approved paths succeed.

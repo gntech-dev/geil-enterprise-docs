@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Implement reliable internal name resolution and address assignment for domain-joined and infrastructure systems.
@@ -32,7 +36,7 @@ Implement reliable internal name resolution and address assignment for domain-jo
 AD-integrated DNS zones are created with the forest. Configure secure dynamic updates only.
 
 ```powershell
-Set-DnsServerPrimaryZone -Name "<AD_DOMAIN_FQDN>" -DynamicUpdate Secure
+Set-DnsServerPrimaryZone -Name "corp.gntech.me" -DynamicUpdate Secure
 Add-DnsServerForwarder -IPAddress 1.1.1.1,1.0.0.1
 Get-DnsServerForwarder
 ```
@@ -45,15 +49,15 @@ Install DHCP on two servers where possible and configure failover.
 
 ```powershell
 Install-WindowsFeature DHCP -IncludeManagementTools
-Add-DhcpServerInDC -DnsName "HQ-DC01.<AD_DOMAIN_FQDN>" -IPAddress 10.10.20.11
-Add-DhcpServerv4Scope -Name "CLIENT-HQ" -StartRange 10.10.30.50 -EndRange 10.10.30.250 -SubnetMask 255.255.255.0
-Set-DhcpServerv4OptionValue -ScopeId 10.10.30.0 -Router 10.10.30.1 -DnsServer 10.10.20.11,10.10.20.12 -DnsDomain "<AD_DOMAIN_FQDN>"
+Add-DhcpServerInDC -DnsName "HQ-DC01.corp.gntech.me" -IPAddress 172.20.20.11
+Add-DhcpServerv4Scope -Name "CLIENT-HQ" -StartRange 172.20.30.50 -EndRange 172.20.30.250 -SubnetMask 255.255.255.0
+Set-DhcpServerv4OptionValue -ScopeId 172.20.30.0 -Router 172.20.30.1 -DnsServer 172.20.20.11,172.20.20.12 -DnsDomain "corp.gntech.me"
 ```
 
 ## Validation
 
 ```powershell
-Resolve-DnsName _ldap._tcp.dc._msdcs.<AD_DOMAIN_FQDN> -Type SRV
+Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
 Get-DhcpServerInDC
 Get-DhcpServerv4Scope
 ipconfig /renew

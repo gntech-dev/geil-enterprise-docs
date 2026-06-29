@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 This document defines the GEIL privileged access model for Microsoft-centered enterprise infrastructure. It establishes tier separation, administrative accounts, privileged groups, administrative workstations, sign-in controls, emergency access, validation, monitoring, and rollback procedures.
@@ -164,23 +168,23 @@ Tier 2 requirements:
 Create a dedicated administrative OU hierarchy. This keeps privileged users, groups, workstations, and service accounts separate from normal user and workstation policy.
 
 ```text
-OU=Admin,DC=<DOMAIN_COMPONENTS>
-├── OU=Tier 0,OU=Admin,DC=<DOMAIN_COMPONENTS>
+OU=Admin,DC=corp,DC=gntech,DC=me
+├── OU=Tier 0,OU=Admin,DC=corp,DC=gntech,DC=me
 │   ├── OU=Users
 │   ├── OU=Groups
 │   ├── OU=Workstations
 │   └── OU=Service Accounts
-├── OU=Tier 1,OU=Admin,DC=<DOMAIN_COMPONENTS>
+├── OU=Tier 1,OU=Admin,DC=corp,DC=gntech,DC=me
 │   ├── OU=Users
 │   ├── OU=Groups
 │   ├── OU=Workstations
 │   └── OU=Service Accounts
-├── OU=Tier 2,OU=Admin,DC=<DOMAIN_COMPONENTS>
+├── OU=Tier 2,OU=Admin,DC=corp,DC=gntech,DC=me
 │   ├── OU=Users
 │   ├── OU=Groups
 │   ├── OU=Workstations
 │   └── OU=Service Accounts
-└── OU=Emergency Access,OU=Admin,DC=<DOMAIN_COMPONENTS>
+└── OU=Emergency Access,OU=Admin,DC=corp,DC=gntech,DC=me
 ```
 
 ## Baseline privileged groups
@@ -295,8 +299,8 @@ If this procedure is run in the wrong domain or with incorrect names before acco
 Get-ADGroup -Filter 'Name -like "GG-T*" -or Name -eq "GG-Privileged-Access-Review"' |
     Remove-ADGroup -Confirm:$true
 
-Set-ADOrganizationalUnit -Identity "OU=Admin,DC=<DOMAIN_COMPONENTS>" -ProtectedFromAccidentalDeletion $false
-Remove-ADOrganizationalUnit -Identity "OU=Admin,DC=<DOMAIN_COMPONENTS>" -Recursive -Confirm:$true
+Set-ADOrganizationalUnit -Identity "OU=Admin,DC=corp,DC=gntech,DC=me" -ProtectedFromAccidentalDeletion $false
+Remove-ADOrganizationalUnit -Identity "OU=Admin,DC=corp,DC=gntech,DC=me" -Recursive -Confirm:$true
 ```
 
 Do not remove the Admin OU recursively after privileged accounts, service accounts, or workstations are placed there. Move objects to a reviewed recovery OU first.
@@ -311,20 +315,20 @@ This procedure creates a named Tier 0 administrative account and places it in th
 
 ```powershell
 $DomainDN = (Get-ADDomain).DistinguishedName
-$UserName = "adm0.<USERNAME>"
-$DisplayName = "<USER_FULL_NAME> Tier 0 Admin"
+$UserName = "adm0.j.smith"
+$DisplayName = "J. Smith Tier 0 Admin"
 $TargetOU = "OU=Users,OU=Tier 0,OU=Admin,$DomainDN"
 $InitialPassword = Read-Host "Enter initial password" -AsSecureString
 
 New-ADUser `
     -Name $DisplayName `
     -SamAccountName $UserName `
-    -UserPrincipalName "$UserName@<AD_DOMAIN_FQDN>" `
+    -UserPrincipalName "$UserName@corp.gntech.me" `
     -Path $TargetOU `
     -AccountPassword $InitialPassword `
     -Enabled $true `
     -ChangePasswordAtLogon $true `
-    -Description "Tier 0 administrative account for <USER_FULL_NAME>; no daily productivity use"
+    -Description "Tier 0 administrative account for J. Smith; no daily productivity use"
 ```
 
 ### Expected result
@@ -334,7 +338,7 @@ A dedicated Tier 0 administrative user is created, enabled, and required to chan
 ### Validation
 
 ```powershell
-Get-ADUser "adm0.<USERNAME>" -Properties Enabled,Description,DistinguishedName,LastLogonDate |
+Get-ADUser "adm0.j.smith" -Properties Enabled,Description,DistinguishedName,LastLogonDate |
     Select-Object SamAccountName,Enabled,Description,DistinguishedName,LastLogonDate
 ```
 
@@ -345,10 +349,10 @@ Expected result: account exists in `OU=Users,OU=Tier 0,OU=Admin` and has no last
 If the account was created incorrectly and has not been used:
 
 ```powershell
-Disable-ADAccount "adm0.<USERNAME>"
+Disable-ADAccount "adm0.j.smith"
 Move-ADObject `
-    -Identity (Get-ADUser "adm0.<USERNAME>").DistinguishedName `
-    -TargetPath "OU=Disabled Objects,DC=<DOMAIN_COMPONENTS>"
+    -Identity (Get-ADUser "adm0.j.smith").DistinguishedName `
+    -TargetPath "OU=Disabled Objects,DC=corp,DC=gntech,DC=me"
 ```
 
 Do not delete privileged accounts immediately if they have been used. Disable, investigate audit logs, then remove after retention requirements are met.
@@ -362,7 +366,7 @@ Privileged membership must be explicit, change-controlled, and validated. The ex
 ### PowerShell
 
 ```powershell
-Add-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.<USERNAME>"
+Add-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith"
 Add-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-AD-Admins"
 ```
 
@@ -382,7 +386,7 @@ Expected result: the user is a member of `GG-T0-AD-Admins`; `GG-T0-AD-Admins` is
 ### Rollback
 
 ```powershell
-Remove-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.<USERNAME>" -Confirm:$true
+Remove-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith" -Confirm:$true
 ```
 
 If the controlled group was incorrectly nested in a built-in group:
@@ -499,7 +503,7 @@ Minimum requirements:
 |---|---|
 | Quantity | At least two emergency access accounts |
 | Type | Cloud-only accounts for Microsoft Entra ID |
-| Naming | `ea.globaladmin.01@<TENANT_DOMAIN>` and `ea.globaladmin.02@<TENANT_DOMAIN>` or approved equivalent |
+| Naming | `ea.globaladmin.01@gntech.me` and `ea.globaladmin.02@gntech.me` or approved equivalent |
 | Storage | Credentials stored in approved break-glass vault process |
 | Assignment | Global Administrator only where required for recovery |
 | Conditional Access | Excluded from policies that can block all access, but monitored aggressively |
@@ -637,13 +641,13 @@ Use rollback when privileged access was granted incorrectly or when a tier bound
 ### Remove incorrect AD group membership
 
 ```powershell
-Remove-ADGroupMember -Identity "<GROUP_NAME>" -Members "<ADMIN_ACCOUNT>" -Confirm:$true
+Remove-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith" -Confirm:$true
 ```
 
 Validation:
 
 ```powershell
-Get-ADGroupMember "<GROUP_NAME>" | Where-Object {$_.SamAccountName -eq "<ADMIN_ACCOUNT>"}
+Get-ADGroupMember "GG-T0-AD-Admins" | Where-Object {$_.SamAccountName -eq "adm0.j.smith"}
 ```
 
 Expected result: no object is returned.
@@ -651,8 +655,8 @@ Expected result: no object is returned.
 ### Disable a suspected compromised privileged account
 
 ```powershell
-Disable-ADAccount "<ADMIN_ACCOUNT>"
-Set-ADAccountPassword "<ADMIN_ACCOUNT>" -Reset -NewPassword (Read-Host "New random password" -AsSecureString)
+Disable-ADAccount "adm0.j.smith"
+Set-ADAccountPassword "adm0.j.smith" -Reset -NewPassword (Read-Host "New random password" -AsSecureString)
 ```
 
 Expected result: account is disabled and password is reset to prevent continued use.

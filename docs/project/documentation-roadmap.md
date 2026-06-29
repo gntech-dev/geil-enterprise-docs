@@ -33,6 +33,7 @@ The documentation roadmap sequences GEIL from a usable internal documentation fo
 |---|---|---|
 | MkDocs Material repository | Done | `mkdocs.yml`, `requirements.txt`, strict build validation |
 | Project charter | Done | [GEIL Project Charter](project-charter.md) |
+| Canonical GNTECH environment specification | Done | [Environment Specification](environment-specification.md) |
 | Document standard | Done | [Documentation Standard](../governance/documentation-standard.md) |
 | Naming standard | Done | [Naming and Addressing Standard](../governance/naming-addressing-standard.md) |
 | Document index | Done | [Document Index](document-index.md) |

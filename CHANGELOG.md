@@ -6,6 +6,19 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+- Added `GEIL-PRJ-ENV-001` Environment Specification as the canonical source of truth for the real GNTECH implementation.
+- Added canonical GNTECH values for `gntech.me`, `corp.gntech.me`, `CORP`, `docs.gntechlabs.me`, `geil-enterprise-docs`, HQ infrastructure names, VLANs, IP ranges, DNS naming, certificate naming, share naming, and repository URLs.
+
+### Changed
+
+- Replaced generic known-value placeholders with canonical GNTECH values across existing implementation documentation.
+- Updated MkDocs site URL and repository metadata to use `docs.gntechlabs.me` and `gntech-dev/geil-enterprise-docs`.
+- Updated network examples from the previous generic `10.10.0.0/16` style ranges to the canonical `172.20.0.0/16` GNTECH baseline.
+- Added adaptation notes to documents that now explicitly use canonical GNTECH values.
+- Updated project charter, document index, backlog, roadmap, and navigation for the canonical environment specification.
+
+### Added
+
 - Added Security section for cross-platform security architecture and controls.
 - Added `GEIL-SEC-PAM-001` Privileged Access Model.
 - Added Tier 0, Tier 1, and Tier 2 privileged access architecture diagram.

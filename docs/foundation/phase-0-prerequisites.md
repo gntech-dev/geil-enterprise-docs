@@ -23,13 +23,17 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Adaptation"
+
+    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+
 ## Purpose
 
 Complete required planning before any production infrastructure is built.
 
 ## Required inputs
 
-- Business name and tenant placeholder: `<TENANT_NAME>`.
+- Business name and tenant placeholder: `GNTECH`.
 - Public DNS zones and registrar access.
 - Static public IP addresses: `<PUBLIC_IP>`.
 - Site codes, subnet plan, VLAN plan.
@@ -48,7 +52,7 @@ Complete required planning before any production infrastructure is built.
 ## Validation
 
 ```powershell
-Resolve-DnsName <PUBLIC_DOMAIN>
+Resolve-DnsName gntech.me
 ```
 
 Expected result: authoritative public DNS resolves from an external resolver.
