@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 3.0
+version: 4.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 3.0 |
+| Version | 4.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -78,6 +78,10 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-ARCH-TECH-001 | Technology Selection Matrix | Approved | `docs/architecture/technology-selection-matrix.md` | Current technology choices, alternatives, pros, cons, and replacement strategy |
 | GEIL-ARCH-IMPL-001 | Implementation Philosophy | Approved | `docs/architecture/implementation-philosophy.md` | Evolution from 15-user SMB to multinational corporation |
 | GEIL-ARCH-PRINCIPLES-001 | Architecture Principles | Approved | `docs/architecture/architecture-principles.md` | Documentation First, Automation First, Zero Trust, scale, failure, and observability principles |
+| GEIL-ARCH-LAB-001 | Enterprise Lab Blueprint HLD | Approved | `docs/architecture/enterprise-lab-blueprint.md` | Complete target enterprise HLD for implementation reference |
+| GEIL-ARCH-LAB-NET-001 | Enterprise Lab Network HLD | Approved | `docs/architecture/enterprise-lab-network-hld.md` | Network, security zone, VLAN, IP addressing, WiFi, and routing HLD |
+| GEIL-ARCH-LAB-ID-001 | Enterprise Lab Identity HLD | Approved | `docs/architecture/enterprise-lab-identity-hld.md` | Forest, domain, AD site, DNS, DHCP, PKI, identity, and cloud identity HLD |
+| GEIL-ARCH-LAB-OPS-001 | Enterprise Lab Operations HLD | Approved | `docs/architecture/enterprise-lab-operations-hld.md` | Storage, backup, monitoring, DR, and operational readiness HLD |
 | GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/architecture/reference-architecture.md` | Overall platform architecture |
 | GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/architecture/environment-tiers.md` | Lab, pilot, production, DR |
 | GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/architecture/identity-architecture.md` | Identity authorities and admin tiers |
@@ -136,6 +140,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
+| E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
 | E03 | E03.R01 - Core directory services | 6 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
 | E03 | E03.R03 - Privileged access control plane | 2 |

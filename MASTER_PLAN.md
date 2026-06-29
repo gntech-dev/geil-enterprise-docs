@@ -198,3 +198,8 @@ The full philosophy is defined in [Implementation Philosophy](../architecture/im
 - [Implementation Philosophy](../architecture/implementation-philosophy.md)
 - [Architecture Principles](../architecture/architecture-principles.md)
 - [Epic and Release Architecture](epic-release-architecture.md)
+
+
+## Phase 1 High-Level Design
+
+GEIL Phase 1 is governed by the [Enterprise Lab Blueprint HLD](docs/architecture/enterprise-lab-blueprint.md) and its supporting Network, Identity, and Operations HLDs. Future implementation documents must reference the HLD before defining product-specific configuration.

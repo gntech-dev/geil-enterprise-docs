@@ -49,3 +49,13 @@ The following documents define the permanent enterprise architecture foundation 
 - [Architecture Principles](architecture-principles.md)
 
 Implementation documents must support one or more capabilities from the Enterprise Capability Model.
+
+
+## Enterprise Lab Blueprint HLD
+
+Release `E02.R02` defines the High-Level Design that all future implementation documents must reference:
+
+- [Enterprise Lab Blueprint HLD](enterprise-lab-blueprint.md)
+- [Enterprise Lab Network HLD](enterprise-lab-network-hld.md)
+- [Enterprise Lab Identity HLD](enterprise-lab-identity-hld.md)
+- [Enterprise Lab Operations HLD](enterprise-lab-operations-hld.md)

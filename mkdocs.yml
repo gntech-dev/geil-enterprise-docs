@@ -75,6 +75,10 @@ nav:
   - Architecture:
       - architecture/index.md
       - Architecture Principles: architecture/architecture-principles.md
+      - Enterprise Lab Blueprint HLD: architecture/enterprise-lab-blueprint.md
+      - Enterprise Lab Network HLD: architecture/enterprise-lab-network-hld.md
+      - Enterprise Lab Identity HLD: architecture/enterprise-lab-identity-hld.md
+      - Enterprise Lab Operations HLD: architecture/enterprise-lab-operations-hld.md
       - Implementation Philosophy: architecture/implementation-philosophy.md
       - Technology Selection Matrix: architecture/technology-selection-matrix.md
       - Enterprise Reference Architecture: architecture/enterprise-reference-architecture.md

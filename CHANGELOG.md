@@ -7,6 +7,12 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-ARCH-LAB-001` Enterprise Lab Blueprint HLD for Phase 1.
+- Added `GEIL-ARCH-LAB-NET-001` Enterprise Lab Network HLD.
+- Added `GEIL-ARCH-LAB-ID-001` Enterprise Lab Identity HLD.
+- Added `GEIL-ARCH-LAB-OPS-001` Enterprise Lab Operations HLD.
+- Added Mermaid diagrams for physical topology, logical topology, site topology, security zones, VLAN/IP allocation, WiFi, forest/domain design, DNS, DHCP, PKI, identity, storage, backup, monitoring, security operations, and disaster recovery.
+
 - Added `GEIL-PRJ-MASTER-001` GEIL Master Plan as the North Star for the Enterprise Infrastructure Engineering Library.
 - Added `GEIL-ARCH-CAP-001` Enterprise Capability Model.
 - Added `GEIL-ARCH-ERA-001` Enterprise Reference Architecture.
@@ -24,6 +30,10 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Added release `E02.R02 Enterprise Lab Blueprint` to roadmap, backlog, document index, and release assignment register.
+- Updated MASTER_PLAN with Phase 1 HLD reference requirements.
+- Updated MkDocs navigation with Enterprise Lab Blueprint HLD documents.
 
 - Updated roadmap, backlog, document index, project charter, navigation, and release assignments for the Enterprise Architecture Vision release.
 - Established release `E01.R02` as the strategic enterprise architecture foundation before additional Microsoft implementation work.
