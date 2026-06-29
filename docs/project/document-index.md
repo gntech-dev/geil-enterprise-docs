@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 9.0
+version: 10.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 9.0 |
+| Version | 10.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -60,6 +60,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-GOV-DOC-001 | Documentation Standard | Draft | `docs/governance/documentation-standard.md` | Authoring requirements |
 | GEIL-GOV-VISUAL-001 | Visual Documentation Standard | Approved | `docs/governance/visual-documentation-standard.md` | Mermaid usage rules, complex diagram asset standards, and replacement candidates |
+| GEIL-GOV-IMPL-001 | Implementation Guide Standard | Approved | `docs/governance/implementation-guide-standard.md` | Microsoft Learn-style implementation guide template, teaching requirements, validation, rollback, evidence, screenshots, and knowledge checks |
 | GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
 | GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
 
@@ -101,8 +102,8 @@ The document index is the authoritative register of GEIL documents, their owners
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
 | GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
-| GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | AD DS forest and DC deployment |
-| GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Name and address services |
+| GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
+| GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
 | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model |
 | GEIL-MSC-PKI-001 | AD CS PKI | Draft | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI architecture |
 | GEIL-MSC-NPS-001 | NPS RADIUS 802.1X | Draft | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication |
@@ -136,7 +137,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 
 | Epic | Release | Current Document Count |
 |---|---|---:|
-| E00 | E00.R01 - Documentation governance foundation | 14 |
+| E00 | E00.R01 - Documentation governance foundation | 15 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |

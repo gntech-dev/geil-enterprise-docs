@@ -3,7 +3,7 @@ title: Proxmox HQ Foundation Implementation Runbook
 document_id: GEIL-PLAT-PVE-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.1
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PVE-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.1 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -66,6 +66,129 @@ This implementation runbook is subordinate to the approved HLD and LLD baseline:
 !!! note "Adaptation"
 
     This runbook uses canonical GNTECH values including `PVE-HQ01`, `HQ-FW01`, `HQ-DC01`, `HQ-MGMT01`, `HQ-W11-001`, `172.20.100.11`, `172.20.100.1`, and `corp.gntech.me`. Other organizations must update their environment specification before adapting commands or screenshots.
+
+
+## Learning Objectives
+
+After completing this guide you will understand:
+
+- Why `PVE-HQ01` is the virtualization anchor for the HQ foundation.
+- How `GEILWAN` and `GEILLAN` isolate GEIL traffic from existing Proxmox networks.
+- How to create bridge configuration safely without breaking current public access.
+- How to create GEIL VM shells with correct bridge and VLAN assignments.
+- How to validate bridge visibility in both Linux and the Proxmox GUI.
+- How to roll back a risky host networking change.
+
+## What You Will Build
+
+By the end of this guide you will have:
+
+- ✓ `GEILWAN` configured as the `172.31.255.1/30` transit bridge.
+- ✓ `GEILLAN` configured as the VLAN-aware GEIL trunk.
+- ✓ Existing `eno1`, `VSW4001`, `PROD`, and `TEST` networks preserved.
+- ✓ `HQ-FW01` attached to `GEILWAN` and `GEILLAN`.
+- ✓ `HQ-DC01`, `HQ-MGMT01`, and `HQ-W11-001` VM shells attached to `GEILLAN` with correct VLAN tags.
+- ✓ Rollback file and validation evidence captured.
+
+## Estimated Time
+
+45-90 minutes, excluding ISO upload and guest OS installation time.
+
+## Difficulty
+
+Advanced.
+
+This guide changes Proxmox host networking. It is safe when performed exactly as written, but a bridge or interface mistake can break remote access.
+
+## Risk Level
+
+High.
+
+Host networking changes can interrupt management access. Create the rollback copy and confirm console access before applying bridge changes.
+
+## Service Impact
+
+Maintenance window recommended.
+
+The GEIL bridge additions are designed to be additive, but a mistake in `/etc/network/interfaces` can interrupt access to existing workloads.
+
+## Architecture Overview
+
+`PVE-HQ01` hosts the Phase 1 GEIL infrastructure. `GEILWAN` connects only the Proxmox host and `HQ-FW01` WAN side. `GEILLAN` carries internal GEIL VLANs to `HQ-FW01` and GEIL VMs. Existing non-GEIL bridges remain untouched.
+
+```mermaid
+flowchart LR
+    PVE[PVE-HQ01]
+    WAN[GEILWAN 172.31.255.1/30]
+    FW[HQ-FW01 WAN 172.31.255.2/30]
+    LAN[GEILLAN VLAN-aware trunk]
+    VMS[GEIL VMs VLAN 20/30]
+
+    PVE --> WAN --> FW --> LAN --> VMS
+```
+
+!!! info "Architecture references"
+
+    Read [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md), [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md), and [Phase 1 Build Plan](phase-1-build-plan.md) before using this guide.
+
+## Background Knowledge
+
+### What is a Linux bridge?
+
+A Linux bridge is a software switch. Proxmox uses bridges to connect VMs to physical or virtual networks.
+
+### What is a VLAN-aware bridge?
+
+A VLAN-aware bridge carries multiple VLANs across one bridge. VMs can attach to the bridge with specific VLAN tags.
+
+### What is GEILWAN?
+
+`GEILWAN` is not the public internet interface. It is a small transit bridge between `PVE-HQ01` and the `HQ-FW01` WAN interface.
+
+### What is GEILLAN?
+
+`GEILLAN` is the internal GEIL trunk. It carries the canonical GEIL VLANs behind `HQ-FW01`.
+
+## Guide Screenshot Requirements
+
+!!! example "Screenshot Required: Proxmox network list before changes"
+
+    Path: `PVE-HQ01 -> System -> Network`
+
+    Expected result:
+
+    - Existing `eno1`, `VSW4001`, `PROD`, and `TEST` are visible if present.
+    - They are recorded before GEIL changes.
+
+    Store final screenshots under `docs/assets/images/proxmox-hq-foundation-implementation/`.
+
+!!! example "Screenshot Required: Proxmox network list after changes"
+
+    Path: `PVE-HQ01 -> System -> Network`
+
+    Expected result:
+
+    - `GEILWAN` exists.
+    - `GEILLAN` exists and is VLAN-aware.
+    - Existing `PROD` and `TEST` remain unchanged.
+
+## Why This Step Matters
+
+The Proxmox bridge layer determines whether every later GEIL component is isolated, reachable, and recoverable. If the foundation bridges are wrong, OPNsense, Active Directory, DHCP relay, management access, and evidence collection will all fail or produce misleading results.
+
+## Knowledge Check
+
+1. Why is `HQ-FW01` connected to `GEILWAN` instead of directly to `eno1`?
+2. Why should `GEILWAN` and `GEILLAN` be defined in `/etc/network/interfaces` instead of only `/etc/network/interfaces.d/`?
+3. What command proves that `GEILLAN` is carrying VLANs 10 through 100?
+4. Which existing Proxmox objects must not be modified during GEIL setup?
+5. Why must `site/` remain untracked in Git after documentation validation?
+
+## Next Guide
+
+Continue to:
+
+- [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)
 
 ## Prerequisites
 

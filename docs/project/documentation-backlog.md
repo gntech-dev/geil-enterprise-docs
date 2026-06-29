@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 10.0
+version: 11.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 10.0 |
+| Version | 11.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -60,6 +60,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-020 | P0 | E02 | E02.R04 | Done | Add HQ Foundation Implementation Runbooks | Proxmox and OPNsense implementation runbooks include prerequisites, required access/files, exact configuration steps, bridge/VLAN/gateway/firewall/DNS/DHCP relay decisions, validation commands, rollback, troubleshooting, and evidence capture | [Proxmox HQ Foundation Implementation](../platform/proxmox-hq-foundation-implementation.md) |
 | DOC-021 | P0 | E02 | E02.R05 | Done | Add HQ Foundation Evidence and Acceptance Package | Evidence rules, screenshot requirements, command outputs, Proxmox/OPNsense/VLAN/firewall/routing/DNS/DHCP/snapshot/rollback evidence, exceptions register, acceptance criteria, sign-off, and remediation workflow documented | [Phase 1 Acceptance Package](../platform/phase-1-acceptance-package.md) |
 | DOC-022 | P0 | E02 | E02.R04 | Done | Upgrade Phase 1 implementation documents to operator-grade detail | Priority implementation, build, validation, and acceptance documents include exact objectives, prerequisites, assumptions, access/files, starting/ending states, copy/paste blocks, GUI paths, validation after major steps, rollback commands, common errors, troubleshooting, evidence, and acceptance criteria | [Proxmox HQ Foundation Implementation](../platform/proxmox-hq-foundation-implementation.md) |
+| DOC-023 | P0 | E00 | E00.R01 | Done | Add Implementation Guide Standard and refactor existing guides | Standard defines Microsoft Learn-style guide structure; existing Proxmox, OPNsense, Active Directory, and DNS/DHCP implementation guides include learning objectives, background knowledge, step validation, rollback, evidence, screenshot placeholders, knowledge checks, and next-guide links | [Implementation Guide Standard](../governance/implementation-guide-standard.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |

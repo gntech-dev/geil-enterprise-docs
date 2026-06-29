@@ -3,7 +3,7 @@ title: OPNsense HQ Foundation Implementation Runbook
 document_id: GEIL-PLAT-OPN-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.1
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-OPN-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.1 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -65,6 +65,141 @@ This implementation runbook is subordinate to the approved HLD and LLD baseline:
 !!! note "Adaptation"
 
     This runbook uses canonical GNTECH values from the Environment Specification. VLAN gateways follow the canonical gateway pattern for the approved VLAN list: VLAN 10 uses `172.20.10.1`, VLAN 20 uses `172.20.20.1`, VLAN 30 uses `172.20.30.1`, VLAN 40 uses `172.20.40.1`, VLAN 50 uses `172.20.50.1`, VLAN 60 uses `172.20.60.1`, VLAN 70 uses `172.20.70.1`, VLAN 80 uses `172.20.80.1`, VLAN 90 uses `172.20.90.1`, and VLAN 100 uses `172.20.100.1`. `HQ-FW01` is the Phase 1 routing and firewall control point.
+
+
+## Learning Objectives
+
+After completing this guide you will understand:
+
+- Why `HQ-FW01` is the Phase 1 routing and firewall control point.
+- How WAN, LAN trunk, VLAN gateways, DNS forwarding, NAT, and firewall policy work together.
+- How to build VLAN interfaces for the canonical GEIL network model.
+- How to validate management access and guest isolation.
+- How to export the firewall configuration and roll back risky changes.
+
+## What You Will Build
+
+By the end of this guide you will have:
+
+- ✓ `HQ-FW01` installed and booting from disk.
+- ✓ WAN configured on `GEILWAN` as `172.31.255.2/30`.
+- ✓ LAN trunk configured on `GEILLAN`.
+- ✓ VLAN gateways created for VLANs 10,20,30,40,50,60,70,80,90,100.
+- ✓ Baseline firewall rules for management access and guest isolation.
+- ✓ DNS forwarding and DHCP relay decisions documented.
+- ✓ Snapshots and `HQ-FW01-baseline.xml` evidence captured.
+
+## Estimated Time
+
+60-120 minutes, excluding OPNsense ISO download time.
+
+## Difficulty
+
+Advanced.
+
+This guide configures the enterprise firewall boundary. Incorrect interface mapping or firewall rule order can block management access or expose internal networks.
+
+## Risk Level
+
+High.
+
+Firewall rules and interface assignments affect every later GEIL service. Take snapshots before VLAN and firewall policy changes.
+
+## Service Impact
+
+Maintenance window recommended.
+
+The initial GEIL firewall has no production users yet, but management access can be interrupted during configuration.
+
+## Architecture Overview
+
+`HQ-FW01` sits between `GEILWAN` and `GEILLAN`. It owns the GEIL VLAN gateways and enforces inter-zone policy. Proxmox does not route between GEIL VLANs.
+
+```mermaid
+flowchart LR
+    WAN[GEILWAN 172.31.255.0/30]
+    FW[HQ-FW01]
+    LAN[GEILLAN VLAN trunk]
+    MGMT[VLAN 10 Mgmt]
+    SERVERS[VLAN 20 Servers]
+    WORK[VLAN 30 Workstations]
+    GUEST[VLAN 70 Guest]
+
+    WAN --> FW --> LAN
+    LAN --> MGMT
+    LAN --> SERVERS
+    LAN --> WORK
+    LAN --> GUEST
+```
+
+!!! info "Architecture references"
+
+    Read [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md), [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md), and [Phase 1 Validation Plan](phase-1-validation-plan.md) before using this guide.
+
+## Background Knowledge
+
+### What is a firewall gateway?
+
+A firewall gateway is the IP address clients use to reach other networks. In GEIL, `HQ-FW01` owns every VLAN `.1` gateway.
+
+### What is a VLAN interface?
+
+A VLAN interface is a logical firewall interface attached to a tagged VLAN on the LAN trunk.
+
+### What is DHCP relay?
+
+DHCP relay forwards DHCP requests from a VLAN to a DHCP server on another subnet. GEIL prepares relay but does not enable it until `HQ-DC01` DHCP scopes exist.
+
+### What is guest isolation?
+
+Guest isolation prevents guest clients from reaching internal enterprise networks such as servers, management, backup, and hypervisors.
+
+## Guide Screenshot Requirements
+
+!!! example "Screenshot Required: Interface assignments"
+
+    Path: `Interfaces -> Assignments`
+
+    Expected result:
+
+    - WAN is attached to the `GEILWAN` adapter.
+    - LAN/trunk parent is attached to the `GEILLAN` adapter.
+
+    Store final screenshots under `docs/assets/images/opnsense-hq-foundation-implementation/`.
+
+!!! example "Screenshot Required: VLAN interfaces"
+
+    Path: `Interfaces -> Other Types -> VLAN`
+
+    Expected result:
+
+    - VLANs 10,20,30,40,50,60,70,80,90,100 exist on the LAN trunk parent.
+
+!!! example "Screenshot Required: Guest isolation rule"
+
+    Path: `Firewall -> Rules -> GUESTWIFI`
+
+    Expected result:
+
+    - Deny rule from VLAN 70 to `172.20.0.0/16` is present and logged.
+
+## Why This Step Matters
+
+The firewall is the enterprise policy boundary. Correct OPNsense configuration ensures that management systems can reach required infrastructure while guest, DMZ, and future restricted networks cannot bypass policy.
+
+## Knowledge Check
+
+1. Why does `HQ-FW01` use `172.31.255.2/30` on WAN instead of a `172.20.x.x` address?
+2. Why must VLAN 70 not relay DHCP to AD DHCP servers?
+3. Why should guest deny rules be placed above broad allow rules?
+4. What evidence proves that `HQ-FW01` owns the VLAN gateways?
+5. Why is `HQ-FW01-baseline.xml` stored outside Git?
+
+## Next Guide
+
+Continue to:
+
+- [Phase 1 Validation Plan](phase-1-validation-plan.md)
 
 ## Prerequisites
 

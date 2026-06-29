@@ -7,6 +7,9 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-GOV-IMPL-001` Implementation Guide Standard for Microsoft Learn-style deployment guides.
+- Added screenshot placeholder directories under `docs/assets/images/` for existing implementation guides.
+
 - Added local SVG architecture visuals under `docs/assets/diagrams/` for PKI hierarchy, security zones, enterprise reference architecture, enterprise lab network, enterprise lab identity, enterprise lab operations, OPNsense VLAN topology, and Proxmox bridge topology.
 - Added diagram generation prompts under `docs/assets/diagram-prompts/` with expected WebP output paths for future image-generation/export tooling.
 
@@ -48,6 +51,9 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Refactored existing implementation guides for Proxmox, OPNsense, Active Directory, and DNS/DHCP with learning objectives, architecture overview, background knowledge, expected results, validation, rollback, evidence collection, knowledge checks, and next-guide links.
+- Updated document index, roadmap, backlog, release assignment register, and MkDocs navigation for the Implementation Guide Standard.
 
 - Expanded Phase 1 HQ foundation implementation documents with operator-grade deployment detail, copy/paste blocks, validation evidence, rollback commands, common errors, and acceptance criteria.
 - Added deployment operator notes for the discovered Proxmox state: `eno1` direct use, protected `VSW4001`/`PROD`/`TEST` objects, GEIL `172.20.0.0/16`, `GEILWAN` `172.31.255.1/30`, and `HQ-FW01` WAN `172.31.255.2/30`.
