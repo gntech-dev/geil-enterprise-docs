@@ -64,6 +64,8 @@ nav:
       - OPNsense HQ Foundation LLD: platform/opnsense-hq-foundation-lld.md
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
+      - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
+      - OPNsense HQ Foundation Implementation: platform/opnsense-hq-foundation-implementation.md
   - Governance:
       - governance/index.md
       - Documentation Standard: governance/documentation-standard.md

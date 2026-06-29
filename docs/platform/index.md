@@ -57,3 +57,11 @@ Release `E02.R03` translates the Enterprise Lab Blueprint HLD into deployable Ph
 - [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
+
+
+## HQ Foundation Implementation Runbooks
+
+Release `E02.R04` provides implementation-ready runbooks for deploying the initial HQ foundation from the approved HLD and LLD:
+
+- [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md)
+- [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)

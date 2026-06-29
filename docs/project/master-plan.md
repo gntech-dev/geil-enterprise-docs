@@ -226,3 +226,13 @@ Authoritative E02.R03 documents:
 - [OPNsense HQ Foundation LLD](../platform/opnsense-hq-foundation-lld.md)
 - [Phase 1 Build Plan](../platform/phase-1-build-plan.md)
 - [Phase 1 Validation Plan](../platform/phase-1-validation-plan.md)
+
+
+## Phase 1 Foundation Implementation
+
+Release `E02.R04 HQ Foundation Implementation Runbook` provides implementation-ready procedures for the first deployable HQ foundation layer. It implements `PVE-HQ01` bridge/VLAN design and `HQ-FW01` OPNsense WAN/LAN, VLAN gateway, baseline firewall, DNS forwarding, DHCP relay preparation, validation, and rollback controls.
+
+Authoritative E02.R04 documents:
+
+- [Proxmox HQ Foundation Implementation Runbook](../platform/proxmox-hq-foundation-implementation.md)
+- [OPNsense HQ Foundation Implementation Runbook](../platform/opnsense-hq-foundation-implementation.md)

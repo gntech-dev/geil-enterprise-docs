@@ -7,6 +7,9 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-PLAT-PVE-HQ-IMPL-001` Proxmox HQ Foundation Implementation Runbook.
+- Added `GEIL-PLAT-OPN-HQ-IMPL-001` OPNsense HQ Foundation Implementation Runbook.
+
 - Added `GEIL-GOV-VISUAL-001` Visual Documentation Standard.
 - Added `docs/assets/diagrams/` as the canonical storage path for generated diagram assets.
 - Identified existing high-complexity Mermaid diagrams that should be replaced with dedicated 16:9 visual assets.
@@ -40,6 +43,9 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Added release `E02.R04 HQ Foundation Implementation Runbook` to roadmap, backlog, document index, and release assignment register.
+- Updated MASTER_PLAN and MkDocs navigation with HQ foundation implementation runbooks.
 
 - Updated the Documentation Standard to limit Mermaid to simple diagrams, workflows, and dependency graphs.
 - Updated backlog, roadmap, document index, navigation, and release assignments for the visual documentation standard.
