@@ -7,6 +7,9 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-GOV-EDU-001` Educational Documentation Standard as a mandatory teaching-first methodology for implementation guides.
+- Added screenshot placeholder directory for Windows Server 2025 Baseline under `docs/assets/images/windows-server-2025-baseline/`.
+
 - Added `GEIL-GOV-IMPL-001` Implementation Guide Standard for Microsoft Learn-style deployment guides.
 - Added screenshot placeholder directories under `docs/assets/images/` for existing implementation guides.
 
@@ -51,6 +54,10 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Enhanced Windows Server 2025 Baseline, Proxmox HQ Foundation Implementation, OPNsense HQ Foundation Implementation, Active Directory Implementation, and DNS/DHCP Implementation with educational enterprise context, internal workflows, GEIL design decisions, alternatives, security/performance/scalability/operational considerations, FAQs, and key takeaways.
+- Updated Implementation Guide Standard to reference the Educational Documentation Standard and document `enterprise` / `implementation` admonition usage.
+- Updated navigation, document index, roadmap, backlog, and release assignment register for the educational documentation methodology.
 
 - Refactored existing implementation guides for Proxmox, OPNsense, Active Directory, and DNS/DHCP with learning objectives, architecture overview, background knowledge, expected results, validation, rollback, evidence collection, knowledge checks, and next-guide links.
 - Updated document index, roadmap, backlog, release assignment register, and MkDocs navigation for the Implementation Guide Standard.

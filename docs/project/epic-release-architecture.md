@@ -136,6 +136,7 @@ flowchart TD
     CHARTER[Project Charter]
     STD[Documentation Standard]
     IMPLSTD[Implementation Guide Standard]
+    EDUSTD[Educational Documentation Standard]
     INDEX[Document Index]
     ROADMAP[Documentation Roadmap]
     BACKLOG[Documentation Backlog]
@@ -194,7 +195,8 @@ flowchart TD
     ENV --> CHARTER
     CHARTER --> STD
     STD --> IMPLSTD
-    IMPLSTD --> INDEX
+    IMPLSTD --> EDUSTD
+    EDUSTD --> INDEX
     STD --> ROADMAP
     STD --> BACKLOG
     STD --> ADR
@@ -246,6 +248,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `governance/documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/visual-documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/implementation-guide-standard.md` |
+| E00.R01 - Documentation governance foundation | E00 | `governance/educational-documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/backlog.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/index.md` |

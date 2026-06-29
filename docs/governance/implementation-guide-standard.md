@@ -3,7 +3,7 @@ title: Implementation Guide Standard
 document_id: GEIL-GOV-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,14 +18,14 @@ classification: Internal Confidential
 | Document ID | GEIL-GOV-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
 ## Purpose
 
-This standard defines the required structure and teaching style for all GEIL implementation guides. GEIL implementation guides must teach, guide, validate, and explain. They must be usable by an engineer deploying the GNTECH enterprise environment for the first time without relying on external tutorials, except where the reader must download vendor software or consult vendor licensing terms.
+This standard defines the required structure and teaching style for all GEIL implementation guides. It must be used together with the [Educational Documentation Standard](educational-documentation-standard.md). GEIL implementation guides must teach, guide, validate, and explain. They must be usable by an engineer deploying the GNTECH enterprise environment for the first time without relying on external tutorials, except where the reader must download vendor software or consult vendor licensing terms.
 
 !!! success "Mandatory standard"
 
@@ -256,6 +256,8 @@ Use Material for MkDocs admonitions extensively:
 - `!!! danger` for destructive or outage-causing actions.
 - `!!! success` for completion criteria.
 - `!!! example` for command/output examples.
+- `!!! enterprise` for how medium and large enterprises implement the concept.
+- `!!! implementation` for lessons learned during actual GEIL deployment.
 
 Admonitions must add value. Do not use them as decoration.
 
@@ -321,5 +323,6 @@ Before an implementation guide is published:
 
 - [Documentation Standard](documentation-standard.md)
 - [Visual Documentation Standard](visual-documentation-standard.md)
+- [Educational Documentation Standard](educational-documentation-standard.md)
 - [Environment Specification](../project/environment-specification.md)
 - [Epic and Release Architecture](../project/epic-release-architecture.md)

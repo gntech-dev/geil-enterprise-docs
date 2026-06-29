@@ -3,7 +3,7 @@ title: OPNsense HQ Foundation Implementation Runbook
 document_id: GEIL-PLAT-OPN-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 2.0
+version: 2.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-OPN-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 2.0 |
+| Version | 2.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -834,3 +834,122 @@ Capture:
 - `HQ-FW01-baseline.xml` is exported to protected storage outside Git.
 - Required snapshots exist.
 - Validation evidence is ready for E02.R05 acceptance.
+
+
+## Educational Enterprise Context
+
+### What you are building
+
+You are building the OPNsense HQ firewall foundation as part of the GEIL enterprise learning and deployment platform.
+
+### Why this component exists
+
+`HQ-FW01` is the routed security boundary for GEIL. It exists so VLANs can communicate only through explicit firewall policy.
+
+### How this component interacts with the rest of the enterprise
+
+GEIL uses `GEILWAN` for firewall WAN transit and `GEILLAN` as a VLAN trunk. VLAN gateways live on `HQ-FW01`, not on Proxmox.
+
+### Internal workflow
+
+```mermaid
+flowchart LR
+    Input[Configuration Input]
+    Component[Component Being Configured]
+    Policy[Enterprise Policy]
+    Validation[Validation Evidence]
+
+    Input --> Component --> Policy --> Validation
+```
+
+The internal workflow is intentionally simple: define the value, apply it to the component, let the component enforce or provide the service, then capture evidence proving the expected behavior.
+
+!!! enterprise "Enterprise pattern"
+
+    Medium and large enterprises usually centralize inter-zone policy at firewalls or routed security gateways. GEIL starts with one firewall VM and can later evolve to redundant firewalls.
+
+!!! implementation "GEIL deployment note"
+
+    The GEIL deployment separates the firewall WAN transit `172.31.255.0/30` from enterprise networks under `172.20.0.0/16` to avoid mixing edge transit with internal VLAN addressing.
+
+### Real-world enterprise usage
+
+In real enterprises, this pattern is used to make infrastructure repeatable, auditable, and recoverable. The guide teaches the manual implementation first so future automation has a known-good target state.
+
+### Design decisions specific to GEIL
+
+| Decision | GEIL Position | Why it matters |
+|---|---|---|
+| Canonical values | Values come from the Environment Specification | Prevents conflicting hostnames, IP addresses, and service names |
+| Evidence-first deployment | Each major step produces validation evidence | Makes acceptance and troubleshooting objective |
+| Rollback before risk | Risky changes require checkpoints or exports | Protects the deployment from lockout or destructive mistakes |
+| Simple first design | Phase 1 favors clear single-site patterns | Builds a foundation that can scale later without ambiguity |
+
+### Alternatives considered
+
+| Alternative | Why GEIL does not use it first |
+|---|---|
+| Ad hoc configuration | Hard to audit, teach, or reproduce |
+| Full automation before learning | Hides the enterprise concepts from new operators |
+| Untracked local notes | Cannot be reviewed, validated, or reused |
+| Skipping evidence capture | Makes acceptance subjective |
+
+### Security considerations
+
+- Use approved administrative accounts only.
+- Do not store passwords, private keys, firewall exports, or sensitive screenshots in Git.
+- Apply least privilege and explicit allow rules.
+- Treat management paths as privileged infrastructure.
+
+### Performance considerations
+
+- Validate the component under the expected Phase 1 workload before adding dependent services.
+- Avoid broad troubleshooting changes that mask resource, latency, or policy issues.
+- Record baseline behavior so future performance regressions are visible.
+
+### Scalability considerations
+
+- Keep names, VLANs, and service boundaries aligned with the HLD/LLD.
+- Prefer patterns that can add a second node, second site, or automated deployment later.
+- Do not hard-code temporary bootstrap decisions into long-term architecture.
+
+### Operational considerations
+
+- Capture screenshots and command output during deployment.
+- Record known exceptions immediately.
+- Re-run validation after every rollback or remediation.
+- Update this guide when real deployment discovers a better operator note.
+
+### Explanation depth for important values
+
+| Value Type | What it is | Why GEIL uses it | What happens if it changes | Customizable? |
+|---|---|---|---|---|
+| Hostname | Stable component identity | Enables deterministic docs, DNS, logs, and evidence | Cross-references and monitoring become wrong | Only through Environment Specification |
+| IP address | Stable network endpoint | Supports firewall rules, DNS, DHCP, and tests | Connectivity and validation can fail | Only through HLD/LLD update |
+| VLAN or bridge name | Network boundary | Keeps traffic segmented and understandable | Traffic may land in the wrong zone | Only through network design update |
+| Snapshot/export name | Recovery checkpoint | Makes rollback auditable | Operators may restore the wrong state | Naming can expand but not lose meaning |
+
+### Frequently Asked Questions
+
+#### Why does GEIL explain concepts before commands?
+
+Because an engineer who understands the reason behind a command can troubleshoot safely when the environment differs from the happy path.
+
+#### Can these values be customized?
+
+Yes, but only by updating the Environment Specification and dependent HLD/LLD documents first. Implementation guides consume canonical values; they do not redefine them.
+
+#### Why is evidence collection mandatory?
+
+Evidence proves that implementation matched the design. It also gives future operators a baseline for troubleshooting and audits.
+
+#### Why include rollback in every guide?
+
+Enterprise infrastructure changes can fail even when the design is correct. Rollback guidance prevents panic-driven fixes and protects dependent services.
+
+### Key takeaways
+
+- GEIL guides are learning artifacts and deployment controls.
+- The operator should understand why the component exists before configuring it.
+- Validation and evidence are part of the implementation, not afterthoughts.
+- Canonical values must come from the Environment Specification and HLD/LLD baseline.
