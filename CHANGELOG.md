@@ -7,6 +7,14 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-PRJ-MASTER-001` GEIL Master Plan as the North Star for the Enterprise Infrastructure Engineering Library.
+- Added `GEIL-ARCH-CAP-001` Enterprise Capability Model.
+- Added `GEIL-ARCH-ERA-001` Enterprise Reference Architecture.
+- Added `GEIL-ARCH-TECH-001` Technology Selection Matrix.
+- Added `GEIL-ARCH-IMPL-001` Implementation Philosophy.
+- Added `GEIL-ARCH-PRINCIPLES-001` Architecture Principles.
+- Added strategic Mermaid diagrams for capability dependencies, enterprise layers, maturity evolution, and architecture principles.
+
 - Added `GEIL-PRJ-ERA-001` Epic and Release Architecture.
 - Added capability-first Epic, Release, and Document hierarchy for scaling GEIL beyond 1,000 pages.
 - Added capability dependency graph, release dependency graph, and document dependency graph.
@@ -16,6 +24,9 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Updated roadmap, backlog, document index, project charter, navigation, and release assignments for the Enterprise Architecture Vision release.
+- Established release `E01.R02` as the strategic enterprise architecture foundation before additional Microsoft implementation work.
 
 - Replaced the technology-first roadmap with a capability-first Epic/Release roadmap.
 - Updated backlog items with Epic and Release ownership.

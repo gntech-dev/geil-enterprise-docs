@@ -3,7 +3,7 @@ title: GEIL Project Charter
 document_id: GEIL-PRJ-CHARTER-001
 owner: Infrastructure Engineering
 status: Approved
-version: 2.0
+version: 3.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-CHARTER-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 2.0 |
+| Version | 3.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -27,7 +27,7 @@ classification: Internal Confidential
 
 The GEIL project creates private internal engineering documentation for designing, implementing, operating, securing, monitoring, troubleshooting, and scaling GNTECH enterprise infrastructure.
 
-GEIL is not a public blog, homelab notebook, or tutorial collection. GEIL is the authoritative implementation library for production-style Microsoft enterprise infrastructure.
+GEIL is not a public blog, homelab notebook, or tutorial collection. GEIL is the authoritative Enterprise Infrastructure Engineering Library for GNTECH. It is organized around permanent enterprise capabilities; technologies are replaceable implementations of those capabilities.
 
 ## Mission
 
@@ -56,6 +56,10 @@ Create implementation-ready documentation that allows GNTECH Infrastructure Engi
 | Endpoint protection | Microsoft Defender |
 | Operations automation | PowerShell |
 
+
+## Capability-first mandate
+
+Every future implementation document must support one or more enterprise capabilities from the [Enterprise Capability Model](../architecture/enterprise-capability-model.md). Technology-specific documents are allowed only when they implement, operate, secure, validate, or recover a defined capability.
 
 ## Documentation architecture model
 
@@ -118,8 +122,13 @@ A GEIL documentation change is complete only when:
 ## Related documents
 
 - [Environment Specification](environment-specification.md)
+- [GEIL Master Plan](master-plan.md)
 
 - [Documentation Standard](../governance/documentation-standard.md)
 - [Documentation Backlog](documentation-backlog.md)
 - [Documentation Roadmap](documentation-roadmap.md)
 - [Document Index](document-index.md)
+
+- [Enterprise Reference Architecture](../architecture/enterprise-reference-architecture.md)
+
+- [Architecture Principles](../architecture/architecture-principles.md)

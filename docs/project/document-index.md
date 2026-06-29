@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.0
+version: 3.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.0 |
+| Version | 3.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -40,6 +40,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
 | GEIL-PRJ-CHARTER-001 | GEIL Project Charter | Approved | `docs/project/project-charter.md` | Scope, roles, quality rules |
+| GEIL-PRJ-MASTER-001 | GEIL Master Plan | Approved | `docs/project/master-plan.md` | North Star vision, mission, long-term goals, roadmap, target architecture, and implementation philosophy |
 | GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
 | GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
 | GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
@@ -72,6 +73,11 @@ The document index is the authoritative register of GEIL documents, their owners
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
+| GEIL-ARCH-CAP-001 | Enterprise Capability Model | Approved | `docs/architecture/enterprise-capability-model.md` | Permanent enterprise capability model and dependencies |
+| GEIL-ARCH-ERA-001 | Enterprise Reference Architecture | Approved | `docs/architecture/enterprise-reference-architecture.md` | High-level multinational architecture layers and diagrams |
+| GEIL-ARCH-TECH-001 | Technology Selection Matrix | Approved | `docs/architecture/technology-selection-matrix.md` | Current technology choices, alternatives, pros, cons, and replacement strategy |
+| GEIL-ARCH-IMPL-001 | Implementation Philosophy | Approved | `docs/architecture/implementation-philosophy.md` | Evolution from 15-user SMB to multinational corporation |
+| GEIL-ARCH-PRINCIPLES-001 | Architecture Principles | Approved | `docs/architecture/architecture-principles.md` | Documentation First, Automation First, Zero Trust, scale, failure, and observability principles |
 | GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/architecture/reference-architecture.md` | Overall platform architecture |
 | GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/architecture/environment-tiers.md` | Lab, pilot, production, DR |
 | GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/architecture/identity-architecture.md` | Identity authorities and admin tiers |
@@ -128,6 +134,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E00 | E00.R01 - Documentation governance foundation | 13 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
+| E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E03 | E03.R01 - Core directory services | 6 |
 | E03 | E03.R02 - Trust and network authentication | 2 |

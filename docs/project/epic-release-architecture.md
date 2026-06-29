@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -89,6 +89,7 @@ flowchart TD
     R001[E00.R01 Governance foundation]
     R002[E00.R02 Publishing platform]
     R101[E01.R01 Reference architecture]
+    R102[E01.R02 Enterprise Architecture Vision]
     R201[E02.R01 Site foundation]
     R301[E03.R01 Directory services]
     R302[E03.R02 Trust and network authentication]
@@ -106,7 +107,7 @@ flowchart TD
     R601[E06.R01 Security assurance evidence]
     R702[E07.R02 Regional operations model]
 
-    R001 --> R002 --> R101 --> R201 --> R301
+    R001 --> R002 --> R101 --> R102 --> R201 --> R301
     R301 --> R302
     R301 --> R303
     R302 --> R304
@@ -221,6 +222,12 @@ The following register assigns every current published document to exactly one r
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/environment-tiers.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/identity-architecture.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/network-architecture.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `project/master-plan.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/enterprise-capability-model.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/enterprise-reference-architecture.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/technology-selection-matrix.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/implementation-philosophy.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/architecture-principles.md` |
 | E02.R01 - Site foundation and edge platform | E02 | `foundation/index.md` |
 | E02.R01 - Site foundation and edge platform | E02 | `foundation/phase-0-prerequisites.md` |
 | E02.R01 - Site foundation and edge platform | E02 | `foundation/proxmox-ve-baseline.md` |

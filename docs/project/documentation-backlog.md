@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.0
+version: 3.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.0 |
+| Version | 3.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -53,6 +53,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-002 | P0 | E03 | E03.R03 | Done | Add privileged access model | Tier 0/1/2 OU, group, workstation, sign-in, and emergency access controls documented | [Privileged Access Model](../security/privileged-access-model.md) |
 | DOC-011 | P0 | E00 | E00.R01 | Done | Add canonical GNTECH environment specification | Domains, forest, NetBIOS, server names, VLANs, IP addressing, DNS, certificate naming, share naming, repository, and documentation URLs documented | [Environment Specification](environment-specification.md) |
 | DOC-012 | P0 | E00 | E00.R01 | Done | Add capability-first epic/release architecture | Epics, releases, document assignments, capability dependency graph, and document dependency graph documented | [Epic and Release Architecture](epic-release-architecture.md) |
+| DOC-015 | P0 | E01 | E01.R02 | Done | Add enterprise architecture vision foundation | Master Plan, capability model, reference architecture, technology matrix, implementation philosophy, and architecture principles documented with diagrams and cross-references | [GEIL Master Plan](master-plan.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |

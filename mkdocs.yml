@@ -51,6 +51,7 @@ nav:
   - Project:
       - project/index.md
       - Project Charter: project/project-charter.md
+      - Master Plan: project/master-plan.md
       - Environment Specification: project/environment-specification.md
       - Document Index: project/document-index.md
       - Documentation Backlog: project/documentation-backlog.md
@@ -73,6 +74,11 @@ nav:
       - Privileged Access Model: security/privileged-access-model.md
   - Architecture:
       - architecture/index.md
+      - Architecture Principles: architecture/architecture-principles.md
+      - Implementation Philosophy: architecture/implementation-philosophy.md
+      - Technology Selection Matrix: architecture/technology-selection-matrix.md
+      - Enterprise Reference Architecture: architecture/enterprise-reference-architecture.md
+      - Enterprise Capability Model: architecture/enterprise-capability-model.md
       - Reference Architecture: architecture/reference-architecture.md
       - Environment Tiers: architecture/environment-tiers.md
       - Identity Architecture: architecture/identity-architecture.md
