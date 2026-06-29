@@ -3,7 +3,7 @@ title: Documentation Roadmap
 document_id: GEIL-PRJ-ROADMAP-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ROADMAP-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -48,7 +48,7 @@ The documentation roadmap sequences GEIL from a usable internal documentation fo
 | OPNsense WAN/LAN/VLAN/firewall baseline | Done | [OPNsense Edge Firewall](../foundation/opnsense-edge-firewall.md) |
 | Windows Server 2025 baseline | Done | [Windows Server 2025 Baseline](../microsoft-core/windows-server-2025-baseline.md) |
 | AD DS, DNS, DHCP, and GPO implementation | Done | Microsoft Core section |
-| Privileged access model | Open | Backlog `DOC-002` |
+| Privileged access model | Done | [Privileged Access Model](../security/privileged-access-model.md) |
 
 ## Phase 3: Security services
 
@@ -56,9 +56,11 @@ The documentation roadmap sequences GEIL from a usable internal documentation fo
 |---|---|---|
 | AD CS enterprise PKI | Done | [AD CS PKI](../microsoft-core/ad-cs-pki.md) |
 | NPS RADIUS and 802.1X | Done | [NPS RADIUS 802.1X](../microsoft-core/nps-radius-8021x.md) |
-| Tiered administration model | Open | Backlog `DOC-002` |
+| Tiered administration model | Done | [Privileged Access Model](../security/privileged-access-model.md) |
 | Defender baseline | Done | [Microsoft Defender](../cloud-endpoint/microsoft-defender.md) |
 | Certificate lifecycle runbook | Open | Backlog `DOC-003` |
+| Privileged access request and approval runbook | Open | Backlog `DOC-007` |
+| Emergency access account test and recovery runbook | Open | Backlog `DOC-008` |
 
 ## Phase 4: Microsoft cloud integration
 

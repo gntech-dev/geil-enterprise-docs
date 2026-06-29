@@ -66,6 +66,9 @@ nav:
       - ADRs:
           - governance/adrs/index.md
           - ADR-0001 MkDocs Material: governance/adrs/ADR-0001-mkdocs-material.md
+  - Security:
+      - security/index.md
+      - Privileged Access Model: security/privileged-access-model.md
   - Architecture:
       - architecture/index.md
       - Reference Architecture: architecture/reference-architecture.md

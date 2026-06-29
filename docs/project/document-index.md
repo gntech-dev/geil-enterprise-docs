@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -58,6 +58,13 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-GOV-DOC-001 | Documentation Standard | Draft | `docs/governance/documentation-standard.md` | Authoring requirements |
 | GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
 | GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
+
+## Security documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-SEC-INDEX | Security | Draft | `docs/security/index.md` | Cross-platform security architecture and controls |
+| GEIL-SEC-PAM-001 | Privileged Access Model | Draft | `docs/security/privileged-access-model.md` | Tier 0/1/2 model, admin accounts, groups, workstations, sign-in controls, emergency access |
 
 ## Architecture documents
 
