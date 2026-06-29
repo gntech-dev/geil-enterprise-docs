@@ -55,6 +55,7 @@ nav:
       - Document Index: project/document-index.md
       - Documentation Backlog: project/documentation-backlog.md
       - Documentation Roadmap: project/documentation-roadmap.md
+      - Epic and Release Architecture: project/epic-release-architecture.md
   - Platform:
       - platform/index.md
       - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md

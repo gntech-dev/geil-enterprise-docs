@@ -6,11 +6,21 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+
+- Added `GEIL-PRJ-ERA-001` Epic and Release Architecture.
+- Added capability-first Epic, Release, and Document hierarchy for scaling GEIL beyond 1,000 pages.
+- Added capability dependency graph, release dependency graph, and document dependency graph.
+- Added a release assignment register requiring every document to belong to exactly one Release.
 - Added `GEIL-PRJ-ENV-001` Environment Specification as the canonical source of truth for the real GNTECH implementation.
 - Added canonical GNTECH values for `gntech.me`, `corp.gntech.me`, `CORP`, `docs.gntechlabs.me`, `geil-enterprise-docs`, HQ infrastructure names, VLANs, IP ranges, DNS naming, certificate naming, share naming, and repository URLs.
 
 ### Changed
 
+
+- Replaced the technology-first roadmap with a capability-first Epic/Release roadmap.
+- Updated backlog items with Epic and Release ownership.
+- Updated the project charter and document index to require release assignment for every published document.
+- Updated MkDocs navigation to include the Epic and Release Architecture page.
 - Replaced generic known-value placeholders with canonical GNTECH values across existing implementation documentation.
 - Updated MkDocs site URL and repository metadata to use `docs.gntechlabs.me` and `gntech-dev/geil-enterprise-docs`.
 - Updated network examples from the previous generic `10.10.0.0/16` style ranges to the canonical `172.20.0.0/16` GNTECH baseline.

@@ -3,7 +3,7 @@ title: GEIL Project Charter
 document_id: GEIL-PRJ-CHARTER-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-CHARTER-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -56,6 +56,25 @@ Create implementation-ready documentation that allows GNTECH Infrastructure Engi
 | Endpoint protection | Microsoft Defender |
 | Operations automation | PowerShell |
 
+
+## Documentation architecture model
+
+GEIL is organized around enterprise capabilities rather than individual technologies.
+
+The canonical hierarchy is:
+
+```text
+Epic -> Release -> Document
+```
+
+Rules:
+
+1. Every document belongs to exactly one Release.
+2. Every Release belongs to exactly one Epic.
+3. Technology-specific documents remain valid, but their ownership is defined by the capability they enable.
+4. The release assignment register in [Epic and Release Architecture](epic-release-architecture.md) is authoritative.
+5. The documentation structure must support more than 1,000 pages without requiring top-level reorganization.
+
 ## Non-negotiable documentation rules
 
 1. Documentation first, infrastructure second.
@@ -74,6 +93,7 @@ A GEIL documentation change is complete only when:
 
 - The document is linked from `mkdocs.yml`.
 - The document is listed in `docs/project/document-index.md`.
+- The document is assigned to exactly one Release in `docs/project/epic-release-architecture.md`.
 - The documentation backlog is updated.
 - The documentation roadmap is updated if the work changes phase progress.
 - `CHANGELOG.md` records the change.

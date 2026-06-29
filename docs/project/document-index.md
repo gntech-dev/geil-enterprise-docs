@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.1
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.1 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -43,7 +43,8 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
 | GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
 | GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
-| GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Phase sequencing |
+| GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Capability-first Epic/Release roadmap |
+| GEIL-PRJ-ERA-001 | Epic and Release Architecture | Approved | `docs/project/epic-release-architecture.md` | Epics, Releases, document assignments, dependency graphs, and scale model |
 
 ## Platform documents
 
@@ -117,9 +118,27 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-OPS-SCALE-001 | Scaling Model | Draft | `docs/operations/scaling-model.md` | Growth triggers |
 | GEIL-OPS-SEC-001 | Security Operations | Draft | `docs/operations/security-operations.md` | Security checks and response |
 
+
+## Release assignment summary
+
+The authoritative document-to-release mapping is maintained in [Epic and Release Architecture](epic-release-architecture.md). Every published document must appear exactly once in that register.
+
+| Epic | Release | Current Document Count |
+|---|---|---:|
+| E00 | E00.R01 - Documentation governance foundation | 13 |
+| E00 | E00.R02 - Documentation delivery platform | 2 |
+| E01 | E01.R01 - Enterprise reference architecture | 5 |
+| E02 | E02.R01 - Site foundation and edge platform | 5 |
+| E03 | E03.R01 - Core directory services | 6 |
+| E03 | E03.R02 - Trust and network authentication | 2 |
+| E03 | E03.R03 - Privileged access control plane | 2 |
+| E04 | E04.R01 - Cloud identity and endpoint management | 6 |
+| E05 | E05.R01 - Operations readiness | 7 |
+
 ## Index maintenance procedure
 
 1. Add a row for every new production document.
 2. Update status when a document moves from Draft to Approved or Retired.
 3. Keep the path exact and relative to the repository root.
 4. Keep related backlog and roadmap entries synchronized.
+5. Keep the release assignment register synchronized so each document belongs to exactly one Release.

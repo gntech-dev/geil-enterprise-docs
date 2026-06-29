@@ -3,7 +3,7 @@ title: Documentation Roadmap
 document_id: GEIL-PRJ-ROADMAP-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.1
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,77 +18,67 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ROADMAP-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.1 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
 ## Purpose
 
-The documentation roadmap sequences GEIL from a usable internal documentation foundation to a complete enterprise operations library.
+The roadmap organizes GEIL by enterprise capability Epics, Releases, and Documents. It intentionally avoids technology-first sequencing so the library can scale beyond 1,000 pages without restructuring.
 
-## Phase 1: Documentation platform and baseline architecture
+## Roadmap model
 
-| Deliverable | Status | Evidence |
-|---|---|---|
-| MkDocs Material repository | Done | `mkdocs.yml`, `requirements.txt`, strict build validation |
-| Project charter | Done | [GEIL Project Charter](project-charter.md) |
-| Canonical GNTECH environment specification | Done | [Environment Specification](environment-specification.md) |
-| Document standard | Done | [Documentation Standard](../governance/documentation-standard.md) |
-| Naming standard | Done | [Naming and Addressing Standard](../governance/naming-addressing-standard.md) |
-| Document index | Done | [Document Index](document-index.md) |
-| Documentation backlog | Done | [Documentation Backlog](documentation-backlog.md) |
-| Reference network and identity architecture | Done | Architecture section |
-| Cloudflare Pages deployment procedure | Done | [Cloudflare Pages Deployment Runbook](../platform/cloudflare-pages-deployment.md) |
+```mermaid
+flowchart LR
+    Epic --> Release --> Document
+    Document --> Validation
+    Document --> Operations
+    Document --> CrossReference[Cross References]
+```
 
-## Phase 2: Core on-premises foundation
+Rules:
 
-| Deliverable | Status | Evidence |
-|---|---|---|
-| Proxmox VE hardened baseline | Done | [Proxmox VE Baseline](../foundation/proxmox-ve-baseline.md) |
-| OPNsense WAN/LAN/VLAN/firewall baseline | Done | [OPNsense Edge Firewall](../foundation/opnsense-edge-firewall.md) |
-| Windows Server 2025 baseline | Done | [Windows Server 2025 Baseline](../microsoft-core/windows-server-2025-baseline.md) |
-| AD DS, DNS, DHCP, and GPO implementation | Done | Microsoft Core section |
-| Privileged access model | Done | [Privileged Access Model](../security/privileged-access-model.md) |
+1. Every Release belongs to exactly one Epic.
+2. Every Document belongs to exactly one Release.
+3. Dependencies are shown in [Epic and Release Architecture](epic-release-architecture.md).
+4. New documents are not considered published until the release assignment register is updated.
 
-## Phase 3: Security services
+## Capability-first roadmap
 
-| Deliverable | Status | Evidence |
-|---|---|---|
-| AD CS enterprise PKI | Done | [AD CS PKI](../microsoft-core/ad-cs-pki.md) |
-| NPS RADIUS and 802.1X | Done | [NPS RADIUS 802.1X](../microsoft-core/nps-radius-8021x.md) |
-| Tiered administration model | Done | [Privileged Access Model](../security/privileged-access-model.md) |
-| Defender baseline | Done | [Microsoft Defender](../cloud-endpoint/microsoft-defender.md) |
-| Certificate lifecycle runbook | Open | Backlog `DOC-003` |
-| Privileged access request and approval runbook | Open | Backlog `DOC-007` |
-| Emergency access account test and recovery runbook | Open | Backlog `DOC-008` |
+| Epic | Release | Capability | Status | Evidence / Primary Documents |
+|---|---|---|---|---|
+| E00 Documentation Governance and Publishing | E00.R01 | Governance foundation | Done | [Project Charter](project-charter.md), [Environment Specification](environment-specification.md), [Document Index](document-index.md), [Documentation Backlog](documentation-backlog.md), [Epic and Release Architecture](epic-release-architecture.md) |
+| E00 Documentation Governance and Publishing | E00.R02 | Publishing platform | Done | [Cloudflare Pages Deployment Runbook](../platform/cloudflare-pages-deployment.md) |
+| E01 Enterprise Architecture | E01.R01 | Reference architecture | Done | [Reference Architecture](../architecture/reference-architecture.md), [Identity Architecture](../architecture/identity-architecture.md), [Network Architecture](../architecture/network-architecture.md) |
+| E02 Site Foundation and Connectivity | E02.R01 | HQ site foundation | Done | [Phase 0 Prerequisites](../foundation/phase-0-prerequisites.md), [Proxmox VE Baseline](../foundation/proxmox-ve-baseline.md), [OPNsense Edge Firewall](../foundation/opnsense-edge-firewall.md) |
+| E03 Identity, Trust, and Access | E03.R01 | Core directory services | Done | [Windows Server 2025 Baseline](../microsoft-core/windows-server-2025-baseline.md), [Active Directory Implementation](../microsoft-core/active-directory-implementation.md), [DNS and DHCP Implementation](../microsoft-core/dns-dhcp-implementation.md), [Group Policy Baseline](../microsoft-core/group-policy-baseline.md) |
+| E03 Identity, Trust, and Access | E03.R02 | Trust and network authentication | Done | [AD CS PKI](../microsoft-core/ad-cs-pki.md), [NPS RADIUS 802.1X](../microsoft-core/nps-radius-8021x.md) |
+| E03 Identity, Trust, and Access | E03.R03 | Privileged access control plane | Done | [Privileged Access Model](../security/privileged-access-model.md) |
+| E04 Cloud and Endpoint Management | E04.R01 | Cloud identity and endpoint management | Done | [Microsoft 365 Tenant Foundation](../cloud-endpoint/microsoft-365-tenant-foundation.md), [Entra ID Hybrid Identity](../cloud-endpoint/entra-id-hybrid-identity.md), [Intune Windows 11 Enterprise](../cloud-endpoint/intune-windows11-enterprise.md), [Windows Hello for Business](../cloud-endpoint/windows-hello-for-business.md), [Microsoft Defender](../cloud-endpoint/microsoft-defender.md) |
+| E05 Operations and Resilience | E05.R01 | Operations readiness | Done | [Monitoring and Alerting](../operations/monitoring-alerting.md), [Backup and Recovery](../operations/backup-recovery.md), [Troubleshooting](../operations/troubleshooting.md), [Scaling Model](../operations/scaling-model.md), [Security Operations](../operations/security-operations.md) |
+| E03 Identity, Trust, and Access | E03.R04 | Certificate lifecycle management | Open | DOC-003 |
+| E04 Cloud and Endpoint Management | E04.R02 | Conditional Access and device compliance | Open | DOC-004 |
+| E03 Identity, Trust, and Access | E03.R05 | Privileged access operations | Open | DOC-007, DOC-008, DOC-009 |
+| E03 Identity, Trust, and Access | E03.R06 | Service account lifecycle | Open | DOC-010 |
+| E00 Documentation Governance and Publishing | E00.R03 | Repository security and branch protection | Open | Future repository security runbook |
+| E00 Documentation Governance and Publishing | E00.R04 | Documentation quality automation | Open | Templates, glossary, CI quality gates |
+| E07 Scale and Expansion | E07.R01 | Multinational data residency | Open | DOC-005 |
+| E05 Operations and Resilience | E05.R02 | Monitoring deep dives | Open | AD, certificate, and Microsoft 365 monitoring runbooks |
+| E06 Security Assurance and Compliance | E06.R01 | Security assurance evidence | Open | Control mapping and exception governance |
+| E07 Scale and Expansion | E07.R02 | Regional operations model | Open | Multi-site delegated operations |
 
-## Phase 4: Microsoft cloud integration
+## Release exit criteria
 
-| Deliverable | Status | Evidence |
-|---|---|---|
-| Microsoft 365 tenant foundation | Done | [Microsoft 365 Tenant Foundation](../cloud-endpoint/microsoft-365-tenant-foundation.md) |
-| Entra ID hybrid identity | Done | [Entra ID Hybrid Identity](../cloud-endpoint/entra-id-hybrid-identity.md) |
-| Intune Windows 11 Enterprise enrollment | Done | [Intune Windows 11 Enterprise](../cloud-endpoint/intune-windows11-enterprise.md) |
-| Windows Hello for Business | Done | [Windows Hello for Business](../cloud-endpoint/windows-hello-for-business.md) |
-| Conditional Access baseline | Open | Backlog `DOC-004` |
+A release is Done only when:
 
-## Phase 5: Operations and scale
+1. Every required document is linked in navigation.
+2. Every document appears in the document index.
+3. Every document appears exactly once in the release assignment register.
+4. Required diagrams and dependency links are present.
+5. Backlog status is updated.
+6. `mkdocs build --strict` succeeds.
 
-| Deliverable | Status | Evidence |
-|---|---|---|
-| Monitoring and alerting | Done | [Monitoring and Alerting](../operations/monitoring-alerting.md) |
-| Backup and recovery | Done | [Backup and Recovery](../operations/backup-recovery.md) |
-| Troubleshooting runbooks | In Progress | [Troubleshooting](../operations/troubleshooting.md) plus future service runbooks |
-| Multisite scaling model | Done | [Scaling Model](../operations/scaling-model.md) |
-| Multinational data residency | Open | Backlog `DOC-005` |
+## Next recommended release
 
-## Roadmap governance
-
-Each phase exits only when:
-
-1. Published documents are linked in navigation.
-2. Validation evidence exists.
-3. Backlog rows are updated.
-4. Required ADRs are created or explicitly deferred.
-5. `mkdocs build --strict` succeeds.
+The next recommended release is **E03.R04 Certificate lifecycle management**, delivered by backlog item `DOC-003`.

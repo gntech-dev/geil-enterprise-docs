@@ -25,11 +25,11 @@ classification: Internal Confidential
 
 ## Purpose
 
-This legacy governance roadmap page is retained for navigation continuity. The authoritative documentation roadmap is now maintained in the Project section.
+This legacy governance roadmap page is retained for navigation continuity. The authoritative capability-first Epic/Release roadmap is maintained in the Project section.
 
 ## Authoritative roadmap
 
-Use [Documentation Roadmap](../project/documentation-roadmap.md) for phase sequencing, current state, and evidence links.
+Use [Documentation Roadmap](../project/documentation-roadmap.md) for capability sequencing, current state, and evidence links. Use [Epic and Release Architecture](../project/epic-release-architecture.md) for the authoritative Epic/Release/Document model.
 
 ## Roadmap governance
 
