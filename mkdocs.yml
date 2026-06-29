@@ -67,6 +67,7 @@ nav:
   - Governance:
       - governance/index.md
       - Documentation Standard: governance/documentation-standard.md
+      - Visual Documentation Standard: governance/visual-documentation-standard.md
       - Naming and Addressing Standard: governance/naming-addressing-standard.md
       - Roadmap: governance/roadmap.md
       - Backlog: governance/backlog.md

@@ -96,3 +96,10 @@ If a published document introduces incorrect production guidance:
 2. Open a corrective PR.
 3. Add an ADR if the error came from an architectural ambiguity.
 4. Notify Infrastructure Engineering and Service Desk if runbooks were affected.
+
+
+## Visual documentation
+
+Mermaid is approved for simple diagrams, workflows, and dependency graphs. Complex architecture diagrams must follow the [Visual Documentation Standard](visual-documentation-standard.md) and use dedicated visual assets under `docs/assets/diagrams/` when Mermaid output would be too wide, crowded, or unreadable at normal MkDocs page width.
+
+Complex diagram pages must include a short explanation, the image asset, a simplified Mermaid diagram where useful, and an Adaptation Note when canonical GNTECH values are shown.

@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 5.0
+version: 6.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 5.0 |
+| Version | 6.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -56,6 +56,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-015 | P0 | E01 | E01.R02 | Done | Add enterprise architecture vision foundation | Master Plan, capability model, reference architecture, technology matrix, implementation philosophy, and architecture principles documented with diagrams and cross-references | [GEIL Master Plan](master-plan.md) |
 | DOC-016 | P0 | E02 | E02.R02 | Done | Add Enterprise Lab Blueprint HLD | Physical, logical, site, datacenter, AD site, forest, domain, DNS, DHCP, PKI, WiFi, identity, storage, backup, monitoring, security zone, VLAN, IP addressing, naming, regional expansion, DR, and cloud integration architecture documented | [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md) |
 | DOC-017 | P0 | E02 | E02.R03 | Done | Add HQ Foundation LLD and Phase 1 build plan | Proxmox bridge/VLAN design, OPNsense VM/interfaces/gateways/rules, HQ VM specifications, routing/DHCP relay decisions, management access path, rollback checkpoints, deployment sequence, and validation checklist documented | [Phase 1 Build Plan](../platform/phase-1-build-plan.md) |
+| DOC-018 | P0 | E00 | E00.R01 | Done | Add visual documentation standard | Mermaid usage policy, complex diagram asset path, 16:9 dark visual style, source/export requirements, page requirements, and existing replacement candidates documented | [Visual Documentation Standard](../governance/visual-documentation-standard.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |
@@ -65,6 +66,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-006 | P2 | E00 | E00.R03 | Open | Add Cloudflare Access policy runbook | Identity provider, application policy, emergency bypass, logging, and rollback documented | Target: `docs/platform/cloudflare-access-runbook.md` |
 | DOC-013 | P2 | E00 | E00.R03 | Open | Add GitHub repository security baseline | Branch protection, CODEOWNERS, secret scanning, required reviews, and CI checks documented | Target: `docs/platform/github-repository-security.md` |
 | DOC-014 | P2 | E00 | E00.R04 | Open | Add glossary and authoring templates | Glossary, acronyms, document templates, runbook template, and ADR template published | Target: `docs/reference/glossary.md` and `templates/` |
+| DOC-019 | P1 | E00 | E00.R04 | Open | Replace high-complexity Mermaid diagrams with dedicated visual assets | P0/P1 replacement candidates from Visual Documentation Standard have source files and exported PNG/WebP/SVG assets under `docs/assets/diagrams/` | Target: complex diagram asset migration |
 | DOC-005 | P2 | E07 | E07.R01 | Open | Add multinational data residency model | Region ownership, tenant strategy, naming, compliance assumptions, and ADR triggers documented | Target: `docs/architecture/multinational-data-residency.md` |
 
 ## Next highest-priority item

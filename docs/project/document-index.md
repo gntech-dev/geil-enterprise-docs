@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 5.0
+version: 6.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 5.0 |
+| Version | 6.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -59,6 +59,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
 | GEIL-GOV-DOC-001 | Documentation Standard | Draft | `docs/governance/documentation-standard.md` | Authoring requirements |
+| GEIL-GOV-VISUAL-001 | Visual Documentation Standard | Approved | `docs/governance/visual-documentation-standard.md` | Mermaid usage rules, complex diagram asset standards, and replacement candidates |
 | GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
 | GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
 
@@ -135,7 +136,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 
 | Epic | Release | Current Document Count |
 |---|---|---:|
-| E00 | E00.R01 - Documentation governance foundation | 13 |
+| E00 | E00.R01 - Documentation governance foundation | 14 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |

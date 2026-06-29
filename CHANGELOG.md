@@ -7,6 +7,10 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-GOV-VISUAL-001` Visual Documentation Standard.
+- Added `docs/assets/diagrams/` as the canonical storage path for generated diagram assets.
+- Identified existing high-complexity Mermaid diagrams that should be replaced with dedicated 16:9 visual assets.
+
 - Added `GEIL-PLAT-PVE-HQ-LLD-001` Proxmox HQ Foundation LLD.
 - Added `GEIL-PLAT-OPN-HQ-LLD-001` OPNsense HQ Foundation LLD.
 - Added `GEIL-PLAT-PH1-BUILD-001` Phase 1 Build Plan.
@@ -36,6 +40,9 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Updated the Documentation Standard to limit Mermaid to simple diagrams, workflows, and dependency graphs.
+- Updated backlog, roadmap, document index, navigation, and release assignments for the visual documentation standard.
 
 - Added release `E02.R03 HQ Foundation Low-Level Design and Build Plan` to roadmap, backlog, document index, and release assignment register.
 - Updated MASTER_PLAN with Phase 1 LLD reference requirements.

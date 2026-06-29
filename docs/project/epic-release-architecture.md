@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 4.0
+version: 5.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 4.0 |
+| Version | 5.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -231,6 +231,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `project/epic-release-architecture.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/documentation-standard.md` |
+| E00.R01 - Documentation governance foundation | E00 | `governance/visual-documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/backlog.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/index.md` |
@@ -296,7 +297,7 @@ The following register assigns every current published document to exactly one r
 | E03.R05 | E03 | Privileged access operations | DOC-007, DOC-008, DOC-009 |
 | E03.R06 | E03 | Service account lifecycle | DOC-010 |
 | E00.R03 | E00 | Repository security and branch protection | Future repository security runbook |
-| E00.R04 | E00 | Documentation quality automation | Templates, glossary, linting, CI checks |
+| E00.R04 | E00 | Documentation quality and visual asset migration | DOC-014, DOC-019 |
 | E07.R01 | E07 | Multinational data residency | DOC-005 |
 | E05.R02 | E05 | Monitoring and alerting deep dives | AD, certificate, Microsoft 365 monitoring runbooks |
 | E06.R01 | E06 | Security assurance evidence | Control mapping, exception register, audit evidence |
