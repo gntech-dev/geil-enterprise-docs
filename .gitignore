@@ -1,0 +1,20 @@
+# Python / MkDocs
+.venv/
+site/
+__pycache__/
+*.py[cod]
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Secrets and local state
+.env
+.env.*
+*.pfx
+*.p12
+*.key
+*.pem
+*.rdp
+*.ovpn
