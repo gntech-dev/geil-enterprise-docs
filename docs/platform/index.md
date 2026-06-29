@@ -65,3 +65,10 @@ Release `E02.R04` provides implementation-ready runbooks for deploying the initi
 
 - [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md)
 - [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)
+
+
+## HQ Foundation Acceptance
+
+Release `E02.R05` defines the formal evidence and sign-off gate before Microsoft identity services begin:
+
+- [Phase 1 Acceptance Package](phase-1-acceptance-package.md)

@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 6.0
+version: 7.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 6.0 |
+| Version | 7.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -94,6 +94,7 @@ flowchart TD
     R202[E02.R02 Enterprise Lab Blueprint]
     R203[E02.R03 HQ Foundation LLD and Build Plan]
     R204[E02.R04 HQ Foundation Implementation]
+    R205[E02.R05 HQ Foundation Acceptance]
     R301[E03.R01 Directory services]
     R302[E03.R02 Trust and network authentication]
     R303[E03.R03 Privileged access]
@@ -110,7 +111,7 @@ flowchart TD
     R601[E06.R01 Security assurance evidence]
     R702[E07.R02 Regional operations model]
 
-    R001 --> R002 --> R101 --> R102 --> R201 --> R202 --> R203 --> R204 --> R301
+    R001 --> R002 --> R101 --> R102 --> R201 --> R202 --> R203 --> R204 --> R205 --> R301
     R301 --> R302
     R301 --> R303
     R302 --> R304
@@ -153,6 +154,7 @@ flowchart TD
     VAL[Phase 1 Validation Plan]
     PVEIMPL[Proxmox HQ Foundation Implementation]
     OPNIMPL[OPNsense HQ Foundation Implementation]
+    ACCEPT[Phase 1 Acceptance Package]
     NAME[Naming and Addressing Standard]
     PVE[Proxmox VE Baseline]
     FW[OPNsense Edge Firewall]
@@ -186,6 +188,8 @@ flowchart TD
     OPNLLD --> OPNIMPL
     VAL --> PVEIMPL
     VAL --> OPNIMPL
+    PVEIMPL --> ACCEPT
+    OPNIMPL --> ACCEPT
     ENV --> CHARTER
     CHARTER --> STD
     STD --> INDEX
@@ -271,6 +275,7 @@ The following register assigns every current published document to exactly one r
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-validation-plan.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/proxmox-hq-foundation-implementation.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/opnsense-hq-foundation-implementation.md` |
+| E02.R05 - HQ Foundation Evidence and Acceptance Package | E02 | `platform/phase-1-acceptance-package.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/index.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-server-2025-baseline.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-implementation.md` |
@@ -302,6 +307,7 @@ The following register assigns every current published document to exactly one r
 | E02.R02 | E02 | Enterprise Lab Blueprint | Done |
 | E02.R03 | E02 | HQ Foundation Low-Level Design and Build Plan | Done |
 | E02.R04 | E02 | HQ Foundation Implementation Runbook | Done |
+| E02.R05 | E02 | HQ Foundation Evidence and Acceptance Package | Done |
 | E03.R04 | E03 | Certificate lifecycle management | DOC-003 |
 | E04.R02 | E04 | Conditional Access and device compliance | DOC-004 |
 | E03.R05 | E03 | Privileged access operations | DOC-007, DOC-008, DOC-009 |

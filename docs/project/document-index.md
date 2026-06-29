@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 7.0
+version: 8.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 7.0 |
+| Version | 8.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -144,6 +144,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
 | E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 4 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 2 |
+| E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 6 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
 | E03 | E03.R03 - Privileged access control plane | 2 |

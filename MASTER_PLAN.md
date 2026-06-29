@@ -225,3 +225,12 @@ Authoritative E02.R04 documents:
 
 - [Proxmox HQ Foundation Implementation Runbook](docs/platform/proxmox-hq-foundation-implementation.md)
 - [OPNsense HQ Foundation Implementation Runbook](docs/platform/opnsense-hq-foundation-implementation.md)
+
+
+## Phase 1 Acceptance Gate
+
+Release `E02.R05 HQ Foundation Evidence and Acceptance Package` defines the formal evidence gate before Microsoft identity services begin. It requires Proxmox, OPNsense, VLAN, firewall, routing, DNS forwarding, DHCP relay readiness, snapshot, rollback, exception, and sign-off evidence for the HQ foundation.
+
+Authoritative E02.R05 document:
+
+- [Phase 1 Acceptance Package](docs/platform/phase-1-acceptance-package.md)

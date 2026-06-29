@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 7.0
+version: 8.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 7.0 |
+| Version | 8.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -58,6 +58,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-017 | P0 | E02 | E02.R03 | Done | Add HQ Foundation LLD and Phase 1 build plan | Proxmox bridge/VLAN design, OPNsense VM/interfaces/gateways/rules, HQ VM specifications, routing/DHCP relay decisions, management access path, rollback checkpoints, deployment sequence, and validation checklist documented | [Phase 1 Build Plan](../platform/phase-1-build-plan.md) |
 | DOC-018 | P0 | E00 | E00.R01 | Done | Add visual documentation standard | Mermaid usage policy, complex diagram asset path, 16:9 dark visual style, source/export requirements, page requirements, and existing replacement candidates documented | [Visual Documentation Standard](../governance/visual-documentation-standard.md) |
 | DOC-020 | P0 | E02 | E02.R04 | Done | Add HQ Foundation Implementation Runbooks | Proxmox and OPNsense implementation runbooks include prerequisites, required access/files, exact configuration steps, bridge/VLAN/gateway/firewall/DNS/DHCP relay decisions, validation commands, rollback, troubleshooting, and evidence capture | [Proxmox HQ Foundation Implementation](../platform/proxmox-hq-foundation-implementation.md) |
+| DOC-021 | P0 | E02 | E02.R05 | Done | Add HQ Foundation Evidence and Acceptance Package | Evidence rules, screenshot requirements, command outputs, Proxmox/OPNsense/VLAN/firewall/routing/DNS/DHCP/snapshot/rollback evidence, exceptions register, acceptance criteria, sign-off, and remediation workflow documented | [Phase 1 Acceptance Package](../platform/phase-1-acceptance-package.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |
@@ -72,7 +73,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 
 ## Next highest-priority item
 
-The next highest-priority open item is `DOC-003`, delivered by release **E03.R04 Certificate lifecycle management**, after confirming the E02.R04 HQ foundation implementation evidence is complete.
+The next highest-priority open item is `DOC-003`, delivered by release **E03.R04 Certificate lifecycle management**, after confirming the E02.R05 HQ foundation acceptance package is approved or approved with accepted exceptions.
 
 ## Backlog maintenance procedure
 

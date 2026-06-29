@@ -66,6 +66,7 @@ nav:
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
       - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
       - OPNsense HQ Foundation Implementation: platform/opnsense-hq-foundation-implementation.md
+      - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
   - Governance:
       - governance/index.md
       - Documentation Standard: governance/documentation-standard.md

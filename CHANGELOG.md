@@ -7,6 +7,8 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-PLAT-PH1-ACCEPT-001` Phase 1 Acceptance Package.
+
 - Added `GEIL-PLAT-PVE-HQ-IMPL-001` Proxmox HQ Foundation Implementation Runbook.
 - Added `GEIL-PLAT-OPN-HQ-IMPL-001` OPNsense HQ Foundation Implementation Runbook.
 
@@ -43,6 +45,9 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Added release `E02.R05 HQ Foundation Evidence and Acceptance Package` to roadmap, backlog, document index, and release assignment register.
+- Updated MASTER_PLAN and MkDocs navigation with the Phase 1 acceptance gate before Microsoft identity services.
 
 - Added release `E02.R04 HQ Foundation Implementation Runbook` to roadmap, backlog, document index, and release assignment register.
 - Updated MASTER_PLAN and MkDocs navigation with HQ foundation implementation runbooks.
