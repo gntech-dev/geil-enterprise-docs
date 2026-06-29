@@ -3,7 +3,7 @@ title: Phase 1 Acceptance Package
 document_id: GEIL-PLAT-PH1-ACCEPT-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PH1-ACCEPT-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -347,3 +347,36 @@ Next Authorized Release: E03.R04 Certificate Lifecycle Management or approved su
 - [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md)
 - [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md)
 - [Environment Specification](../project/environment-specification.md)
+
+
+## Operator evidence capture checklist
+
+### Exact objective
+
+Create a complete acceptance record that a future engineer can use to prove E02.R04 was implemented correctly without relying on memory or informal notes.
+
+### Evidence required for discovered deployment conditions
+
+| Evidence ID | Requirement | Expected Evidence |
+|---|---|---|
+| OP-001 | Existing Proxmox network preserved | Screenshot or text export showing `eno1`, `VSW4001`, `PROD`, and `TEST` unchanged |
+| OP-002 | GEILWAN configured | `ip -brief addr show GEILWAN` showing `172.31.255.1/30` |
+| OP-003 | HQ-FW01 WAN configured | OPNsense screenshot showing WAN `172.31.255.2/30` |
+| OP-004 | GEILLAN GUI visibility | Proxmox Network screenshot showing `GEILLAN` from `/etc/network/interfaces` |
+| OP-005 | GEIL does not use 10.10.x.x | VM config output showing GEIL VMs do not attach to `PROD` or `TEST` |
+| OP-006 | Documentation build hygiene | `git ls-files site | wc -l` returns `0` |
+
+### Acceptance operator notes
+
+!!! warning "Operator Notes"
+
+    Do not accept E02.R05 if the GEIL deployment modified `eno1`, `VSW4001`, `PROD`, or `TEST` without an approved change record. Do not accept E02.R05 if GEIL workloads use `10.10.x.x` networks. GEIL enterprise addressing must remain `172.20.0.0/16`, with the local firewall WAN transit using `172.31.255.0/30`.
+
+### Remediation examples
+
+| Failed Evidence | Remediation |
+|---|---|
+| `GEILWAN` not visible in GUI | Move bridge definition into `/etc/network/interfaces`; run `ifreload -a`; recapture screenshot |
+| `HQ-FW01` WAN not `172.31.255.2/30` | Correct OPNsense WAN settings; validate against `GEILWAN` `172.31.255.1/30` |
+| GEIL VM attached to `PROD` or `TEST` | Stop VM, change NIC bridge to `GEILLAN`, set VLAN tag, recapture `qm config` |
+| `site/` tracked by Git | Remove from Git tracking and confirm `.gitignore` excludes `site/` |

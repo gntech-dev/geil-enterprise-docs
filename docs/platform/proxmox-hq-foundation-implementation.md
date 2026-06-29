@@ -3,7 +3,7 @@ title: Proxmox HQ Foundation Implementation Runbook
 document_id: GEIL-PLAT-PVE-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PVE-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -431,3 +431,332 @@ This runbook is complete when:
 4. VM shells exist with correct names, sizing, and VLAN tags.
 5. Required checkpoints exist.
 6. Evidence is captured and linked to the implementation record.
+
+
+## Deployment operator checklist
+
+### Exact objective
+
+Deploy the GEIL-safe Proxmox foundation without disrupting the existing Proxmox public/access configuration or the existing non-GEIL bridges. The operator must add GEIL-specific bridge definitions and VM shells while preserving current production access.
+
+### Before you begin
+
+1. Confirm you have console or out-of-band access to `PVE-HQ01`.
+2. Confirm you can recover `/etc/network/interfaces` from local console if SSH or GUI access breaks.
+3. Confirm the current host uses `eno1` directly and that existing `PROD` and `TEST` bridges exist for non-GEIL workloads.
+4. Confirm GEIL uses `172.20.0.0/16` internally and `172.31.255.0/30` for the local Proxmox-to-OPNsense WAN transit.
+5. Do not proceed if you cannot identify `eno1`, `VSW4001`, `PROD`, and `TEST` in the current host configuration.
+
+!!! warning "Operator Notes"
+
+    Real deployment discovery showed that the existing Proxmox host uses `eno1` directly, not `vmbr0`. Existing bridges `PROD` and `TEST` use `10.10.x.x` addressing and must not be touched. GEIL must use `172.20.0.0/16` for enterprise networks. The GEIL WAN transit network is `172.31.255.0/30`, with `GEILWAN` using `172.31.255.1/30` and `HQ-FW01` WAN using `172.31.255.2/30`. Do not modify `eno1`, `VSW4001`, `PROD`, or `TEST` during GEIL setup.
+
+### Assumptions
+
+| Item | Assumption |
+|---|---|
+| Existing host access | Existing public/management access is already working and must not be broken. |
+| Existing bridges | `PROD` and `TEST` are non-GEIL bridges and remain unchanged. |
+| Existing direct NIC | `eno1` is already in use by the host and remains unchanged. |
+| GEIL WAN transit | `GEILWAN` is a Proxmox bridge with `172.31.255.1/30`. |
+| Firewall WAN | `HQ-FW01` WAN uses `172.31.255.2/30`. |
+| GEIL LAN | `GEILLAN` is VLAN-aware and carries GEIL VLANs 10,20,30,40,50,60,70,80,90,100. |
+
+### Expected starting state
+
+- `PVE-HQ01` is reachable by the existing access path.
+- `/etc/network/interfaces` contains existing host networking.
+- `eno1`, `VSW4001`, `PROD`, and `TEST` may already exist and are not GEIL objects.
+- `GEILWAN` and `GEILLAN` may not exist yet.
+- `HQ-FW01` may not exist yet.
+
+### Expected ending state
+
+- Existing access through `eno1`, `VSW4001`, `PROD`, and `TEST` still works.
+- `GEILWAN` exists and is visible in the Proxmox GUI.
+- `GEILLAN` exists, is VLAN-aware, and is visible in the Proxmox GUI.
+- `HQ-FW01` has WAN attached to `GEILWAN` and LAN trunk attached to `GEILLAN`.
+- GEIL VM NICs use `GEILLAN` with explicit VLAN tags.
+- `site/` remains untracked in Git after documentation validation.
+
+## Copy/Paste Implementation Blocks
+
+### Step 1: Verify current network configuration
+
+Run from `PVE-HQ01` console or SSH before changing anything:
+
+```bash
+hostname
+ip -brief addr
+ip route
+bridge link
+bridge vlan show
+cp /etc/network/interfaces /root/interfaces.pre-geil.$(date +%Y%m%d-%H%M%S)
+```
+
+Expected result:
+
+- Hostname returns `PVE-HQ01`.
+- Existing public/access configuration remains visible.
+- Existing `PROD` and `TEST` bridges, if present, are identified but not modified.
+- A timestamped backup of `/etc/network/interfaces` exists in `/root`.
+
+Validation evidence to capture:
+
+```bash
+ip -brief addr | tee /root/geil-pre-network-ip-brief.txt
+ip route | tee /root/geil-pre-network-routes.txt
+bridge vlan show | tee /root/geil-pre-bridge-vlans.txt
+```
+
+Rollback after this step:
+
+No rollback is required because this step is read-only except for creating backup/evidence files.
+
+### Step 2: Back up `/etc/network/interfaces`
+
+Create a named rollback copy before editing:
+
+```bash
+cp /etc/network/interfaces /root/interfaces.rollback-before-geil
+ls -l /root/interfaces.rollback-before-geil
+```
+
+Expected result:
+
+- `/root/interfaces.rollback-before-geil` exists.
+
+Rollback command if later networking fails:
+
+```bash
+cp /root/interfaces.rollback-before-geil /etc/network/interfaces
+ifreload -a
+```
+
+If `ifreload -a` fails or remote access is broken, use the physical or out-of-band console and reboot only after confirming the restored file is correct.
+
+### Step 3: Add GEIL bridge definitions to `/etc/network/interfaces`
+
+!!! warning "Operator Notes"
+
+    Proxmox GUI may not show Linux bridge definitions placed only in `/etc/network/interfaces.d/`. For GEIL, place `GEILWAN` and `GEILLAN` definitions directly in `/etc/network/interfaces` so the bridges are visible and maintainable from the Proxmox GUI. Do not move or rewrite existing non-GEIL bridge definitions.
+
+Open the file:
+
+```bash
+nano /etc/network/interfaces
+```
+
+Append this GEIL block below existing configuration. Do not edit `eno1`, `VSW4001`, `PROD`, or `TEST`.
+
+```text
+# =========================================================
+# GEIL Phase 1 network bridges
+# Do not use 10.10.x.x for GEIL. GEIL uses 172.20.0.0/16.
+# GEILWAN is a local transit segment between PVE-HQ01 and HQ-FW01.
+# =========================================================
+
+auto GEILWAN
+iface GEILWAN inet static
+    address 172.31.255.1/30
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0
+    bridge-comment GEIL WAN transit to HQ-FW01
+
+auto GEILLAN
+iface GEILLAN inet manual
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0
+    bridge-vlan-aware yes
+    bridge-vids 10 20 30 40 50 60 70 80 90 100
+    bridge-comment GEIL VLAN-aware LAN trunk
+```
+
+Why this design is used:
+
+- `GEILWAN` is an isolated /30 transit network for the virtual firewall WAN side.
+- `GEILLAN` is a VLAN-aware internal bridge for GEIL networks.
+- Existing public networking is preserved.
+- No GEIL bridge uses the existing `10.10.x.x` PROD/TEST networks.
+
+### Step 4: Validate and apply bridge configuration
+
+Validate syntax and apply:
+
+```bash
+ifquery --list
+ifreload -a
+ip -brief addr show GEILWAN
+ip -brief addr show GEILLAN
+bridge vlan show dev GEILLAN
+```
+
+Expected result:
+
+- `GEILWAN` appears with `172.31.255.1/30`.
+- `GEILLAN` appears as a bridge.
+- `bridge vlan show dev GEILLAN` lists VLANs 10,20,30,40,50,60,70,80,90,100.
+
+Rollback after this risky step:
+
+```bash
+cp /root/interfaces.rollback-before-geil /etc/network/interfaces
+ifreload -a
+ip -brief addr
+```
+
+### Step 5: Verify bridge visibility in the Proxmox GUI
+
+GUI path:
+
+```text
+Proxmox UI -> Datacenter -> PVE-HQ01 -> System -> Network
+```
+
+Expected result:
+
+- `GEILWAN` is visible.
+- `GEILLAN` is visible.
+- `GEILLAN` shows VLAN-aware behavior.
+- Existing `PROD` and `TEST` bridges remain unchanged.
+
+Evidence to capture:
+
+- Screenshot of Proxmox Network page showing `GEILWAN` and `GEILLAN`.
+- Screenshot or text export confirming `PROD` and `TEST` were not modified.
+
+### Step 6: Create `HQ-FW01` using GEIL bridges
+
+GUI path:
+
+```text
+Proxmox UI -> Create VM
+```
+
+Use these settings:
+
+| Setting | Value |
+|---|---|
+| VM name | `HQ-FW01` |
+| vCPU | 2 |
+| Memory | 4096 MB |
+| Disk | 40 GB |
+| NIC 1 | Bridge `GEILWAN`, no VLAN tag |
+| NIC 2 | Bridge `GEILLAN`, no VLAN tag |
+| ISO | Approved OPNsense ISO |
+
+CLI equivalent pattern:
+
+```bash
+qm create 100 --name HQ-FW01 --memory 4096 --cores 2 \
+  --net0 virtio,bridge=GEILWAN \
+  --net1 virtio,bridge=GEILLAN
+qm set 100 --scsihw virtio-scsi-pci --scsi0 local-lvm:40
+qm set 100 --ide2 local:iso/OPNsense-ISO-FILENAME.iso,media=cdrom
+qm set 100 --boot order=ide2\;scsi0
+qm config 100
+```
+
+Validation:
+
+- `qm config 100` shows `net0` on `GEILWAN`.
+- `qm config 100` shows `net1` on `GEILLAN`.
+- No `HQ-FW01` adapter is attached to `PROD` or `TEST`.
+
+Rollback:
+
+```bash
+qm stop 100
+qm destroy 100 --purge
+```
+
+Use rollback only before the VM contains required configuration or after exporting any required evidence.
+
+### Step 7: Create GEIL guest VM shells
+
+Attach GEIL guests to `GEILLAN` with explicit VLAN tags:
+
+```bash
+qm create 110 --name HQ-DC01 --memory 6144 --cores 2 --net0 virtio,bridge=GEILLAN,tag=20
+qm set 110 --scsihw virtio-scsi-pci --scsi0 local-lvm:100
+
+qm create 120 --name HQ-MGMT01 --memory 8192 --cores 2 --net0 virtio,bridge=GEILLAN,tag=30
+qm set 120 --scsihw virtio-scsi-pci --scsi0 local-lvm:100
+
+qm create 121 --name HQ-W11-001 --memory 6144 --cores 2 --net0 virtio,bridge=GEILLAN,tag=30
+qm set 121 --scsihw virtio-scsi-pci --scsi0 local-lvm:80
+```
+
+Validation:
+
+```bash
+qm config 110 | grep net0
+qm config 120 | grep net0
+qm config 121 | grep net0
+```
+
+Expected output includes:
+
+- `bridge=GEILLAN,tag=20` for `HQ-DC01`.
+- `bridge=GEILLAN,tag=30` for `HQ-MGMT01`.
+- `bridge=GEILLAN,tag=30` for `HQ-W11-001`.
+
+## Validation Evidence
+
+Capture these commands after implementation:
+
+```bash
+ip -brief addr | tee /root/geil-post-network-ip-brief.txt
+ip route | tee /root/geil-post-network-routes.txt
+bridge vlan show | tee /root/geil-post-bridge-vlans.txt
+qm config 100 | tee /root/geil-hq-fw01-qm-config.txt
+qm config 110 | tee /root/geil-hq-dc01-qm-config.txt
+qm config 120 | tee /root/geil-hq-mgmt01-qm-config.txt
+qm config 121 | tee /root/geil-hq-w11-001-qm-config.txt
+```
+
+Expected evidence:
+
+- Existing public access remains intact.
+- `GEILWAN` has `172.31.255.1/30`.
+- `GEILLAN` is VLAN-aware.
+- `HQ-FW01` uses `GEILWAN` and `GEILLAN`.
+- GEIL guests use `GEILLAN` and correct VLAN tags.
+
+## Git validation for documentation operators
+
+When editing GEIL documentation during deployment, verify generated MkDocs output is not tracked:
+
+```bash
+cd /home/gntech/geil
+git ls-files site | wc -l
+git status --short site || true
+```
+
+Expected result:
+
+- `git ls-files site | wc -l` returns `0`.
+- `site/` is not staged.
+
+## Common errors
+
+| Error | Cause | Fix |
+|---|---|---|
+| Bridge not visible in Proxmox GUI | Bridge defined only in `/etc/network/interfaces.d/` | Move GEIL bridge definitions into `/etc/network/interfaces` and run `ifreload -a` |
+| Public access breaks | Existing `eno1`, `VSW4001`, `PROD`, or `TEST` changed | Restore `/root/interfaces.rollback-before-geil` from console |
+| GEIL VM lands on 10.10.x.x | VM attached to `PROD` or `TEST` instead of `GEILLAN` | Move VM NIC to `GEILLAN` with correct VLAN tag |
+| VLAN tags ignored | Bridge is not VLAN-aware | Confirm `bridge-vlan-aware yes` on `GEILLAN` |
+| HQ-FW01 WAN cannot reach transit | Wrong bridge on net0 | Set net0 to `GEILWAN`; confirm `172.31.255.2/30` inside OPNsense |
+
+## Acceptance criteria for this runbook
+
+- `GEILWAN` and `GEILLAN` exist in `/etc/network/interfaces` and Proxmox GUI.
+- `GEILWAN` uses `172.31.255.1/30`.
+- `HQ-FW01` WAN is attached to `GEILWAN` and configured later as `172.31.255.2/30`.
+- `GEILLAN` is VLAN-aware and carries the canonical GEIL VLAN list.
+- Existing `eno1`, `VSW4001`, `PROD`, and `TEST` remain unchanged.
+- GEIL VM shells are attached to the correct GEIL bridges and VLAN tags.
+- Rollback file `/root/interfaces.rollback-before-geil` exists.
+- Evidence files listed above are captured.

@@ -3,7 +3,7 @@ title: Phase 1 Build Plan
 document_id: GEIL-PLAT-PH1-BUILD-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PH1-BUILD-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -249,3 +249,56 @@ flowchart LR
 ## Handoff to validation
 
 After build steps are complete, execute [Phase 1 Validation Plan](phase-1-validation-plan.md). Do not proceed to E03 implementation work until validation passes or exceptions are captured.
+
+
+## Operator-focused execution detail
+
+### Exact objective
+
+Execute the Phase 1 foundation build in a safe order that preserves existing Proxmox connectivity while adding GEIL-specific bridge, firewall, VM, validation, and rollback controls.
+
+### Before you begin
+
+- Review [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md).
+- Review [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md).
+- Confirm `eno1`, `VSW4001`, `PROD`, and `TEST` are non-GEIL objects and are not modified.
+- Confirm `GEILWAN` uses `172.31.255.1/30` and `HQ-FW01` WAN uses `172.31.255.2/30`.
+
+!!! warning "Operator Notes"
+
+    The build plan must not assume a clean Proxmox host. The discovered host already has direct `eno1` networking and existing `PROD`/`TEST` bridges using `10.10.x.x`. The GEIL build is additive. Do not repurpose existing public or non-GEIL bridges.
+
+### Step-by-step execution checklist
+
+| Step | Action | Validation | Rollback |
+|---:|---|---|---|
+| 1 | Back up `/etc/network/interfaces` | Backup file exists in `/root` | Restore backup and run `ifreload -a` |
+| 2 | Add `GEILWAN` and `GEILLAN` to `/etc/network/interfaces` | `ip -brief addr` and Proxmox GUI show bridges | Restore previous interfaces file |
+| 3 | Create `HQ-FW01` attached to `GEILWAN` and `GEILLAN` | `qm config 100` shows correct bridges | Destroy/recreate VM before configuration |
+| 4 | Configure OPNsense WAN `172.31.255.2/30` | WAN status shows expected address | Reassign WAN from console |
+| 5 | Create VLAN gateways on `HQ-FW01` | Each VLAN interface shows `172.20.x.1/24` | Revert `CP-FW-VLANS` |
+| 6 | Apply baseline firewall rules | Management pass, guest deny | Disable last rule or revert snapshot |
+| 7 | Create VM shells | `qm config` shows correct VLAN tags | Stop/destroy VM shell before OS role install |
+| 8 | Capture snapshots and exports | Snapshot/config export inventory complete | Re-run checkpoint capture |
+| 9 | Run Phase 1 validation | All P0 validation passes | Follow remediation workflow |
+
+### Copy/Paste evidence bundle
+
+Run on `PVE-HQ01` after core build:
+
+```bash
+mkdir -p /root/geil-e02r04-evidence
+ip -brief addr > /root/geil-e02r04-evidence/ip-brief.txt
+ip route > /root/geil-e02r04-evidence/ip-route.txt
+bridge vlan show > /root/geil-e02r04-evidence/bridge-vlan-show.txt
+qm config 100 > /root/geil-e02r04-evidence/qm-config-100-HQ-FW01.txt
+qm config 110 > /root/geil-e02r04-evidence/qm-config-110-HQ-DC01.txt
+qm config 120 > /root/geil-e02r04-evidence/qm-config-120-HQ-MGMT01.txt
+qm config 121 > /root/geil-e02r04-evidence/qm-config-121-HQ-W11-001.txt
+qm listsnapshot 100 > /root/geil-e02r04-evidence/qm-snapshots-100-HQ-FW01.txt
+```
+
+Acceptance handoff:
+
+- Transfer evidence to the E02.R05 protected evidence package.
+- Do not commit host evidence, config exports, screenshots, or OPNsense XML files to Git.

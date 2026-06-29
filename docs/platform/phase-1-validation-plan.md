@@ -3,7 +3,7 @@ title: Phase 1 Validation Plan
 document_id: GEIL-PLAT-PH1-VAL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PH1-VAL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -159,3 +159,56 @@ E02.R03 is ready for closure only when:
 - [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
 - [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
+
+
+## Operator validation procedure
+
+### Exact objective
+
+Validate that the HQ foundation was implemented as designed and that no legacy Proxmox network objects were modified during the GEIL deployment.
+
+### Before you begin
+
+- Execute validation from `HQ-MGMT01` where possible.
+- Use `PVE-HQ01` console only for host-local checks.
+- Record every command and result in the E02.R05 evidence package.
+
+### Additional validation tests for discovered deployment conditions
+
+| ID | Validation | Command / Check | Expected Result |
+|---|---|---|---|
+| VAL-014 | Existing public access untouched | Review `/etc/network/interfaces` and Proxmox Network GUI | `eno1`, `VSW4001`, `PROD`, and `TEST` unchanged |
+| VAL-015 | GEILWAN exists | `ip -brief addr show GEILWAN` | Shows `172.31.255.1/30` |
+| VAL-016 | GEILLAN visible | Proxmox UI -> node -> System -> Network | `GEILLAN` visible and VLAN-aware |
+| VAL-017 | HQ-FW01 WAN transit | OPNsense WAN page | WAN is `172.31.255.2/30` |
+| VAL-018 | No GEIL workload on 10.10.x.x | `qm config 100 110 120 121` manually reviewed | GEIL VMs do not use `PROD` or `TEST` |
+
+### Copy/Paste validation commands
+
+Run on `PVE-HQ01`:
+
+```bash
+ip -brief addr show GEILWAN
+ip -brief addr show GEILLAN
+bridge vlan show dev GEILLAN
+qm config 100 | egrep 'name|net0|net1'
+qm config 110 | egrep 'name|net0'
+qm config 120 | egrep 'name|net0'
+qm config 121 | egrep 'name|net0'
+git -C /home/gntech/geil ls-files site | wc -l
+```
+
+Expected result:
+
+- `GEILWAN` shows `172.31.255.1/30`.
+- `GEILLAN` is present and VLAN-aware.
+- `HQ-FW01` has `GEILWAN` and `GEILLAN`.
+- GEIL guest VMs use `GEILLAN` with VLAN tags.
+- Git tracked `site/` file count is `0`.
+
+### Validation failure rollback guidance
+
+- If GEIL bridges are missing from GUI, move definitions into `/etc/network/interfaces`, run `ifreload -a`, and recheck.
+- If public access breaks, restore `/root/interfaces.rollback-before-geil` from console.
+- If `HQ-FW01` is on the wrong bridge, stop the VM and correct `net0`/`net1`.
+- If guest isolation fails, disable broad allow rules and restore `CP-FW-VLANS` if management access is at risk.

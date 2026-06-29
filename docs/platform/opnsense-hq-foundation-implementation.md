@@ -3,7 +3,7 @@ title: OPNsense HQ Foundation Implementation Runbook
 document_id: GEIL-PLAT-OPN-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-OPN-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -372,3 +372,330 @@ This runbook is complete when:
 6. DHCP relay decisions are documented and relay is not enabled prematurely.
 7. OPNsense config export and snapshots exist.
 8. Evidence is captured for the implementation record.
+
+
+## Deployment operator checklist
+
+### Exact objective
+
+Deploy `HQ-FW01` as the GEIL routing and firewall boundary without touching the existing Proxmox `PROD` and `TEST` networks. `HQ-FW01` must use `GEILWAN` for WAN transit and `GEILLAN` for the VLAN-aware LAN trunk.
+
+### Before you begin
+
+1. Confirm `PVE-HQ01` has `GEILWAN` and `GEILLAN` visible in the Proxmox GUI.
+2. Confirm `HQ-FW01` VM has two NICs only: WAN on `GEILWAN`, LAN on `GEILLAN`.
+3. Confirm no `HQ-FW01` adapter is attached to `PROD`, `TEST`, `eno1`, or `VSW4001`.
+4. Confirm you have Proxmox console access to `HQ-FW01`.
+5. Confirm you can revert to `CP-FW-INSTALLED` if OPNsense configuration locks out management.
+
+!!! warning "Operator Notes"
+
+    `GEILWAN` is the Proxmox-to-OPNsense WAN transit network. Configure `GEILWAN` on Proxmox as `172.31.255.1/30` and configure the `HQ-FW01` WAN interface as `172.31.255.2/30`. This is not the GEIL enterprise LAN. GEIL enterprise VLANs still use `172.20.0.0/16` behind `HQ-FW01`.
+
+### Expected starting state
+
+- `HQ-FW01` VM exists.
+- NIC 1 is on `GEILWAN`.
+- NIC 2 is on `GEILLAN`.
+- OPNsense ISO is attached or OPNsense is already installed.
+- No VLAN interfaces are required to exist yet.
+
+### Expected ending state
+
+- `HQ-FW01` WAN is `172.31.255.2/30` on GEILWAN.
+- `HQ-FW01` LAN trunk carries VLANs 10,20,30,40,50,60,70,80,90,100.
+- VLAN gateways use canonical `172.20.x.1/24` addresses.
+- Baseline firewall rules enforce management access and guest isolation.
+- DNS forwarding is limited to bootstrap needs and does not replace AD DNS.
+- DHCP relay is prepared but not enabled until `HQ-DC01` DHCP scopes exist.
+- `HQ-FW01-baseline.xml` is exported outside Git.
+
+## Copy/Paste Implementation Blocks
+
+### Step 1: Confirm VM NIC mapping from Proxmox
+
+Run on `PVE-HQ01`:
+
+```bash
+qm config 100 | egrep 'name|net0|net1'
+```
+
+Expected output pattern:
+
+```text
+name: HQ-FW01
+net0: virtio=...,bridge=GEILWAN
+net1: virtio=...,bridge=GEILLAN
+```
+
+Rollback if incorrect:
+
+```bash
+qm stop 100
+qm set 100 --net0 virtio,bridge=GEILWAN
+qm set 100 --net1 virtio,bridge=GEILLAN
+qm config 100 | egrep 'net0|net1'
+```
+
+### Step 2: Configure WAN interface
+
+GUI path:
+
+```text
+OPNsense Console -> Assign interfaces
+OPNsense Web UI -> Interfaces -> WAN
+```
+
+WAN settings:
+
+| Setting | Value |
+|---|---|
+| Interface | WAN |
+| Address family | IPv4 |
+| IPv4 configuration type | Static IPv4 for GEILWAN transit |
+| IPv4 address | `172.31.255.2/30` |
+| Upstream gateway | `172.31.255.1` if using Proxmox transit as upstream for lab bootstrap |
+
+Validation from OPNsense diagnostics or console:
+
+```text
+WAN address: 172.31.255.2/30
+WAN gateway/transit peer: 172.31.255.1
+```
+
+Rollback:
+
+- Revert WAN assignment from console if web UI access fails.
+- Restore `CP-FW-INSTALLED` if interface mapping becomes unrecoverable.
+
+### Step 3: Configure LAN trunk parent
+
+GUI path:
+
+```text
+Interfaces -> Assignments
+```
+
+Actions:
+
+1. Confirm the second NIC is assigned as the LAN/trunk parent.
+2. Do not assign production services to the untagged parent.
+3. Use the parent only for VLAN child interfaces.
+
+Validation:
+
+- Parent interface is up.
+- VLAN child interfaces can be created on the parent.
+
+### Step 4: Create VLAN interfaces
+
+GUI path:
+
+```text
+Interfaces -> Other Types -> VLAN -> Add
+```
+
+Create these VLANs on the LAN trunk parent:
+
+| VLAN | Interface Name | Address |
+|---:|---|---|
+| 10 | `MGMT` | `172.20.10.1/24` |
+| 20 | `SERVERS` | `172.20.20.1/24` |
+| 30 | `WORKSTATIONS` | `172.20.30.1/24` |
+| 40 | `PRINTERS` | `172.20.40.1/24` |
+| 50 | `VOICE` | `172.20.50.1/24` |
+| 60 | `CORPWIFI` | `172.20.60.1/24` |
+| 70 | `GUESTWIFI` | `172.20.70.1/24` |
+| 80 | `DMZ` | `172.20.80.1/24` |
+| 90 | `BACKUP` | `172.20.90.1/24` |
+| 100 | `HYPERVISORS` | `172.20.100.1/24` |
+
+Validation after each VLAN:
+
+- Interface is enabled.
+- Static IPv4 address is correct.
+- The interface appears in the OPNsense interface list.
+
+Rollback after a bad VLAN:
+
+- Disable the incorrect VLAN interface.
+- Delete the incorrect VLAN child.
+- Recreate it with the correct VLAN ID and IP address.
+
+### Step 5: DNS resolver / forwarding setup
+
+GUI path:
+
+```text
+Services -> Unbound DNS -> General
+```
+
+Bootstrap decision:
+
+- Before AD DNS exists, `HQ-FW01` may temporarily forward DNS for bootstrap only.
+- After `HQ-DC01` AD DNS exists, domain clients must use `172.20.20.11` and future `172.20.20.12`.
+- Guest WiFi DNS must remain isolated from AD DNS.
+
+Validation:
+
+```text
+Workstation bootstrap DNS works before AD.
+Domain DNS plan points to HQ-DC01 after AD DNS exists.
+Guest DNS does not depend on HQ-DC01.
+```
+
+### Step 6: NAT behavior
+
+GUI path:
+
+```text
+Firewall -> NAT -> Outbound
+```
+
+Phase 1 decision:
+
+- Use automatic or hybrid outbound NAT only for approved internal networks during bootstrap.
+- Do not NAT guest traffic into internal GEIL networks.
+- Do not create port forwards during Phase 1 unless an ADR approves them.
+
+Validation:
+
+- Internal networks can reach required bootstrap internet destinations if allowed.
+- Guest WiFi can reach internet only.
+- No unsolicited inbound WAN forwards exist.
+
+### Step 7: Baseline firewall rules
+
+GUI path:
+
+```text
+Firewall -> Rules -> <Interface>
+```
+
+Create rules in this order:
+
+1. Allow `HQ-MGMT01` `172.20.30.10` to `HQ-FW01` management `172.20.10.1` on HTTPS.
+2. Allow `HQ-MGMT01` `172.20.30.10` to `PVE-HQ01` `172.20.100.11` on TCP 8006.
+3. Allow approved management flows from `HQ-MGMT01` to `HQ-DC01` `172.20.20.11`.
+4. Allow workstation-to-domain prerequisite flows only when `HQ-DC01` services exist.
+5. Allow guest WiFi to internet.
+6. Deny guest WiFi to `172.20.0.0/16` and log the deny.
+7. Deny all other inter-zone traffic unless explicitly approved.
+
+Validation from `HQ-MGMT01`:
+
+```powershell
+Test-NetConnection 172.20.10.1 -Port 443
+Test-NetConnection 172.20.100.11 -Port 8006
+Test-NetConnection 172.20.20.11 -Port 3389
+```
+
+Guest isolation validation from VLAN 70:
+
+```powershell
+Test-NetConnection 172.20.20.11 -Port 53
+Test-NetConnection 172.20.100.11 -Port 8006
+```
+
+Expected result:
+
+- Management tests from `HQ-MGMT01` pass when target services are listening.
+- Guest tests to internal networks fail and are visible in firewall logs.
+
+Rollback after risky firewall step:
+
+- Use Proxmox console to access OPNsense.
+- Disable the last changed rule or restore `CP-FW-VLANS`.
+- Reapply rules one at a time with validation.
+
+### Step 8: DHCP relay preparation
+
+GUI path:
+
+```text
+Services -> DHCP Relay
+```
+
+Do not enable relay until DHCP scopes exist on `HQ-DC01`.
+
+Prepared relay targets:
+
+| VLAN | Future relay target | State now |
+|---:|---|---|
+| 30 | `172.20.20.11` | Prepared / disabled |
+| 40 | `172.20.20.11` | Prepared / disabled |
+| 60 | `172.20.20.11` | Prepared / disabled |
+| 70 | None | Must not relay to AD DHCP |
+
+Evidence:
+
+- Screenshot showing DHCP relay is disabled or not yet configured for AD scopes.
+- Note that relay enablement is blocked until DHCP scopes exist.
+
+### Step 9: Backup/export configuration
+
+GUI path:
+
+```text
+System -> Configuration -> Backups
+```
+
+Actions:
+
+1. Download the configuration after baseline validation.
+2. Save as `HQ-FW01-baseline.xml` in protected storage outside Git.
+3. Record storage path in the E02.R05 evidence package.
+
+Do not commit OPNsense configuration XML to Git.
+
+### Step 10: Snapshot checkpoints
+
+From `PVE-HQ01`:
+
+```bash
+qm snapshot 100 CP-FW-INSTALLED --description "HQ-FW01 clean install"
+qm snapshot 100 CP-FW-VLANS --description "HQ-FW01 VLAN interfaces and gateways"
+qm snapshot 100 CP-FW-BASELINE-RULES --description "HQ-FW01 baseline firewall rules validated"
+qm listsnapshot 100
+```
+
+Expected result:
+
+- All three snapshots appear for VM 100.
+
+## Validation Evidence
+
+Capture:
+
+- OPNsense interface list.
+- VLAN interface list with IP addresses.
+- Firewall rule screenshots.
+- NAT outbound mode screenshot.
+- DNS resolver/forwarding screenshot.
+- DHCP relay disabled/prepared screenshot.
+- Firewall logs proving guest isolation.
+- `qm config 100` and `qm listsnapshot 100` outputs.
+- `HQ-FW01-baseline.xml` storage record, not the XML itself.
+
+## Common errors
+
+| Error | Cause | Fix |
+|---|---|---|
+| OPNsense WAN uses 172.20.x.x | WAN attached to LAN bridge or wrong interface assigned | Reassign WAN to GEILWAN and configure `172.31.255.2/30` |
+| LAN VLANs unavailable | LAN adapter not on `GEILLAN` | Correct VM net1 to `GEILLAN` |
+| Management lockout | Rule order or missing allow from `HQ-MGMT01` | Use console and restore `CP-FW-VLANS` or fix rule order |
+| Guest reaches internal services | Guest deny missing or below allow rule | Add/log deny from VLAN 70 to `172.20.0.0/16` above broad allows |
+| DHCP relay sends guest traffic to AD | VLAN 70 included in relay | Remove VLAN 70 from relay immediately |
+| DNS remains on firewall after AD | DHCP/static DNS not updated | Move domain clients to `172.20.20.11` after AD DNS exists |
+
+## Acceptance criteria for this runbook
+
+- `HQ-FW01` WAN uses `172.31.255.2/30` on `GEILWAN`.
+- `HQ-FW01` VLAN interfaces exist for all canonical GEIL VLANs.
+- `HQ-FW01` is the gateway for `172.20.10.0/24` through `172.20.100.0/24` canonical VLANs.
+- Baseline firewall rules allow management and deny guest-to-internal access.
+- DNS forwarding is documented as bootstrap-only for domain clients.
+- DHCP relay is not enabled prematurely.
+- `HQ-FW01-baseline.xml` is exported to protected storage outside Git.
+- Required snapshots exist.
+- Validation evidence is ready for E02.R05 acceptance.

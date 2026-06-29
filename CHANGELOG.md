@@ -49,6 +49,9 @@ All notable changes to GEIL are documented in this file.
 ### Changed
 
 
+- Expanded Phase 1 HQ foundation implementation documents with operator-grade deployment detail, copy/paste blocks, validation evidence, rollback commands, common errors, and acceptance criteria.
+- Added deployment operator notes for the discovered Proxmox state: `eno1` direct use, protected `VSW4001`/`PROD`/`TEST` objects, GEIL `172.20.0.0/16`, `GEILWAN` `172.31.255.1/30`, and `HQ-FW01` WAN `172.31.255.2/30`.
+
 - Updated complex HLD/LLD pages to include readable visual asset sections, alt text, architecture explanations, adaptation notes, and simplified Mermaid retention where useful.
 - Expanded the Visual Documentation Standard with naming convention, readability requirements, minimum font-size guidance, maximum text-per-node guidance, and alt text requirements.
 - Updated backlog, roadmap, and release architecture to reflect completion of the priority visual asset migration pass.
