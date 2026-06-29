@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 8.0
+version: 9.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 8.0 |
+| Version | 9.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -68,7 +68,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-006 | P2 | E00 | E00.R03 | Open | Add Cloudflare Access policy runbook | Identity provider, application policy, emergency bypass, logging, and rollback documented | Target: `docs/platform/cloudflare-access-runbook.md` |
 | DOC-013 | P2 | E00 | E00.R03 | Open | Add GitHub repository security baseline | Branch protection, CODEOWNERS, secret scanning, required reviews, and CI checks documented | Target: `docs/platform/github-repository-security.md` |
 | DOC-014 | P2 | E00 | E00.R04 | Open | Add glossary and authoring templates | Glossary, acronyms, document templates, runbook template, and ADR template published | Target: `docs/reference/glossary.md` and `templates/` |
-| DOC-019 | P1 | E00 | E00.R04 | Open | Replace high-complexity Mermaid diagrams with dedicated visual assets | P0/P1 replacement candidates from Visual Documentation Standard have source files and exported PNG/WebP/SVG assets under `docs/assets/diagrams/` | Target: complex diagram asset migration |
+| DOC-019 | P1 | E00 | E00.R04 | Done | Replace high-complexity Mermaid diagrams with dedicated visual assets | P0/P1 replacement candidates from Visual Documentation Standard have source files, local SVG architecture assets, and WebP generation prompts under `docs/assets/diagram-prompts/` | [Visual Documentation Standard](../governance/visual-documentation-standard.md) |
 | DOC-005 | P2 | E07 | E07.R01 | Open | Add multinational data residency model | Region ownership, tenant strategy, naming, compliance assumptions, and ADR triggers documented | Target: `docs/architecture/multinational-data-residency.md` |
 
 ## Next highest-priority item

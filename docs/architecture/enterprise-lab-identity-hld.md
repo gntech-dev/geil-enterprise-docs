@@ -29,6 +29,17 @@ This document defines the identity, directory, DNS, DHCP, PKI, privileged access
 
 It is architecture only. Implementation documents for AD DS, DNS, DHCP, PKI, NPS, Microsoft 365, Entra ID, Intune, and privileged access must reference this HLD.
 
+## Readable visual asset: Enterprise Lab Identity HLD
+
+This visual summarizes the identity HLD without overloading the page with deeply nested Mermaid branches. It shows the `corp.gntech.me` forest/domain, HQ AD site, trust services, and `gntech.me` cloud identity integration path.
+
+![Enterprise Lab Identity HLD showing corp.gntech.me forest and domain, HQ AD site, trust services, and gntech.me cloud identity integration](../assets/diagrams/geil-enterprise-lab-identity-hld.svg)
+
+!!! note "Adaptation"
+
+    This visual uses canonical GNTECH names including `corp.gntech.me`, `CORP`, `HQ-DC01`, `HQ-DC02`, and `gntech.me`. Other organizations must update their Environment Specification before regenerating this visual.
+
+
 ## Forest and domain design
 
 | Design Element | Decision |
@@ -120,6 +131,17 @@ DHCP principles:
 - Workstations, corporate WiFi, guest WiFi, and printers use documented scopes.
 - `HQ-DC02` is reserved for future DHCP failover.
 - DHCP options must point domain devices to `HQ-DC01` and future `HQ-DC02` for DNS.
+
+## Readable visual asset: PKI Hierarchy
+
+The PKI hierarchy is a complex trust diagram and should not rely on a wide Mermaid tree alone. This visual shows the target two-tier trust model from offline root CA to enterprise issuing CA and certificate consumers.
+
+![GNTECH PKI hierarchy architecture showing an offline root CA, enterprise issuing CA, and certificate consumers such as domain controllers, NPS, devices, and internal TLS services](../assets/diagrams/geil-pki-hierarchy-architecture.svg)
+
+!!! note "Adaptation"
+
+    This visual uses the GNTECH issuing CA name `GNTECH-CORP-Issuing-CA01` and the `corp.gntech.me` trust context. Adaptations must update certificate names, CRL/AIA assumptions, DNS names, and relying-party references.
+
 
 ## PKI hierarchy
 

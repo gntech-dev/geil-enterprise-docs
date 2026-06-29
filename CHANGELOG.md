@@ -7,6 +7,9 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added local SVG architecture visuals under `docs/assets/diagrams/` for PKI hierarchy, security zones, enterprise reference architecture, enterprise lab network, enterprise lab identity, enterprise lab operations, OPNsense VLAN topology, and Proxmox bridge topology.
+- Added diagram generation prompts under `docs/assets/diagram-prompts/` with expected WebP output paths for future image-generation/export tooling.
+
 - Added `GEIL-PLAT-PH1-ACCEPT-001` Phase 1 Acceptance Package.
 
 - Added `GEIL-PLAT-PVE-HQ-IMPL-001` Proxmox HQ Foundation Implementation Runbook.
@@ -45,6 +48,10 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+
+- Updated complex HLD/LLD pages to include readable visual asset sections, alt text, architecture explanations, adaptation notes, and simplified Mermaid retention where useful.
+- Expanded the Visual Documentation Standard with naming convention, readability requirements, minimum font-size guidance, maximum text-per-node guidance, and alt text requirements.
+- Updated backlog, roadmap, and release architecture to reflect completion of the priority visual asset migration pass.
 
 - Added release `E02.R05 HQ Foundation Evidence and Acceptance Package` to roadmap, backlog, document index, and release assignment register.
 - Updated MASTER_PLAN and MkDocs navigation with the Phase 1 acceptance gate before Microsoft identity services.

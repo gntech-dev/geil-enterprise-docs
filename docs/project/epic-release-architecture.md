@@ -313,7 +313,7 @@ The following register assigns every current published document to exactly one r
 | E03.R05 | E03 | Privileged access operations | DOC-007, DOC-008, DOC-009 |
 | E03.R06 | E03 | Service account lifecycle | DOC-010 |
 | E00.R03 | E00 | Repository security and branch protection | Future repository security runbook |
-| E00.R04 | E00 | Documentation quality and visual asset migration | DOC-014, DOC-019 |
+| E00.R04 | E00 | Documentation quality and visual asset migration | DOC-014 open; DOC-019 done |
 | E07.R01 | E07 | Multinational data residency | DOC-005 |
 | E05.R02 | E05 | Monitoring and alerting deep dives | AD, certificate, Microsoft 365 monitoring runbooks |
 | E06.R01 | E06 | Security assurance evidence | Control mapping, exception register, audit evidence |

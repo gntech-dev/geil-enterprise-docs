@@ -33,6 +33,17 @@ It is architecture only. Implementation guides must reference this HLD before co
 
     This document uses the canonical GNTECH `172.20.0.0/16` network baseline and `HQ` site from [Environment Specification](../project/environment-specification.md).
 
+## Readable visual asset: Enterprise Lab Network HLD
+
+This visual summarizes the HQ network foundation in one readable 16:9 architecture view. `HQ-FW01` is the routing and policy boundary, the core trunk carries the canonical VLANs, and future regions use routed expansion rather than stretched VLANs.
+
+![Enterprise Lab Network HLD showing HQ-FW01, core VLAN trunk, enterprise zones, and future routed regional expansion](../assets/diagrams/geil-enterprise-lab-network-hld.svg)
+
+!!! note "Adaptation"
+
+    This visual uses the GNTECH `HQ` site and `172.20.0.0/16` addressing model. Organizations adapting this design must update the Environment Specification before regenerating the visual.
+
+
 ## Network design goals
 
 - Provide segmentation from the first deployment phase.
@@ -40,6 +51,17 @@ It is architecture only. Implementation guides must reference this HLD before co
 - Separate management, servers, workstations, WiFi, guest, DMZ, backup, and hypervisor traffic.
 - Support future regional expansion without renumbering HQ.
 - Treat network location as one signal, not as complete trust.
+
+## Readable visual asset: Security Zone Model
+
+This visual replaces the large Mermaid zone diagram for normal reading. It shows `HQ-FW01` as the enforcement point between management, infrastructure, user access, restricted/untrusted, and internet edge zones.
+
+![GNTECH security zone model showing HQ-FW01 as the policy boundary between management, infrastructure, user access, restricted/untrusted, and internet edge zones](../assets/diagrams/geil-security-zone-model.svg)
+
+!!! note "Adaptation"
+
+    This visual uses GNTECH VLAN names, VLAN IDs, and `172.20.0.0/16` addressing from the Environment Specification. Do not alter these values in GEIL unless the canonical environment changes first.
+
 
 ## Security zone model
 

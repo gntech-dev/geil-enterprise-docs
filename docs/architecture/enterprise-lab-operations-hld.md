@@ -29,6 +29,17 @@ This document defines the storage, backup, monitoring, disaster recovery, and op
 
 It is architecture only. It does not provide backup jobs, monitoring configuration, or runbook procedures.
 
+## Readable visual asset: Enterprise Lab Operations HLD
+
+This visual summarizes the operations HLD around workloads, backup, monitoring, and recovery priorities. It is intentionally split from detailed backup and monitoring Mermaid flows to keep normal-page-width rendering readable.
+
+![Enterprise Lab Operations HLD showing workloads, PBS-HQ01 backup, monitoring signals, and recovery priorities](../assets/diagrams/geil-enterprise-lab-operations-hld.svg)
+
+!!! note "Adaptation"
+
+    This visual uses canonical GNTECH systems including `PBS-HQ01`, `HQ-FW01`, `HQ-DC01`, `HQ-MGMT01`, and `HQ-W11-001`. Adaptations must update the Environment Specification before regenerating the asset.
+
+
 ## Storage architecture
 
 ```mermaid

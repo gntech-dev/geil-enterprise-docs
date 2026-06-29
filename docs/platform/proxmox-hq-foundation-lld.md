@@ -78,6 +78,17 @@ Excluded:
 | Backup target | `PBS-HQ01` at `172.20.90.10` when backup release is active |
 | Administrative access | From `HQ-MGMT01` through approved management path only |
 
+## Readable visual asset: Proxmox Bridge Topology
+
+This visual shows the `PVE-HQ01` bridge design as an implementation architecture asset. It highlights WAN isolation on `vmbr0`, VLAN-aware internal trunking on `vmbr1`, management on `vmbr100`, and the VM attachment model.
+
+![Proxmox bridge topology showing PVE-HQ01 physical NICs, vmbr0 WAN bridge, vmbr1 VLAN-aware trunk, vmbr100 management, HQ-FW01, and VLAN-tagged guest VMs](../assets/diagrams/geil-proxmox-bridge-topology.svg)
+
+!!! note "Adaptation"
+
+    This visual uses canonical GNTECH names `PVE-HQ01`, `HQ-FW01`, `HQ-DC01`, `HQ-MGMT01`, and `HQ-W11-001`. Adaptations must update the Environment Specification first.
+
+
 ## Proxmox bridge topology
 
 ```mermaid

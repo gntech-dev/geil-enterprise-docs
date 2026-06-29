@@ -3,7 +3,7 @@ title: Visual Documentation Standard
 document_id: GEIL-GOV-VISUAL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-GOV-VISUAL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -142,6 +142,52 @@ Avoid Mermaid as the only diagram format for:
 - Large document dependency graphs.
 
 When Mermaid is retained for complex content, simplify it to the core flow and pair it with a dedicated visual asset.
+
+
+## Naming convention
+
+Generated diagram files must use the following pattern:
+
+```text
+geil-<topic>-<diagram-type>.<extension>
+```
+
+Examples:
+
+- `geil-pki-hierarchy-architecture.webp`
+- `geil-security-zone-model.webp`
+- `geil-opnsense-vlan-topology.webp`
+- `geil-proxmox-bridge-topology.webp`
+
+When local tooling cannot export WebP, commit the editable `.svg` source and a prompt file under `docs/assets/diagram-prompts/`, then track WebP generation as a follow-up task.
+
+## Readability requirements
+
+| Requirement | Minimum Standard |
+|---|---|
+| Canvas | 16:9, recommended 1600x900 or larger |
+| Minimum readable font size | Equivalent to 18px or larger at 1600x900 |
+| Heading font size | Equivalent to 34px or larger at 1600x900 |
+| Maximum text per node | 3 short lines, 28 characters per line where practical |
+| Maximum nodes per visual | Prefer fewer than 12 primary nodes |
+| Branching | Split diagrams when a node needs more than 5 outgoing branches |
+| Dark mode | Must remain readable on MkDocs Material slate theme |
+
+## Alt text requirements
+
+Every image reference must include meaningful alt text. The alt text must describe the architecture purpose, not merely repeat the filename.
+
+Good:
+
+```markdown
+![GNTECH security zone model showing HQ-FW01 as the policy boundary between management, infrastructure, user, guest, DMZ, backup, and hypervisor zones](../assets/diagrams/geil-security-zone-model.svg)
+```
+
+Bad:
+
+```markdown
+![diagram](../assets/diagrams/geil-security-zone-model.svg)
+```
 
 ## Source and export requirements
 

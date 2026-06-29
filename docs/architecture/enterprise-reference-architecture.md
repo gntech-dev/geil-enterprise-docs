@@ -205,6 +205,17 @@ flowchart TD
 
 Purpose: restore enterprise capabilities after outage, corruption, operator error, or compromise.
 
+## Readable visual asset: Enterprise Reference Architecture
+
+This visual provides a readable architecture-layer view for normal MkDocs page width. It groups business, identity, network/security, platform/cloud, and operations/recovery capabilities without compressing every layer into a single complex Mermaid hierarchy.
+
+![GEIL enterprise reference architecture showing business and application, identity and access, network and security, platform and cloud, and operations and recovery capability layers](../assets/diagrams/geil-enterprise-reference-architecture.svg)
+
+!!! note "Adaptation"
+
+    This visual includes GNTECH identity anchors `corp.gntech.me` and `gntech.me`. Organizations adapting this model should preserve the capability layering while replacing canonical environment values in the Environment Specification.
+
+
 ## Integrated target architecture
 
 ```mermaid

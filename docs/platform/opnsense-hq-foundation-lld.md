@@ -59,6 +59,17 @@ This LLD is derived from and subordinate to the E02.R02 High-Level Design baseli
 | Management IP | `172.20.10.1` on VLAN 10 gateway interface |
 | Role | Default gateway, firewall policy, NAT, DHCP relay where required, DNS forwarding if approved |
 
+## Readable visual asset: OPNsense VLAN Topology
+
+This visual presents the `HQ-FW01` WAN/LAN trunk and VLAN gateway model in a readable architecture format. It avoids the excessive fan-out that makes the full VLAN list difficult to read when rendered only as Mermaid.
+
+![OPNsense VLAN topology showing WAN vmbr0 into HQ-FW01, LAN trunk vmbr1, and canonical VLAN gateway groups](../assets/diagrams/geil-opnsense-vlan-topology.svg)
+
+!!! note "Adaptation"
+
+    This visual uses canonical GNTECH VLAN gateway values and `HQ-FW01`. Other environments must update the Environment Specification and regenerate the visual before implementation.
+
+
 ## OPNsense interface and VLAN topology
 
 ```mermaid
