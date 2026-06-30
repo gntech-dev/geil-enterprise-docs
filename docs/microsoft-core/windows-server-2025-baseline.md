@@ -3,7 +3,7 @@ title: Windows Server 2025 Baseline
 document_id: GEIL-MSC-WS2025-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.1
+version: 2.2
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-WS2025-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.1 |
+| Version | 2.2 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -215,6 +215,166 @@ A standardized baseline makes it easier to add `HQ-DC02`, management servers, ce
 - Record hostname, IP, OS version, patch level, and snapshot name.
 - Keep the pre-role snapshot until the role-specific guide creates its own checkpoint.
 - Move from manual baseline to automation only after the standard is proven.
+
+
+## Detailed Windows Deployment Walkthrough
+
+This section expands the baseline into a first-time deployment workflow for `HQ-DC01`.
+
+!!! warning "Do not install AD DS yet"
+
+    This guide prepares Windows Server 2025 only. Do not install AD DS, DNS, DHCP, CA, NPS, or other infrastructure roles until this baseline is complete and validated.
+
+### Proxmox VM settings for `HQ-DC01`
+
+Confirm the VM shell before starting Windows setup.
+
+| Setting | Canonical value | Why |
+|---|---|---|
+| VM name | `HQ-DC01` | First domain controller and DNS/DHCP server |
+| Target host | `PVE-HQ01` | HQ virtualization host |
+| Network bridge | `GEILLAN` | Internal GEIL trunk |
+| VLAN tag | `20` | Servers VLAN |
+| Static IP after install | `172.20.20.11/24` | Canonical first DC address |
+| Default gateway | `172.20.20.1` | MikroTik CHR VLAN 20 gateway |
+| DNS during bootstrap | `172.20.20.11` after AD DNS role is installed; temporary resolver only before promotion if needed for updates | AD DNS must be authoritative after promotion |
+| Disk bus | VirtIO SCSI recommended | Better performance on Proxmox |
+| NIC model | VirtIO recommended | Better performance on Proxmox |
+| VirtIO ISO | Attached during install | Required if Windows cannot see disk or NIC |
+
+Proxmox validation before Windows install:
+
+```bash
+qm config 110 | egrep 'name|net|scsi|ide|sata|virtio|boot'
+```
+
+Expected result:
+
+- VM name is `HQ-DC01`.
+- Network adapter is attached to `GEILLAN`.
+- VLAN tag is `20` if VLAN tagging is configured at the VM NIC.
+- Windows Server ISO and VirtIO ISO are available.
+
+### Windows edition and installation choice
+
+Use the approved Windows Server 2025 edition for GEIL. For first-time learning and screenshot evidence, use **Desktop Experience** unless the release specifically requires Server Core.
+
+!!! enterprise "Enterprise note"
+
+    Many enterprises prefer Server Core for reduced attack surface. GEIL starts with Desktop Experience for the first learning deployment so that engineers can compare GUI state with PowerShell state. Later hardening releases can introduce Server Core and image automation.
+
+### Disk driver workflow during setup
+
+If Windows Setup does not show a disk:
+
+1. Click **Load driver**.
+2. Browse the VirtIO ISO.
+3. Select the Windows Server storage driver matching the OS architecture.
+4. Load the driver.
+5. Confirm the target disk appears.
+6. Continue installation.
+
+Do not continue if the disk layout is unclear or the wrong disk appears.
+
+### Network driver workflow after first boot
+
+If Windows has no network adapter after login:
+
+1. Open **Device Manager**.
+2. Locate the unknown network device.
+3. Update driver from the VirtIO ISO.
+4. Install the NetKVM driver matching Windows Server 2025/Windows Server family and architecture.
+5. Reboot if prompted.
+6. Validate with:
+
+```powershell
+Get-NetAdapter
+```
+
+Expected result: one connected adapter is visible. Record the exact `InterfaceAlias`; use it in later commands if it is not `Ethernet`.
+
+### First-login checklist
+
+After the first administrator login:
+
+1. Set the local Administrator password and store it in the approved password manager.
+2. Confirm the system clock and time zone.
+3. Confirm the VM has the correct NIC and disk drivers.
+4. Confirm the network adapter alias.
+5. Rename the server before installing roles.
+6. Configure static IP before installing roles.
+7. Patch before installing roles.
+8. Create a pre-role snapshot before AD DS promotion.
+
+### Static IP detail for `HQ-DC01`
+
+If the adapter alias is not `Ethernet`, replace `$InterfaceAlias` with the discovered alias.
+
+```powershell
+$InterfaceAlias = (Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object -First 1 -ExpandProperty Name)
+$InterfaceAlias
+New-NetIPAddress -InterfaceAlias $InterfaceAlias -IPAddress '172.20.20.11' -PrefixLength 24 -DefaultGateway '172.20.20.1'
+Set-DnsClientServerAddress -InterfaceAlias $InterfaceAlias -ServerAddresses '172.20.20.11'
+Get-NetIPConfiguration -InterfaceAlias $InterfaceAlias
+```
+
+!!! note "DNS bootstrap nuance"
+
+    Before AD DNS exists, `172.20.20.11` may not resolve external names. If Windows Update requires temporary external DNS before promotion, document the temporary resolver, apply updates, then return DNS to the AD design before promotion. After AD DS/DNS installation, `HQ-DC01` must use itself for DNS.
+
+### Patch and reboot loop
+
+Run updates until no more approved updates are available:
+
+1. Open `Settings -> Windows Update`.
+2. Check for updates.
+3. Install updates.
+4. Reboot if required.
+5. Repeat until no required updates remain.
+6. Capture update history evidence.
+
+PowerShell evidence:
+
+```powershell
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
+Get-ComputerInfo | Select-Object CsName,WindowsProductName,OsBuildNumber,OsHardwareAbstractionLayer
+```
+
+### Pre-role snapshot requirement
+
+After hostname, network, patching, drivers, Defender, and firewall validation are complete, create a checkpoint from Proxmox before installing AD DS.
+
+Run on `PVE-HQ01`:
+
+```bash
+qm shutdown 110
+qm snapshot 110 CP-DC01-BASELINE --description "HQ-DC01 Windows Server 2025 baseline before AD DS"
+qm start 110
+qm listsnapshot 110
+```
+
+Expected result:
+
+- Snapshot `CP-DC01-BASELINE` exists.
+- The server boots after the snapshot.
+- No AD DS role is installed yet.
+
+!!! danger "Snapshot boundary"
+
+    This snapshot is safe before AD DS promotion. Do not rely on hypervisor snapshot rollback for an active domain controller after clients, DNS, DHCP, or other domain controllers depend on it.
+
+### Do-not-proceed gates
+
+Do not continue to Active Directory if any of these are true:
+
+- Hostname is not `HQ-DC01`.
+- Static IP is not `172.20.20.11/24`.
+- Default gateway is not `172.20.20.1`.
+- Network adapter driver is missing or unstable.
+- Windows is unpatched or waiting for reboot.
+- Defender or Windows Firewall is disabled.
+- No pre-role snapshot exists.
+- DNS settings were left on a public resolver without a documented reason.
 
 ## Step-by-Step Procedure
 

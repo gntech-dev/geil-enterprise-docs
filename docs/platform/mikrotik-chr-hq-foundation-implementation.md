@@ -3,7 +3,7 @@ title: MikroTik CHR HQ Foundation Implementation Guide
 document_id: GEIL-PLAT-MTK-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 2.0
+version: 2.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-MTK-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 2.0 |
+| Version | 2.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -149,6 +149,135 @@ A VLAN interface is a tagged logical interface on `ether2`. It must exist before
 ### What is DHCP relay?
 
 DHCP relay forwards DHCP requests from a client VLAN to a DHCP server on another VLAN. GEIL prepares relay for VLANs 30, 40, and 60 but does not enable relay until Windows DHCP scopes exist on `HQ-DC01`.
+
+
+## Detailed Operator Walkthrough
+
+This section expands the deployment into the exact operator actions to perform before using the copy/paste command blocks.
+
+!!! danger "Keep console access open"
+
+    Keep `PVE-HQ01 -> HQ-FW01 -> Console` open during the entire firewall deployment. Do not rely only on WinBox or SSH until service restrictions and firewall rules are validated.
+
+### Download and prepare the CHR image
+
+1. Open the MikroTik download page from an administrative workstation.
+2. Select **Cloud Hosted Router**.
+3. Download the current stable CHR raw disk image, usually named similar to `chr-<version>.img.zip`.
+4. Verify that the downloaded file is from MikroTik and is not a RouterOS package-only file.
+5. Copy the ZIP to `PVE-HQ01` using SCP or the Proxmox shell upload method.
+6. Extract the image so the final path is:
+
+```text
+/var/lib/vz/template/iso/mikrotik/chr.img
+```
+
+Example on `PVE-HQ01`:
+
+```bash
+mkdir -p /var/lib/vz/template/iso/mikrotik
+cd /var/lib/vz/template/iso/mikrotik
+# Copy chr-<version>.img.zip into this directory first.
+unzip chr-*.img.zip
+mv chr-*.img chr.img
+ls -lh chr.img
+```
+
+Expected result:
+
+- `chr.img` exists.
+- The file size is non-zero.
+- The image is stored outside Git.
+
+!!! warning "Do not use an ISO workflow"
+
+    MikroTik CHR is imported as a disk image. Do not attach it as an ISO installer. If the VM boots to a blank disk or PXE prompt, the CHR disk was not imported or selected as the boot disk correctly.
+
+### Proxmox VM settings to verify
+
+Use these settings for `HQ-FW01`:
+
+| Setting | Value | Why |
+|---|---|---|
+| VM ID | `100` | Canonical Phase 1 firewall VM ID |
+| Name | `HQ-FW01` | Canonical firewall name |
+| Firmware | SeaBIOS or Proxmox default | CHR boots reliably with standard VM firmware |
+| Machine | Proxmox default | Keep simple for Phase 1 |
+| CPU | 2 cores | Enough for Phase 1 routing and firewall testing |
+| Memory | 2048 MB | Enough for CHR and evidence collection |
+| Disk | Imported `chr.img` on `local-lvm` | CHR boot disk |
+| NIC 1 | VirtIO on `GEILWAN` | RouterOS `ether1`, WAN/transit |
+| NIC 2 | VirtIO on `GEILLAN` | RouterOS `ether2`, internal VLAN trunk |
+| Start at boot | Optional during lab build | Enable later after baseline is stable |
+
+!!! warning "NIC order matters"
+
+    In this guide `net0` becomes RouterOS `ether1` and must connect to `GEILWAN`. `net1` becomes RouterOS `ether2` and must connect to `GEILLAN`. If these are reversed, WAN and LAN policy will be wrong.
+
+### First RouterOS login workflow
+
+1. Start `HQ-FW01` from Proxmox.
+2. Open `PVE-HQ01 -> HQ-FW01 -> Console`.
+3. Log in with the default MikroTik CHR credentials shown by RouterOS.
+4. Immediately set the admin password in Step 3.
+5. Do not restrict services yet.
+6. Do not paste firewall rules yet.
+7. Run `/interface/print` and confirm two Ethernet interfaces exist.
+
+Expected first interface state:
+
+```text
+ether1  connected to GEILWAN
+ether2  connected to GEILLAN trunk
+```
+
+If you are unsure which interface is which, stop and verify `qm config 100` before configuring firewall rules.
+
+### Safe Mode workflow
+
+Use Safe Mode only after the initial router identity, interface lists, VLAN interfaces, and management reachability have been validated.
+
+1. Open RouterOS terminal from console, SSH, or WinBox.
+2. Press `Ctrl+X`.
+3. Confirm the prompt indicates Safe Mode.
+4. Run one small command block.
+5. Validate access.
+6. Press `Ctrl+X` again to commit the safe-mode changes only after validation succeeds.
+
+If the management session disconnects while Safe Mode is active, RouterOS reverts the uncommitted changes.
+
+!!! tip "Recommended paste size"
+
+    Paste no more than one numbered step at a time. For firewall rules, paste the input-chain foundation, validate, then paste the WAN drop, validate, then paste forwarding rules.
+
+### WinBox and GUI cross-checks
+
+RouterOS CLI is authoritative in this guide, but WinBox screenshots are useful evidence.
+
+Capture these WinBox locations after CLI validation:
+
+| WinBox location | Expected result |
+|---|---|
+| Interfaces | `ether1`, `ether2`, and VLAN interfaces are visible |
+| Interface List | `WAN`, `LAN`, `MGMT`, `SERVERS`, `WORKSTATIONS`, `GUEST` exist |
+| IP -> Addresses | `172.31.255.2/30` and all `172.20.x.1/24` gateways exist |
+| IP -> Routes | Default route via `172.31.255.1` exists |
+| IP -> DNS | Forwarders are configured |
+| IP -> Firewall -> Filter Rules | Input and forward rules are in documented order |
+| IP -> Firewall -> NAT | Masquerade rule uses `WAN` list |
+| IP -> DHCP Relay | Relay is absent or disabled until scopes exist |
+
+### Do-not-proceed gates
+
+Stop and fix the current step if any of these occur:
+
+- `GEILWAN` or `GEILLAN` is missing from `qm config 100`.
+- `/interface/list/print` does not show all required lists before service restrictions.
+- `/interface/vlan/print` does not show all VLAN interfaces before IP assignment.
+- `/ip/address/print` does not show `172.31.255.2/30` on `ether1`.
+- You cannot reach the management path before service restrictions.
+- DHCP relay appears enabled before Windows DHCP scopes exist.
+- VLAN 70 appears in DHCP relay configuration.
 
 ## Step-by-Step Procedure
 

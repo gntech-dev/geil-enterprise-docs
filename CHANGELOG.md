@@ -60,6 +60,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Expanded MikroTik CHR and Windows Server 2025 deployment walkthroughs with first-time operator detail, Proxmox VM settings, image/driver handling, Safe Mode workflow, validation gates, evidence expectations, and do-not-proceed criteria.
 - Corrected implementation guide execution order and safety gates across scoped Platform, Microsoft Core, Foundation, Security, and Operations guidance, with major corrections to MikroTik CHR, DHCP relay, AD DS validation, Group Policy order, and Proxmox safety notes.
 
 - Changed active Phase 1 firewall implementation from OPNsense to MikroTik CHR / RouterOS while preserving the Enterprise Edge Security / Enterprise Networking capability.
