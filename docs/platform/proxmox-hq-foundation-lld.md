@@ -82,7 +82,7 @@ Excluded:
 
 This visual shows the `PVE-HQ01` bridge design as an implementation architecture asset. It highlights WAN isolation on `vmbr0`, VLAN-aware internal trunking on `vmbr1`, management on `vmbr100`, and the VM attachment model.
 
-![Proxmox bridge topology showing PVE-HQ01 physical NICs, vmbr0 WAN bridge, vmbr1 VLAN-aware trunk, vmbr100 management, HQ-FW01, and VLAN-tagged guest VMs](../assets/diagrams/geil-proxmox-bridge-topology.svg)
+![Proxmox bridge topology showing PVE-HQ01 physical NICs, GEILWAN transit bridge, GEILLAN VLAN-aware trunk, vmbr100 management, HQ-FW01, and VLAN-tagged guest VMs](../assets/diagrams/geil-proxmox-bridge-topology.svg)
 
 !!! note "Adaptation"
 
@@ -96,8 +96,8 @@ flowchart TD
     NICWAN[Physical NIC: WAN uplink]
     NICTRUNK[Physical NIC: LAN VLAN trunk]
     NICMGMT[Physical NIC: Host management / hypervisor network]
-    vmbr0[vmbr0 WAN bridge]
-    vmbr1[vmbr1 VLAN-aware LAN trunk]
+    vmbr0[GEILWAN transit bridge]
+    vmbr1[GEILLAN VLAN-aware LAN trunk]
     vmbr100[vmbr100 Hypervisor management bridge]
     FW[HQ-FW01 MikroTik CHR VM]
     DC[HQ-DC01 VM]

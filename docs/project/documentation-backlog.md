@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 13.0
+version: 14.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 13.0 |
+| Version | 14.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -63,6 +63,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-023 | P0 | E00 | E00.R01 | Done | Add Implementation Guide Standard and refactor existing guides | Standard defines Microsoft Learn-style guide structure; existing Proxmox, MikroTik CHR, Active Directory, and DNS/DHCP implementation guides include learning objectives, background knowledge, step validation, rollback, evidence, screenshot placeholders, knowledge checks, and next-guide links | [Implementation Guide Standard](../governance/implementation-guide-standard.md) |
 | DOC-024 | P0 | E00 | E00.R01 | Done | Add Educational Documentation Standard and demonstrate methodology | Standard defines teaching-before-instruction principles, required educational sections, enterprise and implementation admonitions, visual learning requirements, value explanation depth, FAQs, and key takeaways; five implementation guides demonstrate the methodology | [Educational Documentation Standard](../governance/educational-documentation-standard.md) |
 | DOC-025 | P0 | E02 | E02.R04 | Done | Change Phase 1 firewall implementation to MikroTik CHR | ADR-0002 accepted; canonical environment, HLD/LLD, build, validation, acceptance, technology matrix, navigation, roadmap, backlog, and active implementation guide updated from OPNsense to MikroTik CHR; OPNsense retained as alternative/superseded reference | [MikroTik CHR HQ Foundation Implementation](../platform/mikrotik-chr-hq-foundation-implementation.md) |
+| DOC-026 | P0 | E00 | E00.R01 | Done | Full implementation guide audit and correction | Audited 32 scoped guides; corrected MikroTik CHR command order, DHCP relay sequence, AD validation gates, Group Policy order, Proxmox safety notes, and missing implementation-guide structure sections | [Implementation Guide Audit Report](implementation-guide-audit-report.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |

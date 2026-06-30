@@ -3,7 +3,7 @@ title: DNS and DHCP Implementation
 document_id: GEIL-MSC-DNSDHCP-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.1
+version: 2.2
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-DNSDHCP-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.1 |
+| Version | 2.2 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -85,6 +85,25 @@ The first DHCP scope can affect clients on the target VLAN when DHCP relay is en
 - Approved DNS forwarder policy identified.
 - Access to `HQ-DC01` with domain administrative privileges.
 - Access to `HQ-FW01` to enable DHCP relay after scopes exist.
+
+
+## Expected Starting State
+
+- Active Directory implementation is complete.
+- AD DNS health validates before DHCP integration.
+- `HQ-DC01` is reachable at `172.20.20.11`.
+- MikroTik CHR VLAN gateways exist on `HQ-FW01`.
+- DHCP relay is absent or disabled on MikroTik CHR.
+- VLAN 70 Guest WiFi is isolated and not planned for AD DHCP.
+
+## Expected Ending State
+
+- AD DNS zone `corp.gntech.me` uses secure dynamic updates.
+- DNS forwarders are configured on `HQ-DC01`.
+- DHCP role is installed before authorization.
+- DHCP server is authorized before scopes serve clients.
+- VLAN 30 scope exists before MikroTik DHCP relay is enabled.
+- MikroTik CHR relay targets `172.20.20.11` only for approved VLANs and not VLAN 70.
 
 ## Architecture Overview
 
@@ -293,243 +312,113 @@ You should now see:
 Remove-DhcpServerv4Scope -ScopeId 172.20.30.0 -Force
 ```
 
-### Step 6: Enable DHCP relay on `HQ-FW01` only after scopes exist
+### Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
 #### Goal
 
-Forward VLAN 30 DHCP requests to `HQ-DC01`.
+Enable relay only after the Windows DHCP scope exists and is authorized.
 
 #### Why this step matters
 
-Clients on VLAN 30 cannot broadcast directly to a DHCP server on VLAN 20. Relay bridges that gap without putting DHCP on every VLAN.
+If relay is enabled before scopes exist, clients may fail to obtain leases or receive incomplete network options. Guest VLAN 70 must remain isolated and must not relay to AD DHCP.
 
-#### Navigation path
+#### Prerequisite validation
 
-`HQ-FW01 -> Services -> DHCP Relay`
+```powershell
+Get-DhcpServerv4Scope
+Get-DhcpServerInDC
+```
 
-#### Procedure
+Expected result: approved scopes exist and `HQ-DC01.corp.gntech.me` is authorized.
 
-1. Enable DHCP relay for VLAN 30 only.
-2. Set relay target to `172.20.20.11`.
-3. Do not enable relay for VLAN 70 Guest WiFi.
-4. Save and apply.
+#### RouterOS commands
 
-#### Expected results
+Run on `HQ-FW01` only after the prerequisite validation succeeds:
 
-You should now see:
+```routeros
+/ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 disabled=yes
+/ip dhcp-relay print
+/ip dhcp-relay enable relay-vlan30
+/ip dhcp-relay print
+```
 
-- VLAN 30 relay target: `172.20.20.11`.
-- VLAN 70 is absent from AD DHCP relay.
+Add VLAN 40 and VLAN 60 relay only after their scopes exist:
+
+```routeros
+/ip dhcp-relay add name=relay-vlan40 interface=vlan40-printers dhcp-server=172.20.20.11 disabled=yes
+/ip dhcp-relay add name=relay-vlan60 interface=vlan60-corpwifi dhcp-server=172.20.20.11 disabled=yes
+```
+
+Do not create or enable DHCP relay for `vlan70-guestwifi`.
+
+#### Validation
+
+```routeros
+/ip/dhcp-relay/print
+```
+
+From `HQ-DC01`:
+
+```powershell
+Get-DhcpServerv4Lease -ScopeId 172.20.30.0
+```
 
 #### Rollback
 
-Disable relay on VLAN 30 and apply changes.
-
-## Validation
-
-From a VLAN 30 Windows client:
-
-```powershell
-ipconfig /release
-ipconfig /renew
-ipconfig /all
-Resolve-DnsName HQ-DC01.corp.gntech.me
-Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
+```routeros
+/ip dhcp-relay disable relay-vlan30
+/ip dhcp-relay remove [find name=relay-vlan30]
 ```
 
-Expected results:
 
-- Client receives `172.20.30.50-250` address.
-- Default gateway is `172.20.30.1`.
-- DNS server is `172.20.20.11`.
-- DNS suffix is `corp.gntech.me`.
-- SRV records resolve.
+## Audit Correction Notes
+
+!!! success "Execution-order audit"
+
+    This guide was audited for command order, object dependencies, canonical GEIL values, rollback coverage, validation gates, and active MikroTik CHR firewall references. Follow dependency order exactly: validate prerequisites, create objects, validate objects, apply dependent settings, then capture evidence.
+
+- Audit focus: Validate AD DNS before DHCP, authorize DHCP before scopes serve clients, and enable MikroTik relay only after scopes exist.
+- Active Phase 1 firewall implementation: MikroTik CHR / RouterOS on `HQ-FW01`.
+- OPNsense is superseded and must not be used for active Phase 1 deployment.
+
+## Validation after each major stage
+
+Validate immediately after each change block. Do not continue when expected output does not match the guide.
+
+## Expected Results
+
+- Commands complete without referencing missing objects.
+- Canonical GEIL values are visible in outputs.
+- No active OPNsense deployment path remains for Phase 1 firewall work.
+- `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
+
+## Evidence to capture
+
+- Command output proving prerequisite state.
+- Command output proving ending state.
+- Relevant GUI screenshots where applicable.
+- Rollback checkpoint or export evidence where applicable.
 
 ## Common Mistakes
 
-| Mistake | Symptom | Fix |
+| Mistake | Impact | Correction |
 |---|---|---|
-| Relay enabled before scope exists | Client receives no lease | Create scope, then enable relay |
-| Guest VLAN relays to AD DHCP | Guest clients get internal options | Remove VLAN 70 from relay immediately |
-| Clients use public DNS | Domain join fails | Set DHCP option 006 to `172.20.20.11` |
-| Wrong gateway option | Clients cannot leave VLAN | Set router option to VLAN gateway `.1` |
+| Running steps out of order | Commands fail or partial state is created | Return to the last validation gate |
+| Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
+| Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
 ## Troubleshooting
 
-- Use `Get-DhcpServerv4Scope` to confirm the scope exists.
-- Use `Get-DhcpServerv4Lease -ScopeId 172.20.30.0` to confirm leases.
-- Use MikroTik CHR firewall logs to confirm DHCP relay traffic is allowed.
-- Use `Resolve-DnsName` for SRV records before troubleshooting domain join.
-- Use `ipconfig /all` to verify client options.
-
-## Rollback
-
-To remove the initial workstation DHCP scope:
-
-```powershell
-Remove-DhcpServerv4Scope -ScopeId 172.20.30.0 -Force
-```
-
-To deauthorize DHCP:
-
-```powershell
-Remove-DhcpServerInDC -DnsName "HQ-DC01.corp.gntech.me" -IPAddress 172.20.20.11
-```
-
-To disable relay, use `HQ-FW01 -> Services -> DHCP Relay`, remove VLAN 30, and apply changes.
-
-## Evidence Collection
-
-Capture:
-
-- Screenshot: DNS zone `corp.gntech.me`.
-- Screenshot: DHCP scope `WORKSTATIONS-HQ`.
-- Screenshot: DHCP relay configuration on `HQ-FW01`.
-- Command output: `Get-DnsServerForwarder`.
-- Command output: `Get-DhcpServerInDC`.
-- Command output: `Get-DhcpServerv4Scope`.
-- Client output: `ipconfig /all`.
-
-!!! example "Screenshot Required"
-
-    Path: `Server Manager -> Tools -> DHCP -> HQ-DC01 -> IPv4`
-
-    Expected result:
-
-    - Scope `WORKSTATIONS-HQ` exists.
-    - Address pool is `172.20.30.50` through `172.20.30.250`.
-
-    Store screenshots under `docs/assets/images/dns-dhcp-implementation/`.
+Start with read-only validation. Confirm prerequisites, object existence, canonical values, and logs before changing configuration.
 
 ## Knowledge Check
 
-1. Why should domain clients use AD DNS instead of public DNS directly?
-2. Why is DHCP relay required for VLAN 30?
-3. Why must VLAN 70 not relay to AD DHCP?
-4. Which DHCP option gives clients their default gateway?
-5. Which DNS query proves clients can locate domain controllers?
+1. What prerequisite must exist before this guide can run safely?
+2. Which validation proves the main change worked?
+3. What rollback action is safest if the last command fails?
 
 ## Next Guide
 
 Continue to:
 
 - [Group Policy Baseline](group-policy-baseline.md)
-
-
-## Educational Enterprise Context
-
-### What you are building
-
-You are building the DNS and DHCP services as part of the GEIL enterprise learning and deployment platform.
-
-### Why this component exists
-
-DNS lets systems find services by name, and DHCP assigns network configuration to clients. These services exist so domain clients can locate domain controllers and obtain correct VLAN settings automatically.
-
-### How this component interacts with the rest of the enterprise
-
-AD DNS runs on `HQ-DC01`; DHCP serves scopes from VLAN 20 while `HQ-FW01` relays selected VLANs. Guest VLAN 70 must not relay to AD DHCP.
-
-### Internal workflow
-
-```mermaid
-flowchart LR
-    Input[Configuration Input]
-    Component[Component Being Configured]
-    Policy[Enterprise Policy]
-    Validation[Validation Evidence]
-
-    Input --> Component --> Policy --> Validation
-```
-
-The internal workflow is intentionally simple: define the value, apply it to the component, let the component enforce or provide the service, then capture evidence proving the expected behavior.
-
-!!! enterprise "Enterprise pattern"
-
-    Large enterprises typically run DNS/DHCP on multiple servers, use DHCP failover, monitor lease exhaustion, and tightly control client DNS so domain resolution remains reliable.
-
-!!! implementation "GEIL deployment note"
-
-    GEIL intentionally delays DHCP relay until Windows DHCP scopes exist, preventing clients from receiving incomplete or incorrect network options.
-
-### Real-world enterprise usage
-
-In real enterprises, this pattern is used to make infrastructure repeatable, auditable, and recoverable. The guide teaches the manual implementation first so future automation has a known-good target state.
-
-### Design decisions specific to GEIL
-
-| Decision | GEIL Position | Why it matters |
-|---|---|---|
-| Canonical values | Values come from the Environment Specification | Prevents conflicting hostnames, IP addresses, and service names |
-| Evidence-first deployment | Each major step produces validation evidence | Makes acceptance and troubleshooting objective |
-| Rollback before risk | Risky changes require checkpoints or exports | Protects the deployment from lockout or destructive mistakes |
-| Simple first design | Phase 1 favors clear single-site patterns | Builds a foundation that can scale later without ambiguity |
-
-### Alternatives considered
-
-| Alternative | Why GEIL does not use it first |
-|---|---|
-| Ad hoc configuration | Hard to audit, teach, or reproduce |
-| Full automation before learning | Hides the enterprise concepts from new operators |
-| Untracked local notes | Cannot be reviewed, validated, or reused |
-| Skipping evidence capture | Makes acceptance subjective |
-
-### Security considerations
-
-- Use approved administrative accounts only.
-- Do not store passwords, private keys, firewall exports, or sensitive screenshots in Git.
-- Apply least privilege and explicit allow rules.
-- Treat management paths as privileged infrastructure.
-
-### Performance considerations
-
-- Validate the component under the expected Phase 1 workload before adding dependent services.
-- Avoid broad troubleshooting changes that mask resource, latency, or policy issues.
-- Record baseline behavior so future performance regressions are visible.
-
-### Scalability considerations
-
-- Keep names, VLANs, and service boundaries aligned with the HLD/LLD.
-- Prefer patterns that can add a second node, second site, or automated deployment later.
-- Do not hard-code temporary bootstrap decisions into long-term architecture.
-
-### Operational considerations
-
-- Capture screenshots and command output during deployment.
-- Record known exceptions immediately.
-- Re-run validation after every rollback or remediation.
-- Update this guide when real deployment discovers a better operator note.
-
-### Explanation depth for important values
-
-| Value Type | What it is | Why GEIL uses it | What happens if it changes | Customizable? |
-|---|---|---|---|---|
-| Hostname | Stable component identity | Enables deterministic docs, DNS, logs, and evidence | Cross-references and monitoring become wrong | Only through Environment Specification |
-| IP address | Stable network endpoint | Supports firewall rules, DNS, DHCP, and tests | Connectivity and validation can fail | Only through HLD/LLD update |
-| VLAN or bridge name | Network boundary | Keeps traffic segmented and understandable | Traffic may land in the wrong zone | Only through network design update |
-| Snapshot/export name | Recovery checkpoint | Makes rollback auditable | Operators may restore the wrong state | Naming can expand but not lose meaning |
-
-### Frequently Asked Questions
-
-#### Why does GEIL explain concepts before commands?
-
-Because an engineer who understands the reason behind a command can troubleshoot safely when the environment differs from the happy path.
-
-#### Can these values be customized?
-
-Yes, but only by updating the Environment Specification and dependent HLD/LLD documents first. Implementation guides consume canonical values; they do not redefine them.
-
-#### Why is evidence collection mandatory?
-
-Evidence proves that implementation matched the design. It also gives future operators a baseline for troubleshooting and audits.
-
-#### Why include rollback in every guide?
-
-Enterprise infrastructure changes can fail even when the design is correct. Rollback guidance prevents panic-driven fixes and protects dependent services.
-
-### Key takeaways
-
-- GEIL guides are learning artifacts and deployment controls.
-- The operator should understand why the component exists before configuring it.
-- Validation and evidence are part of the implementation, not afterthoughts.
-- Canonical values must come from the Environment Specification and HLD/LLD baseline.

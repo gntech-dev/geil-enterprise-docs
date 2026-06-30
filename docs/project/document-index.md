@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 12.0
+version: 13.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 12.0 |
+| Version | 13.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -143,7 +143,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 
 | Epic | Release | Current Document Count |
 |---|---|---:|
-| E00 | E00.R01 - Documentation governance foundation | 17 |
+| E00 | E00.R01 - Documentation governance foundation | 18 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |

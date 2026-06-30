@@ -3,7 +3,7 @@ title: MikroTik CHR HQ Foundation Implementation Guide
 document_id: GEIL-PLAT-MTK-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,41 +18,43 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-MTK-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
 !!! note "Adaptation"
 
-    This guide uses canonical GEIL values from the [Environment Specification](../project/environment-specification.md). `HQ-FW01` is MikroTik CHR / RouterOS, `ether1` is `GEILWAN`, `ether2` is `GEILLAN`, WAN is `172.31.255.2/30`, and internal VLAN gateways use `172.20.x.1/24`.
+    This guide uses canonical GEIL values from the [Environment Specification](../project/environment-specification.md). `HQ-FW01` is MikroTik CHR / RouterOS. `ether1` connects to `GEILWAN`, `ether2` connects to `GEILLAN`, CHR WAN is `172.31.255.2/30`, and internal VLAN gateways use `172.20.x.1/24`.
 
 ## Purpose
 
-Deploy `HQ-FW01` as a MikroTik CHR firewall/router for the Phase 1 HQ foundation. This guide replaces the previous MikroTik CHR implementation guide.
+Deploy `HQ-FW01` as a MikroTik CHR firewall/router for the Phase 1 HQ foundation. This guide supersedes all active OPNsense deployment instructions.
 
 ## Learning Objectives
 
 After completing this guide you will understand:
 
 - Why GEIL uses MikroTik CHR for Phase 1 edge security.
-- How RouterOS interfaces, VLANs, interface lists, firewall filters, NAT, DNS, and DHCP relay work together.
-- How to import a CHR image into Proxmox and map VirtIO NICs.
-- How to validate RouterOS configuration with CLI commands.
-- How to export configuration and roll back safely.
+- How RouterOS interfaces, interface lists, VLANs, NAT, firewall rules, DNS, and DHCP relay work together.
+- How to import CHR into Proxmox with safe VirtIO NIC mapping.
+- How to use RouterOS Safe Mode to reduce lockout risk.
+- How to validate RouterOS configuration after every risky stage.
+- How to export, back up, troubleshoot, and roll back the firewall.
 
 ## What You Will Build
 
 By the end of this guide you will have:
 
 - ✓ `HQ-FW01` running MikroTik CHR.
-- ✓ `ether1` connected to `GEILWAN` with `172.31.255.2/30`.
-- ✓ `ether2` connected to `GEILLAN` as the VLAN trunk parent.
-- ✓ VLAN interfaces and gateways for GEIL VLANs 10-100.
-- ✓ RouterOS interface lists for WAN, LAN, MGMT, SERVERS, WORKSTATIONS, and GUEST.
-- ✓ Baseline NAT and firewall policy.
-- ✓ DHCP relay prepared but disabled until `HQ-DC01` DHCP exists.
-- ✓ Export, snapshot, validation, and evidence captured.
+- ✓ `ether1` mapped to `GEILWAN` with `172.31.255.2/30`.
+- ✓ `ether2` mapped to `GEILLAN` as the VLAN trunk parent.
+- ✓ RouterOS interface lists created before use.
+- ✓ VLAN interfaces and gateway IPs for VLANs 10,20,30,40,50,60,70,80,90,100.
+- ✓ NAT masquerade to `GEILWAN`.
+- ✓ Baseline firewall policy with management allow and guest isolation.
+- ✓ DHCP relay commands prepared but disabled until `HQ-DC01` DHCP scopes exist.
+- ✓ RouterOS export, Proxmox snapshots, and validation evidence captured.
 
 ## Estimated Time
 
@@ -60,88 +62,156 @@ By the end of this guide you will have:
 
 ## Difficulty
 
-Advanced. RouterOS CLI is powerful and direct; incorrect firewall order can lock out management or overexpose internal networks.
+Advanced. RouterOS CLI is direct and order-sensitive. Interface lists, VLAN interfaces, and firewall rules must exist before they are referenced.
 
 ## Risk Level
 
-High. `HQ-FW01` is the enterprise routing and security boundary. Take snapshots before firewall policy changes.
+High. `HQ-FW01` is the routing and security boundary. Incorrect service restrictions or firewall rules can lock out management access.
 
 ## Service Impact
 
-Maintenance window recommended. Phase 1 has no production users yet, but firewall mistakes can interrupt deployment and validation.
+Maintenance window recommended. Phase 1 has no production users yet, but a firewall error can block deployment validation.
 
 ## Prerequisites
 
 - [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md) reviewed.
 - [Proxmox HQ Foundation Implementation](proxmox-hq-foundation-implementation.md) completed.
-- `GEILWAN` exists on `PVE-HQ01` as `172.31.255.1/30`.
-- `GEILLAN` exists on `PVE-HQ01` as a VLAN-aware trunk.
-- CHR image downloaded from MikroTik.
-- Proxmox privileged access.
-- Console access to `HQ-FW01`.
-- Approved password manager ready for RouterOS admin credentials.
+- `GEILWAN` exists on `PVE-HQ01` and is visible in the Proxmox GUI.
+- `GEILLAN` exists on `PVE-HQ01`, is VLAN-aware, and is visible in the Proxmox GUI.
+- `GEILWAN` Proxmox side is `172.31.255.1/30`.
+- No GEIL VM is attached to `PROD`, `TEST`, `eno1`, or `VSW4001`.
+- MikroTik CHR image has been downloaded from MikroTik and extracted.
+- Proxmox privileged access is available.
+- Proxmox console access to `HQ-FW01` is available.
+- Approved password manager is ready for the RouterOS admin password.
+
+## Expected Starting State
+
+- `HQ-FW01` does not exist, or exists only as a disposable test VM.
+- `GEILWAN` and `GEILLAN` have already been validated on `PVE-HQ01`.
+- DHCP relay is not enabled on any firewall.
+- No firewall rules depend on VLAN interfaces that do not exist.
+
+## Expected Ending State
+
+- `HQ-FW01` runs MikroTik CHR.
+- RouterOS identity is `HQ-FW01`.
+- Interface lists exist before any services or firewall rules reference them.
+- Management restrictions are applied only after MGMT and management workstation access are validated.
+- VLAN gateways, NAT, firewall policy, exports, and snapshots are complete.
 
 ## Architecture Overview
 
 ```mermaid
 flowchart LR
-    GEILWAN[GEILWAN
-172.31.255.1/30]
-    CHR[HQ-FW01 MikroTik CHR
-ether1 172.31.255.2/30]
-    GEILLAN[GEILLAN trunk
-ether2]
-    VLANs[VLAN interfaces
-172.20.x.1/24]
+    PVE[PVE-HQ01]
+    WAN[GEILWAN 172.31.255.1/30]
+    CHR[HQ-FW01 MikroTik CHR ether1 172.31.255.2/30]
+    LAN[GEILLAN trunk on ether2]
+    V10[VLAN 10 MGMT]
+    V20[VLAN 20 Servers]
+    V30[VLAN 30 Workstations]
+    V70[VLAN 70 Guest]
 
-    GEILWAN --> CHR --> GEILLAN --> VLANs
+    PVE --> WAN --> CHR --> LAN
+    LAN --> V10
+    LAN --> V20
+    LAN --> V30
+    LAN --> V70
 ```
+
+!!! warning "Copy/paste firewall lockout risk"
+
+    Do not paste all firewall and service-hardening commands at once. Use RouterOS Safe Mode, validate after each block, and keep the Proxmox console open. Apply management restrictions only after the `MGMT` interface list exists, has members, and management access is confirmed.
 
 !!! enterprise "Enterprise pattern"
 
-    Medium and large enterprises separate firewall routing, security policy, NAT, management access, and guest isolation into explicit control planes. RouterOS implements these with interfaces, interface lists, firewall chains, NAT rules, and exports.
+    Enterprises treat firewall management as a privileged control plane. Rules are staged, validated from an approved management network, exported, and backed by console access before broad deny rules are applied.
 
 !!! implementation "GEIL deployment note"
 
-    The active Phase 1 firewall implementation changed from MikroTik CHR to MikroTik CHR because the implementation owner has RouterOS operational experience. This reduces build friction while preserving the Enterprise Edge Security capability.
+    This guide corrects the original CHR draft where `MGMT` was referenced before the interface list existed. Interface lists are now created first, VLAN members are added only after VLAN interfaces exist, and service restrictions are applied after management access is validated.
 
 ## Background Knowledge
 
-### What is MikroTik CHR?
+### What is RouterOS Safe Mode?
 
-Cloud Hosted Router is MikroTik RouterOS packaged as a virtual router. It runs as a VM on Proxmox and provides routing, firewall, NAT, DNS forwarding, and DHCP relay features.
+Safe Mode automatically reverts changes if the management session disconnects. Use it when changing firewall rules, MAC server restrictions, or management services.
 
 ### What is an interface list?
 
-An interface list groups interfaces for firewall and NAT rules. GEIL uses lists such as `WAN`, `LAN`, `MGMT`, `SERVERS`, `WORKSTATIONS`, and `GUEST` so rules express intent instead of only interface names.
+An interface list is a named group of interfaces. RouterOS firewall rules and services can reference the list. The list must exist before it can be referenced.
 
-### What is masquerade NAT?
+### What is a VLAN interface?
 
-Masquerade rewrites internal source addresses when traffic leaves through the WAN/transit interface. GEIL uses it for outbound bootstrap connectivity.
+A VLAN interface is a tagged logical interface on `ether2`. It must exist before an IP address or interface-list membership can reference it.
 
 ### What is DHCP relay?
 
-DHCP relay forwards DHCP broadcasts from client VLANs to a DHCP server on another subnet. GEIL prepares relay to `HQ-DC01` but does not enable it until scopes exist.
+DHCP relay forwards DHCP requests from a client VLAN to a DHCP server on another VLAN. GEIL prepares relay for VLANs 30, 40, and 60 but does not enable relay until Windows DHCP scopes exist on `HQ-DC01`.
 
 ## Step-by-Step Procedure
 
-### Step 1: Download and import CHR image
+### Step 1: Validate Proxmox bridge prerequisites
 
 #### Goal
 
-Import MikroTik CHR into Proxmox as the boot disk for `HQ-FW01`.
+Confirm Proxmox bridge objects exist before creating `HQ-FW01`.
 
 #### Why this step matters
 
-CHR is delivered as a disk image, not a traditional ISO installer. Importing it correctly creates a predictable RouterOS VM.
+VM NIC mapping is safe only after the bridge names are known and visible.
 
 #### Commands
 
-On `PVE-HQ01`, after downloading and extracting the CHR image:
+Run on `PVE-HQ01`:
+
+```bash
+ip -brief addr show GEILWAN
+ip -brief addr show GEILLAN
+bridge vlan show dev GEILLAN
+```
+
+#### Expected result
+
+You should now see:
+
+- `GEILWAN` with `172.31.255.1/30`.
+- `GEILLAN` present.
+- `GEILLAN` carrying VLANs 10,20,30,40,50,60,70,80,90,100.
+
+#### Validation
+
+Also verify in the GUI: `PVE-HQ01 -> System -> Network`.
+
+#### Evidence
+
+Capture command output and a Proxmox Network screenshot.
+
+#### Rollback
+
+Do not continue. Return to [Proxmox HQ Foundation Implementation](proxmox-hq-foundation-implementation.md) and fix bridge configuration first.
+
+#### Next step
+
+Import the CHR image.
+
+### Step 2: Import CHR image and create VM
+
+#### Goal
+
+Create `HQ-FW01` with the CHR disk and correct NIC mapping.
+
+#### Why this step matters
+
+A wrong NIC mapping reverses WAN/LAN policy and can expose internal networks or break validation.
+
+#### Commands
+
+Run on `PVE-HQ01` after copying the extracted CHR `.img` file to `/var/lib/vz/template/iso/mikrotik/chr.img`:
 
 ```bash
 mkdir -p /var/lib/vz/template/iso/mikrotik
-# Copy the extracted CHR .img file into the path above before continuing.
 qm create 100 --name HQ-FW01 --memory 2048 --cores 2 --net0 virtio,bridge=GEILWAN --net1 virtio,bridge=GEILLAN
 qm importdisk 100 /var/lib/vz/template/iso/mikrotik/chr.img local-lvm
 qm set 100 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-100-disk-0
@@ -152,7 +222,12 @@ qm config 100
 
 #### Expected result
 
-You should now see `HQ-FW01` with two VirtIO NICs and an imported CHR disk.
+You should now see:
+
+- VM 100 named `HQ-FW01`.
+- `net0` on `GEILWAN`.
+- `net1` on `GEILLAN`.
+- CHR disk attached as boot disk.
 
 #### Validation
 
@@ -173,17 +248,17 @@ qm destroy 100 --purge
 
 #### Next step
 
-Boot CHR and set credentials.
+Boot CHR and perform non-network-locking hardening.
 
-### Step 2: Initial RouterOS hardening
+### Step 3: Set identity and admin password only
 
 #### Goal
 
-Secure the default RouterOS instance before enabling enterprise routing.
+Secure the default account and set the router identity without referencing interface lists that do not exist yet.
 
 #### Why this step matters
 
-Default services and default credentials are unsafe for an enterprise firewall.
+This step is safe because it does not restrict management services or firewall access.
 
 #### Commands
 
@@ -192,65 +267,92 @@ Run from the RouterOS console:
 ```routeros
 /user set admin password=<PASSWORD>
 /system identity set name=HQ-FW01
-/ip service disable telnet,ftp,www,api,api-ssl
-/ip service set ssh address=172.20.10.0/24,172.20.30.10/32
-/ip service set winbox address=172.20.10.0/24,172.20.30.10/32
-/ip neighbor discovery-settings set discover-interface-list=MGMT
-/tool mac-server set allowed-interface-list=MGMT
-/tool mac-server mac-winbox set allowed-interface-list=MGMT
+/system identity print
 ```
-
-`<PASSWORD>` must be generated and stored in the approved password manager. Do not commit it to Git.
 
 #### Expected result
 
-You should now see RouterOS identity `HQ-FW01`; unnecessary services are disabled.
+You should now see identity `HQ-FW01`.
 
 #### Validation
 
 ```routeros
+/user print
 /system identity print
-/ip service print
 ```
 
 #### Evidence
 
-Capture sanitized `/ip service print` output.
+Capture sanitized `/system identity print` output. Do not capture or commit the password.
 
 #### Rollback
 
-Use Proxmox console to restore service access or roll back to `CP-FW-CHR-IMPORTED`.
+Use the Proxmox console to reset the password if the password was mistyped before management service restrictions are applied.
 
 #### Next step
 
-Name interfaces and create interface lists.
+Create interface lists.
 
-### Step 3: Name interfaces and create interface lists
+### Step 4: Create interface lists before referencing them
+
+#### Goal
+
+Create RouterOS interface lists in the correct order.
+
+#### Why this step matters
+
+RouterOS commands that reference a missing interface list fail or partially apply, which can leave the firewall in an inconsistent state.
 
 #### Commands
 
 ```routeros
-/interface ethernet set [find default-name=ether1] name=ether1 comment=GEILWAN
-/interface ethernet set [find default-name=ether2] name=ether2 comment="GEILLAN trunk"
-/interface list add name=WAN
-/interface list add name=LAN
-/interface list add name=MGMT
-/interface list add name=SERVERS
-/interface list add name=WORKSTATIONS
-/interface list add name=GUEST
+/interface list add name=WAN comment="External/transit interfaces"
+/interface list add name=LAN comment="Internal non-guest interfaces"
+/interface list add name=MGMT comment="Approved firewall management interfaces"
+/interface list add name=SERVERS comment="Server VLAN interfaces"
+/interface list add name=WORKSTATIONS comment="Workstation VLAN interfaces"
+/interface list add name=GUEST comment="Guest-only VLAN interfaces"
 /interface list member add list=WAN interface=ether1
-/interface list member add list=LAN interface=ether2
 ```
+
+#### Expected result
+
+You should now see all required interface lists.
 
 #### Validation
 
 ```routeros
-/interface print
-/interface list print
-/interface list member print
+/interface/list/print
+/interface/list/member/print
 ```
 
-### Step 4: Configure WAN IP, default route, and DNS
+#### Evidence
+
+Capture interface list output.
+
+#### Rollback
+
+```routeros
+/interface list member remove [find]
+/interface list remove [find name=WAN]
+/interface list remove [find name=LAN]
+/interface list remove [find name=MGMT]
+/interface list remove [find name=SERVERS]
+/interface list remove [find name=WORKSTATIONS]
+/interface list remove [find name=GUEST]
+```
+
+#### Next step
+
+Configure WAN and default route.
+
+### Step 5: Configure WAN IP, default route, and DNS
+
+#### Goal
+
+Make CHR reachable on the GEILWAN transit network.
+
+#### Commands
 
 ```routeros
 /ip address add address=172.31.255.2/30 interface=ether1 comment="GEILWAN CHR WAN"
@@ -258,15 +360,41 @@ Name interfaces and create interface lists.
 /ip dns set servers=1.1.1.1,1.0.0.1 allow-remote-requests=yes
 ```
 
-Validation:
+#### Expected result
+
+You should now see `172.31.255.2/30` on `ether1` and default route via `172.31.255.1`.
+
+#### Validation
 
 ```routeros
-/ip address print where interface=ether1
-/ip route print where dst-address=0.0.0.0/0
+/ip/address/print
+/ip/route/print
+/ip/dns/print
 /ping 172.31.255.1 count=4
 ```
 
-### Step 5: Create VLAN interfaces and assign gateways
+#### Evidence
+
+Capture address, route, DNS, and ping output.
+
+#### Rollback
+
+```routeros
+/ip route remove [find comment="Default route via GEILWAN Proxmox peer"]
+/ip address remove [find comment="GEILWAN CHR WAN"]
+```
+
+#### Next step
+
+Create VLAN interfaces.
+
+### Step 6: Create VLAN interfaces on ether2
+
+#### Goal
+
+Create the VLAN interface objects before assigning IPs or interface-list membership.
+
+#### Commands
 
 ```routeros
 /interface vlan add name=vlan10-mgmt interface=ether2 vlan-id=10
@@ -279,6 +407,38 @@ Validation:
 /interface vlan add name=vlan80-dmz interface=ether2 vlan-id=80
 /interface vlan add name=vlan90-backup interface=ether2 vlan-id=90
 /interface vlan add name=vlan100-hypervisors interface=ether2 vlan-id=100
+```
+
+#### Expected result
+
+You should now see ten VLAN interfaces on `ether2`.
+
+#### Validation
+
+```routeros
+/interface/print
+/interface/vlan/print
+```
+
+#### Rollback
+
+```routeros
+/interface vlan remove [find interface=ether2]
+```
+
+#### Next step
+
+Assign gateway IP addresses.
+
+### Step 7: Assign VLAN gateway IP addresses
+
+#### Goal
+
+Assign canonical gateway IPs only after VLAN interfaces exist.
+
+#### Commands
+
+```routeros
 /ip address add address=172.20.10.1/24 interface=vlan10-mgmt comment="VLAN10 Management gateway"
 /ip address add address=172.20.20.1/24 interface=vlan20-servers comment="VLAN20 Servers gateway"
 /ip address add address=172.20.30.1/24 interface=vlan30-workstations comment="VLAN30 Workstations gateway"
@@ -289,6 +449,33 @@ Validation:
 /ip address add address=172.20.80.1/24 interface=vlan80-dmz comment="VLAN80 DMZ gateway"
 /ip address add address=172.20.90.1/24 interface=vlan90-backup comment="VLAN90 Backup gateway"
 /ip address add address=172.20.100.1/24 interface=vlan100-hypervisors comment="VLAN100 Hypervisors gateway"
+```
+
+#### Validation
+
+```routeros
+/ip/address/print
+```
+
+#### Rollback
+
+```routeros
+/ip address remove [find comment~"gateway"]
+```
+
+#### Next step
+
+Add VLAN interfaces to interface lists.
+
+### Step 8: Add VLAN interfaces to interface lists
+
+#### Goal
+
+Populate lists only after the VLAN interfaces exist.
+
+#### Commands
+
+```routeros
 /interface list member add list=MGMT interface=vlan10-mgmt
 /interface list member add list=SERVERS interface=vlan20-servers
 /interface list member add list=WORKSTATIONS interface=vlan30-workstations
@@ -304,28 +491,162 @@ Validation:
 /interface list member add list=LAN interface=vlan100-hypervisors
 ```
 
-Validation:
+#### Validation
 
 ```routeros
-/interface vlan print
-/ip address print where address~"172.20"
+/interface/list/member/print
 ```
 
-### Step 6: Configure NAT masquerade
+#### Rollback
+
+```routeros
+/interface list member remove [find list=LAN]
+/interface list member remove [find list=MGMT]
+/interface list member remove [find list=SERVERS]
+/interface list member remove [find list=WORKSTATIONS]
+/interface list member remove [find list=GUEST]
+```
+
+#### Next step
+
+Validate management reachability before restricting services.
+
+### Step 9: Validate management path before restrictions
+
+#### Goal
+
+Confirm an approved management source can reach RouterOS before limiting management services to the `MGMT` list.
+
+#### Validation
+
+From an approved management context, validate WinBox or SSH reachability to `172.20.10.1` when the network path exists. From RouterOS, print current state:
+
+```routeros
+/interface/list/print
+/interface/list/member/print
+/ip/address/print
+/ip/service/print
+```
+
+#### Expected result
+
+- `MGMT` list exists and contains `vlan10-mgmt`.
+- `HQ-MGMT01` or approved management network has a path to `172.20.10.1` when VLAN 10/30 connectivity is available.
+
+#### Rollback
+
+Do not apply service restrictions until this validation succeeds.
+
+#### Next step
+
+Enter Safe Mode and restrict services.
+
+### Step 10: Enter Safe Mode and restrict RouterOS services
+
+#### Goal
+
+Disable unnecessary services and restrict management after lists and management path exist.
+
+#### Why this step matters
+
+This was the critical order issue found during deployment. `MGMT` must exist and contain the intended interface before any command references it.
+
+#### Procedure
+
+In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the block below. Keep the Proxmox console open.
+
+#### Commands
+
+```routeros
+/ip service disable telnet,ftp,www,api,api-ssl
+/ip service set ssh address=172.20.10.0/24,172.20.30.10/32
+/ip service set winbox address=172.20.10.0/24,172.20.30.10/32
+/ip neighbor discovery-settings set discover-interface-list=MGMT
+/tool mac-server set allowed-interface-list=MGMT
+/tool mac-server mac-winbox set allowed-interface-list=MGMT
+```
+
+#### Validation
+
+```routeros
+/ip/service/print
+/ip/neighbor/discovery-settings/print
+/tool/mac-server/print
+/tool/mac-server/mac-winbox/print
+```
+
+#### Evidence
+
+Capture sanitized service and MAC-server output.
+
+#### Rollback
+
+If management disconnects, Safe Mode should revert the changes. If using console, manually relax the settings:
+
+```routeros
+/ip service enable ssh,winbox
+/tool mac-server set allowed-interface-list=all
+/tool mac-server mac-winbox set allowed-interface-list=all
+```
+
+#### Next step
+
+Configure NAT and firewall filters.
+
+### Step 11: Configure NAT masquerade
+
+#### Commands
 
 ```routeros
 /ip firewall nat add chain=srcnat out-interface-list=WAN action=masquerade comment="GEIL outbound masquerade to GEILWAN"
-/ip firewall nat print
 ```
 
-### Step 7: Configure baseline firewall rules
+#### Validation
+
+```routeros
+/ip/firewall/nat/print
+```
+
+#### Rollback
+
+```routeros
+/ip firewall nat remove [find comment="GEIL outbound masquerade to GEILWAN"]
+```
+
+#### Next step
+
+Apply firewall rules in small blocks.
+
+### Step 12: Apply baseline firewall rules in safe order
+
+#### Goal
+
+Allow required management and established traffic, block guest-to-internal traffic, and deny unapproved forwarding.
+
+#### Commands: input chain foundation
 
 ```routeros
 /ip firewall filter add chain=input connection-state=established,related action=accept comment="Accept established/related to router"
 /ip firewall filter add chain=input connection-state=invalid action=drop comment="Drop invalid to router"
 /ip firewall filter add chain=input src-address=172.20.10.0/24 action=accept comment="Allow management VLAN to router"
 /ip firewall filter add chain=input src-address=172.20.30.10 action=accept comment="Allow HQ-MGMT01 to router"
+```
+
+Validate before adding drops:
+
+```routeros
+/ip/firewall/filter/print
+```
+
+#### Commands: WAN input drop
+
+```routeros
 /ip firewall filter add chain=input in-interface-list=WAN action=drop comment="Drop WAN access to router"
+```
+
+#### Commands: forwarding policy
+
+```routeros
 /ip firewall filter add chain=forward connection-state=established,related action=accept comment="Accept established/related forwarding"
 /ip firewall filter add chain=forward connection-state=invalid action=drop comment="Drop invalid forwarding"
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 dst-address=172.20.0.0/16 action=drop comment="Block guest to internal GEIL"
@@ -335,38 +656,69 @@ Validation:
 /ip firewall filter add chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
-Validation:
+#### Validation
 
 ```routeros
-/ip firewall filter print stats
+/ip/firewall/filter/print stats
 ```
 
-### Step 8: Prepare DHCP relay without enabling prematurely
+#### Rollback
 
-Record the future relay commands but do not run them until `HQ-DC01` DHCP scopes exist:
+Remove the most recent bad rule by comment, for example:
 
 ```routeros
-# Future only after DHCP scopes exist:
-# /ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 disabled=yes
-# /ip dhcp-relay add name=relay-vlan40 interface=vlan40-printers dhcp-server=172.20.20.11 disabled=yes
-# /ip dhcp-relay add name=relay-vlan60 interface=vlan60-corpwifi dhcp-server=172.20.20.11 disabled=yes
+/ip firewall filter remove [find comment="Default deny unapproved forwarding"]
 ```
 
-Validation:
+#### Next step
+
+Prepare DHCP relay without enabling it.
+
+### Step 13: Prepare DHCP relay commands but keep disabled
+
+#### Goal
+
+Document the future relay configuration without sending traffic before DHCP scopes exist.
+
+#### Commands
+
+Do not run until `HQ-DC01` DHCP scopes exist. When ready, add them disabled first:
 
 ```routeros
-/ip dhcp-relay print
+/ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 disabled=yes
+/ip dhcp-relay add name=relay-vlan40 interface=vlan40-printers dhcp-server=172.20.20.11 disabled=yes
+/ip dhcp-relay add name=relay-vlan60 interface=vlan60-corpwifi dhcp-server=172.20.20.11 disabled=yes
 ```
 
-Expected result: no active relay sends Guest WiFi or other VLAN traffic to AD DHCP before scopes exist.
+Never create relay for VLAN 70 Guest WiFi.
 
-### Step 9: Export configuration and capture snapshots
+#### Validation
+
+```routeros
+/ip/dhcp-relay/print
+```
+
+Expected result before DHCP scopes exist: no enabled relay entries.
+
+#### Rollback
+
+```routeros
+/ip dhcp-relay remove [find]
+```
+
+#### Next step
+
+Export and snapshot.
+
+### Step 14: Export configuration and capture snapshots
+
+#### Commands
 
 RouterOS export:
 
 ```routeros
 /export hide-sensitive file=HQ-FW01-baseline
-/file print where name~"HQ-FW01-baseline"
+/file/print where name~"HQ-FW01-baseline"
 ```
 
 Proxmox snapshots:
@@ -379,34 +731,86 @@ qm snapshot 100 CP-FW-BASELINE-RULES --description "HQ-FW01 RouterOS baseline fi
 qm listsnapshot 100
 ```
 
-## Validation commands
+## Validation after each major stage
+
+Run this final validation bundle from RouterOS:
 
 ```routeros
-/system identity print
-/interface print
-/interface vlan print
-/interface list member print
-/ip address print
-/ip route print
-/ip firewall nat print
-/ip firewall filter print stats
-/ip service print
-/ping 172.31.255.1 count=4
+/system/identity/print
+/interface/print
+/interface/list/print
+/interface/list/member/print
+/interface/vlan/print
+/ip/address/print
+/ip/route/print
+/ip/dns/print
+/ip/firewall/filter/print
+/ip/firewall/nat/print
+/ip/neighbor/discovery-settings/print
+/tool/mac-server/print
+/tool/mac-server/mac-winbox/print
+/ip/dhcp-relay/print
 ```
+
+Expected results:
+
+- Interface lists exist before services reference them.
+- VLAN interfaces exist before IP addresses reference them.
+- `ether1` has `172.31.255.2/30`.
+- Default route uses `172.31.255.1`.
+- Guest WiFi has an explicit deny to `172.20.0.0/16`.
+- NAT masquerade uses the `WAN` interface list.
+- DHCP relay is absent or disabled until DHCP scopes exist.
+
+## Evidence to capture
+
+- `qm config 100` output.
+- `/interface/print` output.
+- `/interface/list/print` and `/interface/list/member/print` output.
+- `/ip/address/print` output.
+- `/ip/route/print` output.
+- `/ip/dns/print` output.
+- `/ip/firewall/filter/print stats` output.
+- `/ip/firewall/nat/print` output.
+- `/ip/neighbor/discovery-settings/print` output.
+- `/tool/mac-server/print` and `/tool/mac-server/mac-winbox/print` output.
+- `/export hide-sensitive` file stored outside Git.
+- Proxmox snapshot inventory.
+
+!!! example "Screenshot Required"
+
+    Capture RouterOS/WinBox interface list, VLAN list, firewall filter rules, NAT rule, route table, and file/export screens after validation. Store sanitized screenshots under `docs/assets/images/mikrotik-chr-hq-foundation-implementation/` if they do not contain secrets.
+
+## Common Mistakes
+
+| Mistake | Symptom | Fix |
+|---|---|---|
+| Referencing `MGMT` before creating it | RouterOS command fails or applies inconsistently | Create interface lists in Step 4 first |
+| Restricting services before management path works | WinBox/SSH lockout | Use Safe Mode and Proxmox console rollback |
+| Assigning IPs before VLAN interfaces exist | `/ip address add` fails | Create VLAN interfaces first |
+| Enabling DHCP relay before scopes exist | Clients receive no lease or bad state | Keep relay disabled until scopes exist |
+| Guest allow rule above guest deny | Guest reaches internal networks | Place guest-to-internal deny above internet allow |
 
 ## Troubleshooting
 
 | Symptom | Likely Cause | Fix |
 |---|---|---|
-| Cannot reach `172.31.255.1` | `ether1` not on `GEILWAN` or wrong IP | Check `qm config 100` and `/ip address print` |
-| VLAN gateway unreachable | `ether2` not on `GEILLAN` or VLAN trunk issue | Check Proxmox bridge and `/interface vlan print` |
-| Management lockout | Firewall input rule missing | Use Proxmox console and add MGMT/HQ-MGMT01 allow |
-| Guest reaches internal | Guest deny rule missing or below allow | Move guest deny above broad allows |
-| No outbound internet | NAT missing or default route wrong | Check `/ip firewall nat print` and `/ip route print` |
+| Cannot reach `172.31.255.1` | `ether1` not on `GEILWAN` or wrong IP | Check `qm config 100` and `/ip/address/print` |
+| VLAN gateway unreachable | `ether2` not on `GEILLAN` or VLAN trunk issue | Check Proxmox bridge and `/interface/vlan/print` |
+| Management lockout | Input or MAC-server restriction applied too early | Use Proxmox console; Safe Mode should revert if session dropped |
+| Guest reaches internal | Guest deny missing or below allow | Move guest deny above internet allow |
+| DNS queries fail from router | DNS servers or default route wrong | Check `/ip/dns/print`, `/ip/route/print`, and ping upstream |
 
 ## Rollback
 
-RouterOS command rollback is rule-by-rule using `remove [find comment="..."]` where practical. For major failures, use Proxmox snapshot rollback from console:
+Use the least destructive rollback that restores access:
+
+1. Safe Mode auto-revert for management-session disconnects.
+2. Remove the last bad rule by comment.
+3. Restore a Proxmox snapshot.
+4. Rebuild VM 100 before production use if configuration becomes untrusted.
+
+Snapshot rollback example:
 
 ```bash
 qm shutdown 100
@@ -414,43 +818,41 @@ qm rollback 100 CP-FW-VLANS
 qm start 100
 ```
 
-For full rebuild before production use:
+Full rebuild before production use:
 
 ```bash
 qm stop 100
 qm destroy 100 --purge
 ```
 
-## Evidence Collection
-
-!!! example "Screenshot Required"
-
-    Capture RouterOS/WinBox interface list, VLAN list, firewall filter rules, NAT rule, route table, and file/export screens after validation. Store sanitized screenshots under `docs/assets/images/mikrotik-chr-hq-foundation-implementation/` if they do not contain secrets.
-
-
-Capture:
-
-- `qm config 100` output.
-- RouterOS `/system identity print`.
-- RouterOS `/interface print`.
-- RouterOS `/interface vlan print`.
-- RouterOS `/ip address print`.
-- RouterOS `/ip route print`.
-- RouterOS `/ip firewall filter print stats`.
-- RouterOS `/ip firewall nat print`.
-- RouterOS `/export hide-sensitive` file stored outside Git.
-- Proxmox snapshot inventory for VM 100.
-
 ## Knowledge Check
 
-1. Why is `ether1` connected to `GEILWAN` instead of directly to an existing Proxmox public interface?
-2. Why does GEIL use interface lists in RouterOS firewall rules?
-3. Why must Guest WiFi be blocked from `172.20.0.0/16` before broad internet access is allowed?
-4. Why is DHCP relay prepared but not enabled before `HQ-DC01` DHCP scopes exist?
-5. Why should RouterOS exports use `hide-sensitive`?
+1. Why must interface lists be created before `/ip service`, `/tool mac-server`, or firewall rules reference them?
+2. Why should service restrictions wait until management access is validated?
+3. Why is DHCP relay added disabled first and never configured for VLAN 70?
+4. Which validation command proves VLAN interfaces exist before gateway IPs are assigned?
+5. What does RouterOS Safe Mode protect against during firewall changes?
 
 ## Next Guide
 
 Continue to:
 
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
+
+
+## Audit Correction Notes
+
+!!! success "Execution-order audit"
+
+    This guide was audited for command order, object dependencies, canonical GEIL values, rollback coverage, validation gates, and active MikroTik CHR firewall references. Follow dependency order exactly: validate prerequisites, create objects, validate objects, apply dependent settings, then capture evidence.
+
+- Audit focus: Deploy RouterOS in dependency order: lists, interfaces, addresses, management validation, service restriction, NAT, firewall, relay preparation.
+- Active Phase 1 firewall implementation: MikroTik CHR / RouterOS on `HQ-FW01`.
+- OPNsense is superseded and must not be used for active Phase 1 deployment.
+
+## Expected Results
+
+- Commands complete without referencing missing objects.
+- Canonical GEIL values are visible in outputs.
+- No active OPNsense deployment path remains for Phase 1 firewall work.
+- `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.

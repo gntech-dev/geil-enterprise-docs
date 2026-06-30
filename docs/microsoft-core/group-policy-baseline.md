@@ -3,7 +3,7 @@ title: Group Policy Baseline
 document_id: GEIL-MSC-GPO-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,54 +18,310 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-GPO-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
 !!! note "Adaptation"
 
-    This document uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Organizations adapting this design should change the environment specification first, then update all affected DNS zones, certificates, PowerShell commands, Group Policies, VLANs, firewall rules, and service configurations.
+    This guide uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md). Update the Environment Specification before changing OU names, domain names, group names, or GPO names.
 
 ## Purpose
 
-Implement baseline Group Policy for security, operations, and Windows client consistency.
+Create the initial Group Policy baseline for GEIL after the Active Directory forest and baseline OU structure exist.
 
-## Baseline GPOs
+## Learning Objectives
 
-| GPO | Link | Purpose |
-|---|---|---|
-| `GEIL-DC-Security-Baseline` | Domain Controllers OU | Domain controller hardening |
-| `GEIL-Server-Security-Baseline` | Servers OU | Server firewall, audit, Defender |
-| `GEIL-Workstation-Security-Baseline` | Workstations OU | Windows 11 security settings |
-| `GEIL-Admin-Tier0-Restrictions` | Admin OU | Restrict Tier 0 interactive logon |
-| `GEIL-Certificate-Autoenrollment` | Domain root or scoped OUs | PKI autoenrollment |
+After completing this guide you will understand:
 
-## Implementation PowerShell
+- Why Group Policy is applied after OU creation.
+- How GPO creation, linking, and security filtering differ.
+- How to validate GPO scope before enabling broad policy.
+- How to roll back by unlinking or disabling a GPO before deleting it.
+- How to collect evidence that a policy applied to the intended computer.
+
+## What You Will Build
+
+By the end of this guide you will have:
+
+- ✓ Verified the baseline OU structure exists.
+- ✓ Created baseline GPO shells before linking them.
+- ✓ Linked the workstation baseline to the Workstations OU.
+- ✓ Configured a safe example setting for PowerShell script block logging.
+- ✓ Validated security filtering and resultant policy.
+- ✓ Documented rollback for unlinking and disabling GPOs.
+
+## Estimated Time
+
+30-60 minutes for the initial baseline shell and one validated policy.
+
+## Difficulty
+
+Intermediate. GPOs are easy to create but can affect many systems if linked or filtered incorrectly.
+
+## Risk Level
+
+Medium. Incorrect GPO links or filters can apply settings to the wrong computers.
+
+## Service Impact
+
+Maintenance window recommended for broad policy rollout. Creating unlinked GPOs has no impact; linking enabled GPOs can affect target computers at refresh.
+
+## Prerequisites
+
+- [Active Directory Implementation](active-directory-implementation.md) completed.
+- `corp.gntech.me` forest exists.
+- Baseline OUs exist: `Admin`, `Servers`, `Workstations`, `Groups`.
+- Group Policy Management Console is installed.
+- PowerShell GroupPolicy module is available.
+- Test workstation exists or is planned for validation.
+
+## Expected Starting State
+
+- Domain exists.
+- OUs exist.
+- No GEIL baseline GPO is linked to production OUs unless it was created by a previous approved change.
+
+## Expected Ending State
+
+- GPOs exist before links are configured.
+- Workstation baseline is linked only to the Workstations OU.
+- Security filtering is reviewed and documented.
+- Rollback commands are captured.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+    Domain[corp.gntech.me]
+    OU[OU=Workstations]
+    GPO[GEIL-Workstation-Security-Baseline]
+    Client[HQ-W11-001]
+    Domain --> OU
+    GPO --> OU --> Client
+```
+
+!!! enterprise "Enterprise pattern"
+
+    Enterprises usually create GPOs as unlinked objects first, configure and review settings, validate security filtering, then link to a pilot OU before broad deployment.
+
+## Background Knowledge
+
+### What is a GPO?
+
+A Group Policy Object stores policy settings. It does nothing until it is linked to a site, domain, or OU and security filtering allows it to apply.
+
+### What is a GPO link?
+
+A link attaches a GPO to a scope such as an OU. The link should be created only after the GPO exists.
+
+### What is security filtering?
+
+Security filtering controls which users or computers inside the linked scope can apply the GPO.
+
+## Step-by-Step Procedure
+
+### Step 1: Validate OU structure and module availability
+
+#### Goal
+
+Confirm the required objects exist before creating or linking GPOs.
+
+#### Commands
 
 ```powershell
-New-GPO -Name "GEIL-Workstation-Security-Baseline"
-New-GPLink -Name "GEIL-Workstation-Security-Baseline" -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
+Import-Module ActiveDirectory
+Import-Module GroupPolicy
+$RequiredOUs = @(
+  "OU=Admin,DC=corp,DC=gntech,DC=me",
+  "OU=Servers,DC=corp,DC=gntech,DC=me",
+  "OU=Workstations,DC=corp,DC=gntech,DC=me",
+  "OU=Groups,DC=corp,DC=gntech,DC=me"
+)
+foreach ($OU in $RequiredOUs) { Get-ADOrganizationalUnit -Identity $OU | Select-Object Name,DistinguishedName }
+Get-Command New-GPO,New-GPLink,Get-GPO
+```
+
+#### Expected result
+
+You should now see all required OUs and GroupPolicy commands.
+
+#### Rollback
+
+No rollback is required for read-only validation.
+
+### Step 2: Create GPOs before linking
+
+#### Goal
+
+Create baseline GPO shells without applying them yet.
+
+#### Commands
+
+```powershell
+$Gpos = @(
+  "GEIL-DC-Security-Baseline",
+  "GEIL-Server-Security-Baseline",
+  "GEIL-Workstation-Security-Baseline",
+  "GEIL-Admin-Tier0-Restrictions"
+)
+foreach ($Gpo in $Gpos) {
+  if (-not (Get-GPO -Name $Gpo -ErrorAction SilentlyContinue)) {
+    New-GPO -Name $Gpo | Out-Null
+  }
+}
+Get-GPO -All | Where-Object DisplayName -like "GEIL-*" | Select-Object DisplayName,GpoStatus
+```
+
+#### Rollback
+
+If a GPO was created with the wrong name and has no links:
+
+```powershell
+Remove-GPO -Name "Incorrect-GPO-Name" -Confirm:$false
+```
+
+### Step 3: Configure a safe workstation baseline setting
+
+#### Goal
+
+Enable PowerShell script block logging in the workstation baseline before linking.
+
+#### Commands
+
+```powershell
 Set-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
   -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
   -ValueName EnableScriptBlockLogging -Type DWord -Value 1
+
+Get-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
+  -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+  -ValueName EnableScriptBlockLogging
 ```
 
-Expected result: GPO exists, is linked to the correct OU, and enables PowerShell script block logging.
-
-## Validation
+#### Rollback
 
 ```powershell
-Get-GPO -Name "GEIL-Workstation-Security-Baseline"
-gpresult /h C:\Temp\gpresult.html
+Remove-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
+  -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+  -ValueName EnableScriptBlockLogging
 ```
 
-Expected result: GPO appears in applied policies for a test workstation.
+### Step 4: Validate security filtering before linking
+
+#### Commands
+
+```powershell
+Get-GPPermission -Name "GEIL-Workstation-Security-Baseline" -All | Select-Object Trustee,Permission
+```
+
+Expected result: filtering is visible and documented. Do not proceed if it would apply to unintended computers.
+
+### Step 5: Link the GPO to the Workstations OU
+
+#### Commands
+
+```powershell
+New-GPLink -Name "GEIL-Workstation-Security-Baseline" `
+  -Target "OU=Workstations,DC=corp,DC=gntech,DC=me" `
+  -LinkEnabled Yes
+
+Get-GPInheritance -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
+```
+
+#### Rollback
+
+```powershell
+Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" `
+  -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
+```
+
+### Step 6: Validate resultant policy
+
+From a test workstation such as `HQ-W11-001` after domain join:
+
+```powershell
+gpupdate /force
+gpresult /h C:\Temp\geil-gpresult.html
+Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20
+```
+
+Expected result: `GEIL-Workstation-Security-Baseline` appears in applied computer policies for the test workstation.
+
+## Validation after each major stage
+
+- OU validation passes before GPO creation.
+- GPOs exist before links are configured.
+- Security filtering is reviewed before linking.
+- `gpresult` confirms the intended policy applies to the intended computer.
+
+## Evidence to capture
+
+- `Get-ADOrganizationalUnit` output for required OUs.
+- `Get-GPO -All` output for GEIL GPOs.
+- `Get-GPPermission` output.
+- `Get-GPInheritance` output.
+- `gpresult` HTML from a test workstation.
+- Event log review output.
+
+## Common Mistakes
+
+| Mistake | Symptom | Fix |
+|---|---|---|
+| Link created before GPO settings reviewed | Policy applies too early | Remove link, review settings, relink when approved |
+| OU missing | `New-GPLink` fails | Create OU in AD implementation guide first |
+| Filtering too broad | Policy applies to wrong computers | Adjust security filtering before linking |
+| GPO deleted instead of disabled | Rollback evidence lost | Unlink or disable first; delete only after impact review |
+
+## Troubleshooting
+
+- Use `Get-GPInheritance` to confirm links.
+- Use `Get-GPPermission` to confirm filtering.
+- Use `gpresult /r` and `gpresult /h` on the target client.
+- Check `Microsoft-Windows-GroupPolicy/Operational` event log for processing failures.
 
 ## Rollback
 
-Unlink first; do not delete until impact is understood.
+Rollback in this order:
+
+1. Unlink the GPO from the OU.
+2. Disable the GPO if additional containment is required.
+3. Remove or correct settings.
+4. Delete only after impact is understood.
 
 ```powershell
-Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
+Set-GPO -Name "GEIL-Workstation-Security-Baseline" -GpoStatus AllSettingsDisabled
 ```
+
+## Knowledge Check
+
+1. Why must the OU structure exist before linking GPOs?
+2. Why should a GPO be created before it is linked?
+3. What does security filtering control?
+4. Why is unlinking safer than deleting during rollback?
+5. Which command proves a GPO applied to a workstation?
+
+## Next Guide
+
+Continue to:
+
+- [Privileged Access Model](../security/privileged-access-model.md)
+
+
+## Audit Correction Notes
+
+!!! success "Execution-order audit"
+
+    This guide was audited for command order, object dependencies, canonical GEIL values, rollback coverage, validation gates, and active MikroTik CHR firewall references. Follow dependency order exactly: validate prerequisites, create objects, validate objects, apply dependent settings, then capture evidence.
+
+- Audit focus: Create GPOs before links, verify OU structure and filtering before applying policy.
+- Active Phase 1 firewall implementation: MikroTik CHR / RouterOS on `HQ-FW01`.
+- OPNsense is superseded and must not be used for active Phase 1 deployment.
+
+## Expected Results
+
+- Commands complete without referencing missing objects.
+- Canonical GEIL values are visible in outputs.
+- No active OPNsense deployment path remains for Phase 1 firewall work.
+- `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.

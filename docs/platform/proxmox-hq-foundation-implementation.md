@@ -3,7 +3,7 @@ title: Proxmox HQ Foundation Implementation Runbook
 document_id: GEIL-PLAT-PVE-HQ-IMPL-001
 owner: Infrastructure Engineering
 status: Approved
-version: 2.1
+version: 2.2
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PVE-HQ-IMPL-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 2.1 |
+| Version | 2.2 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -111,6 +111,19 @@ Host networking changes can interrupt management access. Create the rollback cop
 Maintenance window recommended.
 
 The GEIL bridge additions are designed to be additive, but a mistake in `/etc/network/interfaces` can interrupt access to existing workloads.
+
+
+## Expected Starting State
+
+- Existing `eno1`, `VSW4001`, `PROD`, and `TEST` networking is documented and preserved.
+- `GEILWAN` and `GEILLAN` do not yet exist or have been approved for correction.
+- Console access to `PVE-HQ01` is available before editing networking.
+
+## Expected Ending State
+
+- `GEILWAN` and `GEILLAN` are defined in `/etc/network/interfaces` where the Proxmox GUI can see them.
+- Existing public/non-GEIL access remains intact.
+- Bridges validate before `HQ-FW01` or other GEIL VMs are created.
 
 ## Architecture Overview
 
@@ -231,14 +244,16 @@ The detailed Proxmox bridge design is complex enough that future visual asset mi
 
 ```mermaid
 flowchart LR
-    WAN[WAN NIC] --> vmbr0[vmbr0 WAN]
-    Trunk[LAN Trunk NIC] --> vmbr1[vmbr1 VLAN-aware trunk]
+    WAN[WAN NIC] --> vmbr0[GEILWAN transit]
+    Trunk[LAN Trunk NIC] --> vmbr1[GEILLAN VLAN-aware trunk]
     Mgmt[Mgmt NIC/VLAN100] --> vmbr100[vmbr100 management]
     vmbr0 --> FW[HQ-FW01 WAN]
     vmbr1 --> FWLAN[HQ-FW01 LAN trunk]
     vmbr1 --> Guests[VLAN-tagged guests]
     vmbr100 --> PVE[PVE-HQ01 172.20.100.11]
 ```
+
+## Step-by-Step Procedure
 
 ## Exact Proxmox configuration steps
 
@@ -523,6 +538,14 @@ qm rollback 100 CP-FW-INSTALLED
 ```
 
 Use the appropriate VM ID and checkpoint name from the build evidence.
+
+## Common Mistakes
+
+| Mistake | Symptom | Correction |
+|---|---|---|
+| Editing `eno1`, `VSW4001`, `PROD`, or `TEST` | Existing access breaks | Revert from backup and only add GEIL bridges |
+| Placing bridge definitions only in `interfaces.d` | Proxmox GUI does not show them | Put GEIL bridge definitions in `/etc/network/interfaces` |
+| Creating VMs before bridge validation | VM NICs bind to wrong network | Validate bridges first |
 
 ## Troubleshooting
 
@@ -1002,3 +1025,25 @@ Enterprise infrastructure changes can fail even when the design is correct. Roll
 - The operator should understand why the component exists before configuring it.
 - Validation and evidence are part of the implementation, not afterthoughts.
 - Canonical values must come from the Environment Specification and HLD/LLD baseline.
+
+
+## Audit Correction Notes
+
+!!! success "Execution-order audit"
+
+    This guide was audited for command order, object dependencies, canonical GEIL values, rollback coverage, validation gates, and active MikroTik CHR firewall references. Follow dependency order exactly: validate prerequisites, create objects, validate objects, apply dependent settings, then capture evidence.
+
+- Audit focus: Create GEIL bridges in `/etc/network/interfaces`, validate them, then create VMs.
+- Active Phase 1 firewall implementation: MikroTik CHR / RouterOS on `HQ-FW01`.
+- OPNsense is superseded and must not be used for active Phase 1 deployment.
+
+## Validation after each major stage
+
+Validate immediately after each change block. Do not continue when expected output does not match the guide.
+
+## Expected Results
+
+- Commands complete without referencing missing objects.
+- Canonical GEIL values are visible in outputs.
+- No active OPNsense deployment path remains for Phase 1 firewall work.
+- `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.

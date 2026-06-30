@@ -3,7 +3,7 @@ title: Documentation Roadmap
 document_id: GEIL-PRJ-ROADMAP-001
 owner: Infrastructure Engineering
 status: Draft
-version: 13.0
+version: 14.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ROADMAP-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 13.0 |
+| Version | 14.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |

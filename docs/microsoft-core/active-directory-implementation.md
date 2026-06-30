@@ -3,7 +3,7 @@ title: Active Directory Implementation
 document_id: GEIL-MSC-AD-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.1
+version: 2.2
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-AD-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.1 |
+| Version | 2.2 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -86,6 +86,24 @@ This guide creates the first GEIL directory service before production users or w
 - Local Administrator credentials stored in the approved password manager.
 - Console or RDP access to `HQ-DC01`.
 - Snapshot `CP-DC01-OS` exists before promotion.
+
+
+## Expected Starting State
+
+- Windows Server 2025 baseline is complete on `HQ-DC01`.
+- `HQ-DC01` hostname is set before AD DS promotion.
+- `HQ-DC01` static IP is `172.20.20.11/24`.
+- Default gateway is `172.20.20.1`.
+- DNS is temporarily set to a bootstrap resolver or loopback only until AD DNS is installed.
+- Snapshot `CP-DC01-PRE-ADDS` exists before forest creation.
+
+## Expected Ending State
+
+- `corp.gntech.me` forest exists.
+- `HQ-DC01` is a domain controller and DNS server.
+- DNS points to `HQ-DC01` after promotion.
+- Baseline OUs exist only after the domain exists.
+- AD DS, DNS SRV records, FSMO roles, replication commands, and event logs validate successfully.
 
 ## Architecture Overview
 
@@ -528,3 +546,32 @@ Enterprise infrastructure changes can fail even when the design is correct. Roll
 - The operator should understand why the component exists before configuring it.
 - Validation and evidence are part of the implementation, not afterthoughts.
 - Canonical values must come from the Environment Specification and HLD/LLD baseline.
+
+
+## Audit Correction Notes
+
+!!! success "Execution-order audit"
+
+    This guide was audited for command order, object dependencies, canonical GEIL values, rollback coverage, validation gates, and active MikroTik CHR firewall references. Follow dependency order exactly: validate prerequisites, create objects, validate objects, apply dependent settings, then capture evidence.
+
+- Audit focus: Promote `HQ-DC01` only after Windows baseline, static IP, DNS bootstrap, and snapshot prerequisites are complete.
+- Active Phase 1 firewall implementation: MikroTik CHR / RouterOS on `HQ-FW01`.
+- OPNsense is superseded and must not be used for active Phase 1 deployment.
+
+## Validation after each major stage
+
+Validate immediately after each change block. Do not continue when expected output does not match the guide.
+
+## Expected Results
+
+- Commands complete without referencing missing objects.
+- Canonical GEIL values are visible in outputs.
+- No active OPNsense deployment path remains for Phase 1 firewall work.
+- `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
+
+## Evidence to capture
+
+- Command output proving prerequisite state.
+- Command output proving ending state.
+- Relevant GUI screenshots where applicable.
+- Rollback checkpoint or export evidence where applicable.

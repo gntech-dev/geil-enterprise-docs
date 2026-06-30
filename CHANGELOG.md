@@ -6,6 +6,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+- Added `GEIL-PROJ-IMPL-AUDIT-001` Full implementation guide audit and correction report.
 
 - Added `GEIL-ADR-0002` ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall.
 - Added `GEIL-PLAT-MTK-HQ-LLD-001` MikroTik CHR HQ Foundation LLD.
@@ -59,6 +60,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Corrected implementation guide execution order and safety gates across scoped Platform, Microsoft Core, Foundation, Security, and Operations guidance, with major corrections to MikroTik CHR, DHCP relay, AD DS validation, Group Policy order, and Proxmox safety notes.
 
 - Changed active Phase 1 firewall implementation from OPNsense to MikroTik CHR / RouterOS while preserving the Enterprise Edge Security / Enterprise Networking capability.
 - Updated Environment Specification, Enterprise Lab Network HLD, Phase 1 build/validation/acceptance documents, Technology Selection Matrix, roadmap, backlog, document index, release assignment register, MASTER_PLAN, and MkDocs navigation for MikroTik CHR.

@@ -3,7 +3,7 @@ title: Windows Server 2025 Baseline
 document_id: GEIL-MSC-WS2025-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.0
+version: 2.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-WS2025-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.0 |
+| Version | 2.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -84,6 +84,18 @@ This baseline is performed before the server provides production services.
 - Console access to the target VM.
 - Static IP assignment from the Environment Specification.
 - Snapshot exists before role installation.
+
+
+## Expected Starting State
+
+- VM shell exists on `GEILLAN` with the correct VLAN tag.
+- Windows Server 2025 ISO and VirtIO driver ISO are attached or available.
+- No AD DS role is installed yet.
+
+## Expected Ending State
+
+- Hostname, static IP, DNS bootstrap settings, time zone, updates, and remote management baseline are complete.
+- Server is ready for AD DS promotion but is not promoted yet.
 
 ## Architecture Overview
 
@@ -246,7 +258,15 @@ Get-ComputerInfo | Select-Object WindowsProductName,WindowsVersion,OsBuildNumber
 
 Capture a screenshot of the Windows Server login or Server Manager page.
 
-#### Troubleshooting
+#### Common Mistakes
+
+| Mistake | Why it matters | Correction |
+|---|---|---|
+| Promoting AD before static IP is configured | Domain DNS and SRV records can be wrong | Complete this baseline first |
+| Leaving DNS pointed only to public resolvers after promotion | Domain clients cannot locate AD services | Point DNS to `HQ-DC01` after AD DNS exists |
+| Skipping updates before role install | First domain controller starts from a weak baseline | Patch before promotion |
+
+## Troubleshooting
 
 If the disk is not visible, attach the VirtIO ISO and load the correct storage driver.
 
@@ -575,3 +595,32 @@ Capture:
 Continue to:
 
 - [Active Directory Implementation](active-directory-implementation.md)
+
+
+## Audit Correction Notes
+
+!!! success "Execution-order audit"
+
+    This guide was audited for command order, object dependencies, canonical GEIL values, rollback coverage, validation gates, and active MikroTik CHR firewall references. Follow dependency order exactly: validate prerequisites, create objects, validate objects, apply dependent settings, then capture evidence.
+
+- Audit focus: Prepare `HQ-DC01` before AD DS promotion.
+- Active Phase 1 firewall implementation: MikroTik CHR / RouterOS on `HQ-FW01`.
+- OPNsense is superseded and must not be used for active Phase 1 deployment.
+
+## Validation after each major stage
+
+Validate immediately after each change block. Do not continue when expected output does not match the guide.
+
+## Expected Results
+
+- Commands complete without referencing missing objects.
+- Canonical GEIL values are visible in outputs.
+- No active OPNsense deployment path remains for Phase 1 firewall work.
+- `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
+
+## Evidence to capture
+
+- Command output proving prerequisite state.
+- Command output proving ending state.
+- Relevant GUI screenshots where applicable.
+- Rollback checkpoint or export evidence where applicable.
