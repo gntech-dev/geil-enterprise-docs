@@ -3,7 +3,7 @@ title: Group Policy Baseline
 document_id: GEIL-MSC-GPO-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.0
+version: 2.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-GPO-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.0 |
+| Version | 2.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -301,6 +301,57 @@ Set-GPO -Name "GEIL-Workstation-Security-Baseline" -GpoStatus AllSettingsDisable
 3. What does security filtering control?
 4. Why is unlinking safer than deleting during rollback?
 5. Which command proves a GPO applied to a workstation?
+
+
+## DQI Operator Workflow Upgrade
+
+!!! success "Documentation Quality Initiative improvement"
+
+    This guide was upgraded under the GEIL Documentation Quality Initiative and reviewed against the [Deployment Style Guide](../governance/deployment-style-guide.md). The current quality score is **87/100**.
+
+### Operator workflow for this guide
+
+Use this guide as a sequence of small execution units:
+
+1. Read the goal and why it matters.
+2. Confirm the prerequisites and starting state.
+3. Execute only the current command block or GUI action.
+4. Validate immediately.
+5. Capture evidence.
+6. Continue only when the expected ending state is true.
+
+### First-time operator focus
+
+This guide now emphasizes OU validation before GPO links, GPO creation before linking, filtering validation, pilot rollout, unlink/disable rollback. The operator should not need to infer execution order from surrounding context.
+
+### Step contract reminder
+
+Before every risky action, confirm:
+
+| Field | Operator question |
+|---|---|
+| Goal | What one thing am I changing now? |
+| Why this matters | Why does the enterprise need this? |
+| Estimated time | How long should this section take? |
+| Risk level | What can break? |
+| Prerequisites | Which object must already exist? |
+| Starting state | What must be true before I run the command? |
+| Expected ending state | What proves I am done? |
+
+### Local troubleshooting pattern
+
+If a step fails:
+
+1. Stop at the failed step.
+2. Do not continue to dependent steps.
+3. Run the validation command again.
+4. Compare the result with the expected output.
+5. Use the rollback for the current step before trying a different approach.
+6. Record the failure and correction as implementation evidence.
+
+### Screenshot placement rule
+
+When a GUI action appears in this guide, capture the screenshot at that point in the workflow, not at the end of deployment. The screenshot should show the field/value or status that proves the step succeeded.
 
 ## Next Guide
 

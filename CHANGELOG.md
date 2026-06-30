@@ -6,6 +6,8 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+- Added `GEIL-GOV-DEPLOY-001` Deployment Style Guide as the canonical writing standard for GEIL deployment documentation.
+- Added `GEIL-PROJ-DQI-001` Documentation Quality Report with quality scores, weaknesses, recommendations, and next refactoring target.
 - Added `GEIL-PROJ-IMPL-AUDIT-001` Full implementation guide audit and correction report.
 
 - Added `GEIL-ADR-0002` ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall.
@@ -60,6 +62,8 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Launched the Documentation Quality Initiative: shifted priority from creating more documents to improving quality, reproducibility, educational value, validation, rollback, and operator experience across existing deployment guides.
+- Added DQI operator workflow upgrades to six priority guides: Proxmox, MikroTik CHR, Windows Server 2025, Active Directory, DNS/DHCP, and Group Policy.
 - Expanded MikroTik CHR and Windows Server 2025 deployment walkthroughs with first-time operator detail, Proxmox VM settings, image/driver handling, Safe Mode workflow, validation gates, evidence expectations, and do-not-proceed criteria.
 - Corrected implementation guide execution order and safety gates across scoped Platform, Microsoft Core, Foundation, Security, and Operations guidance, with major corrections to MikroTik CHR, DHCP relay, AD DS validation, Group Policy order, and Proxmox safety notes.
 

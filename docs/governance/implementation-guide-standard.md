@@ -326,3 +326,8 @@ Before an implementation guide is published:
 - [Educational Documentation Standard](educational-documentation-standard.md)
 - [Environment Specification](../project/environment-specification.md)
 - [Epic and Release Architecture](../project/epic-release-architecture.md)
+
+
+## Related deployment writing standard
+
+All deployment-facing guides must also comply with the [Deployment Style Guide](deployment-style-guide.md), which defines one-objective steps, validation placement, command formatting, failure handling, rollback, and operator workflow requirements.

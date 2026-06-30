@@ -246,12 +246,14 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `project/documentation-backlog.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/documentation-roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/implementation-guide-audit-report.md` |
+| E00.R01 - Documentation governance foundation | E00 | `project/documentation-quality-report.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/epic-release-architecture.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/visual-documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/implementation-guide-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/educational-documentation-standard.md` |
+| E00.R01 - Documentation governance foundation | E00 | `governance/deployment-style-guide.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/backlog.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/index.md` |

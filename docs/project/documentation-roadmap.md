@@ -3,7 +3,7 @@ title: Documentation Roadmap
 document_id: GEIL-PRJ-ROADMAP-001
 owner: Infrastructure Engineering
 status: Draft
-version: 15.0
+version: 16.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ROADMAP-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 15.0 |
+| Version | 16.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -91,3 +91,8 @@ A release is Done only when:
 ## Next recommended release
 
 The next recommended release is **E03.R04 Certificate lifecycle management**, delivered by backlog item `DOC-003`. All E03.R04 documents must reference the Enterprise Lab Blueprint HLD and the E02.R03/E02.R04/E02.R05 HQ Foundation design, implementation, and acceptance baseline before defining implementation details.
+
+
+## Documentation Quality Initiative
+
+The primary roadmap objective is now improving existing deployment guides to Microsoft Learn / VMware / Cisco / Red Hat / HashiCorp quality before creating new implementation documents. The first DQI report is [Documentation Quality Report](documentation-quality-report.md).

@@ -141,3 +141,8 @@ Each guide must end its educational content with key takeaways. These should sum
 - [Implementation Guide Standard](implementation-guide-standard.md)
 - [Visual Documentation Standard](visual-documentation-standard.md)
 - [Environment Specification](../project/environment-specification.md)
+
+
+## Related deployment writing standard
+
+All deployment-facing guides must also comply with the [Deployment Style Guide](deployment-style-guide.md), which defines one-objective steps, validation placement, command formatting, failure handling, rollback, and operator workflow requirements.
