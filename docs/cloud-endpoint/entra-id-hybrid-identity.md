@@ -54,3 +54,19 @@ Expected result: pilot users show `OnPremisesSyncEnabled=True`.
 ## Rollback
 
 Disable sync scope for the affected OU, wait for export, and verify cloud objects. Do not delete synced cloud users until source authority and mailbox impact are reviewed.
+
+## Hybrid identity namespace requirement
+
+Before Entra hybrid identity synchronization, on-premises users must have routable UPNs using the verified Microsoft 365 domain `gntech.me`.
+
+Required model:
+
+```text
+Forest: corp.gntech.me
+NetBIOS: GNTECH
+Primary UPN suffix: gntech.me
+Default user sign-in: username@gntech.me
+Legacy logon: GNTECH\username
+```
+
+Do not synchronize production users whose UPN is `username@corp.gntech.me` unless documenting the temporary pre-remediation state.

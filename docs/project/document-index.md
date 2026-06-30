@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 14.0
+version: 15.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -68,6 +68,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-GOV-EDU-001 | Educational Documentation Standard | Approved | `docs/governance/educational-documentation-standard.md` | Teaching-first methodology for implementation guides, enterprise/implementation admonitions, visual learning, value explanations, FAQs, and key takeaways |
 | GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
 | GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
+| GEIL-ADR-0003 | ADR-0003 Hybrid Identity Namespace | Accepted | `docs/governance/adrs/ADR-0003-hybrid-identity-namespace.md` | Accepted hybrid identity namespace decision for `corp.gntech.me`, `gntech.me`, and `GNTECH` |
 | GEIL-ADR-0002 | ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall | Approved | `docs/governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` | Accepted implementation change from OPNsense to MikroTik CHR for `HQ-FW01` |
 
 ## Security documents

@@ -47,3 +47,7 @@ Expected result: device is Entra joined or hybrid joined as designed, BitLocker 
 ## Rollback
 
 Remove device from assignment group or exclude from policy. For Autopilot issues, remove the hardware hash from Autopilot only after confirming ownership and reset plan.
+
+## Identity namespace prerequisite
+
+Intune enrollment and Windows 11 cloud sign-in use the Microsoft 365 verified domain `gntech.me`. Do not use `username@corp.gntech.me` as the production enrollment identity.

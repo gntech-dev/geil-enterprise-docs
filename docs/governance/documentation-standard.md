@@ -55,7 +55,7 @@ Examples:
 
 ## Placeholder rules
 
-Known GNTECH values must come from the [Environment Specification](../project/environment-specification.md). Do not use placeholders for canonical values such as `gntech.me`, `corp.gntech.me`, `CORP`, `HQ-DC01`, VLAN IDs, or `172.20.0.0/16` network ranges.
+Known GNTECH values must come from the [Environment Specification](../project/environment-specification.md). Do not use placeholders for canonical values such as `gntech.me`, `corp.gntech.me`, `GNTECH`, `HQ-DC01`, VLAN IDs, or `172.20.0.0/16` network ranges.
 
 Allowed placeholders are limited to values that cannot be known before deployment or must not be committed:
 

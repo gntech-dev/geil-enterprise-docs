@@ -6,6 +6,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+- Added `GEIL-ADR-0003` Hybrid Identity Namespace and updated canonical identity architecture so AD remains `corp.gntech.me`, NetBIOS is `GNTECH`, and users sign in as `username@gntech.me`.
 - Added `GEIL-GOV-DEPLOY-001` Deployment Style Guide as the canonical writing standard for GEIL deployment documentation.
 - Added `GEIL-PROJ-DQI-001` Documentation Quality Report with quality scores, weaknesses, recommendations, and next refactoring target.
 - Added `GEIL-PROJ-IMPL-AUDIT-001` Full implementation guide audit and correction report.
@@ -58,7 +59,7 @@ All notable changes to GEIL are documented in this file.
 - Added capability dependency graph, release dependency graph, and document dependency graph.
 - Added a release assignment register requiring every document to belong to exactly one Release.
 - Added `GEIL-PRJ-ENV-001` Environment Specification as the canonical source of truth for the real GNTECH implementation.
-- Added canonical GNTECH values for `gntech.me`, `corp.gntech.me`, `CORP`, `docs.gntechlabs.me`, `geil-enterprise-docs`, HQ infrastructure names, VLANs, IP ranges, DNS naming, certificate naming, share naming, and repository URLs.
+- Added canonical GNTECH values for `gntech.me`, `corp.gntech.me`, `GNTECH`, `docs.gntechlabs.me`, `geil-enterprise-docs`, HQ infrastructure names, VLANs, IP ranges, DNS naming, certificate naming, share naming, and repository URLs.
 
 ### Changed
 

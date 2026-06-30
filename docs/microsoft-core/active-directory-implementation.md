@@ -25,7 +25,7 @@ classification: Internal Confidential
 
 !!! note "Adaptation"
 
-    This guide uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md), including `corp.gntech.me`, NetBIOS name `CORP`, `HQ-DC01`, and server IP `172.20.20.11`. Change the Environment Specification first before adapting commands.
+    This guide uses canonical GNTECH values from the [Environment Specification](../project/environment-specification.md), including forest `corp.gntech.me`, NetBIOS name `GNTECH`, primary user UPN suffix `gntech.me`, `HQ-DC01`, and server IP `172.20.20.11`. Change the Environment Specification first before adapting commands.
 
 ## Purpose
 
@@ -47,7 +47,9 @@ By the end of this guide you will have:
 
 - ✓ `HQ-DC01` promoted as the first domain controller.
 - ✓ `corp.gntech.me` forest created.
-- ✓ NetBIOS name `CORP` configured.
+- ✓ NetBIOS name `GNTECH` configured.
+- ✓ Hybrid UPN suffix `gntech.me` added.
+- ✓ Administrator UPN set to `Administrator@gntech.me`.
 - ✓ AD-integrated DNS installed.
 - ✓ Baseline OUs created.
 - ✓ Validation evidence captured for `dcdiag`, DNS, and FSMO roles.
@@ -115,7 +117,7 @@ This guide creates the first GEIL directory service before production users or w
 flowchart LR
     FW[HQ-FW01 VLAN 20 Gateway 172.20.20.1]
     DC[HQ-DC01 172.20.20.11]
-    AD[corp.gntech.me / CORP]
+    AD[corp.gntech.me / GNTECH]
     CLIENTS[Future domain clients]
 
     FW --> DC --> AD
@@ -271,7 +273,7 @@ This creates the identity authority for GEIL. All future Microsoft identity serv
 $SafeModePassword = Read-Host "Enter Directory Services Restore Mode password" -AsSecureString
 Install-ADDSForest `
   -DomainName "corp.gntech.me" `
-  -DomainNetbiosName "CORP" `
+  -DomainNetbiosName "GNTECH" `
   -ForestMode WinThreshold `
   -DomainMode WinThreshold `
   -InstallDNS `
@@ -286,7 +288,7 @@ You should now see:
 
 - The server installs AD DS.
 - The server reboots.
-- The logon screen allows domain logon for `CORP`.
+- The logon screen allows domain logon for `GNTECH`.
 
 #### Validate this step — Step 4: Create the corp.gntech.me forest
 
@@ -300,8 +302,9 @@ Get-ADForest | Select-Object Name,ForestMode
 Expected output:
 
 - DNSRoot: `corp.gntech.me`.
-- NetBIOSName: `CORP`.
+- NetBIOSName: `GNTECH`.
 - Forest name: `corp.gntech.me`.
+- The default post-promotion UPN suffix may still be `corp.gntech.me` until Step 5 adds `gntech.me`.
 
 #### Rollback — Step 4: Create the corp.gntech.me forest
 
@@ -312,17 +315,114 @@ If promotion fails before production use:
 3. Fix the root cause.
 4. Retry promotion.
 
-### Step 5: Create baseline organizational units
+### Step 5: Configure the Hybrid UPN Suffix
 
-#### Goal — Step 5: Create baseline organizational units
+#### Goal — Step 5: Configure the Hybrid UPN Suffix
+
+Add `gntech.me` as the production user sign-in suffix immediately after the `corp.gntech.me` forest exists.
+
+#### Why this step matters — Step 5: Configure the Hybrid UPN Suffix
+
+The AD forest DNS namespace remains `corp.gntech.me` because it is the internal directory and DNS boundary. Users authenticate as `username@gntech.me` because `gntech.me` is the verified Microsoft 365 and Microsoft Entra ID domain. Microsoft hybrid identity guidance favors a routable, verified public UPN suffix so the same sign-in name works across Windows, Microsoft 365, Entra ID, Intune, Windows Hello for Business, and future cloud services.
+
+The public authentication namespace and AD DNS namespace are intentionally different:
+
+- AD DS forest and DNS: `corp.gntech.me`
+- Primary user UPN suffix: `gntech.me`
+- Microsoft 365 verified domain: `gntech.me`
+- Legacy logon: `GNTECH\username`
+
+Do not create production users with `username@corp.gntech.me` after this step.
+
+#### GUI procedure — Step 5: Configure the Hybrid UPN Suffix
+
+1. Open **Active Directory Domains and Trusts** on `HQ-DC01`.
+2. In the left pane, right-click **Active Directory Domains and Trusts**.
+3. Select **Properties**.
+4. In **Alternative UPN suffixes**, enter:
+
+```text
+gntech.me
+```
+
+5. Select **Add**.
+6. Select **Apply**.
+7. Select **OK**.
+
+!!! example "Screenshot Required"
+
+    Path: `HQ-DC01 -> Server Manager -> Tools -> Active Directory Domains and Trusts -> Properties`
+
+    Expected result: `gntech.me` appears in the Alternative UPN suffixes list.
+
+#### Commands — Step 5: Configure the Hybrid UPN Suffix
+
+Use PowerShell to validate and update the built-in Administrator account after adding the suffix in the GUI.
+
+```powershell
+Get-ADForest | Select-Object Name,UPNSuffixes
+```
+
+```powershell
+Set-ADUser -Identity Administrator -UserPrincipalName "Administrator@gntech.me"
+```
+
+```powershell
+Get-ADUser -Identity Administrator -Properties UserPrincipalName,SamAccountName | Select-Object SamAccountName,UserPrincipalName
+```
+
+#### Expected result — Step 5: Configure the Hybrid UPN Suffix
+
+`Get-ADForest` includes:
+
+```text
+Name        : corp.gntech.me
+UPNSuffixes : {gntech.me}
+```
+
+Administrator validation returns:
+
+```text
+SamAccountName    UserPrincipalName
+--------------    -----------------
+Administrator     Administrator@gntech.me
+```
+
+Future users must be created with:
+
+```text
+username@gntech.me
+```
+
+Legacy Windows logon remains available as:
+
+```text
+GNTECH\username
+```
+
+#### If validation fails — Step 5: Configure the Hybrid UPN Suffix
+
+STOP. Do not create production users, configure Entra sync, or proceed to Microsoft 365 hybrid identity until `gntech.me` appears as an AD forest UPN suffix and Administrator has `Administrator@gntech.me`.
+
+#### Rollback — Step 5: Configure the Hybrid UPN Suffix
+
+If the suffix was added incorrectly before production users are created, remove the incorrect suffix from **Active Directory Domains and Trusts -> Properties** and rerun validation. Do not remove `gntech.me` after production users or Entra sync depend on it without a formal identity migration plan.
+
+#### Continue only if successful — Step 5: Configure the Hybrid UPN Suffix
+
+Continue only when the forest is `corp.gntech.me`, NetBIOS is `GNTECH`, UPN suffix includes `gntech.me`, and Administrator is `Administrator@gntech.me`.
+
+### Step 6: Create baseline organizational units
+
+#### Goal — Step 6: Create baseline organizational units
 
 Create the first OU structure for servers, workstations, groups, service accounts, disabled objects, and administration.
 
-#### Why this step matters — Step 5: Create baseline organizational units
+#### Why this step matters — Step 6: Create baseline organizational units
 
 OUs give GEIL a predictable management structure for future GPOs, delegation, and lifecycle operations.
 
-#### Commands — Step 5: Create baseline organizational units
+#### Commands — Step 6: Create baseline organizational units
 
 ```powershell
 $Base = "DC=corp,DC=gntech,DC=me"
@@ -333,11 +433,11 @@ foreach ($OU in $OUs) {
 Get-ADOrganizationalUnit -Filter * -SearchBase $Base | Select-Object Name,DistinguishedName
 ```
 
-#### Expected results — Step 5: Create baseline organizational units
+#### Expected results — Step 6: Create baseline organizational units
 
 You should now see each baseline OU listed.
 
-#### Rollback — Step 5: Create baseline organizational units
+#### Rollback — Step 6: Create baseline organizational units
 
 If an OU was created with the wrong name, remove it only if it is empty:
 
@@ -401,6 +501,8 @@ Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
 
 ```powershell
 Get-ADDomain | Select-Object DNSRoot,NetBIOSName,DomainMode
+Get-ADForest | Select-Object Name,UPNSuffixes
+Get-ADUser -Identity Administrator -Properties UserPrincipalName | Select-Object SamAccountName,UserPrincipalName
 ```
 
 #### Expected result — Domain controller health validation
@@ -424,7 +526,9 @@ Domain output should include:
 
 ```text
 DNSRoot        : corp.gntech.me
-NetBIOSName    : CORP
+NetBIOSName    : GNTECH
+UPNSuffixes     : {gntech.me}
+Administrator   : Administrator@gntech.me
 ```
 
 #### If validation fails — Domain controller health validation

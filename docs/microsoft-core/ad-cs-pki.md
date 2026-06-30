@@ -49,7 +49,7 @@ A single-tier enterprise CA requires an ADR and is acceptable only for constrain
 ## Validation PowerShell
 
 ```powershell
-certutil -config "HQ-DC01\GNTECH-CORP-Issuing-CA01" -ping
+certutil -config "HQ-DC01\GNTECH-Issuing-CA01" -ping
 certutil -urlfetch -verify C:\Temp\issued-test.cer
 Get-CertificationAuthority | Select Name,ComputerName
 ```
@@ -73,7 +73,7 @@ If templates are wrong, supersede template versions instead of editing blindly. 
 Validate PKI only after AD DS and DNS health are proven.
 
 ```powershell
-certutil -config "HQ-DC01\GNTECH-CORP-Issuing-CA01" -ping
+certutil -config "HQ-DC01\GNTECH-Issuing-CA01" -ping
 ```
 
 Expected result:

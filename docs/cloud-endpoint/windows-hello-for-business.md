@@ -51,3 +51,7 @@ Expected result: device registration is healthy and WHfB sign-in obtains access 
 ## Rollback
 
 Disable WHfB assignment for pilot group in Intune. Users can continue password sign-in unless passwordless-only policy has been separately enforced.
+
+## Identity namespace prerequisite
+
+Windows Hello for Business must use the same user-facing sign-in namespace as Microsoft 365 and Entra ID. For GEIL, users sign in as `username@gntech.me`; the AD forest remains `corp.gntech.me`, and legacy logon remains `GNTECH\username`.

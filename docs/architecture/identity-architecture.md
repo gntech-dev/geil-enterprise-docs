@@ -63,3 +63,19 @@ Expected result: only named Tier 0 administrative users appear in Tier 0 groups.
 ## Rollback
 
 If an account is assigned to the wrong tier, remove the membership, revoke sessions in Entra ID if applicable, reset credentials, and document the event.
+
+## Hybrid identity namespace model
+
+GEIL uses `corp.gntech.me` as the internal Active Directory forest and DNS namespace, but users authenticate with the Microsoft 365 verified public domain `gntech.me`.
+
+```mermaid
+flowchart TD
+    M365[Microsoft 365]
+    Entra[Microsoft Entra ID]
+    UPN[UPN: username@gntech.me]
+    AD[Active Directory Forest: corp.gntech.me\nNetBIOS: GNTECH]
+
+    M365 --> Entra --> UPN --> AD
+```
+
+Server FQDNs remain in `corp.gntech.me`, for example `HQ-DC01.corp.gntech.me`. User sign-in uses `username@gntech.me`. Legacy logon remains `GNTECH\username`.

@@ -13,7 +13,7 @@
 <text x="118" y="442" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="22">Signs issuing CA only</text>
 <rect x="620" y="230" width="390" height="250" rx="22" fill="#0f172a" stroke="#22d3ee" stroke-width="3" filter="url(#glow)"/>
 <text x="648" y="274" fill="#22d3ee" font-family="Arial, sans-serif" font-size="26" font-weight="700">Enterprise Issuing CA</text>
-<text x="648" y="314" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="22">GNTECH-CORP-Issuing-CA01</text>
+<text x="648" y="314" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="22">GNTECH-Issuing-CA01</text>
 <text x="648" y="350" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="22">AD integrated</text>
 <text x="648" y="386" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="22">Publishes CRL/AIA</text>
 <text x="648" y="422" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="22">Issues enterprise templates</text>

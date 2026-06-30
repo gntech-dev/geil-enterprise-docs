@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 7.0
+version: 8.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -142,6 +142,7 @@ flowchart TD
     BACKLOG[Documentation Backlog]
     ADR[ADR-0001 MkDocs Material]
     ADR2[ADR-0002 MikroTik CHR Firewall]
+    ADR3[ADR-0003 Hybrid Identity Namespace]
     CF[Cloudflare Pages Deployment]
     REF[Reference Architecture]
     NET[Network Architecture]
@@ -203,6 +204,9 @@ flowchart TD
     STD --> ADR
     ADR --> CF
     ADR2 --> FWLLD
+    ADR3 --> IDARCH
+    ADR3 --> AD
+    ADR3 --> ENTRA
     ENV --> REF
     ENV --> NAME
     REF --> NET
@@ -259,6 +263,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0001-mkdocs-material.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` |
+| E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0003-hybrid-identity-namespace.md` |
 | E00.R02 - Documentation delivery platform | E00 | `platform/index.md` |
 | E00.R02 - Documentation delivery platform | E00 | `platform/cloudflare-pages-deployment.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/index.md` |

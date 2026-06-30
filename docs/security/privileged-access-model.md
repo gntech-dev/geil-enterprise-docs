@@ -323,7 +323,7 @@ $InitialPassword = Read-Host "Enter initial password" -AsSecureString
 New-ADUser `
     -Name $DisplayName `
     -SamAccountName $UserName `
-    -UserPrincipalName "$UserName@corp.gntech.me" `
+    -UserPrincipalName "$UserName@gntech.me" `
     -Path $TargetOU `
     -AccountPassword $InitialPassword `
     -Enabled $true `
@@ -339,10 +339,10 @@ A dedicated Tier 0 administrative user is created, enabled, and required to chan
 
 ```powershell
 Get-ADUser "adm0.j.smith" -Properties Enabled,Description,DistinguishedName,LastLogonDate |
-    Select-Object SamAccountName,Enabled,Description,DistinguishedName,LastLogonDate
+    Select-Object SamAccountName,UserPrincipalName,Enabled,Description,DistinguishedName,LastLogonDate
 ```
 
-Expected result: account exists in `OU=Users,OU=Tier 0,OU=Admin` and has no last logon until first controlled use.
+Expected result: account exists in `OU=Users,OU=Tier 0,OU=Admin`, has a `gntech.me` UPN, and has no last logon until first controlled use.
 
 ### Rollback — Rollback
 

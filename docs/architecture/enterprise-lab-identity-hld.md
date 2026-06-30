@@ -31,13 +31,13 @@ It is architecture only. Implementation documents for AD DS, DNS, DHCP, PKI, NPS
 
 ## Readable visual asset: Enterprise Lab Identity HLD
 
-This visual summarizes the identity HLD without overloading the page with deeply nested Mermaid branches. It shows the `corp.gntech.me` forest/domain, HQ AD site, trust services, and `gntech.me` cloud identity integration path.
+This visual summarizes the hybrid identity namespace decision without overloading the page with deeply nested Mermaid branches. It shows Microsoft 365, Microsoft Entra ID, the primary UPN `username@gntech.me`, and the internal Active Directory forest `corp.gntech.me` with NetBIOS `GNTECH`.
 
-![Enterprise Lab Identity HLD showing corp.gntech.me forest and domain, HQ AD site, trust services, and gntech.me cloud identity integration](../assets/diagrams/geil-enterprise-lab-identity-hld.svg)
+![Hybrid identity namespace showing Microsoft 365 to Microsoft Entra ID to UPN username@gntech.me to Active Directory forest corp.gntech.me with NetBIOS GNTECH](../assets/diagrams/geil-enterprise-lab-identity-hld.svg)
 
 !!! note "Adaptation"
 
-    This visual uses canonical GNTECH names including `corp.gntech.me`, `CORP`, `HQ-DC01`, `HQ-DC02`, and `gntech.me`. Other organizations must update their Environment Specification before regenerating this visual.
+    This visual uses canonical GNTECH names including `corp.gntech.me`, `GNTECH`, `HQ-DC01`, `HQ-DC02`, and `gntech.me`. Other organizations must update their Environment Specification before regenerating this visual.
 
 
 ## Forest and domain design
@@ -46,7 +46,7 @@ This visual summarizes the identity HLD without overloading the page with deeply
 |---|---|
 | Forest | `corp.gntech.me` |
 | Domain | `corp.gntech.me` |
-| NetBIOS | `CORP` |
+| NetBIOS | `GNTECH` |
 | Initial DC | `HQ-DC01` |
 | Future second DC | `HQ-DC02` |
 | Forest strategy | Single forest, single domain for Phase 1 through small enterprise scale |
@@ -55,7 +55,7 @@ This visual summarizes the identity HLD without overloading the page with deeply
 ```mermaid
 flowchart TD
     Forest[Forest: corp.gntech.me]
-    Domain[Domain: corp.gntech.me / CORP]
+    Domain[Domain: corp.gntech.me / GNTECH]
     HQSite[AD Site: HQ]
     DC1[HQ-DC01]
     DC2[HQ-DC02 Future]
@@ -140,7 +140,7 @@ The PKI hierarchy is a complex trust diagram and should not rely on a wide Merma
 
 !!! note "Adaptation"
 
-    This visual uses the GNTECH issuing CA name `GNTECH-CORP-Issuing-CA01` and the `corp.gntech.me` trust context. Adaptations must update certificate names, CRL/AIA assumptions, DNS names, and relying-party references.
+    This visual uses the GNTECH issuing CA name `GNTECH-Issuing-CA01` and the `corp.gntech.me` trust context. Adaptations must update certificate names, CRL/AIA assumptions, DNS names, and relying-party references.
 
 
 ## PKI hierarchy
@@ -150,7 +150,7 @@ Target state is a two-tier PKI, even if Phase 1 bootstraps with constrained reso
 ```mermaid
 flowchart TD
     Root[Offline Root CA: GNTECH Root CA]
-    Issuing[Enterprise Issuing CA: GNTECH-CORP-Issuing-CA01]
+    Issuing[Enterprise Issuing CA: GNTECH-Issuing-CA01]
     Templates[Certificate Templates]
     DC[Domain Controller Certificates]
     NPS[NPS / 802.1X Certificates]

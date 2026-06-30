@@ -51,3 +51,7 @@ Expected result: tenant roles and verified domains match design.
 ## Rollback
 
 Do not delete emergency access accounts. For bad role assignments, remove the role assignment and revoke sessions for the affected principal.
+
+## Identity namespace prerequisite
+
+The Microsoft 365 verified domain `gntech.me` is the production user authentication namespace. Active Directory uses `corp.gntech.me` for the forest and DNS, but users sign in to Microsoft 365 as `username@gntech.me`.

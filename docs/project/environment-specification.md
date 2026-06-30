@@ -3,7 +3,7 @@ title: Environment Specification
 document_id: GEIL-PRJ-ENV-001
 owner: Infrastructure Engineering
 status: Approved
-version: 2.0
+version: 3.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -61,7 +61,11 @@ Only use placeholders when the value cannot be known before deployment or must n
 | Microsoft 365 tenant | `gntech.me` |
 | Internal Active Directory forest | `corp.gntech.me` |
 | Internal Active Directory domain | `corp.gntech.me` |
-| NetBIOS name | `CORP` |
+| NetBIOS name | `GNTECH` |
+| Primary user UPN suffix | `gntech.me` |
+| Microsoft 365 verified domain | `gntech.me` |
+| Default user sign-in | `username@gntech.me` |
+| Legacy logon format | `GNTECH\username` |
 | Primary site | `HQ` |
 | Primary datacenter | `HQ` |
 | Documentation site | `docs.gntechlabs.me` |
@@ -99,13 +103,34 @@ Only use placeholders when the value cannot be known before deployment or must n
 | Forest | `corp.gntech.me` |
 | Domain | `corp.gntech.me` |
 | Distinguished name | `DC=corp,DC=gntech,DC=me` |
-| NetBIOS | `CORP` |
+| NetBIOS | `GNTECH` |
+| Primary user UPN suffix | `gntech.me` |
+| Production user sign-in | `username@gntech.me` |
+| Legacy logon format | `GNTECH\username` |
+| Disallowed production UPN pattern | `username@corp.gntech.me` except when explaining the default pre-suffix AD state |
 | Admin root OU | `OU=Admin,DC=corp,DC=gntech,DC=me` |
 | Servers OU | `OU=Servers,DC=corp,DC=gntech,DC=me` |
 | Workstations OU | `OU=Workstations,DC=corp,DC=gntech,DC=me` |
 | Groups OU | `OU=Groups,DC=corp,DC=gntech,DC=me` |
 | Service Accounts OU | `OU=Service Accounts,DC=corp,DC=gntech,DC=me` |
 | Disabled Objects OU | `OU=Disabled Objects,DC=corp,DC=gntech,DC=me` |
+
+## Hybrid identity namespace
+
+GEIL intentionally separates the Active Directory DNS namespace from the user authentication namespace.
+
+| Identity Layer | Canonical Value | Purpose |
+|---|---|---|
+| Forest root domain | `corp.gntech.me` | Internal AD DS forest and DNS namespace |
+| DNS namespace | `corp.gntech.me` | AD-integrated DNS records such as `HQ-DC01.corp.gntech.me` |
+| NetBIOS domain | `GNTECH` | Legacy Windows logon and compatibility namespace |
+| Primary user UPN suffix | `gntech.me` | Default user sign-in namespace |
+| Microsoft 365 verified domain | `gntech.me` | Entra ID, Microsoft 365, Intune, WHfB, and cloud services |
+| Default user sign-in | `username@gntech.me` | Production user authentication format |
+| Legacy logon | `GNTECH\username` | Supported legacy Windows logon format |
+
+Production user accounts must use `username@gntech.me`. Do not use `username@corp.gntech.me` for production logons except when explaining the default Active Directory state before the hybrid UPN suffix is configured. Server FQDNs and AD DNS records remain in `corp.gntech.me`.
+
 
 ## Network baseline
 
@@ -166,7 +191,7 @@ Supernet: `172.20.0.0/16`.
 | Windows Admin Center certificate | Subject/SAN for `HQ-MGMT01.corp.gntech.me` if hosted there, or the approved WAC host FQDN |
 | NPS server certificate | Subject/SAN for the NPS host FQDN when NPS is deployed |
 | Documentation site certificate | Public certificate for `docs.gntechlabs.me` via Cloudflare |
-| Internal issuing CA | `GNTECH-CORP-Issuing-CA01` |
+| Internal issuing CA | `GNTECH-Issuing-CA01` |
 
 ## Share naming
 
