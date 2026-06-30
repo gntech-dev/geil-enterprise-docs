@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ENV-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 2.0 |
+| Version | 3.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -150,6 +150,8 @@ Production user accounts must use `username@gntech.me`. Do not use `username@cor
 Supernet: `172.20.0.0/16`.
 
 ## Firewall platform baseline
+
+This is the active GEIL firewall model. OPNsense material is retained only where documents explicitly state that it is historical or superseded. Active implementation, validation, acceptance, operations, and troubleshooting use MikroTik CHR / RouterOS on `HQ-FW01`.
 
 | Item | Canonical Value |
 |---|---|

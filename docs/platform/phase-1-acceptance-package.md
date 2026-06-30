@@ -110,16 +110,16 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 | ID | Screenshot | Required Detail | Source |
 |---|---|---|---|
 | SS-001 | Proxmox node summary | `PVE-HQ01`, version, node status | Proxmox UI |
-| SS-002 | Proxmox network view | `vmbr0`, `vmbr1`, `vmbr100`; VLAN-aware state for `vmbr1` | Proxmox UI |
-| SS-003 | `HQ-FW01` hardware | net0 on `vmbr0`, net1 on `vmbr1` | Proxmox UI |
-| SS-004 | `HQ-DC01` hardware | net0 on `vmbr1` with VLAN tag 20 | Proxmox UI |
-| SS-005 | `HQ-MGMT01` hardware | net0 on `vmbr1` with VLAN tag 30 | Proxmox UI |
-| SS-006 | `HQ-W11-001` hardware | net0 on `vmbr1` with VLAN tag 30 | Proxmox UI |
+| SS-002 | Proxmox network view | `GEILWAN`, `GEILLAN`, and protected existing bridges; VLAN-aware state for `GEILLAN` | Proxmox UI |
+| SS-003 | `HQ-FW01` hardware | net0 on `GEILWAN`, net1 on `GEILLAN` | Proxmox UI |
+| SS-004 | `HQ-DC01` hardware | net0 on `GEILLAN` with VLAN tag 20 | Proxmox UI |
+| SS-005 | `HQ-MGMT01` hardware | net0 on `GEILLAN` with VLAN tag 30 | Proxmox UI |
+| SS-006 | `HQ-W11-001` hardware | net0 on `GEILLAN` with VLAN tag 30 | Proxmox UI |
 | SS-007 | RouterOS interface assignments | WAN and LAN trunk parent are visible | RouterOS CLI / WinBox |
 | SS-008 | RouterOS VLAN interfaces | VLAN interfaces 10,20,30,40,50,60,70,80,90,100 | RouterOS CLI / WinBox |
 | SS-009 | MikroTik CHR firewall rules | Baseline allow and deny rules | RouterOS CLI / WinBox |
 | SS-010 | RouterOS routes | WAN default route and connected internal routes | RouterOS CLI / WinBox |
-| SS-011 | RouterOS export backup page | Evidence that `HQ-FW01-baseline.xml` was exported | RouterOS CLI / WinBox |
+| SS-011 | RouterOS export backup page | Evidence that `HQ-FW01-baseline.rsc` was exported | RouterOS CLI / WinBox |
 | SS-012 | Snapshot inventory | Required VM checkpoints exist | Proxmox UI |
 
 ## Command output requirements
@@ -129,8 +129,8 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 | CMD-001 | `PVE-HQ01` shell | `hostname` | Returns `PVE-HQ01` |
 | CMD-002 | `PVE-HQ01` shell | `ip -brief addr` | Shows expected bridge addresses including `172.20.100.11` |
 | CMD-003 | `PVE-HQ01` shell | `ip route` | Default route uses `172.20.100.1` |
-| CMD-004 | `PVE-HQ01` shell | `bridge vlan show` | `vmbr1` carries VLANs 10,20,30,40,50,60,70,80,90,100 |
-| CMD-005 | `PVE-HQ01` shell | `qm config 100` | `HQ-FW01` uses `vmbr0` and `vmbr1` |
+| CMD-004 | `PVE-HQ01` shell | `bridge vlan show dev GEILLAN` | `GEILLAN` carries VLANs 10,20,30,40,50,60,70,80,90,100 |
+| CMD-005 | `PVE-HQ01` shell | `qm config 100` | `HQ-FW01` uses `GEILWAN` and `GEILLAN` |
 | CMD-006 | `PVE-HQ01` shell | `qm config 110` | `HQ-DC01` uses VLAN tag 20 |
 | CMD-007 | `PVE-HQ01` shell | `qm config 120` | `HQ-MGMT01` uses VLAN tag 30 |
 | CMD-008 | `PVE-HQ01` shell | `qm config 121` | `HQ-W11-001` uses VLAN tag 30 |
@@ -159,9 +159,9 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 
 | Evidence ID | Requirement | Pass Criteria | Evidence Location |
 |---|---|---|---|
-| BR-001 | `vmbr0` WAN bridge | Exists and is used only by `HQ-FW01` WAN | |
-| BR-002 | `vmbr1` LAN trunk | Exists and is VLAN-aware | |
-| BR-003 | `vmbr1` VLAN set | Carries VLANs 10,20,30,40,50,60,70,80,90,100 | |
+| BR-001 | `GEILWAN` WAN transit bridge | Exists and is used only by `HQ-FW01` WAN | |
+| BR-002 | `GEILLAN` LAN trunk | Exists and is VLAN-aware | |
+| BR-003 | `GEILLAN` VLAN set | Carries VLANs 10,20,30,40,50,60,70,80,90,100 | |
 | BR-004 | `vmbr100` management | Exists or approved equivalent management design is documented | |
 | BR-005 | No Proxmox inter-VLAN routing | Inter-VLAN routing remains on `HQ-FW01` | |
 
@@ -169,11 +169,11 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 
 | Evidence ID | Requirement | Pass Criteria | Evidence Location |
 |---|---|---|---|
-| OPN-001 | `HQ-FW01` VM installation | MikroTik CHR boots from VM disk | |
-| OPN-002 | WAN assignment | WAN is mapped to `vmbr0` | |
-| OPN-003 | LAN trunk assignment | LAN trunk parent is mapped to `vmbr1` | |
-| OPN-004 | Management access | RouterOS CLI / WinBox reachable from approved path | |
-| OPN-005 | Config export | `HQ-FW01-baseline.xml` exported and stored outside Git | |
+| MTK-001 | `HQ-FW01` VM installation | MikroTik CHR boots from VM disk | |
+| MTK-002 | WAN assignment | WAN is mapped to `GEILWAN` | |
+| MTK-003 | LAN trunk assignment | LAN trunk parent is mapped to `GEILLAN` | |
+| MTK-004 | Management access | RouterOS CLI / WinBox reachable from approved path | |
+| MTK-005 | Config export | `HQ-FW01-baseline.rsc` exported and stored outside Git | |
 
 ## VLAN gateway evidence
 
@@ -255,7 +255,7 @@ Acceptance criteria:
 Rollback readiness is accepted only when:
 
 1. `PVE-HQ01` network baseline export exists.
-2. `HQ-FW01-baseline.xml` exists outside Git in protected storage.
+2. `HQ-FW01-baseline.rsc` exists outside Git in protected storage.
 3. Required VM snapshots exist or an approved equivalent recovery method is documented.
 4. Console access to `PVE-HQ01` is available for emergency management recovery.
 5. Rollback owner is identified.

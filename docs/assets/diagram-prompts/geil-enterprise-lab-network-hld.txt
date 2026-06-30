@@ -6,7 +6,7 @@ Create a 16:9 dark enterprise architecture diagram for GEIL/GNTECH. Use a near-b
 
 ## Content requirements
 
-Show HQ-FW01, core VLAN trunk, security zones, and future regional routed expansion. Include 172.20.0.0/16 and no stretched VLANs.
+Show HQ-FW01 as MikroTik CHR / RouterOS, core VLAN trunk, security zones, and future regional routed expansion. Include 172.20.0.0/16, GEILWAN/GEILLAN, and no stretched VLANs.
 
 ## Style constraints
 

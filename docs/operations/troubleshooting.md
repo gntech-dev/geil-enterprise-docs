@@ -39,6 +39,23 @@ Provide first-response troubleshooting workflow for GEIL infrastructure incident
 4. Endpoint: Intune policy, Defender, Windows update, certificate state.
 5. Service: Microsoft 365 service health, server event logs, application logs.
 
+
+## Canonical platform and identity quick checks
+
+Before troubleshooting a cross-service issue, confirm the incident is being evaluated against the current canonical model:
+
+| Layer | Canonical value |
+|---|---|
+| Firewall | `HQ-FW01` running MikroTik CHR / RouterOS |
+| Forest | `corp.gntech.me` |
+| NetBIOS | `GNTECH` |
+| Primary user UPN suffix | `gntech.me` |
+| User sign-in | `username@gntech.me` |
+| Legacy logon | `GNTECH\username` |
+| Server FQDNs | `*.corp.gntech.me` |
+
+If evidence shows an active OPNsense path, the old `CORP` NetBIOS namespace, or a production `username@corp.gntech.me` sign-in pattern, treat it as architecture drift and stop before applying fixes.
+
 ## AD health commands
 
 ```powershell

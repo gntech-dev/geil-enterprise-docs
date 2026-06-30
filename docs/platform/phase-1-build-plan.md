@@ -160,7 +160,7 @@ Apply the policy from [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundatio
 Checkpoint:
 
 - Snapshot `CP-FW-BASELINE-RULES`.
-- Export `HQ-FW01-baseline.xml` to protected storage.
+- Export `HQ-FW01-baseline.rsc` to protected storage.
 
 ### Step 5: Create `HQ-DC01`
 

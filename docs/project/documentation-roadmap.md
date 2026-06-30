@@ -44,6 +44,11 @@ Rules:
 3. Dependencies are shown in [Epic and Release Architecture](epic-release-architecture.md).
 4. New documents are not considered published until the release assignment register is updated.
 
+
+## Canonical architecture checkpoint
+
+The current canonical model after ADR-0002 and ADR-0003 is: firewall `HQ-FW01` runs MikroTik CHR / RouterOS; forest and server FQDNs use `corp.gntech.me`; NetBIOS is `GNTECH`; primary user UPN suffix is `gntech.me`; users sign in as `username@gntech.me`; legacy logon remains `GNTECH\username`. OPNsense and old identity examples may appear only in historical or explicitly superseded explanations.
+
 ## Capability-first roadmap
 
 | Epic | Release | Capability | Status | Evidence / Primary Documents |

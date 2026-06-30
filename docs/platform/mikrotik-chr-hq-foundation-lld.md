@@ -25,7 +25,7 @@ classification: Internal Confidential
 
 ## Purpose
 
-This Low-Level Design translates the Enterprise Lab Network HLD into deployable specifications for `HQ-FW01` running MikroTik CHR / RouterOS. It supersedes the previous MikroTik CHR-specific Phase 1 firewall LLD while preserving the same enterprise edge security and networking capability.
+This Low-Level Design translates the Enterprise Lab Network HLD into deployable specifications for `HQ-FW01` running MikroTik CHR / RouterOS. It supersedes the previous OPNsense-specific Phase 1 firewall LLD while preserving the same enterprise edge security and networking capability.
 
 ## Scope
 
@@ -71,7 +71,7 @@ ether1 172.31.255.2/30]
 
 !!! implementation "Architecture change"
 
-    `HQ-FW01` remains the canonical firewall name, but the active platform is now MikroTik CHR / RouterOS. MikroTik CHR is retained only as an alternative implementation and superseded historical runbook set.
+    `HQ-FW01` remains the canonical firewall name, and the active platform is MikroTik CHR / RouterOS. OPNsense is retained only as an alternative/superseded historical runbook set and must not be used for active Phase 1 deployment.
 
 ## VM specification
 

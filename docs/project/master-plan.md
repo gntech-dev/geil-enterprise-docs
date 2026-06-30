@@ -33,7 +33,7 @@ GEIL exists to make infrastructure reproducible, secure, observable, recoverable
 
 Build a complete enterprise infrastructure library that enables GNTECH to design, implement, operate, secure, monitor, troubleshoot, recover, and scale its infrastructure with engineering discipline.
 
-GEIL must support the real GNTECH environment defined in [Environment Specification](environment-specification.md), including `corp.gntech.me`, `gntech.me`, `docs.gntechlabs.me`, `HQ`, `HQ-DC01`, `HQ-FW01`, `PVE-HQ01`, and the `172.20.0.0/16` network baseline.
+GEIL must support the real GNTECH environment defined in [Environment Specification](environment-specification.md), including forest `corp.gntech.me`, NetBIOS `GNTECH`, primary user UPN suffix `gntech.me`, user sign-in `username@gntech.me`, legacy logon `GNTECH\username`, `docs.gntechlabs.me`, `HQ`, `HQ-DC01`, `HQ-FW01` running MikroTik CHR / RouterOS, `PVE-HQ01`, and the `172.20.0.0/16` network baseline.
 
 ## Guiding principles
 

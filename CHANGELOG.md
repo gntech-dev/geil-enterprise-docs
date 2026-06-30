@@ -28,14 +28,14 @@ All notable changes to GEIL are documented in this file.
 - Added `GEIL-PLAT-PH1-ACCEPT-001` Phase 1 Acceptance Package.
 
 - Added `GEIL-PLAT-PVE-HQ-IMPL-001` Proxmox HQ Foundation Implementation Runbook.
-- Added `GEIL-PLAT-OPN-HQ-IMPL-001` MikroTik CHR HQ Foundation Implementation Guide.
+- Added `GEIL-PLAT-MTK-HQ-IMPL-001` MikroTik CHR HQ Foundation Implementation Guide.
 
 - Added `GEIL-GOV-VISUAL-001` Visual Documentation Standard.
 - Added `docs/assets/diagrams/` as the canonical storage path for generated diagram assets.
 - Identified existing high-complexity Mermaid diagrams that should be replaced with dedicated 16:9 visual assets.
 
 - Added `GEIL-PLAT-PVE-HQ-LLD-001` Proxmox HQ Foundation LLD.
-- Added `GEIL-PLAT-OPN-HQ-LLD-001` MikroTik CHR HQ Foundation LLD.
+- Added `GEIL-PLAT-MTK-HQ-LLD-001` MikroTik CHR HQ Foundation LLD.
 - Added `GEIL-PLAT-PH1-BUILD-001` Phase 1 Build Plan.
 - Added `GEIL-PLAT-PH1-VAL-001` Phase 1 Validation Plan.
 - Added Mermaid diagrams for Proxmox bridge topology, RouterOS interface/VLAN topology, Phase 1 deployment sequence, rollback checkpoints, and management access flow.
@@ -63,6 +63,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Audited GEIL after MikroTik CHR and Hybrid UPN architecture changes; corrected stale active firewall, RouterOS export, diagram, document-control, roadmap, backlog, and canonical identity references.
 - Improved existing Platform and Microsoft Core implementation guides from Phase 1 field validation lessons: LAN-to-WAN firewall allowance, disabled DHCP relay until scopes exist, RouterOS Safe Mode sequencing, protected Proxmox networking, Windows pre-AD internet/DNS validation, and stop-condition deployment gates.
 - Corrected MkDocs rendered-code behavior so fenced code blocks render as real block-level code instead of visible inline language text such as `bash`, `powershell`, or `routeros`; added rendered-site code readability CSS for desktop and mobile copy/paste safety.
 - Performed a mandatory release quality gate audit across all 75 Markdown files under `docs/`, correcting duplicate headings, a broken table row, and structural Markdown issues found by custom code-fence/link/table/admonition checks before strict build validation.

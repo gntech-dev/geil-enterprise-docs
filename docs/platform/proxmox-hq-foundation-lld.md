@@ -193,7 +193,7 @@ Before this LLD is considered implemented:
 ## Rollback principles
 
 - If bridge configuration breaks management access, use local console to restore the previous host network configuration.
-- If `HQ-FW01` policy breaks routing, revert to `CP-FW-VLANS` or restore the last exported RouterOS exporturation.
+- If `HQ-FW01` policy breaks routing, revert to `CP-FW-VLANS` or restore the last exported RouterOS configuration export.
 - If a guest OS role configuration fails, revert the VM checkpoint before reattempting.
 
 ## Related documents

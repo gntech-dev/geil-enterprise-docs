@@ -3,7 +3,7 @@ title: Technology Selection Matrix
 document_id: GEIL-ARCH-TECH-001
 owner: Infrastructure Engineering
 status: Approved
-version: 2.0
+version: 3.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-ARCH-TECH-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 2.0 |
+| Version | 3.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |

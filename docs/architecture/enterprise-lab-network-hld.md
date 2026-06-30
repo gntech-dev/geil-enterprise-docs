@@ -27,7 +27,7 @@ classification: Internal Confidential
 
 This document defines the network, security zone, VLAN, IP addressing, WiFi, and site connectivity High-Level Design for the GEIL Enterprise Lab Blueprint.
 
-It is architecture only. Implementation guides must reference this HLD before configuring `HQ-FW01`, switches, DHCP scopes, DNS forwarding, wireless networks, or firewall policy.
+It is architecture only. Implementation guides must reference this HLD before configuring `HQ-FW01` as MikroTik CHR / RouterOS, switches, DHCP scopes, DNS forwarding, wireless networks, or firewall policy.
 
 !!! note "Adaptation"
 
@@ -35,7 +35,7 @@ It is architecture only. Implementation guides must reference this HLD before co
 
 ## Readable visual asset: Enterprise Lab Network HLD
 
-This visual summarizes the HQ network foundation in one readable 16:9 architecture view. `HQ-FW01` is the routing and policy boundary, the core trunk carries the canonical VLANs, and future regions use routed expansion rather than stretched VLANs.
+This visual summarizes the HQ network foundation in one readable 16:9 architecture view. `HQ-FW01` is the MikroTik CHR / RouterOS routing and policy boundary, the core trunk carries the canonical VLANs, and future regions use routed expansion rather than stretched VLANs.
 
 ![Enterprise Lab Network HLD showing HQ-FW01, core VLAN trunk, enterprise zones, and future routed regional expansion](../assets/diagrams/geil-enterprise-lab-network-hld.svg)
 
@@ -157,7 +157,7 @@ flowchart TD
     Internet[Internet]
     Guest[Guest WiFi]
     DMZ[DMZ]
-    FW[HQ-FW01 Policy Enforcement]
+    FW[HQ-FW01 MikroTik CHR / RouterOS Policy Enforcement]
 
     Client --> FW
     Guest --> FW
