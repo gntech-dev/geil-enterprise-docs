@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 16.0
+version: 17.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 16.0 |
+| Version | 17.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -110,6 +110,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
 | GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
+| GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy, users, groups, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
 | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
 | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model |
 | GEIL-MSC-PKI-001 | AD CS PKI | Draft | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI architecture |
@@ -153,7 +154,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 5 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 3 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
-| E03 | E03.R01 - Core directory services | 6 |
+| E03 | E03.R01 - Core directory services | 7 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
 | E03 | E03.R03 - Privileged access control plane | 2 |
 | E04 | E04.R01 - Cloud identity and endpoint management | 6 |

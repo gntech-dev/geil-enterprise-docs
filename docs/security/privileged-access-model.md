@@ -3,7 +3,7 @@ title: Privileged Access Model
 document_id: GEIL-SEC-PAM-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-SEC-PAM-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -165,33 +165,29 @@ Tier 2 requirements:
 
 ## Baseline OU structure
 
-Create a dedicated administrative OU hierarchy. This keeps privileged users, groups, workstations, and service accounts separate from normal user and workstation policy.
+The authoritative OU implementation is defined in [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md). Privileged access uses the `Admin` branch of the canonical tree and must not create a parallel OU model.
 
 ```text
-OU=Admin,DC=corp,DC=gntech,DC=me
-├── OU=Tier 0,OU=Admin,DC=corp,DC=gntech,DC=me
-│   ├── OU=Users
-│   ├── OU=Groups
-│   ├── OU=Workstations
-│   └── OU=Service Accounts
-├── OU=Tier 1,OU=Admin,DC=corp,DC=gntech,DC=me
-│   ├── OU=Users
-│   ├── OU=Groups
-│   ├── OU=Workstations
-│   └── OU=Service Accounts
-├── OU=Tier 2,OU=Admin,DC=corp,DC=gntech,DC=me
-│   ├── OU=Users
-│   ├── OU=Groups
-│   ├── OU=Workstations
-│   └── OU=Service Accounts
-└── OU=Emergency Access,OU=Admin,DC=corp,DC=gntech,DC=me
+corp.gntech.me
+└── GNTECH
+    ├── Admin
+    │   ├── Tier 0
+    │   ├── Tier 1
+    │   └── Tier 2
+    ├── Users
+    ├── Groups
+    ├── Computers
+    ├── Service Accounts
+    └── Policies
 ```
+
+Tier 0 identities belong under `OU=Tier 0,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me`. Tier 1 and Tier 2 identities follow the equivalent tier OUs. Daily users do not belong in the `Admin` branch.
 
 ## Baseline privileged groups
 
 | Group | Scope | Tier | Purpose |
 |---|---|---:|---|
-| `GG-T0-AD-Admins` | Global | 0 | Controlled source group for AD DS Tier 0 administrators |
+| `GG-T0-Domain-Admins` | Global | 0 | Controlled source group for AD DS Tier 0 administrators, created by the organizational foundation guide |
 | `GG-T0-PKI-Admins` | Global | 0 | AD CS administrators and certificate managers |
 | `GG-T0-Entra-Admins` | Global or cloud group | 0 | Cloud identity administrators |
 | `GG-T0-DC-Logon-Allow` | Global | 0 | Accounts permitted to sign in to domain controllers |
@@ -209,101 +205,50 @@ Do not add user accounts directly to high-privilege built-in groups except where
 
 ### Explanation
 
-The following PowerShell creates the administrative OU hierarchy and baseline AD groups. Run it from a Tier 0 administrative workstation using a Tier 0 account after the AD forest is built and healthy.
+The authoritative OU, user, group, delegation, and service account implementation now lives in [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md). This privileged access model consumes that structure instead of creating a parallel privileged OU tree.
 
-### PowerShell
+### Required baseline
+
+Before creating privileged accounts or assigning privileged group membership, validate that the organizational foundation created:
+
+- `OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+- `OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+- `OU=Tier 0,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+- `OU=Tier 1,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+- `OU=Tier 2,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+- `OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+- Baseline groups such as `GG-T0-Domain-Admins`, `GG-T1-Server-Admins`, and `GG-T2-Workstation-Admins`.
+
+### PowerShell validation
 
 ```powershell
 $DomainDN = (Get-ADDomain).DistinguishedName
-$AdminRoot = "OU=Admin,$DomainDN"
-if (-not (Get-ADOrganizationalUnit -LDAPFilter "(ou=Admin)" -SearchBase $DomainDN -SearchScope OneLevel -ErrorAction SilentlyContinue)) {
-    New-ADOrganizationalUnit -Name "Admin" -Path $DomainDN -ProtectedFromAccidentalDeletion $true
-}
-```
-
-Create the tier OUs and child OUs:
-
-```powershell
-$Tiers = @("Tier 0", "Tier 1", "Tier 2")
-$ChildOUs = @("Users", "Groups", "Workstations", "Service Accounts")
-foreach ($Tier in $Tiers) {
-    $TierPath = "OU=$Tier,$AdminRoot"
-    if (-not (Get-ADOrganizationalUnit -Identity $TierPath -ErrorAction SilentlyContinue)) {
-        New-ADOrganizationalUnit -Name $Tier -Path $AdminRoot -ProtectedFromAccidentalDeletion $true
-    }
-    foreach ($Child in $ChildOUs) {
-        $ChildPath = "OU=$Child,$TierPath"
-        if (-not (Get-ADOrganizationalUnit -Identity $ChildPath -ErrorAction SilentlyContinue)) {
-            New-ADOrganizationalUnit -Name $Child -Path $TierPath -ProtectedFromAccidentalDeletion $true
-        }
-    }
-}
-```
-
-Create the emergency access OU and baseline groups:
-
-```powershell
-$EmergencyPath = "OU=Emergency Access,$AdminRoot"
-if (-not (Get-ADOrganizationalUnit -Identity $EmergencyPath -ErrorAction SilentlyContinue)) {
-    New-ADOrganizationalUnit -Name "Emergency Access" -Path $AdminRoot -ProtectedFromAccidentalDeletion $true
-}
-```
-
-```powershell
-$Groups = @(
-    @{ Name = "GG-T0-AD-Admins"; Tier = "Tier 0"; Description = "Tier 0 Active Directory administrators" },
-    @{ Name = "GG-T0-PKI-Admins"; Tier = "Tier 0"; Description = "Tier 0 AD CS and PKI administrators" },
-    @{ Name = "GG-T0-Entra-Admins"; Tier = "Tier 0"; Description = "Tier 0 Microsoft Entra administrators" },
-    @{ Name = "GG-T0-DC-Logon-Allow"; Tier = "Tier 0"; Description = "Accounts allowed to sign in to domain controllers" },
-    @{ Name = "GG-T1-Server-Admins"; Tier = "Tier 1"; Description = "Tier 1 server administrators" },
-    @{ Name = "GG-T1-Proxmox-Admins"; Tier = "Tier 1"; Description = "Tier 1 Proxmox administrators" },
-    @{ Name = "GG-T1-Firewall-Admins"; Tier = "Tier 1"; Description = "Tier 1 firewall administrators" },
-    @{ Name = "GG-T1-Backup-Operators"; Tier = "Tier 1"; Description = "Tier 1 backup operators" },
-    @{ Name = "GG-T2-Workstation-Admins"; Tier = "Tier 2"; Description = "Tier 2 workstation administrators" },
-    @{ Name = "GG-Privileged-Access-Review"; Tier = "Tier 0"; Description = "Privileged access reviewers" }
+$RequiredPaths = @(
+    "OU=Admin,OU=GNTECH,$DomainDN",
+    "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN",
+    "OU=Tier 1,OU=Admin,OU=GNTECH,$DomainDN",
+    "OU=Tier 2,OU=Admin,OU=GNTECH,$DomainDN",
+    "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
 )
-```
-
-```powershell
-foreach ($Group in $Groups) {
-    $GroupPath = "OU=Groups,OU=$($Group.Tier),$AdminRoot"
-    if (-not (Get-ADGroup -LDAPFilter "(cn=$($Group.Name))" -SearchBase $GroupPath -ErrorAction SilentlyContinue)) {
-        New-ADGroup -Name $Group.Name -SamAccountName $Group.Name -GroupScope Global -GroupCategory Security -Path $GroupPath -Description $Group.Description
-    }
+foreach ($Path in $RequiredPaths) {
+    Get-ADOrganizationalUnit -Identity $Path | Select-Object Name,DistinguishedName
 }
-```
-
-### Expected result
-
-- `OU=Admin` exists at the domain root.
-- Tier 0, Tier 1, Tier 2, and Emergency Access OUs exist.
-- Administrative child OUs exist under each tier.
-- Baseline privileged groups exist in the appropriate tier group OU.
-
-### Validation
-
-```powershell
-Get-ADOrganizationalUnit -SearchBase (Get-ADDomain).DistinguishedName -LDAPFilter "(ou=Admin)"
-Get-ADGroup -Filter 'Name -like "GG-T*" -or Name -eq "GG-Privileged-Access-Review"' |
+Get-ADGroup -Filter 'Name -in "GG-T0-Domain-Admins","GG-T1-Server-Admins","GG-T2-Workstation-Admins"' |
     Select-Object Name,GroupScope,DistinguishedName |
     Sort-Object Name
 ```
 
-Expected result: the command returns the Admin OU and all baseline privileged groups in the expected OU paths.
+### Expected result
+
+The command returns the canonical admin OUs and privileged groups under `OU=GNTECH`.
+
+### Stop condition
+
+STOP. Do not create privileged users, add group membership, or configure privileged GPOs until the Active Directory Organizational Foundation guide validates successfully.
 
 ### Rollback
 
-If this procedure is run in the wrong domain or with incorrect names before accounts are placed in the OUs, remove the created objects after review:
-
-```powershell
-Get-ADGroup -Filter 'Name -like "GG-T*" -or Name -eq "GG-Privileged-Access-Review"' |
-    Remove-ADGroup -Confirm:$true
-
-Set-ADOrganizationalUnit -Identity "OU=Admin,DC=corp,DC=gntech,DC=me" -ProtectedFromAccidentalDeletion $false
-Remove-ADOrganizationalUnit -Identity "OU=Admin,DC=corp,DC=gntech,DC=me" -Recursive -Confirm:$true
-```
-
-Do not remove the Admin OU recursively after privileged accounts, service accounts, or workstations are placed there. Move objects to a reviewed recovery OU first.
+No rollback is required for this read-only validation. Roll back OU or group mistakes in the organizational foundation guide, not here.
 
 ## Implementation procedure: create a Tier 0 administrative user
 
@@ -317,7 +262,7 @@ This procedure creates a named Tier 0 administrative account and places it in th
 $DomainDN = (Get-ADDomain).DistinguishedName
 $UserName = "adm0.j.smith"
 $DisplayName = "J. Smith Tier 0 Admin"
-$TargetOU = "OU=Users,OU=Tier 0,OU=Admin,$DomainDN"
+$TargetOU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"
 $InitialPassword = Read-Host "Enter initial password" -AsSecureString
 
 New-ADUser `
@@ -342,7 +287,7 @@ Get-ADUser "adm0.j.smith" -Properties Enabled,Description,DistinguishedName,Last
     Select-Object SamAccountName,UserPrincipalName,Enabled,Description,DistinguishedName,LastLogonDate
 ```
 
-Expected result: account exists in `OU=Users,OU=Tier 0,OU=Admin`, has a `gntech.me` UPN, and has no last logon until first controlled use.
+Expected result: account exists in `OU=Tier 0,OU=Admin,OU=GNTECH`, has a `gntech.me` UPN, and has no last logon until first controlled use.
 
 ### Rollback — Rollback
 
@@ -352,7 +297,7 @@ If the account was created incorrectly and has not been used:
 Disable-ADAccount "adm0.j.smith"
 Move-ADObject `
     -Identity (Get-ADUser "adm0.j.smith").DistinguishedName `
-    -TargetPath "OU=Disabled Objects,DC=corp,DC=gntech,DC=me"
+    -TargetPath "OU=Disabled,OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 ```
 
 Do not delete privileged accounts immediately if they have been used. Disable, investigate audit logs, then remove after retention requirements are met.
@@ -366,8 +311,8 @@ Privileged membership must be explicit, change-controlled, and validated. The ex
 ### PowerShell — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
-Add-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith"
-Add-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-AD-Admins"
+Add-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "adm0.j.smith"
+Add-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins"
 ```
 
 ### Expected result — Implementation procedure: privileged group membership assignment 2
@@ -377,22 +322,22 @@ The named Tier 0 account receives Domain Admin rights through the controlled GEI
 ### Validation — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
-Get-ADGroupMember "GG-T0-AD-Admins" | Select-Object Name,SamAccountName,ObjectClass
+Get-ADGroupMember "GG-T0-Domain-Admins" | Select-Object Name,SamAccountName,ObjectClass
 Get-ADGroupMember "Domain Admins" | Select-Object Name,SamAccountName,ObjectClass
 ```
 
-Expected result: the user is a member of `GG-T0-AD-Admins`; `GG-T0-AD-Admins` is the member visible in `Domain Admins`.
+Expected result: the user is a member of `GG-T0-Domain-Admins`; `GG-T0-Domain-Admins` is the member visible in `Domain Admins`.
 
 ### Rollback — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
-Remove-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith" -Confirm:$true
+Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "adm0.j.smith" -Confirm:$true
 ```
 
 If the controlled group was incorrectly nested in a built-in group:
 
 ```powershell
-Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-AD-Admins" -Confirm:$true
+Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins" -Confirm:$true
 ```
 
 After rollback, revoke active sessions where applicable and review security logs for actions performed during the membership window.
@@ -628,7 +573,7 @@ Get-ADGroupMember "Domain Admins"
 Get-ADGroupMember "Enterprise Admins"
 Get-ADGroupMember "Schema Admins"
 Get-ADOrganizationalUnit -LDAPFilter "(ou=Admin)" -SearchBase (Get-ADDomain).DistinguishedName
-Get-ADUser -Filter 'SamAccountName -like "adm*.*"' -SearchBase "OU=Admin,$((Get-ADDomain).DistinguishedName)" -Properties Enabled,LastLogonDate |
+Get-ADUser -Filter 'SamAccountName -like "adm*.*"' -SearchBase "OU=Admin,OU=GNTECH,$((Get-ADDomain).DistinguishedName)" -Properties Enabled,LastLogonDate |
     Select-Object SamAccountName,Enabled,LastLogonDate,DistinguishedName
 ```
 
@@ -641,13 +586,13 @@ Use rollback when privileged access was granted incorrectly or when a tier bound
 ### Remove incorrect AD group membership
 
 ```powershell
-Remove-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith" -Confirm:$true
+Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "adm0.j.smith" -Confirm:$true
 ```
 
 Validation:
 
 ```powershell
-Get-ADGroupMember "GG-T0-AD-Admins" | Where-Object {$_.SamAccountName -eq "adm0.j.smith"}
+Get-ADGroupMember "GG-T0-Domain-Admins" | Where-Object {$_.SamAccountName -eq "adm0.j.smith"}
 ```
 
 Expected result: no object is returned.

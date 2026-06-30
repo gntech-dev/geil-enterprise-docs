@@ -3,7 +3,7 @@ title: Active Directory Implementation
 document_id: GEIL-MSC-AD-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.3
+version: 2.4
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-AD-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.3 |
+| Version | 2.4 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -51,7 +51,7 @@ By the end of this guide you will have:
 - ✓ Hybrid UPN suffix `gntech.me` added.
 - ✓ Administrator UPN set to `Administrator@gntech.me`.
 - ✓ AD-integrated DNS installed.
-- ✓ Baseline OUs created.
+- ✓ Next guide identified for the required organizational foundation.
 - ✓ Validation evidence captured for `dcdiag`, DNS, and FSMO roles.
 
 ## Estimated Time
@@ -106,7 +106,7 @@ This guide creates the first GEIL directory service before production users or w
 - `corp.gntech.me` forest exists.
 - `HQ-DC01` is a domain controller and DNS server.
 - DNS points to `HQ-DC01` after promotion.
-- Baseline OUs exist only after the domain exists.
+- Baseline OUs are created in the dedicated Active Directory Organizational Foundation guide after forest health and Hybrid UPN validation pass.
 - AD DS, DNS SRV records, FSMO roles, replication commands, and event logs validate successfully.
 
 ## Architecture Overview
@@ -412,39 +412,29 @@ If the suffix was added incorrectly before production users are created, remove 
 
 Continue only when the forest is `corp.gntech.me`, NetBIOS is `GNTECH`, UPN suffix includes `gntech.me`, and Administrator is `Administrator@gntech.me`.
 
-### Step 6: Create baseline organizational units
+### Step 6: Continue to the Active Directory Organizational Foundation guide
 
-#### Goal — Step 6: Create baseline organizational units
+#### Goal — Step 6: Continue to the Active Directory Organizational Foundation guide
 
-Create the first OU structure for servers, workstations, groups, service accounts, disabled objects, and administration.
+Stop after forest, DNS, NetBIOS, and Hybrid UPN validation, then create the OU, user, group, delegation, and service account foundation using [Active Directory Organizational Foundation](active-directory-organizational-foundation.md).
 
-#### Why this step matters — Step 6: Create baseline organizational units
+#### Why this step matters — Step 6: Continue to the Active Directory Organizational Foundation guide
 
-OUs give GEIL a predictable management structure for future GPOs, delegation, and lifecycle operations.
+The organizational foundation is intentionally separated from forest promotion so junior operators do not mix two different risk domains. Forest creation establishes the directory. The organizational foundation creates the managed enterprise structure that later Group Policy, delegation, Entra ID sync, PKI, NPS, and operations guides depend on.
 
-#### Commands — Step 6: Create baseline organizational units
+#### Continue only if successful — Step 6: Continue to the Active Directory Organizational Foundation guide
 
-```powershell
-$Base = "DC=corp,DC=gntech,DC=me"
-$OUs = "Admin","Servers","Workstations","Groups","Service Accounts","Disabled Objects"
-foreach ($OU in $OUs) {
-    New-ADOrganizationalUnit -Name $OU -Path $Base -ProtectedFromAccidentalDeletion $true
-}
-Get-ADOrganizationalUnit -Filter * -SearchBase $Base | Select-Object Name,DistinguishedName
-```
+Continue only when this guide validates:
 
-#### Expected results — Step 6: Create baseline organizational units
+- Forest: `corp.gntech.me`.
+- NetBIOS: `GNTECH`.
+- UPN suffix: `gntech.me`.
+- Administrator UPN: `Administrator@gntech.me`.
+- Domain controller health: `dcdiag`, `repadmin`, and AD DNS SRV records pass.
 
-You should now see each baseline OU listed.
+#### Stop condition — Step 6: Continue to the Active Directory Organizational Foundation guide
 
-#### Rollback — Step 6: Create baseline organizational units
-
-If an OU was created with the wrong name, remove it only if it is empty:
-
-```powershell
-Set-ADOrganizationalUnit -Identity "OU=WrongName,DC=corp,DC=gntech,DC=me" -ProtectedFromAccidentalDeletion $false
-Remove-ADOrganizationalUnit -Identity "OU=WrongName,DC=corp,DC=gntech,DC=me" -Confirm:$false
-```
+STOP. Do not proceed to DNS/DHCP expansion, Group Policy, PKI, Entra ID, Intune, or production user onboarding until [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) is completed and validated.
 
 ## Validation
 
@@ -533,7 +523,7 @@ Administrator   : Administrator@gntech.me
 
 #### If validation fails — Domain controller health validation
 
-STOP. Do not configure DHCP or Group Policy.
+STOP. Do not configure DHCP, Group Policy, PKI, Entra ID sync, or production users.
 
 - If `dcdiag` fails DNS tests, run `dcdiag /test:dns /v` and correct AD DNS registration.
 - If SRV records are missing, restart Netlogon and recheck DNS.
@@ -645,7 +635,7 @@ When a GUI action appears in this guide, capture the screenshot at that point in
 
 Continue to:
 
-- [DNS and DHCP Implementation](dns-dhcp-implementation.md)
+- [Active Directory Organizational Foundation](active-directory-organizational-foundation.md), then [DNS and DHCP Implementation](dns-dhcp-implementation.md)
 
 
 ## Educational Enterprise Context

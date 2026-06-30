@@ -3,7 +3,7 @@ title: Environment Specification
 document_id: GEIL-PRJ-ENV-001
 owner: Infrastructure Engineering
 status: Approved
-version: 3.0
+version: 3.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ENV-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 3.0 |
+| Version | 3.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -108,12 +108,23 @@ Only use placeholders when the value cannot be known before deployment or must n
 | Production user sign-in | `username@gntech.me` |
 | Legacy logon format | `GNTECH\username` |
 | Disallowed production UPN pattern | `username@corp.gntech.me` except when explaining the default pre-suffix AD state |
-| Admin root OU | `OU=Admin,DC=corp,DC=gntech,DC=me` |
-| Servers OU | `OU=Servers,DC=corp,DC=gntech,DC=me` |
-| Workstations OU | `OU=Workstations,DC=corp,DC=gntech,DC=me` |
-| Groups OU | `OU=Groups,DC=corp,DC=gntech,DC=me` |
-| Service Accounts OU | `OU=Service Accounts,DC=corp,DC=gntech,DC=me` |
-| Disabled Objects OU | `OU=Disabled Objects,DC=corp,DC=gntech,DC=me` |
+| Managed organization root OU | `OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Admin root OU | `OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Tier 0 admin OU | `OU=Tier 0,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Tier 1 admin OU | `OU=Tier 1,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Tier 2 admin OU | `OU=Tier 2,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Standard users OU | `OU=Standard,OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Groups security OU | `OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Workstations OU | `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Servers OU | `OU=Servers,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Service Accounts OU | `OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Disabled users OU | `OU=Disabled,OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+
+## Active Directory organizational foundation
+
+The canonical managed OU root is `OU=GNTECH,DC=corp,DC=gntech,DC=me`. Create and validate this structure with [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md) before Group Policy, PKI, Entra ID sync, or production onboarding.
+
+Initial users and service accounts use the primary UPN suffix `gntech.me`, for example `gnolasco@gntech.me`, `admin.gnolasco@gntech.me`, `svc-backup@gntech.me`, and `svc-monitoring@gntech.me`.
 
 ## Hybrid identity namespace
 

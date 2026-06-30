@@ -3,7 +3,7 @@ title: Group Policy Baseline
 document_id: GEIL-MSC-GPO-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.1
+version: 2.2
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-GPO-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.1 |
+| Version | 2.2 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -47,7 +47,7 @@ By the end of this guide you will have:
 
 - ✓ Verified the baseline OU structure exists.
 - ✓ Created baseline GPO shells before linking them.
-- ✓ Linked the workstation baseline to the Workstations OU.
+- ✓ Linked the workstation baseline to the Workstations OU under the canonical Computers OU.
 - ✓ Configured a safe example setting for PowerShell script block logging.
 - ✓ Validated security filtering and resultant policy.
 - ✓ Documented rollback for unlinking and disabling GPOs.
@@ -71,8 +71,9 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 ## Prerequisites
 
 - [Active Directory Implementation](active-directory-implementation.md) completed.
+- [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) completed and validated.
 - `corp.gntech.me` forest exists.
-- Baseline OUs exist: `Admin`, `Servers`, `Workstations`, `Groups`.
+- Baseline OUs exist under `OU=GNTECH,DC=corp,DC=gntech,DC=me`, especially `Admin`, `Users`, `Groups`, `Computers`, `Service Accounts`, and `Policies`.
 - Group Policy Management Console is installed.
 - PowerShell GroupPolicy module is available.
 - Test workstation exists or is planned for validation.
@@ -86,7 +87,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 ## Expected Ending State
 
 - GPOs exist before links are configured.
-- Workstation baseline is linked only to the Workstations OU.
+- Workstation baseline is linked only to the Workstations OU under the canonical Computers OU.
 - Security filtering is reviewed and documented.
 - Rollback commands are captured.
 
@@ -95,7 +96,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 ```mermaid
 flowchart LR
     Domain[corp.gntech.me]
-    OU[OU=Workstations]
+    OU[OU=Workstations,OU=Computers,OU=GNTECH]
     GPO[GEIL-Workstation-Security-Baseline]
     Client[HQ-W11-001]
     Domain --> OU
@@ -134,10 +135,11 @@ Confirm the required objects exist before creating or linking GPOs.
 Import-Module ActiveDirectory
 Import-Module GroupPolicy
 $RequiredOUs = @(
-  "OU=Admin,DC=corp,DC=gntech,DC=me",
-  "OU=Servers,DC=corp,DC=gntech,DC=me",
-  "OU=Workstations,DC=corp,DC=gntech,DC=me",
-  "OU=Groups,DC=corp,DC=gntech,DC=me"
+  "OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me",
+  "OU=Servers,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
+  "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
+  "OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me",
+  "OU=Policies,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 )
 foreach ($OU in $RequiredOUs) { Get-ADOrganizationalUnit -Identity $OU | Select-Object Name,DistinguishedName }
 Get-Command New-GPO,New-GPLink,Get-GPO
@@ -218,23 +220,23 @@ Get-GPPermission -Name "GEIL-Workstation-Security-Baseline" -All | Select-Object
 
 Expected result: filtering is visible and documented. Do not proceed if it would apply to unintended computers.
 
-### Step 5: Link the GPO to the Workstations OU
+### Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
 
-#### Commands — Step 5: Link the GPO to the Workstations OU
+#### Commands — Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
 
 ```powershell
 New-GPLink -Name "GEIL-Workstation-Security-Baseline" `
-  -Target "OU=Workstations,DC=corp,DC=gntech,DC=me" `
+  -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me" `
   -LinkEnabled Yes
 
-Get-GPInheritance -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
+Get-GPInheritance -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 ```
 
-#### Rollback — Step 5: Link the GPO to the Workstations OU
+#### Rollback — Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
 
 ```powershell
 Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" `
-  -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
+  -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 ```
 
 ### Step 6: Validate resultant policy

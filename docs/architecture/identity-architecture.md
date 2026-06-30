@@ -55,10 +55,10 @@ Use Microsoft Entra Connect Cloud Sync or Entra Connect Sync only after document
 ```powershell
 Get-ADGroupMember "Domain Admins"
 Get-ADGroupMember "Enterprise Admins"
-Get-ADUser -Filter 'Enabled -eq $true' -SearchBase "OU=Admin,DC=corp,DC=gntech,DC=me" | Select Name,SamAccountName
+Get-ADUser -Filter 'Enabled -eq $true' -SearchBase "OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me" | Select Name,SamAccountName
 ```
 
-Expected result: only named Tier 0 administrative users appear in Tier 0 groups.
+Expected result: only named administrative users appear in the canonical `OU=Admin,OU=GNTECH,...` branch and only approved Tier 0 users appear in Tier 0 groups.
 
 ## Rollback
 

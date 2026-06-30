@@ -112,6 +112,7 @@ nav:
       - microsoft-core/index.md
       - Windows Server 2025 Baseline: microsoft-core/windows-server-2025-baseline.md
       - Active Directory Implementation: microsoft-core/active-directory-implementation.md
+      - Active Directory Organizational Foundation: microsoft-core/active-directory-organizational-foundation.md
       - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
       - Group Policy Baseline: microsoft-core/group-policy-baseline.md
       - AD CS PKI: microsoft-core/ad-cs-pki.md

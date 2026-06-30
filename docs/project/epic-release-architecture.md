@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 8.0
+version: 9.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 7.0 |
+| Version | 9.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -164,6 +164,7 @@ flowchart TD
     FW[MikroTik CHR Edge Firewall]
     WS[Windows Server 2025 Baseline]
     AD[Active Directory Implementation]
+    ADORG[Active Directory Organizational Foundation]
     DNS[DNS and DHCP Implementation]
     GPO[Group Policy Baseline]
     PKI[AD CS PKI]
@@ -218,13 +219,14 @@ flowchart TD
     PVE --> WS
     FW --> WS
     WS --> AD
-    AD --> DNS
-    AD --> GPO
-    AD --> PKI
+    AD --> ADORG
+    ADORG --> DNS
+    ADORG --> GPO
+    ADORG --> PKI
     PKI --> NPS
     IDARCH --> PAM
-    AD --> PAM
-    AD --> M365
+    ADORG --> PAM
+    ADORG --> M365
     M365 --> ENTRA
     ENTRA --> INTUNE
     INTUNE --> WHFB
@@ -298,6 +300,7 @@ The following register assigns every current published document to exactly one r
 | E03.R01 - Core directory services | E03 | `microsoft-core/index.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-server-2025-baseline.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-implementation.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-organizational-foundation.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/dns-dhcp-implementation.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/group-policy-baseline.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/powershell-operations.md` |

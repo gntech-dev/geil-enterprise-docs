@@ -208,12 +208,13 @@ The OU design separates normal operations from administrative control.
 
 | OU | Purpose |
 |---|---|
-| `OU=Admin,DC=corp,DC=gntech,DC=me` | Tiered administrative users, groups, workstations, and service accounts |
-| `OU=Servers,DC=corp,DC=gntech,DC=me` | Member servers and infrastructure servers |
-| `OU=Workstations,DC=corp,DC=gntech,DC=me` | Windows 11 Enterprise workstations |
-| `OU=Groups,DC=corp,DC=gntech,DC=me` | Security and distribution groups |
-| `OU=Service Accounts,DC=corp,DC=gntech,DC=me` | Traditional service accounts and gMSA organization |
-| `OU=Disabled Objects,DC=corp,DC=gntech,DC=me` | Disabled users, computers, and retained objects |
+| `OU=GNTECH,DC=corp,DC=gntech,DC=me` | Managed enterprise OU root for GNTECH-owned objects |
+| `OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me` | Tiered administrative users and admin delegation targets |
+| `OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me` | Standard, executive, contractor, and disabled user lifecycle containers |
+| `OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me` | Security, Microsoft 365, and role-based access groups |
+| `OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` | Workstations, servers, and staging computer lifecycle containers |
+| `OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me` | Standard service accounts, gMSA planning, and legacy service identities |
+| `OU=Policies,OU=GNTECH,DC=corp,DC=gntech,DC=me` | Policy staging and future control-plane anchors |
 
 ## Cloud integration strategy
 
@@ -230,6 +231,6 @@ The OU design separates normal operations from administrative control.
 - [Enterprise Lab Blueprint HLD](enterprise-lab-blueprint.md)
 - [Environment Specification](../project/environment-specification.md)
 - [Identity Architecture](identity-architecture.md)
-- [Active Directory Implementation](../microsoft-core/active-directory-implementation.md)
+- [Active Directory Implementation](../microsoft-core/active-directory-implementation.md) and [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md)
 - [AD CS PKI](../microsoft-core/ad-cs-pki.md)
 - [Privileged Access Model](../security/privileged-access-model.md)

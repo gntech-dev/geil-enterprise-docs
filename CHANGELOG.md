@@ -6,6 +6,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+- Added `GEIL-MSC-ADORG-001` Active Directory Organizational Foundation with canonical OU hierarchy, initial users, groups, service accounts, delegation boundaries, GPO readiness, Entra ID readiness, PowerShell implementation, validation, rollback, and evidence guidance.
 - Added `GEIL-ADR-0003` Hybrid Identity Namespace and updated canonical identity architecture so AD remains `corp.gntech.me`, NetBIOS is `GNTECH`, and users sign in as `username@gntech.me`.
 - Added `GEIL-GOV-DEPLOY-001` Deployment Style Guide as the canonical writing standard for GEIL deployment documentation.
 - Added `GEIL-PROJ-DQI-001` Documentation Quality Report with quality scores, weaknesses, recommendations, and next refactoring target.
@@ -63,6 +64,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Active Directory Implementation now routes operators to the organizational foundation before DNS/DHCP, Group Policy, PKI, Entra ID sync, or production onboarding. Updated GPO, privileged access, environment specification, roadmap, backlog, document index, release assignments, and navigation for the new AD foundation gate.
 - Audited GEIL after MikroTik CHR and Hybrid UPN architecture changes; corrected stale active firewall, RouterOS export, diagram, document-control, roadmap, backlog, and canonical identity references.
 - Improved existing Platform and Microsoft Core implementation guides from Phase 1 field validation lessons: LAN-to-WAN firewall allowance, disabled DHCP relay until scopes exist, RouterOS Safe Mode sequencing, protected Proxmox networking, Windows pre-AD internet/DNS validation, and stop-condition deployment gates.
 - Corrected MkDocs rendered-code behavior so fenced code blocks render as real block-level code instead of visible inline language text such as `bash`, `powershell`, or `routeros`; added rendered-site code readability CSS for desktop and mobile copy/paste safety.
