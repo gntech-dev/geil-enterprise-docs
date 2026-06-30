@@ -153,11 +153,11 @@ No rollback is required for read-only validation.
 
 ### Step 2: Create GPOs before linking
 
-#### Goal
+#### Goal — Step 2: Create GPOs before linking
 
 Create baseline GPO shells without applying them yet.
 
-#### Commands
+#### Commands — Step 2: Create GPOs before linking
 
 ```powershell
 $Gpos = @(
@@ -174,7 +174,7 @@ foreach ($Gpo in $Gpos) {
 Get-GPO -All | Where-Object DisplayName -like "GEIL-*" | Select-Object DisplayName,GpoStatus
 ```
 
-#### Rollback
+#### Rollback — Step 2: Create GPOs before linking
 
 If a GPO was created with the wrong name and has no links:
 
@@ -184,11 +184,11 @@ Remove-GPO -Name "Incorrect-GPO-Name" -Confirm:$false
 
 ### Step 3: Configure a safe workstation baseline setting
 
-#### Goal
+#### Goal — Step 3: Configure a safe workstation baseline setting
 
 Enable PowerShell script block logging in the workstation baseline before linking.
 
-#### Commands
+#### Commands — Step 3: Configure a safe workstation baseline setting
 
 ```powershell
 Set-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
@@ -200,7 +200,7 @@ Get-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
   -ValueName EnableScriptBlockLogging
 ```
 
-#### Rollback
+#### Rollback — Step 3: Configure a safe workstation baseline setting
 
 ```powershell
 Remove-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
@@ -210,7 +210,7 @@ Remove-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
 
 ### Step 4: Validate security filtering before linking
 
-#### Commands
+#### Commands — Step 4: Validate security filtering before linking
 
 ```powershell
 Get-GPPermission -Name "GEIL-Workstation-Security-Baseline" -All | Select-Object Trustee,Permission
@@ -220,7 +220,7 @@ Expected result: filtering is visible and documented. Do not proceed if it would
 
 ### Step 5: Link the GPO to the Workstations OU
 
-#### Commands
+#### Commands — Step 5: Link the GPO to the Workstations OU
 
 ```powershell
 New-GPLink -Name "GEIL-Workstation-Security-Baseline" `
@@ -230,7 +230,7 @@ New-GPLink -Name "GEIL-Workstation-Security-Baseline" `
 Get-GPInheritance -Target "OU=Workstations,DC=corp,DC=gntech,DC=me"
 ```
 
-#### Rollback
+#### Rollback — Step 5: Link the GPO to the Workstations OU
 
 ```powershell
 Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" `

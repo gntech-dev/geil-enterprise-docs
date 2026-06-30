@@ -440,15 +440,15 @@ Set the server hostname.
 
 ### Step 2: Set hostname
 
-#### Goal
+#### Goal — Step 2: Set hostname
 
 Rename the server to its canonical GEIL name.
 
-#### Why this step matters
+#### Why this step matters — Step 2: Set hostname
 
 Server names become part of logs, certificates, DNS records, monitoring, and operational evidence.
 
-#### Commands
+#### Commands — Step 2: Set hostname
 
 For `HQ-DC01`:
 
@@ -456,15 +456,15 @@ For `HQ-DC01`:
 Rename-Computer -NewName "HQ-DC01" -Restart
 ```
 
-#### GUI navigation
+#### GUI navigation — Step 2: Set hostname
 
 `Server Manager -> Local Server -> Computer name`
 
-#### Expected result
+#### Expected result — Step 2: Set hostname
 
 You should now see `HQ-DC01` after reboot.
 
-#### Validation
+#### Validation — Step 2: Set hostname
 
 ```powershell
 hostname
@@ -476,7 +476,7 @@ Expected output:
 HQ-DC01
 ```
 
-#### Evidence
+#### Evidence — Step 2: Set hostname
 
 Capture command output or Server Manager Local Server screenshot.
 
@@ -484,25 +484,25 @@ Capture command output or Server Manager Local Server screenshot.
 
 If the hostname does not change, confirm you ran PowerShell as Administrator and rebooted.
 
-#### Rollback
+#### Rollback — Step 2: Set hostname
 
 Before role installation, rename again using `Rename-Computer` and reboot.
 
-#### Next step
+#### Next step — Step 2: Set hostname
 
 Configure static IP addressing.
 
 ### Step 3: Configure static IP and DNS
 
-#### Goal
+#### Goal — Step 3: Configure static IP and DNS
 
 Assign the server its canonical network identity.
 
-#### Why this step matters
+#### Why this step matters — Step 3: Configure static IP and DNS
 
 Infrastructure services must be reachable at stable IP addresses. Domain services are especially sensitive to DNS and IP changes.
 
-#### Commands
+#### Commands — Step 3: Configure static IP and DNS
 
 ```powershell
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "172.20.20.11" -PrefixLength 24 -DefaultGateway "172.20.20.1"
@@ -510,11 +510,11 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "172.20.2
 Get-NetIPConfiguration
 ```
 
-#### GUI navigation
+#### GUI navigation — Step 3: Configure static IP and DNS
 
 `Control Panel -> Network and Sharing Center -> Change adapter settings -> Ethernet -> IPv4 Properties`
 
-#### Expected result
+#### Expected result — Step 3: Configure static IP and DNS
 
 You should now see:
 
@@ -523,18 +523,18 @@ You should now see:
 - Default gateway `172.20.20.1`.
 - DNS server `172.20.20.11` for the first domain controller bootstrap state.
 
-#### Validation
+#### Validation — Step 3: Configure static IP and DNS
 
 ```powershell
 Test-NetConnection 172.20.20.1
 Get-DnsClientServerAddress -AddressFamily IPv4
 ```
 
-#### Evidence
+#### Evidence — Step 3: Configure static IP and DNS
 
 Capture `Get-NetIPConfiguration` output.
 
-#### Troubleshooting
+#### Troubleshooting — Step 3: Configure static IP and DNS
 
 If the interface alias is not `Ethernet`, discover it with:
 
@@ -542,28 +542,28 @@ If the interface alias is not `Ethernet`, discover it with:
 Get-NetAdapter
 ```
 
-#### Rollback
+#### Rollback — Step 3: Configure static IP and DNS
 
 ```powershell
 Remove-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "172.20.20.11" -Confirm:$false
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ResetServerAddresses
 ```
 
-#### Next step
+#### Next step — Step 3: Configure static IP and DNS
 
 Apply updates and enable security baseline controls.
 
 ### Step 4: Apply updates and enable security controls
 
-#### Goal
+#### Goal — Step 4: Apply updates and enable security controls
 
 Bring the server to a supported patch and security state before installing roles.
 
-#### Why this step matters
+#### Why this step matters — Step 4: Apply updates and enable security controls
 
 Installing infrastructure roles on an unpatched server creates avoidable risk and can introduce troubleshooting noise.
 
-#### Commands
+#### Commands — Step 4: Apply updates and enable security controls
 
 ```powershell
 Get-MpComputerStatus | Select-Object AMServiceEnabled,AntivirusEnabled,RealTimeProtectionEnabled
@@ -572,11 +572,11 @@ Get-NetFirewallProfile | Select-Object Name,Enabled
 
 Use Windows Update from the GUI or approved enterprise update tooling.
 
-#### GUI navigation
+#### GUI navigation — Step 4: Apply updates and enable security controls
 
 `Settings -> Windows Update`
 
-#### Expected result
+#### Expected result — Step 4: Apply updates and enable security controls
 
 You should now see:
 
@@ -584,55 +584,55 @@ You should now see:
 - Defender enabled.
 - Firewall profiles enabled.
 
-#### Validation
+#### Validation — Step 4: Apply updates and enable security controls
 
 ```powershell
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5
 Get-NetFirewallProfile
 ```
 
-#### Evidence
+#### Evidence — Step 4: Apply updates and enable security controls
 
 Capture Windows Update status and firewall profile output.
 
-#### Troubleshooting
+#### Troubleshooting — Step 4: Apply updates and enable security controls
 
 If updates fail, check network connectivity, DNS resolution, and Windows Update logs before installing roles.
 
-#### Rollback
+#### Rollback — Step 4: Apply updates and enable security controls
 
 Use Windows Update uninstall or VM snapshot before role installation if an update causes boot or network failure.
 
-#### Next step
+#### Next step — Step 4: Apply updates and enable security controls
 
 Install management tools.
 
 ### Step 5: Install management tools
 
-#### Goal
+#### Goal — Step 5: Install management tools
 
 Install administration features needed by later guides.
 
-#### Why this step matters
+#### Why this step matters — Step 5: Install management tools
 
 Role-specific guides require management cmdlets and consoles. Installing tools early makes validation repeatable.
 
-#### Commands
+#### Commands — Step 5: Install management tools
 
 ```powershell
 Install-WindowsFeature -Name RSAT-AD-PowerShell,RSAT-DNS-Server -IncludeAllSubFeature
 Get-WindowsFeature RSAT-AD-PowerShell,RSAT-DNS-Server
 ```
 
-#### GUI navigation
+#### GUI navigation — Step 5: Install management tools
 
 `Server Manager -> Manage -> Add Roles and Features -> Features`
 
-#### Expected result
+#### Expected result — Step 5: Install management tools
 
 You should now see RSAT tools installed.
 
-#### Validation
+#### Validation — Step 5: Install management tools
 
 ```powershell
 Get-Command Get-ADDomain -ErrorAction SilentlyContinue
@@ -641,17 +641,17 @@ Get-Command Get-DnsServerZone -ErrorAction SilentlyContinue
 
 These commands may not return useful role data until roles exist, but the cmdlets should be present after tooling is installed.
 
-#### Evidence
+#### Evidence — Step 5: Install management tools
 
 Capture `Get-WindowsFeature` output.
 
-#### Rollback
+#### Rollback — Step 5: Install management tools
 
 ```powershell
 Uninstall-WindowsFeature RSAT-AD-PowerShell,RSAT-DNS-Server
 ```
 
-#### Next step
+#### Next step — Step 5: Install management tools
 
 Capture the pre-role checkpoint.
 
@@ -702,7 +702,7 @@ No. Create explicit allow rules or troubleshoot the blocked traffic. Disabling t
 
 No. Snapshots are useful before role installation. After roles such as AD DS are installed, use role-aware backup and recovery.
 
-## Troubleshooting
+## Troubleshooting — Troubleshooting
 
 - Use `Get-NetAdapter` to identify interface names.
 - Use `Test-NetConnection 172.20.20.1` to validate the gateway.

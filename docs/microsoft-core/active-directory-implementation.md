@@ -190,11 +190,11 @@ No rollback is required for read-only validation.
 
 ### Step 2: Create a pre-promotion checkpoint
 
-#### Goal
+#### Goal — Step 2: Create a pre-promotion checkpoint
 
 Create a safe rollback point before installing AD DS.
 
-#### Why this step matters
+#### Why this step matters — Step 2: Create a pre-promotion checkpoint
 
 The clean OS checkpoint is the safest rollback path if forest creation fails before production use.
 
@@ -211,7 +211,7 @@ You should now see:
 
 - Snapshot `CP-DC01-PRE-ADDS` listed for VM 110.
 
-#### Rollback
+#### Rollback — Step 2: Create a pre-promotion checkpoint
 
 ```bash
 qm rollback 110 CP-DC01-PRE-ADDS
@@ -223,29 +223,29 @@ qm rollback 110 CP-DC01-PRE-ADDS
 
 ### Step 3: Install AD DS and DNS roles
 
-#### Goal
+#### Goal — Step 3: Install AD DS and DNS roles
 
 Install the required Windows roles.
 
-#### Why this step matters
+#### Why this step matters — Step 3: Install AD DS and DNS roles
 
 The role binaries must exist before forest creation can begin.
 
-#### Commands
+#### Commands — Step 3: Install AD DS and DNS roles
 
 ```powershell
 Install-WindowsFeature AD-Domain-Services,DNS -IncludeManagementTools
 Get-WindowsFeature AD-Domain-Services,DNS
 ```
 
-#### Expected results
+#### Expected results — Step 3: Install AD DS and DNS roles
 
 You should now see:
 
 - `AD-Domain-Services` installed.
 - `DNS` installed.
 
-#### Rollback
+#### Rollback — Step 3: Install AD DS and DNS roles
 
 Before promotion, remove the features if required:
 
@@ -255,15 +255,15 @@ Uninstall-WindowsFeature AD-Domain-Services,DNS -Remove
 
 ### Step 4: Create the `corp.gntech.me` forest
 
-#### Goal
+#### Goal — Step 4: Create the corp.gntech.me forest
 
 Promote `HQ-DC01` as the first domain controller.
 
-#### Why this step matters
+#### Why this step matters — Step 4: Create the corp.gntech.me forest
 
 This creates the identity authority for GEIL. All future Microsoft identity services depend on this forest and domain name.
 
-#### Commands
+#### Commands — Step 4: Create the corp.gntech.me forest
 
 ```powershell
 $SafeModePassword = Read-Host "Enter Directory Services Restore Mode password" -AsSecureString
@@ -278,7 +278,7 @@ Install-ADDSForest `
   -Force
 ```
 
-#### Expected results
+#### Expected results — Step 4: Create the corp.gntech.me forest
 
 You should now see:
 
@@ -286,7 +286,7 @@ You should now see:
 - The server reboots.
 - The logon screen allows domain logon for `CORP`.
 
-#### Validate this step
+#### Validate this step — Step 4: Create the corp.gntech.me forest
 
 After reboot, log in with an approved domain admin context and run:
 
@@ -301,7 +301,7 @@ Expected output:
 - NetBIOSName: `CORP`.
 - Forest name: `corp.gntech.me`.
 
-#### Rollback
+#### Rollback — Step 4: Create the corp.gntech.me forest
 
 If promotion fails before production use:
 
@@ -312,15 +312,15 @@ If promotion fails before production use:
 
 ### Step 5: Create baseline organizational units
 
-#### Goal
+#### Goal — Step 5: Create baseline organizational units
 
 Create the first OU structure for servers, workstations, groups, service accounts, disabled objects, and administration.
 
-#### Why this step matters
+#### Why this step matters — Step 5: Create baseline organizational units
 
 OUs give GEIL a predictable management structure for future GPOs, delegation, and lifecycle operations.
 
-#### Commands
+#### Commands — Step 5: Create baseline organizational units
 
 ```powershell
 $Base = "DC=corp,DC=gntech,DC=me"
@@ -331,11 +331,11 @@ foreach ($OU in $OUs) {
 Get-ADOrganizationalUnit -Filter * -SearchBase $Base | Select-Object Name,DistinguishedName
 ```
 
-#### Expected results
+#### Expected results — Step 5: Create baseline organizational units
 
 You should now see each baseline OU listed.
 
-#### Rollback
+#### Rollback — Step 5: Create baseline organizational units
 
 If an OU was created with the wrong name, remove it only if it is empty:
 

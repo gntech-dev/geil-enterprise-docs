@@ -3,7 +3,7 @@ title: Documentation Quality Report
 document_id: GEIL-PROJ-DQI-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-30
 review_cycle: Monthly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PROJ-DQI-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-30 |
 | Review Cycle | Monthly |
 | Classification | Internal Confidential |
@@ -138,3 +138,32 @@ Refactor next:
 - [Proxmox HQ Foundation Implementation](../platform/proxmox-hq-foundation-implementation.md)
 
 Rationale: Proxmox networking is the highest-risk dependency. It protects existing public access, creates `GEILWAN` and `GEILLAN`, and determines whether all later MikroTik, Windows, AD, DNS, DHCP, and management deployment steps are possible.
+
+
+## Mandatory Release Quality Gate Audit
+
+This release quality gate audited every Markdown file under `docs/` from scratch. Build success was not treated as sufficient; the audit checked Markdown structure, code fences, code-block language identifiers, tables, admonitions, Mermaid fences, internal links, image references, duplicate headings, and navigation inclusion.
+
+| Gate | Result |
+|---|---|
+| Markdown files audited | 75 |
+| Broken fenced code blocks | 0 after correction |
+| Incorrect code block language identifiers | 0 after correction |
+| Broken tables | 0 after correction |
+| Broken admonitions | 0 after correction |
+| Broken internal links | 0 after correction |
+| Broken image references | 0 after correction |
+| Duplicate headings | 0 after correction |
+| Release assignment gaps | 0 |
+| Generated `site/` tracked | No |
+
+### Corrections made during this quality gate
+
+- Fixed the Proxmox HQ Foundation LLD snapshot checkpoint table so every row matches the five-column table header.
+- Disambiguated repeated procedural headings such as `Goal`, `Commands`, `Validation`, `Rollback`, and `Expected result` so generated heading anchors are unique and easier to link to.
+- Disambiguated repeated privileged access procedure headings in the security guide.
+- Re-ran custom Markdown/link/table/code-fence checks and strict MkDocs build after correction.
+
+### Remaining quality considerations
+
+The documentation now passes the structural release quality gate. The remaining work is editorial and experiential: continue converting older high-value guides into strict Deployment Style Guide sections with inline screenshots, sample expected outputs, and step-local troubleshooting.

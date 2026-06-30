@@ -179,42 +179,42 @@ No rollback is required for read-only validation.
 
 ### Step 2: Enforce secure dynamic updates
 
-#### Goal
+#### Goal — Step 2: Enforce secure dynamic updates
 
 Allow domain-joined systems to update DNS securely while preventing unauthenticated updates.
 
-#### Why this step matters
+#### Why this step matters — Step 2: Enforce secure dynamic updates
 
 Secure updates reduce stale or malicious DNS records.
 
-#### Commands
+#### Commands — Step 2: Enforce secure dynamic updates
 
 ```powershell
 Set-DnsServerPrimaryZone -Name "corp.gntech.me" -DynamicUpdate Secure
 Get-DnsServerZone -Name "corp.gntech.me" | Select-Object ZoneName,DynamicUpdate
 ```
 
-#### Expected results
+#### Expected results — Step 2: Enforce secure dynamic updates
 
 You should now see:
 
 - `DynamicUpdate` set to `Secure`.
 
-#### Rollback
+#### Rollback — Step 2: Enforce secure dynamic updates
 
 Do not disable secure updates for the domain zone unless an approved troubleshooting exception exists.
 
 ### Step 3: Configure DNS forwarders
 
-#### Goal
+#### Goal — Step 3: Configure DNS forwarders
 
 Allow internal DNS to resolve external names without making clients use public DNS directly.
 
-#### Why this step matters
+#### Why this step matters — Step 3: Configure DNS forwarders
 
 Domain clients should use AD DNS. AD DNS can forward unknown public names upstream.
 
-#### Commands
+#### Commands — Step 3: Configure DNS forwarders
 
 ```powershell
 Set-DnsServerForwarder -IPAddress 1.1.1.1,1.0.0.1
@@ -222,14 +222,14 @@ Get-DnsServerForwarder
 Resolve-DnsName www.microsoft.com
 ```
 
-#### Expected results
+#### Expected results — Step 3: Configure DNS forwarders
 
 You should now see:
 
 - Forwarders `1.1.1.1` and `1.0.0.1` listed.
 - Public DNS lookup succeeds from `HQ-DC01`.
 
-#### Rollback
+#### Rollback — Step 3: Configure DNS forwarders
 
 ```powershell
 Remove-DnsServerForwarder -IPAddress 1.1.1.1,1.0.0.1 -Force
@@ -237,15 +237,15 @@ Remove-DnsServerForwarder -IPAddress 1.1.1.1,1.0.0.1 -Force
 
 ### Step 4: Install and authorize DHCP
 
-#### Goal
+#### Goal — Step 4: Install and authorize DHCP
 
 Install DHCP on `HQ-DC01` and authorize it in Active Directory.
 
-#### Why this step matters
+#### Why this step matters — Step 4: Install and authorize DHCP
 
 Windows DHCP servers must be authorized in AD before serving domain networks.
 
-#### Commands
+#### Commands — Step 4: Install and authorize DHCP
 
 ```powershell
 Install-WindowsFeature DHCP -IncludeManagementTools
@@ -253,14 +253,14 @@ Add-DhcpServerInDC -DnsName "HQ-DC01.corp.gntech.me" -IPAddress 172.20.20.11
 Get-DhcpServerInDC
 ```
 
-#### Expected results
+#### Expected results — Step 4: Install and authorize DHCP
 
 You should now see:
 
 - DHCP role installed.
 - `HQ-DC01.corp.gntech.me` authorized with IP `172.20.20.11`.
 
-#### Rollback
+#### Rollback — Step 4: Install and authorize DHCP
 
 ```powershell
 Remove-DhcpServerInDC -DnsName "HQ-DC01.corp.gntech.me" -IPAddress 172.20.20.11
@@ -269,15 +269,15 @@ Uninstall-WindowsFeature DHCP
 
 ### Step 5: Create the VLAN 30 workstation scope
 
-#### Goal
+#### Goal — Step 5: Create the VLAN 30 workstation scope
 
 Provide DHCP addresses to workstation clients on VLAN 30.
 
-#### Why this step matters
+#### Why this step matters — Step 5: Create the VLAN 30 workstation scope
 
 VLAN 30 is the first user/client VLAN and supports `HQ-MGMT01` and `HQ-W11-001` testing.
 
-#### Commands
+#### Commands — Step 5: Create the VLAN 30 workstation scope
 
 ```powershell
 Add-DhcpServerv4Scope `
@@ -297,7 +297,7 @@ Get-DhcpServerv4Scope
 Get-DhcpServerv4OptionValue -ScopeId 172.20.30.0
 ```
 
-#### Expected results
+#### Expected results — Step 5: Create the VLAN 30 workstation scope
 
 You should now see:
 
@@ -306,7 +306,7 @@ You should now see:
 - DNS server option `172.20.20.11`.
 - DNS domain option `corp.gntech.me`.
 
-#### Rollback
+#### Rollback — Step 5: Create the VLAN 30 workstation scope
 
 ```powershell
 Remove-DhcpServerv4Scope -ScopeId 172.20.30.0 -Force
@@ -314,11 +314,11 @@ Remove-DhcpServerv4Scope -ScopeId 172.20.30.0 -Force
 
 ### Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
-#### Goal
+#### Goal — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
 Enable relay only after the Windows DHCP scope exists and is authorized.
 
-#### Why this step matters
+#### Why this step matters — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
 If relay is enabled before scopes exist, clients may fail to obtain leases or receive incomplete network options. Guest VLAN 70 must remain isolated and must not relay to AD DHCP.
 
@@ -363,7 +363,7 @@ From `HQ-DC01`:
 Get-DhcpServerv4Lease -ScopeId 172.20.30.0
 ```
 
-#### Rollback
+#### Rollback — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
 ```routeros
 /ip dhcp-relay disable relay-vlan30

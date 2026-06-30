@@ -327,15 +327,15 @@ Import the CHR image.
 
 ### Step 2: Import CHR image and create VM
 
-#### Goal
+#### Goal — Step 2: Import CHR image and create VM
 
 Create `HQ-FW01` with the CHR disk and correct NIC mapping.
 
-#### Why this step matters
+#### Why this step matters — Step 2: Import CHR image and create VM
 
 A wrong NIC mapping reverses WAN/LAN policy and can expose internal networks or break validation.
 
-#### Commands
+#### Commands — Step 2: Import CHR image and create VM
 
 Run on `PVE-HQ01` after copying the extracted CHR `.img` file to `/var/lib/vz/template/iso/mikrotik/chr.img`:
 
@@ -349,7 +349,7 @@ qm set 100 --serial0 socket --vga serial0
 qm config 100
 ```
 
-#### Expected result
+#### Expected result — Step 2: Import CHR image and create VM
 
 You should now see:
 
@@ -358,38 +358,38 @@ You should now see:
 - `net1` on `GEILLAN`.
 - CHR disk attached as boot disk.
 
-#### Validation
+#### Validation — Step 2: Import CHR image and create VM
 
 ```bash
 qm config 100 | egrep 'name|net0|net1|scsi0|boot'
 ```
 
-#### Evidence
+#### Evidence — Step 2: Import CHR image and create VM
 
 Capture `qm config 100` output.
 
-#### Rollback
+#### Rollback — Step 2: Import CHR image and create VM
 
 ```bash
 qm stop 100
 qm destroy 100 --purge
 ```
 
-#### Next step
+#### Next step — Step 2: Import CHR image and create VM
 
 Boot CHR and perform non-network-locking hardening.
 
 ### Step 3: Set identity and admin password only
 
-#### Goal
+#### Goal — Step 3: Set identity and admin password only
 
 Secure the default account and set the router identity without referencing interface lists that do not exist yet.
 
-#### Why this step matters
+#### Why this step matters — Step 3: Set identity and admin password only
 
 This step is safe because it does not restrict management services or firewall access.
 
-#### Commands
+#### Commands — Step 3: Set identity and admin password only
 
 Run from the RouterOS console:
 
@@ -399,40 +399,40 @@ Run from the RouterOS console:
 /system identity print
 ```
 
-#### Expected result
+#### Expected result — Step 3: Set identity and admin password only
 
 You should now see identity `HQ-FW01`.
 
-#### Validation
+#### Validation — Step 3: Set identity and admin password only
 
 ```routeros
 /user print
 /system identity print
 ```
 
-#### Evidence
+#### Evidence — Step 3: Set identity and admin password only
 
 Capture sanitized `/system identity print` output. Do not capture or commit the password.
 
-#### Rollback
+#### Rollback — Step 3: Set identity and admin password only
 
 Use the Proxmox console to reset the password if the password was mistyped before management service restrictions are applied.
 
-#### Next step
+#### Next step — Step 3: Set identity and admin password only
 
 Create interface lists.
 
 ### Step 4: Create interface lists before referencing them
 
-#### Goal
+#### Goal — Step 4: Create interface lists before referencing them
 
 Create RouterOS interface lists in the correct order.
 
-#### Why this step matters
+#### Why this step matters — Step 4: Create interface lists before referencing them
 
 RouterOS commands that reference a missing interface list fail or partially apply, which can leave the firewall in an inconsistent state.
 
-#### Commands
+#### Commands — Step 4: Create interface lists before referencing them
 
 ```routeros
 /interface list add name=WAN comment="External/transit interfaces"
@@ -444,22 +444,22 @@ RouterOS commands that reference a missing interface list fail or partially appl
 /interface list member add list=WAN interface=ether1
 ```
 
-#### Expected result
+#### Expected result — Step 4: Create interface lists before referencing them
 
 You should now see all required interface lists.
 
-#### Validation
+#### Validation — Step 4: Create interface lists before referencing them
 
 ```routeros
 /interface/list/print
 /interface/list/member/print
 ```
 
-#### Evidence
+#### Evidence — Step 4: Create interface lists before referencing them
 
 Capture interface list output.
 
-#### Rollback
+#### Rollback — Step 4: Create interface lists before referencing them
 
 ```routeros
 /interface list member remove [find]
@@ -471,17 +471,17 @@ Capture interface list output.
 /interface list remove [find name=GUEST]
 ```
 
-#### Next step
+#### Next step — Step 4: Create interface lists before referencing them
 
 Configure WAN and default route.
 
 ### Step 5: Configure WAN IP, default route, and DNS
 
-#### Goal
+#### Goal — Step 5: Configure WAN IP, default route, and DNS
 
 Make CHR reachable on the GEILWAN transit network.
 
-#### Commands
+#### Commands — Step 5: Configure WAN IP, default route, and DNS
 
 ```routeros
 /ip address add address=172.31.255.2/30 interface=ether1 comment="GEILWAN CHR WAN"
@@ -489,11 +489,11 @@ Make CHR reachable on the GEILWAN transit network.
 /ip dns set servers=1.1.1.1,1.0.0.1 allow-remote-requests=yes
 ```
 
-#### Expected result
+#### Expected result — Step 5: Configure WAN IP, default route, and DNS
 
 You should now see `172.31.255.2/30` on `ether1` and default route via `172.31.255.1`.
 
-#### Validation
+#### Validation — Step 5: Configure WAN IP, default route, and DNS
 
 ```routeros
 /ip/address/print
@@ -502,28 +502,28 @@ You should now see `172.31.255.2/30` on `ether1` and default route via `172.31.2
 /ping 172.31.255.1 count=4
 ```
 
-#### Evidence
+#### Evidence — Step 5: Configure WAN IP, default route, and DNS
 
 Capture address, route, DNS, and ping output.
 
-#### Rollback
+#### Rollback — Step 5: Configure WAN IP, default route, and DNS
 
 ```routeros
 /ip route remove [find comment="Default route via GEILWAN Proxmox peer"]
 /ip address remove [find comment="GEILWAN CHR WAN"]
 ```
 
-#### Next step
+#### Next step — Step 5: Configure WAN IP, default route, and DNS
 
 Create VLAN interfaces.
 
 ### Step 6: Create VLAN interfaces on ether2
 
-#### Goal
+#### Goal — Step 6: Create VLAN interfaces on ether2
 
 Create the VLAN interface objects before assigning IPs or interface-list membership.
 
-#### Commands
+#### Commands — Step 6: Create VLAN interfaces on ether2
 
 ```routeros
 /interface vlan add name=vlan10-mgmt interface=ether2 vlan-id=10
@@ -538,34 +538,34 @@ Create the VLAN interface objects before assigning IPs or interface-list members
 /interface vlan add name=vlan100-hypervisors interface=ether2 vlan-id=100
 ```
 
-#### Expected result
+#### Expected result — Step 6: Create VLAN interfaces on ether2
 
 You should now see ten VLAN interfaces on `ether2`.
 
-#### Validation
+#### Validation — Step 6: Create VLAN interfaces on ether2
 
 ```routeros
 /interface/print
 /interface/vlan/print
 ```
 
-#### Rollback
+#### Rollback — Step 6: Create VLAN interfaces on ether2
 
 ```routeros
 /interface vlan remove [find interface=ether2]
 ```
 
-#### Next step
+#### Next step — Step 6: Create VLAN interfaces on ether2
 
 Assign gateway IP addresses.
 
 ### Step 7: Assign VLAN gateway IP addresses
 
-#### Goal
+#### Goal — Step 7: Assign VLAN gateway IP addresses
 
 Assign canonical gateway IPs only after VLAN interfaces exist.
 
-#### Commands
+#### Commands — Step 7: Assign VLAN gateway IP addresses
 
 ```routeros
 /ip address add address=172.20.10.1/24 interface=vlan10-mgmt comment="VLAN10 Management gateway"
@@ -580,29 +580,29 @@ Assign canonical gateway IPs only after VLAN interfaces exist.
 /ip address add address=172.20.100.1/24 interface=vlan100-hypervisors comment="VLAN100 Hypervisors gateway"
 ```
 
-#### Validation
+#### Validation — Step 7: Assign VLAN gateway IP addresses
 
 ```routeros
 /ip/address/print
 ```
 
-#### Rollback
+#### Rollback — Step 7: Assign VLAN gateway IP addresses
 
 ```routeros
 /ip address remove [find comment~"gateway"]
 ```
 
-#### Next step
+#### Next step — Step 7: Assign VLAN gateway IP addresses
 
 Add VLAN interfaces to interface lists.
 
 ### Step 8: Add VLAN interfaces to interface lists
 
-#### Goal
+#### Goal — Step 8: Add VLAN interfaces to interface lists
 
 Populate lists only after the VLAN interfaces exist.
 
-#### Commands
+#### Commands — Step 8: Add VLAN interfaces to interface lists
 
 ```routeros
 /interface list member add list=MGMT interface=vlan10-mgmt
@@ -620,13 +620,13 @@ Populate lists only after the VLAN interfaces exist.
 /interface list member add list=LAN interface=vlan100-hypervisors
 ```
 
-#### Validation
+#### Validation — Step 8: Add VLAN interfaces to interface lists
 
 ```routeros
 /interface/list/member/print
 ```
 
-#### Rollback
+#### Rollback — Step 8: Add VLAN interfaces to interface lists
 
 ```routeros
 /interface list member remove [find list=LAN]
@@ -636,17 +636,17 @@ Populate lists only after the VLAN interfaces exist.
 /interface list member remove [find list=GUEST]
 ```
 
-#### Next step
+#### Next step — Step 8: Add VLAN interfaces to interface lists
 
 Validate management reachability before restricting services.
 
 ### Step 9: Validate management path before restrictions
 
-#### Goal
+#### Goal — Step 9: Validate management path before restrictions
 
 Confirm an approved management source can reach RouterOS before limiting management services to the `MGMT` list.
 
-#### Validation
+#### Validation — Step 9: Validate management path before restrictions
 
 From an approved management context, validate WinBox or SSH reachability to `172.20.10.1` when the network path exists. From RouterOS, print current state:
 
@@ -657,26 +657,26 @@ From an approved management context, validate WinBox or SSH reachability to `172
 /ip/service/print
 ```
 
-#### Expected result
+#### Expected result — Step 9: Validate management path before restrictions
 
 - `MGMT` list exists and contains `vlan10-mgmt`.
 - `HQ-MGMT01` or approved management network has a path to `172.20.10.1` when VLAN 10/30 connectivity is available.
 
-#### Rollback
+#### Rollback — Step 9: Validate management path before restrictions
 
 Do not apply service restrictions until this validation succeeds.
 
-#### Next step
+#### Next step — Step 9: Validate management path before restrictions
 
 Enter Safe Mode and restrict services.
 
 ### Step 10: Enter Safe Mode and restrict RouterOS services
 
-#### Goal
+#### Goal — Step 10: Enter Safe Mode and restrict RouterOS services
 
 Disable unnecessary services and restrict management after lists and management path exist.
 
-#### Why this step matters
+#### Why this step matters — Step 10: Enter Safe Mode and restrict RouterOS services
 
 This was the critical order issue found during deployment. `MGMT` must exist and contain the intended interface before any command references it.
 
@@ -684,7 +684,7 @@ This was the critical order issue found during deployment. `MGMT` must exist and
 
 In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the block below. Keep the Proxmox console open.
 
-#### Commands
+#### Commands — Step 10: Enter Safe Mode and restrict RouterOS services
 
 ```routeros
 /ip service disable telnet,ftp,www,api,api-ssl
@@ -695,7 +695,7 @@ In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the blo
 /tool mac-server mac-winbox set allowed-interface-list=MGMT
 ```
 
-#### Validation
+#### Validation — Step 10: Enter Safe Mode and restrict RouterOS services
 
 ```routeros
 /ip/service/print
@@ -704,11 +704,11 @@ In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the blo
 /tool/mac-server/mac-winbox/print
 ```
 
-#### Evidence
+#### Evidence — Step 10: Enter Safe Mode and restrict RouterOS services
 
 Capture sanitized service and MAC-server output.
 
-#### Rollback
+#### Rollback — Step 10: Enter Safe Mode and restrict RouterOS services
 
 If management disconnects, Safe Mode should revert the changes. If using console, manually relax the settings:
 
@@ -718,37 +718,37 @@ If management disconnects, Safe Mode should revert the changes. If using console
 /tool mac-server mac-winbox set allowed-interface-list=all
 ```
 
-#### Next step
+#### Next step — Step 10: Enter Safe Mode and restrict RouterOS services
 
 Configure NAT and firewall filters.
 
 ### Step 11: Configure NAT masquerade
 
-#### Commands
+#### Commands — Step 11: Configure NAT masquerade
 
 ```routeros
 /ip firewall nat add chain=srcnat out-interface-list=WAN action=masquerade comment="GEIL outbound masquerade to GEILWAN"
 ```
 
-#### Validation
+#### Validation — Step 11: Configure NAT masquerade
 
 ```routeros
 /ip/firewall/nat/print
 ```
 
-#### Rollback
+#### Rollback — Step 11: Configure NAT masquerade
 
 ```routeros
 /ip firewall nat remove [find comment="GEIL outbound masquerade to GEILWAN"]
 ```
 
-#### Next step
+#### Next step — Step 11: Configure NAT masquerade
 
 Apply firewall rules in small blocks.
 
 ### Step 12: Apply baseline firewall rules in safe order
 
-#### Goal
+#### Goal — Step 12: Apply baseline firewall rules in safe order
 
 Allow required management and established traffic, block guest-to-internal traffic, and deny unapproved forwarding.
 
@@ -785,13 +785,13 @@ Validate before adding drops:
 /ip firewall filter add chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
-#### Validation
+#### Validation — Step 12: Apply baseline firewall rules in safe order
 
 ```routeros
 /ip/firewall/filter/print stats
 ```
 
-#### Rollback
+#### Rollback — Step 12: Apply baseline firewall rules in safe order
 
 Remove the most recent bad rule by comment, for example:
 
@@ -799,17 +799,17 @@ Remove the most recent bad rule by comment, for example:
 /ip firewall filter remove [find comment="Default deny unapproved forwarding"]
 ```
 
-#### Next step
+#### Next step — Step 12: Apply baseline firewall rules in safe order
 
 Prepare DHCP relay without enabling it.
 
 ### Step 13: Prepare DHCP relay commands but keep disabled
 
-#### Goal
+#### Goal — Step 13: Prepare DHCP relay commands but keep disabled
 
 Document the future relay configuration without sending traffic before DHCP scopes exist.
 
-#### Commands
+#### Commands — Step 13: Prepare DHCP relay commands but keep disabled
 
 Do not run until `HQ-DC01` DHCP scopes exist. When ready, add them disabled first:
 
@@ -821,7 +821,7 @@ Do not run until `HQ-DC01` DHCP scopes exist. When ready, add them disabled firs
 
 Never create relay for VLAN 70 Guest WiFi.
 
-#### Validation
+#### Validation — Step 13: Prepare DHCP relay commands but keep disabled
 
 ```routeros
 /ip/dhcp-relay/print
@@ -829,19 +829,19 @@ Never create relay for VLAN 70 Guest WiFi.
 
 Expected result before DHCP scopes exist: no enabled relay entries.
 
-#### Rollback
+#### Rollback — Step 13: Prepare DHCP relay commands but keep disabled
 
 ```routeros
 /ip dhcp-relay remove [find]
 ```
 
-#### Next step
+#### Next step — Step 13: Prepare DHCP relay commands but keep disabled
 
 Export and snapshot.
 
 ### Step 14: Export configuration and capture snapshots
 
-#### Commands
+#### Commands — Step 14: Export configuration and capture snapshots
 
 RouterOS export:
 

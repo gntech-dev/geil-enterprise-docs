@@ -307,11 +307,11 @@ Do not remove the Admin OU recursively after privileged accounts, service accoun
 
 ## Implementation procedure: create a Tier 0 administrative user
 
-### Explanation
+### Explanation — Explanation
 
 This procedure creates a named Tier 0 administrative account and places it in the Tier 0 Users OU. It does not automatically grant Domain Admin membership. Membership assignment requires a separate approved change.
 
-### PowerShell
+### PowerShell — PowerShell
 
 ```powershell
 $DomainDN = (Get-ADDomain).DistinguishedName
@@ -331,11 +331,11 @@ New-ADUser `
     -Description "Tier 0 administrative account for J. Smith; no daily productivity use"
 ```
 
-### Expected result
+### Expected result — Expected result
 
 A dedicated Tier 0 administrative user is created, enabled, and required to change password at first sign-in.
 
-### Validation
+### Validation — Validation
 
 ```powershell
 Get-ADUser "adm0.j.smith" -Properties Enabled,Description,DistinguishedName,LastLogonDate |
@@ -344,7 +344,7 @@ Get-ADUser "adm0.j.smith" -Properties Enabled,Description,DistinguishedName,Last
 
 Expected result: account exists in `OU=Users,OU=Tier 0,OU=Admin` and has no last logon until first controlled use.
 
-### Rollback
+### Rollback — Rollback
 
 If the account was created incorrectly and has not been used:
 
@@ -359,22 +359,22 @@ Do not delete privileged accounts immediately if they have been used. Disable, i
 
 ## Implementation procedure: privileged group membership assignment
 
-### Explanation
+### Explanation — Implementation procedure: privileged group membership assignment 2
 
 Privileged membership must be explicit, change-controlled, and validated. The example below grants Tier 0 AD administration by adding a named admin account to the GEIL-controlled group and then adding that group to a built-in privileged group where required.
 
-### PowerShell
+### PowerShell — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
 Add-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith"
 Add-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-AD-Admins"
 ```
 
-### Expected result
+### Expected result — Implementation procedure: privileged group membership assignment 2
 
 The named Tier 0 account receives Domain Admin rights through the controlled GEIL group.
 
-### Validation
+### Validation — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
 Get-ADGroupMember "GG-T0-AD-Admins" | Select-Object Name,SamAccountName,ObjectClass
@@ -383,7 +383,7 @@ Get-ADGroupMember "Domain Admins" | Select-Object Name,SamAccountName,ObjectClas
 
 Expected result: the user is a member of `GG-T0-AD-Admins`; `GG-T0-AD-Admins` is the member visible in `Domain Admins`.
 
-### Rollback
+### Rollback — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
 Remove-ADGroupMember -Identity "GG-T0-AD-Admins" -Members "adm0.j.smith" -Confirm:$true

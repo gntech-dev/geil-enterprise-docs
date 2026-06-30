@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 16.0
+version: 17.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 16.0 |
+| Version | 17.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -66,6 +66,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-026 | P0 | E00 | E00.R01 | Done | Full implementation guide audit and correction | Audited 32 scoped guides; corrected MikroTik CHR command order, DHCP relay sequence, AD validation gates, Group Policy order, Proxmox safety notes, and missing implementation-guide structure sections | [Implementation Guide Audit Report](implementation-guide-audit-report.md) |
 | DOC-027 | P0 | E02/E03 | E02.R04 / E03.R01 | Done | Expand MikroTik CHR and Windows Server deployment detail | MikroTik CHR guide includes image preparation, Proxmox VM settings, first login, Safe Mode workflow, WinBox evidence, and do-not-proceed gates; Windows Server guide includes Proxmox VM settings, edition choice, VirtIO driver workflow, first-login checklist, static IP detail, patch loop, pre-role snapshot, and do-not-proceed gates | [MikroTik CHR HQ Foundation Implementation](../platform/mikrotik-chr-hq-foundation-implementation.md), [Windows Server 2025 Baseline](../microsoft-core/windows-server-2025-baseline.md) |
 | DOC-028 | P0 | E00 | E00.R01 | Done | Launch Documentation Quality Initiative | Created Deployment Style Guide, audited 32 scoped guides, improved six priority guides with DQI operator workflow blocks, and published quality scores/recommendations | [Documentation Quality Report](documentation-quality-report.md) |
+| DOC-029 | P0 | E00 | E00.R01 | Done | Mandatory release quality gate audit | Audited all 75 Markdown files under `docs/`; corrected broken table structure and duplicate procedural headings; verified code fences, language identifiers, links, images, admonitions, navigation, release assignments, and strict build | [Documentation Quality Report](documentation-quality-report.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |

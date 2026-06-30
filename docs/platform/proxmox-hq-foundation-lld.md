@@ -172,7 +172,7 @@ Management rules:
 
 | Checkpoint | Target | Timing | Purpose | Rollback Action |
 |---|---|---|---|---|
-| `CP-PVE-BASELINE` | Host config export | After Proxmox network baseline | Recover bridge/network design |
+| `CP-PVE-BASELINE` | Host config export | After Proxmox network baseline | Recover bridge/network design | Restore `/etc/network/interfaces` backup and reapply networking from console |
 | `CP-FW-INSTALLED` | `HQ-FW01` | After MikroTik CHR install, before VLAN policy | Return to clean firewall install |
 | `CP-FW-VLANS` | `HQ-FW01` | After VLAN gateways and baseline rules | Return to working routing baseline |
 | `CP-DC01-OS` | `HQ-DC01` | After Windows Server install, before AD DS | Return to clean server OS |

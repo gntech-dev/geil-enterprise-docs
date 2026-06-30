@@ -62,6 +62,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Performed a mandatory release quality gate audit across all 75 Markdown files under `docs/`, correcting duplicate headings, a broken table row, and structural Markdown issues found by custom code-fence/link/table/admonition checks before strict build validation.
 - Launched the Documentation Quality Initiative: shifted priority from creating more documents to improving quality, reproducibility, educational value, validation, rollback, and operator experience across existing deployment guides.
 - Added DQI operator workflow upgrades to six priority guides: Proxmox, MikroTik CHR, Windows Server 2025, Active Directory, DNS/DHCP, and Group Policy.
 - Expanded MikroTik CHR and Windows Server 2025 deployment walkthroughs with first-time operator detail, Proxmox VM settings, image/driver handling, Safe Mode workflow, validation gates, evidence expectations, and do-not-proceed criteria.
