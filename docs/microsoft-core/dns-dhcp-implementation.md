@@ -407,6 +407,99 @@ Validate immediately after each change block. Do not continue when expected outp
 | Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
 | Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
+## Deployment Validation
+
+Complete this validation before moving to Group Policy or client-domain validation.
+
+### DNS validation
+
+#### Goal — DNS validation
+
+Prove that AD DNS resolves internal SRV records and external names through approved forwarders.
+
+#### Commands — DNS validation
+
+```powershell
+Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
+```
+
+```powershell
+Resolve-DnsName cloudflare.com
+```
+
+#### Expected result — DNS validation
+
+Internal SRV lookup returns `HQ-DC01.corp.gntech.me`.
+
+External lookup returns at least one public address for `cloudflare.com`.
+
+#### If validation fails — DNS validation
+
+STOP. Do not enable DHCP relay or proceed to client validation.
+
+Continue only if successful.
+
+### DHCP scope validation
+
+#### Goal — DHCP scope validation
+
+Prove that DHCP scopes exist before enabling MikroTik relay.
+
+#### Commands — DHCP scope validation
+
+```powershell
+Get-DhcpServerv4Scope
+```
+
+```powershell
+Get-DhcpServerInDC
+```
+
+#### Expected result — DHCP scope validation
+
+```text
+ScopeId       SubnetMask      Name
+172.20.30.0   255.255.255.0   VLAN30-Workstations
+```
+
+`Get-DhcpServerInDC` includes `HQ-DC01.corp.gntech.me` and `172.20.20.11`.
+
+#### If validation fails — DHCP scope validation
+
+STOP. Do not enable DHCP relay on `HQ-FW01`.
+
+Continue only if successful.
+
+### MikroTik relay validation
+
+#### Goal — MikroTik relay validation
+
+Enable relay only after DHCP scopes exist and prove no guest relay exists.
+
+#### Commands — MikroTik relay validation
+
+```routeros
+/ip/dhcp-relay/print
+```
+
+#### Expected result — MikroTik relay validation
+
+Approved relay entries target `172.20.20.11`. VLAN 70 must not appear.
+
+```text
+relay-vlan30  interface=vlan30-workstations  dhcp-server=172.20.20.11  disabled=no
+```
+
+#### If validation fails — MikroTik relay validation
+
+STOP. Disable or remove incorrect relay entries.
+
+```routeros
+/ip dhcp-relay disable [find]
+```
+
+Continue only if successful.
+
 ## Troubleshooting
 
 Start with read-only validation. Confirm prerequisites, object existence, canonical values, and logs before changing configuration.

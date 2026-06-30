@@ -489,6 +489,21 @@ Validate immediately after each change block. Do not continue when expected outp
 | Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
 | Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
+## Deployment Validation
+
+Acceptance requires proof that every implementation guide completed its own deployment validation section.
+
+```text
+Required acceptance evidence:
+- Proxmox bridge screenshots and command output.
+- RouterOS route, address, NAT, firewall, DNS, and DHCP relay output.
+- Windows Server gateway, internet, and DNS validation output.
+- AD DS dcdiag, repadmin, and SRV lookup output.
+- DHCP scope and relay validation output.
+```
+
+If any evidence item is missing, STOP. The environment is not accepted.
+
 ## Troubleshooting
 
 Start with read-only validation. Confirm prerequisites, object existence, canonical values, and logs before changing configuration.

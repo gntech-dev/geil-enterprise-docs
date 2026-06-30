@@ -780,6 +780,7 @@ Validate before adding drops:
 /ip firewall filter add chain=forward connection-state=invalid action=drop comment="Drop invalid forwarding"
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 dst-address=172.20.0.0/16 action=drop comment="Block guest to internal GEIL"
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 out-interface-list=WAN action=accept comment="Allow guest to internet only"
+/ip firewall filter add chain=forward in-interface-list=LAN out-interface-list=WAN action=accept comment="Allow GEIL LAN to internet"
 /ip firewall filter add chain=forward src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 action=accept comment="Allow HQ-MGMT01 to Proxmox"
 /ip firewall filter add chain=forward src-address=172.20.30.10 dst-address=172.20.20.11 action=accept comment="Allow HQ-MGMT01 to HQ-DC01 management prep"
 /ip firewall filter add chain=forward action=drop comment="Default deny unapproved forwarding"
@@ -790,6 +791,39 @@ Validate before adding drops:
 ```routeros
 /ip/firewall/filter/print stats
 ```
+
+#### Expected output — Step 12: Apply baseline firewall rules in safe order
+
+`/ip/firewall/filter/print stats` must show the forwarding rules in this order before the final drop rule:
+
+```text
+chain=forward action=accept connection-state=established,related comment="Accept established/related forwarding"
+chain=forward action=drop connection-state=invalid comment="Drop invalid forwarding"
+chain=forward action=drop src-address=172.20.70.0/24 dst-address=172.20.0.0/16 comment="Block guest to internal GEIL"
+chain=forward action=accept src-address=172.20.70.0/24 out-interface-list=WAN comment="Allow guest to internet only"
+chain=forward action=accept in-interface-list=LAN out-interface-list=WAN comment="Allow GEIL LAN to internet"
+chain=forward action=accept src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 comment="Allow HQ-MGMT01 to Proxmox"
+chain=forward action=accept src-address=172.20.30.10 dst-address=172.20.20.11 comment="Allow HQ-MGMT01 to HQ-DC01 management prep"
+chain=forward action=drop comment="Default deny unapproved forwarding"
+```
+
+!!! implementation "Field deployment lesson"
+
+    During Phase 1 deployment, Windows internet validation failed because the firewall allowed guest internet and management access but did not yet include a general `LAN -> WAN` forwarding rule. Do not continue to Windows deployment unless the `Allow GEIL LAN to internet` rule exists before the default deny rule.
+
+#### If validation fails — Step 12: Apply baseline firewall rules in safe order
+
+STOP. Do not continue to DHCP, Windows Server, or Active Directory deployment.
+
+Check:
+
+- `LAN` interface list exists.
+- Non-guest VLANs are members of `LAN`.
+- `WAN` interface list contains `ether1`.
+- `Allow GEIL LAN to internet` appears before `Default deny unapproved forwarding`.
+- NAT masquerade exists.
+
+Continue only if successful.
 
 #### Rollback — Step 12: Apply baseline firewall rules in safe order
 
@@ -953,6 +987,107 @@ Full rebuild before production use:
 qm stop 100
 qm destroy 100 --purge
 ```
+
+## Deployment Validation
+
+Complete this validation before moving to Windows Server deployment.
+
+### RouterOS gateway validation
+
+#### Goal — RouterOS gateway validation
+
+Prove that the firewall can reach its Proxmox transit peer, the internet, and DNS names.
+
+#### Commands — RouterOS gateway validation
+
+```routeros
+/ping 172.31.255.1 count=4
+```
+
+```routeros
+/ping 1.1.1.1 count=4
+```
+
+```routeros
+/ping cloudflare.com count=4
+```
+
+#### Expected result — RouterOS gateway validation
+
+```text
+sent=4 received=4 packet-loss=0%
+```
+
+DNS validation is successful only when `cloudflare.com` resolves and replies.
+
+#### If validation fails — RouterOS gateway validation
+
+STOP. Do not continue to Windows deployment.
+
+- If `172.31.255.1` fails, fix `GEILWAN`, `ether1`, or the default route.
+- If `1.1.1.1` fails, fix NAT or upstream routing.
+- If `cloudflare.com` fails but `1.1.1.1` succeeds, fix RouterOS DNS settings.
+
+Continue only if successful.
+
+### LAN-to-WAN validation
+
+#### Goal — LAN-to-WAN validation
+
+Prove that internal GEIL networks can use the firewall for internet access before Windows setup begins.
+
+#### Commands — LAN-to-WAN validation
+
+```routeros
+/ip/firewall/filter/print where comment="Allow GEIL LAN to internet"
+```
+
+```routeros
+/ip/firewall/nat/print where comment="GEIL outbound masquerade to GEILWAN"
+```
+
+#### Expected result — LAN-to-WAN validation
+
+```text
+chain=forward action=accept in-interface-list=LAN out-interface-list=WAN comment="Allow GEIL LAN to internet"
+chain=srcnat action=masquerade out-interface-list=WAN comment="GEIL outbound masquerade to GEILWAN"
+```
+
+#### If validation fails — LAN-to-WAN validation
+
+STOP. Do not continue to Windows Server baseline. This was a real Phase 1 deployment defect: Windows internet access fails when the LAN-to-WAN rule is missing or placed after the default deny rule.
+
+Continue only if successful.
+
+### DHCP relay validation
+
+#### Goal — DHCP relay validation
+
+Prove that DHCP relay is not active before Windows DHCP scopes exist.
+
+#### Commands — DHCP relay validation
+
+```routeros
+/ip/dhcp-relay/print
+```
+
+#### Expected result — DHCP relay validation
+
+Before `HQ-DC01` DHCP scopes exist, every relay entry must be disabled, or the list must be empty:
+
+```text
+# no enabled relay entries
+```
+
+#### If validation fails — DHCP relay validation
+
+STOP. Disable relay before continuing.
+
+```routeros
+/ip dhcp-relay disable [find]
+```
+
+Continue only if successful.
 
 ## Knowledge Check
 

@@ -411,6 +411,21 @@ Validate immediately after each change block. Do not continue when expected outp
 | Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
 | Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
+## Deployment Validation
+
+Before executing the next implementation guide, confirm that the build sequence has not been changed.
+
+```text
+1. Proxmox protected-network validation complete.
+2. GEILWAN and GEILLAN validated.
+3. HQ-FW01 RouterOS validation complete, including LAN-to-WAN rule and NAT.
+4. Windows Server baseline complete before AD DS.
+5. AD DS health complete before DNS/DHCP.
+6. DHCP scopes exist before DHCP relay is enabled.
+```
+
+If any item is false, STOP. Do not continue to the next guide until the failed prerequisite is corrected.
+
 ## Troubleshooting
 
 Start with read-only validation. Confirm prerequisites, object existence, canonical values, and logs before changing configuration.

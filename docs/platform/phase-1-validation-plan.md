@@ -321,6 +321,23 @@ Validate immediately after each change block. Do not continue when expected outp
 | Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
 | Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
+## Deployment Validation
+
+Use this plan as the release gate after each implementation guide. A failed validation is a stop condition, not a warning.
+
+```text
+PASS = expected output matches the guide and evidence is captured.
+FAIL = stop, remediate, rerun validation, then continue.
+```
+
+Minimum field validation set:
+
+- RouterOS can ping `172.31.255.1`, `1.1.1.1`, and `cloudflare.com`.
+- RouterOS has `Allow GEIL LAN to internet` before default deny.
+- DHCP relay is disabled until Windows DHCP scopes exist.
+- Windows Server can ping gateway, reach internet, and resolve DNS before AD DS.
+- `dcdiag`, `repadmin`, and AD DNS SRV lookup pass before DNS/DHCP expansion.
+
 ## Troubleshooting
 
 Start with read-only validation. Confirm prerequisites, object existence, canonical values, and logs before changing configuration.

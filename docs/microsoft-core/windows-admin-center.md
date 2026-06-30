@@ -58,3 +58,20 @@ Expected result: service is running and reachable only from approved management 
 ## Rollback
 
 Uninstall from Programs and Features or with MSI product code. Revoke the gateway certificate only if the private key was exposed.
+
+
+## Deployment Validation
+
+Validate Windows Admin Center only after DNS and firewall prerequisites exist.
+
+```powershell
+Test-NetConnection HQ-MGMT01.corp.gntech.me -Port 443
+```
+
+Expected result:
+
+```text
+TcpTestSucceeded : True
+```
+
+If validation fails, STOP. Check DNS, Windows Firewall, certificate binding, and the Windows Admin Center service before continuing.

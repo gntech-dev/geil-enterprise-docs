@@ -75,3 +75,21 @@ Expected result: Event 6272 for allowed authentication or 6273 with clear denial
 ## Rollback
 
 Disable the switch port or SSID 802.1X enforcement and return to the previous access mode during the change window. Remove or disable the NPS policy if it causes unintended grants.
+
+
+## Deployment Validation
+
+Validate NPS only after AD DS, DNS, PKI, and firewall reachability are healthy.
+
+```powershell
+Get-WinEvent -LogName Security -MaxEvents 20 | Where-Object {$_.Id -in 6272,6273}
+```
+
+Expected result:
+
+```text
+6272 = access granted for approved test
+6273 = access denied for rejected test
+```
+
+If neither event appears during testing, STOP. Check RADIUS client IP, shared secret, firewall rules, and certificate trust before continuing.

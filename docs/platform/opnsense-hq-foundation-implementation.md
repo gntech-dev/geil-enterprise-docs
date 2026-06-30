@@ -959,3 +959,14 @@ Enterprise infrastructure changes can fail even when the design is correct. Roll
 - The operator should understand why the component exists before configuring it.
 - Validation and evidence are part of the implementation, not afterthoughts.
 - Canonical values must come from the Environment Specification and HLD/LLD baseline.
+
+
+## Deployment Validation
+
+This guide is superseded for active Phase 1 deployment.
+
+```text
+STOP. Do not use this guide to deploy the active GEIL Phase 1 firewall.
+```
+
+Use the MikroTik CHR implementation guide for active deployment. Keep this page only as historical/alternative reference.

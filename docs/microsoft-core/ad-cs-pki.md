@@ -66,3 +66,20 @@ If templates are wrong, supersede template versions instead of editing blindly. 
 - Root CA remains offline.
 - CA admins are Tier 0.
 - Monitor CA certificate and CRL expiry.
+
+
+## Deployment Validation
+
+Validate PKI only after AD DS and DNS health are proven.
+
+```powershell
+certutil -config "HQ-DC01\GNTECH-CORP-Issuing-CA01" -ping
+```
+
+Expected result:
+
+```text
+CertUtil: -ping command completed successfully.
+```
+
+If validation fails, STOP. Do not issue production certificates until CA reachability, templates, CRL, and AIA publication validate.

@@ -294,6 +294,51 @@ Rollback in this order:
 Set-GPO -Name "GEIL-Workstation-Security-Baseline" -GpoStatus AllSettingsDisabled
 ```
 
+## Deployment Validation
+
+Complete this validation on a pilot workstation before broad rollout.
+
+### GPO application validation
+
+#### Goal — GPO application validation
+
+Prove that baseline GPOs apply to the intended pilot object and do not apply broadly by accident.
+
+#### Commands — GPO application validation
+
+```powershell
+gpupdate /force
+```
+
+```powershell
+gpresult /h C:\Temp\geil-gpresult.html
+```
+
+```powershell
+Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20
+```
+
+#### Expected result — GPO application validation
+
+```text
+Computer Policy update has completed successfully.
+User Policy update has completed successfully.
+```
+
+The generated `geil-gpresult.html` shows only the expected GEIL baseline GPOs for the pilot workstation.
+
+#### If validation fails — GPO application validation
+
+STOP. Do not link the policy more broadly.
+
+Unlink or disable the affected GPO before troubleshooting:
+
+```powershell
+Set-GPO -Name "GEIL-Workstation-Security-Baseline" -GpoStatus AllSettingsDisabled
+```
+
+Continue only if successful.
+
 ## Knowledge Check
 
 1. Why must the OU structure exist before linking GPOs?

@@ -76,6 +76,8 @@ This guide creates the first GEIL directory service before production users or w
 
 ## Prerequisites
 
+- Windows Server 2025 baseline guide completed and validated on `HQ-DC01`.
+
 - [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md) reviewed.
 - [Phase 1 Acceptance Package](../platform/phase-1-acceptance-package.md) approved or approved with accepted exceptions.
 - `HQ-DC01` VM created from the Phase 1 build plan.
@@ -372,6 +374,68 @@ Expected results:
 | Wrong DNS name | Forest does not match `corp.gntech.me` | Rebuild before production use; do not rename a new forest casually |
 | No snapshot | Failed promotion has no safe checkpoint | Rebuild VM from clean OS state |
 | Time skew | Authentication or promotion errors | Correct time source and retry |
+
+## Deployment Validation
+
+Complete this validation before moving to DNS/DHCP configuration.
+
+### Domain controller health validation
+
+#### Goal — Domain controller health validation
+
+Prove that `HQ-DC01` is a healthy first domain controller for `corp.gntech.me`.
+
+#### Commands — Domain controller health validation
+
+```powershell
+dcdiag /v
+```
+
+```powershell
+repadmin /replsummary
+```
+
+```powershell
+Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
+```
+
+```powershell
+Get-ADDomain | Select-Object DNSRoot,NetBIOSName,DomainMode
+```
+
+#### Expected result — Domain controller health validation
+
+`dcdiag /v` should not show failed critical tests.
+
+`repadmin /replsummary` should show no failures for the single-domain-controller state:
+
+```text
+Fails: 0
+```
+
+SRV lookup should return `HQ-DC01.corp.gntech.me`:
+
+```text
+Name                           Type   NameTarget
+_ldap._tcp.dc._msdcs...        SRV    HQ-DC01.corp.gntech.me
+```
+
+Domain output should include:
+
+```text
+DNSRoot        : corp.gntech.me
+NetBIOSName    : CORP
+```
+
+#### If validation fails — Domain controller health validation
+
+STOP. Do not configure DHCP or Group Policy.
+
+- If `dcdiag` fails DNS tests, run `dcdiag /test:dns /v` and correct AD DNS registration.
+- If SRV records are missing, restart Netlogon and recheck DNS.
+- If replication reports failures in a single-DC deployment, check local AD DS, DNS, and event logs before proceeding.
+
+Continue only if successful.
 
 ## Troubleshooting
 

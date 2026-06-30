@@ -742,6 +742,102 @@ Capture:
 - GEIL uses canonical values so later guides can be deterministic.
 - Snapshots are useful before role installation, but role-aware backups are required after production use begins.
 
+## Deployment Validation
+
+Complete this validation before moving to Active Directory Domain Services.
+
+### Windows network validation
+
+#### Goal — Windows network validation
+
+Prove that `HQ-DC01` can reach its VLAN gateway, the internet, and DNS resolution before AD DS is installed.
+
+#### Commands — Windows network validation
+
+```powershell
+Get-NetIPAddress -AddressFamily IPv4
+```
+
+```powershell
+Test-NetConnection 172.20.20.1
+```
+
+```powershell
+Test-NetConnection 1.1.1.1 -Port 443
+```
+
+```powershell
+Resolve-DnsName cloudflare.com
+```
+
+#### Expected result — Windows network validation
+
+`Get-NetIPAddress` includes:
+
+```text
+IPAddress         : 172.20.20.11
+PrefixLength      : 24
+AddressFamily     : IPv4
+```
+
+Gateway test includes:
+
+```text
+ComputerName           : 172.20.20.1
+PingSucceeded          : True
+```
+
+Internet test includes:
+
+```text
+TcpTestSucceeded       : True
+```
+
+DNS test includes at least one returned address for `cloudflare.com`.
+
+#### If validation fails — Windows network validation
+
+STOP. Do not install AD DS.
+
+- If gateway ping fails, check Proxmox VLAN tag 20, `GEILLAN`, and `HQ-FW01` VLAN 20 gateway.
+- If internet fails, check the MikroTik `Allow GEIL LAN to internet` firewall rule and NAT masquerade.
+- If DNS name resolution fails, check temporary bootstrap DNS settings and RouterOS DNS forwarding.
+
+Continue only if successful.
+
+### AD DS readiness validation
+
+#### Goal — AD DS readiness validation
+
+Confirm that the server is a clean baseline and no domain role has been installed yet.
+
+#### Commands — AD DS readiness validation
+
+```powershell
+Get-WindowsFeature AD-Domain-Services,DNS,DHCP
+```
+
+```powershell
+hostname
+```
+
+#### Expected result — AD DS readiness validation
+
+```text
+AD-Domain-Services    Available
+DNS                   Available
+DHCP                  Available
+HQ-DC01
+```
+
+Installed state should be `Available`, not `Installed`, before the AD DS implementation guide begins.
+
+#### If validation fails — AD DS readiness validation
+
+STOP. Do not continue to AD DS promotion until the baseline is corrected or the VM is rolled back to `CP-DC01-BASELINE`.
+
+Continue only if successful.
+
 ## Knowledge Check
 
 1. Why does GEIL assign static IPs to infrastructure servers?

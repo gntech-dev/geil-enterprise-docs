@@ -1437,6 +1437,16 @@ If any VM has the wrong bridge or VLAN tag, correct the VM hardware before insta
 
 No rollback is required because this step is read-only.
 
+## Field Deployment Lessons
+
+!!! implementation "Protected existing networking"
+
+    Phase 1 deployment confirmed that GEIL must be additive on the existing Proxmox host. Do not modify `eno1`, `VSW4001`, `PROD`, or `TEST`. Do not use `10.10.x.x` for GEIL networks. If a proposed step changes these objects, STOP and correct the plan before applying it.
+
+!!! implementation "GUI visibility"
+
+    GEIL bridge definitions must be present in `/etc/network/interfaces` so `GEILWAN` and `GEILLAN` are visible in the Proxmox GUI. Bridges defined only in include files may work at the Linux layer but fail the operator experience requirement.
+
 ## Validation Summary
 
 Run this final validation bundle after all steps complete.

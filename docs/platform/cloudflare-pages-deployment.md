@@ -335,6 +335,28 @@ If Cloudflare Access blocks all administrators:
 
 Do not disable Cloudflare Access for GEIL except during an approved emergency and only for the minimum time required.
 
+## Deployment Validation
+
+Before publishing documentation changes, verify the rendered site rather than relying only on Markdown.
+
+```bash
+mkdocs build --strict
+```
+
+Expected result:
+
+```text
+Documentation built successfully with zero warnings or errors.
+```
+
+Rendered-site stop condition:
+
+```text
+No rendered code block may show bash, powershell, routeros, yaml, or text as visible first-line content.
+```
+
+If rendered output fails, STOP. Do not publish.
+
 ## Troubleshooting
 
 | Symptom | Likely Cause | Response |

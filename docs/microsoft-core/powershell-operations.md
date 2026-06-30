@@ -178,6 +178,23 @@ Validate immediately after each change block. Do not continue when expected outp
 | Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
 | Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
+## Deployment Validation
+
+Before using a PowerShell operation in a deployment guide, validate that the command is safe, reversible, and produces evidence.
+
+```powershell
+$PSVersionTable.PSVersion
+```
+
+Expected result:
+
+```text
+Major  Minor
+5      1
+```
+
+If a command changes state, the guide must show validation and rollback immediately after the command. If rollback is unknown, STOP and do not run the command in production.
+
 ## Troubleshooting
 
 Start with read-only validation. Confirm prerequisites, object existence, canonical values, and logs before changing configuration.
