@@ -54,7 +54,7 @@ This section documents the platforms used to publish, protect, and operate GEIL 
 Release `E02.R03` translates the Enterprise Lab Blueprint HLD into deployable Phase 1 specifications:
 
 - [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
-- [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
 
@@ -64,7 +64,7 @@ Release `E02.R03` translates the Enterprise Lab Blueprint HLD into deployable Ph
 Release `E02.R04` provides implementation-ready runbooks for deploying the initial HQ foundation from the approved HLD and LLD:
 
 - [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md)
-- [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](mikrotik-chr-hq-foundation-implementation.md)
 
 
 ## HQ Foundation Acceptance

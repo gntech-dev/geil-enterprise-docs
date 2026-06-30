@@ -99,7 +99,7 @@ flowchart TD
     vmbr0[vmbr0 WAN bridge]
     vmbr1[vmbr1 VLAN-aware LAN trunk]
     vmbr100[vmbr100 Hypervisor management bridge]
-    FW[HQ-FW01 OPNsense VM]
+    FW[HQ-FW01 MikroTik CHR VM]
     DC[HQ-DC01 VM]
     MGMT[HQ-MGMT01 VM]
     W11[HQ-W11-001 VM]
@@ -144,7 +144,7 @@ Design decisions:
 
 | VM | Role | vCPU | Memory | Disk | Network | Notes |
 |---|---|---:|---:|---:|---|---|
-| `HQ-FW01` | OPNsense firewall | 2 | 4 GB | 40 GB | WAN + LAN trunk | Must boot before internal routing works |
+| `HQ-FW01` | MikroTik CHR firewall | 2 | 4 GB | 40 GB | WAN + LAN trunk | Must boot before internal routing works |
 | `HQ-DC01` | Windows Server 2025 domain controller | 2 | 6 GB | 100 GB | VLAN 20 | Static IP `172.20.20.11` |
 | `HQ-MGMT01` | Windows 11 Enterprise management workstation | 2 | 8 GB | 100 GB | VLAN 30 | Static IP `172.20.30.10` during bootstrap |
 | `HQ-W11-001` | Windows 11 Enterprise client | 2 | 6 GB | 80 GB | VLAN 30 | DHCP after DHCP is available |
@@ -173,7 +173,7 @@ Management rules:
 | Checkpoint | Target | Timing | Purpose | Rollback Action |
 |---|---|---|---|---|
 | `CP-PVE-BASELINE` | Host config export | After Proxmox network baseline | Recover bridge/network design |
-| `CP-FW-INSTALLED` | `HQ-FW01` | After OPNsense install, before VLAN policy | Return to clean firewall install |
+| `CP-FW-INSTALLED` | `HQ-FW01` | After MikroTik CHR install, before VLAN policy | Return to clean firewall install |
 | `CP-FW-VLANS` | `HQ-FW01` | After VLAN gateways and baseline rules | Return to working routing baseline |
 | `CP-DC01-OS` | `HQ-DC01` | After Windows Server install, before AD DS | Return to clean server OS |
 | `CP-MGMT01-OS` | `HQ-MGMT01` | After Windows 11 install and updates | Return to clean management workstation |
@@ -193,11 +193,11 @@ Before this LLD is considered implemented:
 ## Rollback principles
 
 - If bridge configuration breaks management access, use local console to restore the previous host network configuration.
-- If `HQ-FW01` policy breaks routing, revert to `CP-FW-VLANS` or restore the last exported OPNsense configuration.
+- If `HQ-FW01` policy breaks routing, revert to `CP-FW-VLANS` or restore the last exported RouterOS exporturation.
 - If a guest OS role configuration fails, revert the VM checkpoint before reattempting.
 
 ## Related documents
 
-- [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)

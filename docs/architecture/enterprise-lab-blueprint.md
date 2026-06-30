@@ -60,7 +60,7 @@ GEIL Phase 1 creates a production-style enterprise lab that is intentionally sma
 flowchart TD
     Internet[Internet]
     Cloud[Cloud Services: Microsoft 365 / Entra ID / Cloudflare]
-    Edge[HQ-FW01 OPNsense Edge]
+    Edge[HQ-FW01 MikroTik CHR Edge]
     HQ[HQ Site]
     PVE[PVE-HQ01 Hypervisor]
     PBS[PBS-HQ01 Backup]

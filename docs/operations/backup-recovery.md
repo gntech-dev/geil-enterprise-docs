@@ -31,7 +31,7 @@ Ensure infrastructure can be recovered from operator error, hardware failure, ra
 
 - Domain controllers: system state and VM-level backup where supported.
 - Certificate authorities: CA database, private keys, registry configuration, and CRL configuration.
-- OPNsense: encrypted configuration export after every approved change.
+- MikroTik CHR: encrypted configuration export after every approved change.
 - Proxmox: scheduled VM backups and host configuration documentation.
 - Microsoft 365: retention policies and third-party backup decision documented by ADR.
 

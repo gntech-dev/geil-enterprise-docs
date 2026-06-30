@@ -2,7 +2,7 @@
 title: OPNsense HQ Foundation LLD
 document_id: GEIL-PLAT-OPN-HQ-LLD-001
 owner: Infrastructure Engineering
-status: Approved
+status: Superseded
 version: 1.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
@@ -17,11 +17,17 @@ classification: Internal Confidential
 |---|---|
 | Document ID | GEIL-PLAT-OPN-HQ-LLD-001 |
 | Owner | Infrastructure Engineering |
-| Status | Approved |
+| Status | Superseded |
 | Version | 1.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
+
+## Superseded Notice
+
+!!! warning "Superseded"
+
+    This OPNsense document is retained for historical reference and alternative-implementation comparison only. The active Phase 1 firewall implementation is MikroTik CHR. Use [mikrotik-chr-hq-foundation-lld.md](mikrotik-chr-hq-foundation-lld.md) for current deployment work.
 
 ## Purpose
 

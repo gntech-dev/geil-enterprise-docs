@@ -7,29 +7,34 @@ All notable changes to GEIL are documented in this file.
 ### Added
 
 
+- Added `GEIL-ADR-0002` ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall.
+- Added `GEIL-PLAT-MTK-HQ-LLD-001` MikroTik CHR HQ Foundation LLD.
+- Added `GEIL-PLAT-MTK-HQ-IMPL-001` MikroTik CHR HQ Foundation Implementation Guide.
+- Added MikroTik CHR implementation screenshot/evidence placeholder directory under `docs/assets/images/mikrotik-chr-hq-foundation-implementation/`.
+
 - Added `GEIL-GOV-EDU-001` Educational Documentation Standard as a mandatory teaching-first methodology for implementation guides.
 - Added screenshot placeholder directory for Windows Server 2025 Baseline under `docs/assets/images/windows-server-2025-baseline/`.
 
 - Added `GEIL-GOV-IMPL-001` Implementation Guide Standard for Microsoft Learn-style deployment guides.
 - Added screenshot placeholder directories under `docs/assets/images/` for existing implementation guides.
 
-- Added local SVG architecture visuals under `docs/assets/diagrams/` for PKI hierarchy, security zones, enterprise reference architecture, enterprise lab network, enterprise lab identity, enterprise lab operations, OPNsense VLAN topology, and Proxmox bridge topology.
+- Added local SVG architecture visuals under `docs/assets/diagrams/` for PKI hierarchy, security zones, enterprise reference architecture, enterprise lab network, enterprise lab identity, enterprise lab operations, RouterOS VLAN topology, and Proxmox bridge topology.
 - Added diagram generation prompts under `docs/assets/diagram-prompts/` with expected WebP output paths for future image-generation/export tooling.
 
 - Added `GEIL-PLAT-PH1-ACCEPT-001` Phase 1 Acceptance Package.
 
 - Added `GEIL-PLAT-PVE-HQ-IMPL-001` Proxmox HQ Foundation Implementation Runbook.
-- Added `GEIL-PLAT-OPN-HQ-IMPL-001` OPNsense HQ Foundation Implementation Runbook.
+- Added `GEIL-PLAT-OPN-HQ-IMPL-001` MikroTik CHR HQ Foundation Implementation Guide.
 
 - Added `GEIL-GOV-VISUAL-001` Visual Documentation Standard.
 - Added `docs/assets/diagrams/` as the canonical storage path for generated diagram assets.
 - Identified existing high-complexity Mermaid diagrams that should be replaced with dedicated 16:9 visual assets.
 
 - Added `GEIL-PLAT-PVE-HQ-LLD-001` Proxmox HQ Foundation LLD.
-- Added `GEIL-PLAT-OPN-HQ-LLD-001` OPNsense HQ Foundation LLD.
+- Added `GEIL-PLAT-OPN-HQ-LLD-001` MikroTik CHR HQ Foundation LLD.
 - Added `GEIL-PLAT-PH1-BUILD-001` Phase 1 Build Plan.
 - Added `GEIL-PLAT-PH1-VAL-001` Phase 1 Validation Plan.
-- Added Mermaid diagrams for Proxmox bridge topology, OPNsense interface/VLAN topology, Phase 1 deployment sequence, rollback checkpoints, and management access flow.
+- Added Mermaid diagrams for Proxmox bridge topology, RouterOS interface/VLAN topology, Phase 1 deployment sequence, rollback checkpoints, and management access flow.
 
 - Added `GEIL-ARCH-LAB-001` Enterprise Lab Blueprint HLD for Phase 1.
 - Added `GEIL-ARCH-LAB-NET-001` Enterprise Lab Network HLD.
@@ -55,11 +60,15 @@ All notable changes to GEIL are documented in this file.
 ### Changed
 
 
-- Enhanced Windows Server 2025 Baseline, Proxmox HQ Foundation Implementation, OPNsense HQ Foundation Implementation, Active Directory Implementation, and DNS/DHCP Implementation with educational enterprise context, internal workflows, GEIL design decisions, alternatives, security/performance/scalability/operational considerations, FAQs, and key takeaways.
+- Changed active Phase 1 firewall implementation from OPNsense to MikroTik CHR / RouterOS while preserving the Enterprise Edge Security / Enterprise Networking capability.
+- Updated Environment Specification, Enterprise Lab Network HLD, Phase 1 build/validation/acceptance documents, Technology Selection Matrix, roadmap, backlog, document index, release assignment register, MASTER_PLAN, and MkDocs navigation for MikroTik CHR.
+- Marked OPNsense Phase 1 LLD/implementation and foundation edge firewall material as superseded/historical alternative references.
+
+- Enhanced Windows Server 2025 Baseline, Proxmox HQ Foundation Implementation, MikroTik CHR HQ Foundation Implementation, Active Directory Implementation, and DNS/DHCP Implementation with educational enterprise context, internal workflows, GEIL design decisions, alternatives, security/performance/scalability/operational considerations, FAQs, and key takeaways.
 - Updated Implementation Guide Standard to reference the Educational Documentation Standard and document `enterprise` / `implementation` admonition usage.
 - Updated navigation, document index, roadmap, backlog, and release assignment register for the educational documentation methodology.
 
-- Refactored existing implementation guides for Proxmox, OPNsense, Active Directory, and DNS/DHCP with learning objectives, architecture overview, background knowledge, expected results, validation, rollback, evidence collection, knowledge checks, and next-guide links.
+- Refactored existing implementation guides for Proxmox, MikroTik CHR, Active Directory, and DNS/DHCP with learning objectives, architecture overview, background knowledge, expected results, validation, rollback, evidence collection, knowledge checks, and next-guide links.
 - Updated document index, roadmap, backlog, release assignment register, and MkDocs navigation for the Implementation Guide Standard.
 
 - Expanded Phase 1 HQ foundation implementation documents with operator-grade deployment detail, copy/paste blocks, validation evidence, rollback commands, common errors, and acceptance criteria.

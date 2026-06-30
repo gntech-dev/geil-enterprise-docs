@@ -141,6 +141,7 @@ flowchart TD
     ROADMAP[Documentation Roadmap]
     BACKLOG[Documentation Backlog]
     ADR[ADR-0001 MkDocs Material]
+    ADR2[ADR-0002 MikroTik CHR Firewall]
     CF[Cloudflare Pages Deployment]
     REF[Reference Architecture]
     NET[Network Architecture]
@@ -151,15 +152,15 @@ flowchart TD
     LABID[Enterprise Lab Identity HLD]
     LABOPS[Enterprise Lab Operations HLD]
     PVELLD[Proxmox HQ Foundation LLD]
-    OPNLLD[OPNsense HQ Foundation LLD]
+    FWLLD[MikroTik CHR HQ Foundation LLD]
     BUILD[Phase 1 Build Plan]
     VAL[Phase 1 Validation Plan]
     PVEIMPL[Proxmox HQ Foundation Implementation]
-    OPNIMPL[OPNsense HQ Foundation Implementation]
+    FWIMPL[MikroTik CHR HQ Foundation Implementation]
     ACCEPT[Phase 1 Acceptance Package]
     NAME[Naming and Addressing Standard]
     PVE[Proxmox VE Baseline]
-    FW[OPNsense Edge Firewall]
+    FW[MikroTik CHR Edge Firewall]
     WS[Windows Server 2025 Baseline]
     AD[Active Directory Implementation]
     DNS[DNS and DHCP Implementation]
@@ -181,17 +182,17 @@ flowchart TD
     LAB --> LABID
     LAB --> LABOPS
     LABNET --> PVELLD
-    LABNET --> OPNLLD
+    LABNET --> FWLLD
     LABOPS --> BUILD
     PVELLD --> BUILD
-    OPNLLD --> BUILD
+    FWLLD --> BUILD
     BUILD --> VAL
     PVELLD --> PVEIMPL
-    OPNLLD --> OPNIMPL
+    FWLLD --> FWIMPL
     VAL --> PVEIMPL
-    VAL --> OPNIMPL
+    VAL --> FWIMPL
     PVEIMPL --> ACCEPT
-    OPNIMPL --> ACCEPT
+    FWIMPL --> ACCEPT
     ENV --> CHARTER
     CHARTER --> STD
     STD --> IMPLSTD
@@ -201,6 +202,7 @@ flowchart TD
     STD --> BACKLOG
     STD --> ADR
     ADR --> CF
+    ADR2 --> FWLLD
     ENV --> REF
     ENV --> NAME
     REF --> NET
@@ -253,6 +255,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `governance/roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0001-mkdocs-material.md` |
+| E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` |
 | E00.R02 - Documentation delivery platform | E00 | `platform/index.md` |
 | E00.R02 - Documentation delivery platform | E00 | `platform/cloudflare-pages-deployment.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/index.md` |
@@ -276,10 +279,12 @@ The following register assigns every current published document to exactly one r
 | E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-identity-hld.md` |
 | E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-operations-hld.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/proxmox-hq-foundation-lld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/mikrotik-chr-hq-foundation-lld.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/opnsense-hq-foundation-lld.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-build-plan.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-validation-plan.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/proxmox-hq-foundation-implementation.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/mikrotik-chr-hq-foundation-implementation.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/opnsense-hq-foundation-implementation.md` |
 | E02.R05 - HQ Foundation Evidence and Acceptance Package | E02 | `platform/phase-1-acceptance-package.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/index.md` |

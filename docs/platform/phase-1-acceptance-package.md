@@ -37,7 +37,7 @@ Included:
 - Screenshot and command-output evidence requirements.
 - Proxmox host and VM evidence.
 - Proxmox network bridge evidence.
-- OPNsense interface, VLAN gateway, firewall, routing, DNS forwarding, and DHCP relay readiness evidence.
+- RouterOS interface, VLAN gateway, firewall, routing, DNS forwarding, and DHCP relay readiness evidence.
 - Snapshot and rollback readiness evidence.
 - Known exceptions register.
 - Acceptance criteria and sign-off section.
@@ -57,7 +57,7 @@ This acceptance package validates the implementation against the approved archit
 - [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md)
 - [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md)
 - [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
-- [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
 - [Environment Specification](../project/environment-specification.md)
@@ -67,7 +67,7 @@ This acceptance package validates the implementation against the approved archit
 The following runbooks must be complete before acceptance:
 
 - [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md)
-- [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](mikrotik-chr-hq-foundation-implementation.md)
 
 !!! note "Adaptation"
 
@@ -98,7 +98,7 @@ Recommended evidence storage layout outside Git:
 GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
   01-proxmox/
   02-network-bridges/
-  03-opnsense/
+  03-mikrotik-chr/
   04-validation/
   05-rollback/
   06-exceptions/
@@ -115,11 +115,11 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 | SS-004 | `HQ-DC01` hardware | net0 on `vmbr1` with VLAN tag 20 | Proxmox UI |
 | SS-005 | `HQ-MGMT01` hardware | net0 on `vmbr1` with VLAN tag 30 | Proxmox UI |
 | SS-006 | `HQ-W11-001` hardware | net0 on `vmbr1` with VLAN tag 30 | Proxmox UI |
-| SS-007 | OPNsense interface assignments | WAN and LAN trunk parent are visible | OPNsense UI |
-| SS-008 | OPNsense VLAN interfaces | VLAN interfaces 10,20,30,40,50,60,70,80,90,100 | OPNsense UI |
-| SS-009 | OPNsense firewall rules | Baseline allow and deny rules | OPNsense UI |
-| SS-010 | OPNsense routes | WAN default route and connected internal routes | OPNsense UI |
-| SS-011 | OPNsense config backup page | Evidence that `HQ-FW01-baseline.xml` was exported | OPNsense UI |
+| SS-007 | RouterOS interface assignments | WAN and LAN trunk parent are visible | RouterOS CLI / WinBox |
+| SS-008 | RouterOS VLAN interfaces | VLAN interfaces 10,20,30,40,50,60,70,80,90,100 | RouterOS CLI / WinBox |
+| SS-009 | MikroTik CHR firewall rules | Baseline allow and deny rules | RouterOS CLI / WinBox |
+| SS-010 | RouterOS routes | WAN default route and connected internal routes | RouterOS CLI / WinBox |
+| SS-011 | RouterOS export backup page | Evidence that `HQ-FW01-baseline.xml` was exported | RouterOS CLI / WinBox |
 | SS-012 | Snapshot inventory | Required VM checkpoints exist | Proxmox UI |
 
 ## Command output requirements
@@ -165,14 +165,14 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 | BR-004 | `vmbr100` management | Exists or approved equivalent management design is documented | |
 | BR-005 | No Proxmox inter-VLAN routing | Inter-VLAN routing remains on `HQ-FW01` | |
 
-## OPNsense evidence
+## MikroTik CHR evidence
 
 | Evidence ID | Requirement | Pass Criteria | Evidence Location |
 |---|---|---|---|
-| OPN-001 | `HQ-FW01` VM installation | OPNsense boots from VM disk | |
+| OPN-001 | `HQ-FW01` VM installation | MikroTik CHR boots from VM disk | |
 | OPN-002 | WAN assignment | WAN is mapped to `vmbr0` | |
 | OPN-003 | LAN trunk assignment | LAN trunk parent is mapped to `vmbr1` | |
-| OPN-004 | Management access | OPNsense UI reachable from approved path | |
+| OPN-004 | Management access | RouterOS CLI / WinBox reachable from approved path | |
 | OPN-005 | Config export | `HQ-FW01-baseline.xml` exported and stored outside Git | |
 
 ## VLAN gateway evidence
@@ -207,7 +207,7 @@ Required evidence:
 | Evidence ID | Requirement | Pass Criteria | Evidence Location |
 |---|---|---|---|
 | RT-001 | WAN default route | `HQ-FW01` has an active WAN default route | |
-| RT-002 | Internal connected routes | OPNsense lists connected routes for canonical VLANs | |
+| RT-002 | Internal connected routes | RouterOS lists connected routes for canonical VLANs | |
 | RT-003 | No layer-3 switching | Core switching does not bypass `HQ-FW01` policy | |
 | RT-004 | No regional routes | No future regional routes exist in Phase 1 unless approved | |
 
@@ -342,7 +342,7 @@ Next Authorized Release: E03.R04 Certificate Lifecycle Management or approved su
 ## Related documents
 
 - [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md)
-- [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](mikrotik-chr-hq-foundation-implementation.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
 - [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md)
 - [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md)
@@ -361,7 +361,7 @@ Create a complete acceptance record that a future engineer can use to prove E02.
 |---|---|---|
 | OP-001 | Existing Proxmox network preserved | Screenshot or text export showing `eno1`, `VSW4001`, `PROD`, and `TEST` unchanged |
 | OP-002 | GEILWAN configured | `ip -brief addr show GEILWAN` showing `172.31.255.1/30` |
-| OP-003 | HQ-FW01 WAN configured | OPNsense screenshot showing WAN `172.31.255.2/30` |
+| OP-003 | HQ-FW01 WAN configured | MikroTik CHR screenshot showing WAN `172.31.255.2/30` |
 | OP-004 | GEILLAN GUI visibility | Proxmox Network screenshot showing `GEILLAN` from `/etc/network/interfaces` |
 | OP-005 | GEIL does not use 10.10.x.x | VM config output showing GEIL VMs do not attach to `PROD` or `TEST` |
 | OP-006 | Documentation build hygiene | `git ls-files site | wc -l` returns `0` |
@@ -377,6 +377,6 @@ Create a complete acceptance record that a future engineer can use to prove E02.
 | Failed Evidence | Remediation |
 |---|---|
 | `GEILWAN` not visible in GUI | Move bridge definition into `/etc/network/interfaces`; run `ifreload -a`; recapture screenshot |
-| `HQ-FW01` WAN not `172.31.255.2/30` | Correct OPNsense WAN settings; validate against `GEILWAN` `172.31.255.1/30` |
+| `HQ-FW01` WAN not `172.31.255.2/30` | Correct MikroTik CHR WAN settings; validate against `GEILWAN` `172.31.255.1/30` |
 | GEIL VM attached to `PROD` or `TEST` | Stop VM, change NIC bridge to `GEILLAN`, set VLAN tag, recapture `qm config` |
 | `site/` tracked by Git | Remove from Git tracking and confirm `.gitignore` excludes `site/` |

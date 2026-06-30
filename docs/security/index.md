@@ -25,7 +25,7 @@ classification: Internal Confidential
 
 ## Purpose
 
-This section defines GEIL security architecture and operational controls that cut across Active Directory, Microsoft Entra ID, Windows Server, Windows 11 Enterprise, Microsoft 365, Intune, Defender, OPNsense, Proxmox VE, and the documentation platform.
+This section defines GEIL security architecture and operational controls that cut across Active Directory, Microsoft Entra ID, Windows Server, Windows 11 Enterprise, Microsoft 365, Intune, Defender, MikroTik CHR, Proxmox VE, and the documentation platform.
 
 ## Security principles
 

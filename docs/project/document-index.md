@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 11.0
+version: 12.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 11.0 |
+| Version | 12.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -53,6 +53,10 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-PLT-INDEX | Platform | Draft | `docs/platform/index.md` | Documentation delivery platform section |
 | GEIL-PLT-CFPAGES-001 | Cloudflare Pages Deployment Runbook | Draft | `docs/platform/cloudflare-pages-deployment.md` | Private MkDocs deployment to Cloudflare Pages |
+| GEIL-PLAT-MTK-HQ-LLD-001 | MikroTik CHR HQ Foundation LLD | Approved | `docs/platform/mikrotik-chr-hq-foundation-lld.md` | Active `HQ-FW01` MikroTik CHR / RouterOS LLD replacing OPNsense for Phase 1 |
+| GEIL-PLAT-MTK-HQ-IMPL-001 | MikroTik CHR HQ Foundation Implementation Guide | Approved | `docs/platform/mikrotik-chr-hq-foundation-implementation.md` | RouterOS CHR image import, hardening, VLAN gateways, NAT, firewall, DHCP relay preparation, validation, rollback, and evidence |
+| GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
+| GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
 
 ## Governance documents
 
@@ -64,6 +68,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-GOV-EDU-001 | Educational Documentation Standard | Approved | `docs/governance/educational-documentation-standard.md` | Teaching-first methodology for implementation guides, enterprise/implementation admonitions, visual learning, value explanations, FAQs, and key takeaways |
 | GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
 | GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
+| GEIL-ADR-0002 | ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall | Approved | `docs/governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` | Accepted implementation change from OPNsense to MikroTik CHR for `HQ-FW01` |
 
 ## Security documents
 
@@ -96,7 +101,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-FND-P0-001 | Phase 0 Prerequisites | Draft | `docs/foundation/phase-0-prerequisites.md` | Pre-implementation checklist |
 | GEIL-FND-PVE-001 | Proxmox VE Baseline | Draft | `docs/foundation/proxmox-ve-baseline.md` | Virtualization baseline |
-| GEIL-FND-OPN-001 | OPNsense Edge Firewall | Draft | `docs/foundation/opnsense-edge-firewall.md` | Edge segmentation baseline |
+| GEIL-FND-OPN-001 | Superseded OPNsense Edge Firewall | Superseded | `docs/foundation/opnsense-edge-firewall.md` | Historical alternative edge firewall baseline superseded by ADR-0002 |
 
 ## Microsoft Core documents
 
@@ -138,14 +143,14 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 
 | Epic | Release | Current Document Count |
 |---|---|---:|
-| E00 | E00.R01 - Documentation governance foundation | 16 |
+| E00 | E00.R01 - Documentation governance foundation | 17 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 4 |
-| E02 | E02.R04 - HQ Foundation Implementation Runbook | 2 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 5 |
+| E02 | E02.R04 - HQ Foundation Implementation Runbook | 3 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 6 |
 | E03 | E03.R02 - Trust and network authentication | 2 |

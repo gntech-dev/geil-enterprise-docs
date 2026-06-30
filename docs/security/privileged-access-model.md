@@ -78,7 +78,7 @@ flowchart TD
     A1[Tier 1 Admin Account] --> PAW1[Tier 1 Admin Workstation]
     A2[Tier 2 Admin Account] --> PAW2[Tier 2 Admin Workstation]
     PAW0 --> T0[AD DS / Entra Admin / PKI / DCs]
-    PAW1 --> T1[Servers / Proxmox / OPNsense / Backup / Monitoring]
+    PAW1 --> T1[Servers / Proxmox / MikroTik CHR / Backup / Monitoring]
     PAW2 --> T2[Windows 11 Clients / Intune Help Desk]
     T0 -.must not administer from.-> T1
     T0 -.must not administer from.-> T2
@@ -117,7 +117,7 @@ Tier 1 includes:
 
 - Member servers.
 - Proxmox VE hosts and clusters.
-- OPNsense firewall administration, unless firewall identity integration can compromise Tier 0.
+- MikroTik CHR firewall administration, unless firewall identity integration can compromise Tier 0.
 - Backup infrastructure.
 - Monitoring infrastructure.
 - Windows Admin Center gateway.
@@ -197,7 +197,7 @@ OU=Admin,DC=corp,DC=gntech,DC=me
 | `GG-T0-DC-Logon-Allow` | Global | 0 | Accounts permitted to sign in to domain controllers |
 | `GG-T1-Server-Admins` | Global | 1 | Server administrators |
 | `GG-T1-Proxmox-Admins` | Global | 1 | Proxmox administrators if integrated with directory identity |
-| `GG-T1-Firewall-Admins` | Global | 1 | OPNsense administrators if integrated with directory identity |
+| `GG-T1-Firewall-Admins` | Global | 1 | MikroTik CHR administrators if integrated with directory identity |
 | `GG-T1-Backup-Operators` | Global | 1 | Backup operators with scoped permissions |
 | `GG-T2-Workstation-Admins` | Global | 2 | Workstation support administrators |
 | `GG-T2-Intune-Helpdesk` | Cloud group | 2 | Intune help desk assignments |
@@ -434,7 +434,7 @@ Tier 0 and Tier 1 accounts must not sign in to standard user workstations. Use d
 | Workstation Type | Used By | Permitted Targets | Requirements |
 |---|---|---|---|
 | Tier 0 PAW | Tier 0 admins | AD DS, DCs, PKI, Entra high-privilege portals | Hardened, restricted internet, no email, no productivity apps |
-| Tier 1 admin workstation | Tier 1 admins | Servers, Proxmox, OPNsense, backup, monitoring | Hardened, management network access, no Tier 0 use |
+| Tier 1 admin workstation | Tier 1 admins | Servers, Proxmox, MikroTik CHR, backup, monitoring | Hardened, management network access, no Tier 0 use |
 | Tier 2 admin workstation | Help desk and endpoint admins | Windows 11 clients, Intune help desk portals | Hardened support tools, no Tier 0 or Tier 1 use |
 
 Minimum controls:

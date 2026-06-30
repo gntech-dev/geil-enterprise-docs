@@ -61,11 +61,11 @@ nav:
       - platform/index.md
       - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
       - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
-      - OPNsense HQ Foundation LLD: platform/opnsense-hq-foundation-lld.md
+      - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
       - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
-      - OPNsense HQ Foundation Implementation: platform/opnsense-hq-foundation-implementation.md
+      - MikroTik CHR HQ Foundation Implementation: platform/mikrotik-chr-hq-foundation-implementation.md
       - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
   - Governance:
       - governance/index.md
@@ -79,6 +79,7 @@ nav:
       - ADRs:
           - governance/adrs/index.md
           - ADR-0001 MkDocs Material: governance/adrs/ADR-0001-mkdocs-material.md
+          - ADR-0002 MikroTik CHR Firewall: governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md
   - Security:
       - security/index.md
       - Privileged Access Model: security/privileged-access-model.md
@@ -101,7 +102,7 @@ nav:
       - foundation/index.md
       - Phase 0 Prerequisites: foundation/phase-0-prerequisites.md
       - Proxmox VE Baseline: foundation/proxmox-ve-baseline.md
-      - OPNsense Edge Firewall: foundation/opnsense-edge-firewall.md
+      - Superseded OPNsense Edge Firewall: foundation/opnsense-edge-firewall.md
   - Microsoft Core:
       - microsoft-core/index.md
       - Windows Server 2025 Baseline: microsoft-core/windows-server-2025-baseline.md

@@ -358,7 +358,7 @@ Expected results:
 
 - Use `Get-DhcpServerv4Scope` to confirm the scope exists.
 - Use `Get-DhcpServerv4Lease -ScopeId 172.20.30.0` to confirm leases.
-- Use OPNsense firewall logs to confirm DHCP relay traffic is allowed.
+- Use MikroTik CHR firewall logs to confirm DHCP relay traffic is allowed.
 - Use `Resolve-DnsName` for SRV records before troubleshooting domain join.
 - Use `ipconfig /all` to verify client options.
 

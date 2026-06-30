@@ -33,7 +33,7 @@ This standard defines the required structure and teaching style for all GEIL imp
 
 ## Scope
 
-This standard applies to documents that install, configure, integrate, validate, or roll back infrastructure components. Examples include Proxmox, OPNsense, Active Directory, DNS, DHCP, PKI, NPS, Microsoft 365, Entra ID, Intune, monitoring, backup, and security tooling implementation guides.
+This standard applies to documents that install, configure, integrate, validate, or roll back infrastructure components. Examples include Proxmox, MikroTik CHR, Active Directory, DNS, DHCP, PKI, NPS, Microsoft 365, Entra ID, Intune, monitoring, backup, and security tooling implementation guides.
 
 It does not replace HLD, LLD, architecture, policy, ADR, evidence, or acceptance package formats. Those documents may reference this standard when they contain procedural implementation sections.
 

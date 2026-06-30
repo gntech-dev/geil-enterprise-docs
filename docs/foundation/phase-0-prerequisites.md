@@ -47,7 +47,7 @@ Complete required planning before any production infrastructure is built.
 2. Create private GitHub repository.
 3. Configure branch protection.
 4. Configure Cloudflare DNS and Access plan.
-5. Record OPNsense, Proxmox, Microsoft 365, and domain registrar emergency access procedures in a secure password manager, not in GEIL.
+5. Record MikroTik CHR, Proxmox, Microsoft 365, and domain registrar emergency access procedures in a secure password manager, not in GEIL.
 
 ## Validation
 

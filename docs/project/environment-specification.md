@@ -3,7 +3,7 @@ title: Environment Specification
 document_id: GEIL-PRJ-ENV-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ENV-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -74,7 +74,7 @@ Only use placeholders when the value cannot be known before deployment or must n
 | Virtualization platform | Proxmox VE | Standard hypervisor platform |
 | Primary hypervisor | `PVE-HQ01` | Primary Proxmox VE host |
 | Backup server | `PBS-HQ01` | Proxmox Backup Server |
-| Firewall | `HQ-FW01` | OPNsense firewall |
+| Firewall | `HQ-FW01` | MikroTik CHR / RouterOS firewall |
 | Primary domain controller | `HQ-DC01` | First Windows Server 2025 domain controller |
 | Future secondary domain controller | `HQ-DC02` | Future second domain controller |
 | Management workstation | `HQ-MGMT01` | Administrative workstation |
@@ -123,6 +123,19 @@ Only use placeholders when the value cannot be known before deployment or must n
 | 100 | Hypervisors | `172.20.100.0/24` | `172.20.100.1` | Proxmox VE host management and cluster traffic |
 
 Supernet: `172.20.0.0/16`.
+
+## Firewall platform baseline
+
+| Item | Canonical Value |
+|---|---|
+| Active firewall platform | MikroTik CHR / RouterOS |
+| Firewall host | `HQ-FW01` |
+| WAN interface | `ether1` connected to `GEILWAN` |
+| LAN trunk interface | `ether2` connected to `GEILLAN` |
+| GEILWAN transit | `172.31.255.0/30` |
+| Proxmox GEILWAN endpoint | `172.31.255.1/30` |
+| CHR WAN endpoint | `172.31.255.2/30` |
+| CHR default route | `172.31.255.1` |
 
 ## Baseline infrastructure IP assignments
 

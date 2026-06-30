@@ -32,7 +32,7 @@ Define the standard GEIL enterprise architecture from 15 users to multinational 
 ```mermaid
 flowchart LR
     Internet --> CF[Cloudflare DNS / Access / Pages]
-    Internet --> FW[OPNsense Edge]
+    Internet --> FW[MikroTik CHR Edge]
     FW --> VLANs[LAN VLANs]
     VLANs --> PVE[Proxmox VE Cluster]
     PVE --> DC[Windows Server Domain Controllers]
@@ -57,7 +57,7 @@ flowchart LR
 
 - AD DS remains authoritative for on-premises Windows identity unless cloud-native-only is approved by ADR.
 - Entra ID and Intune manage SaaS identity and endpoints.
-- OPNsense provides edge routing, VPN, and segmentation for SMB/midmarket deployments.
+- MikroTik CHR provides edge routing, VPN, and segmentation for SMB/midmarket deployments.
 - Proxmox VE hosts infrastructure workloads where a commercial hypervisor is not mandated.
 - Microsoft Defender is the endpoint protection standard.
 

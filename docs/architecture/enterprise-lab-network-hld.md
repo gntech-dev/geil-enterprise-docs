@@ -239,5 +239,6 @@ flowchart TD
 - [Enterprise Lab Blueprint HLD](enterprise-lab-blueprint.md)
 - [Environment Specification](../project/environment-specification.md)
 - [Network Architecture](network-architecture.md)
-- [OPNsense Edge Firewall](../foundation/opnsense-edge-firewall.md)
+- [MikroTik CHR HQ Foundation LLD](../platform/mikrotik-chr-hq-foundation-lld.md)
+- [ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall](../governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md)
 - [DNS and DHCP Implementation](../microsoft-core/dns-dhcp-implementation.md)

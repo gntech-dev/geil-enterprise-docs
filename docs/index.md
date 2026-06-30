@@ -57,5 +57,5 @@ A site is production-ready only when these controls are complete:
 - Tiered administrative accounts exist.
 - Backups complete and a restore test has succeeded.
 - Monitoring alerts cover domain controllers, edge firewall, virtualization hosts, certificate expiry, storage capacity, and Microsoft 365 identity risk.
-- Emergency access accounts exist for Microsoft 365 and OPNsense.
+- Emergency access accounts exist for Microsoft 365 and MikroTik CHR.
 - Change log, rollback plan, and validation evidence are recorded for each major implementation.

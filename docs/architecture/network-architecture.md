@@ -71,4 +71,4 @@ Expected result: required ports succeed; unrelated server ports fail from client
 
 ## Rollback
 
-Export the OPNsense configuration before rule changes. If authentication or DNS breaks, restore the previous firewall alias/rule set and reload filters.
+Export the RouterOS exporturation before rule changes. If authentication or DNS breaks, restore the previous firewall alias/rule set and reload filters.

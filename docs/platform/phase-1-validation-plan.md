@@ -55,7 +55,7 @@ This LLD is derived from and subordinate to the E02.R02 High-Level Design baseli
 | VAL-001 | Proxmox host | `PVE-HQ01` reachable from `HQ-MGMT01` over approved management path | Proxmox UI/API reachable at `172.20.100.11` only through allowed path | Screenshot or command transcript |
 | VAL-002 | Bridge design | Proxmox bridges match LLD | `vmbr0`, `vmbr1`, and management bridge exist; `vmbr1` is VLAN-aware | Bridge configuration export |
 | VAL-003 | WAN isolation | Only `HQ-FW01` is attached to WAN bridge | No non-firewall VM has `vmbr0` attachment | VM hardware inventory |
-| VAL-004 | OPNsense gateways | Every Phase 1 VLAN gateway exists on `HQ-FW01` | `.1` gateway responds per VLAN test context | Ping or interface status evidence |
+| VAL-004 | MikroTik CHR gateways | Every Phase 1 VLAN gateway exists on `HQ-FW01` | `.1` gateway responds per VLAN test context | Ping or interface status evidence |
 | VAL-005 | Server VLAN | `HQ-DC01` has static `172.20.20.11/24` | Gateway is `172.20.20.1`; no DHCP dependency | OS network screenshot or command output |
 | VAL-006 | Management workstation | `HQ-MGMT01` has static `172.20.30.10/24` | Gateway is `172.20.30.1`; management targets reachable | Command output |
 | VAL-007 | First client | `HQ-W11-001` is connected to VLAN 30 | Client can reach VLAN 30 gateway; DHCP state documented | Command output |
@@ -157,7 +157,7 @@ E02.R03 is ready for closure only when:
 ## Related documents
 
 - [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
-- [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 
 
@@ -180,7 +180,7 @@ Validate that the HQ foundation was implemented as designed and that no legacy P
 | VAL-014 | Existing public access untouched | Review `/etc/network/interfaces` and Proxmox Network GUI | `eno1`, `VSW4001`, `PROD`, and `TEST` unchanged |
 | VAL-015 | GEILWAN exists | `ip -brief addr show GEILWAN` | Shows `172.31.255.1/30` |
 | VAL-016 | GEILLAN visible | Proxmox UI -> node -> System -> Network | `GEILLAN` visible and VLAN-aware |
-| VAL-017 | HQ-FW01 WAN transit | OPNsense WAN page | WAN is `172.31.255.2/30` |
+| VAL-017 | HQ-FW01 WAN transit | MikroTik CHR WAN page | WAN is `172.31.255.2/30` |
 | VAL-018 | No GEIL workload on 10.10.x.x | `qm config 100 110 120 121` manually reviewed | GEIL VMs do not use `PROD` or `TEST` |
 
 ### Copy/Paste validation commands

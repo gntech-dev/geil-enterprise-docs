@@ -1,15 +1,15 @@
 ---
-title: OPNsense Edge Firewall
+title: Superseded OPNsense Edge Firewall
 document_id: GEIL-FND-OPN-001
 owner: Infrastructure Engineering
-status: Draft
+status: Superseded
 version: 1.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
 ---
 
-# OPNsense Edge Firewall
+# Superseded OPNsense Edge Firewall
 
 ## Document Control
 
@@ -17,7 +17,7 @@ classification: Internal Confidential
 |---|---|
 | Document ID | GEIL-FND-OPN-001 |
 | Owner | Infrastructure Engineering |
-| Status | Draft |
+| Status | Superseded |
 | Version | 1.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
@@ -29,7 +29,7 @@ classification: Internal Confidential
 
 ## Purpose
 
-Implement OPNsense as the segmented edge firewall, router, VPN endpoint, and DHCP relay where required.
+This historical foundation document described OPNsense as the edge firewall. It is superseded by ADR-0002 and retained only as alternative-implementation context. The active Phase 1 firewall is MikroTik CHR / RouterOS documented in the Platform section.
 
 ## Baseline configuration
 
@@ -42,7 +42,7 @@ Implement OPNsense as the segmented edge firewall, router, VPN endpoint, and DHC
 
 ## Implementation steps
 
-1. Install OPNsense and patch to current stable release.
+1. Historical OPNsense implementation steps are superseded; use MikroTik CHR Platform implementation guides for active deployment.
 2. Change default admin password and create named admin accounts.
 3. Define VLAN interfaces for MGMT, SERVER, CLIENT, WIFI-CORP, WIFI-GUEST, and IOT.
 4. Create aliases for domain controllers, NPS servers, management workstations, and Microsoft service endpoints where needed.
@@ -64,4 +64,4 @@ Expected result: only approved paths succeed.
 
 ## Rollback
 
-Use System > Configuration > Backups to restore the previous known-good configuration. Keep console access available for firewall rule mistakes.
+For active deployment rollback, use the MikroTik CHR implementation guide and RouterOS exports/snapshots. Historical OPNsense restore guidance is no longer active for GEIL Phase 1.

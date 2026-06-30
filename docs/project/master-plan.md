@@ -218,29 +218,29 @@ GEIL Phase 1 is governed by the [Enterprise Lab Blueprint HLD](../architecture/e
 
 ## Phase 1 Low-Level Design
 
-Release `E02.R03 HQ Foundation Low-Level Design and Build Plan` translates the Enterprise Lab Blueprint HLD into deployable specifications for the initial HQ environment. It defines the `PVE-HQ01` Proxmox baseline, `HQ-FW01` OPNsense design, Phase 1 VM specifications, routing and DHCP relay decisions, management access path, rollback checkpoints, deployment sequence, and validation checklist.
+Release `E02.R03 HQ Foundation Low-Level Design and Build Plan` translates the Enterprise Lab Blueprint HLD into deployable specifications for the initial HQ environment. It defines the `PVE-HQ01` Proxmox baseline, `HQ-FW01` MikroTik CHR design, Phase 1 VM specifications, routing and DHCP relay decisions, management access path, rollback checkpoints, deployment sequence, and validation checklist.
 
 Authoritative E02.R03 documents:
 
 - [Proxmox HQ Foundation LLD](../platform/proxmox-hq-foundation-lld.md)
-- [OPNsense HQ Foundation LLD](../platform/opnsense-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](../platform/mikrotik-chr-hq-foundation-lld.md)
 - [Phase 1 Build Plan](../platform/phase-1-build-plan.md)
 - [Phase 1 Validation Plan](../platform/phase-1-validation-plan.md)
 
 
 ## Phase 1 Foundation Implementation
 
-Release `E02.R04 HQ Foundation Implementation Runbook` provides implementation-ready procedures for the first deployable HQ foundation layer. It implements `PVE-HQ01` bridge/VLAN design and `HQ-FW01` OPNsense WAN/LAN, VLAN gateway, baseline firewall, DNS forwarding, DHCP relay preparation, validation, and rollback controls.
+Release `E02.R04 HQ Foundation Implementation Runbook` provides implementation-ready procedures for the first deployable HQ foundation layer. It implements `PVE-HQ01` bridge/VLAN design and `HQ-FW01` MikroTik CHR WAN/LAN, VLAN gateway, baseline firewall, DNS forwarding, DHCP relay preparation, validation, and rollback controls.
 
 Authoritative E02.R04 documents:
 
 - [Proxmox HQ Foundation Implementation Runbook](../platform/proxmox-hq-foundation-implementation.md)
-- [OPNsense HQ Foundation Implementation Runbook](../platform/opnsense-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](../platform/mikrotik-chr-hq-foundation-implementation.md)
 
 
 ## Phase 1 Acceptance Gate
 
-Release `E02.R05 HQ Foundation Evidence and Acceptance Package` defines the formal evidence gate before Microsoft identity services begin. It requires Proxmox, OPNsense, VLAN, firewall, routing, DNS forwarding, DHCP relay readiness, snapshot, rollback, exception, and sign-off evidence for the HQ foundation.
+Release `E02.R05 HQ Foundation Evidence and Acceptance Package` defines the formal evidence gate before Microsoft identity services begin. It requires Proxmox, MikroTik CHR, VLAN, firewall, routing, DNS forwarding, DHCP relay readiness, snapshot, rollback, exception, and sign-off evidence for the HQ foundation.
 
 Authoritative E02.R05 document:
 

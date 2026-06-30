@@ -57,7 +57,7 @@ This implementation runbook is subordinate to the approved HLD and LLD baseline:
 - [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md)
 - [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md)
 - [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
-- [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
 - [Environment Specification](../project/environment-specification.md)
@@ -174,7 +174,7 @@ A VLAN-aware bridge carries multiple VLANs across one bridge. VMs can attach to 
 
 ## Why This Step Matters
 
-The Proxmox bridge layer determines whether every later GEIL component is isolated, reachable, and recoverable. If the foundation bridges are wrong, OPNsense, Active Directory, DHCP relay, management access, and evidence collection will all fail or produce misleading results.
+The Proxmox bridge layer determines whether every later GEIL component is isolated, reachable, and recoverable. If the foundation bridges are wrong, MikroTik CHR, Active Directory, DHCP relay, management access, and evidence collection will all fail or produce misleading results.
 
 ## Knowledge Check
 
@@ -188,7 +188,7 @@ The Proxmox bridge layer determines whether every later GEIL component is isolat
 
 Continue to:
 
-- [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](mikrotik-chr-hq-foundation-implementation.md)
 
 ## Prerequisites
 
@@ -196,7 +196,7 @@ Continue to:
 |---|---|
 | Physical host installed | `PVE-HQ01` |
 | Proxmox VE ISO | Current approved Proxmox VE ISO from vendor source |
-| OPNsense ISO uploaded | Required before creating `HQ-FW01` |
+| MikroTik CHR image uploaded | Required before creating `HQ-FW01` |
 | Windows Server ISO uploaded | Required before creating `HQ-DC01` |
 | Windows 11 Enterprise ISO uploaded | Required before creating `HQ-MGMT01` and `HQ-W11-001` |
 | VirtIO drivers ISO | Required for Windows guests if virtio devices are used |
@@ -219,11 +219,11 @@ Continue to:
 | File | Purpose | Storage Location |
 |---|---|---|
 | Proxmox VE ISO | Install `PVE-HQ01` | Physical installer, not committed |
-| OPNsense ISO | Install `HQ-FW01` | Proxmox ISO storage |
+| MikroTik CHR image | Install `HQ-FW01` | Proxmox ISO storage |
 | Windows Server 2025 ISO | Install `HQ-DC01` | Proxmox ISO storage |
 | Windows 11 Enterprise ISO | Install `HQ-MGMT01`, `HQ-W11-001` | Proxmox ISO storage |
 | VirtIO driver ISO | Windows guest storage/network drivers | Proxmox ISO storage |
-| `HQ-FW01-baseline.xml` | Post-validation firewall config export | Protected admin storage after OPNsense build |
+| `HQ-FW01-baseline.xml` | Post-validation firewall config export | Protected admin storage after MikroTik CHR build |
 
 ## Visual implementation summary
 
@@ -340,7 +340,7 @@ From the Proxmox UI:
 1. Open `PVE-HQ01`.
 2. Open local ISO storage.
 3. Upload:
-   - OPNsense ISO.
+   - MikroTik CHR image.
    - Windows Server 2025 ISO.
    - Windows 11 Enterprise ISO.
    - VirtIO driver ISO.
@@ -365,8 +365,8 @@ Create the firewall VM with these settings:
 | vCPU | 2 |
 | Memory | 4096 MB |
 | Disk | 40 GB |
-| BIOS | OVMF or SeaBIOS per tested OPNsense baseline |
-| Boot ISO | OPNsense ISO |
+| BIOS | OVMF or SeaBIOS per tested MikroTik CHR baseline |
+| Boot disk | Imported MikroTik CHR image |
 | net0 | `vmbr0`, no VLAN tag, WAN |
 | net1 | `vmbr1`, no VLAN tag, LAN trunk |
 
@@ -375,16 +375,16 @@ Example Proxmox CLI pattern, using an approved unused VM ID such as `100`:
 ```bash
 qm create 100 --name HQ-FW01 --memory 4096 --cores 2 --net0 virtio,bridge=vmbr0 --net1 virtio,bridge=vmbr1
 qm set 100 --scsihw virtio-scsi-pci --scsi0 local-lvm:40
-qm set 100 --ide2 local:iso/OPNsense-ISO-FILENAME.iso,media=cdrom
+qm set 100 --ide2 local-lvm:vm-100-disk-0
 qm set 100 --boot order=ide2\;scsi0
 ```
 
-`OPNsense-ISO-FILENAME.iso` must be replaced with the uploaded OPNsense ISO filename from local Proxmox storage.
+`MikroTik CHR-ISO-FILENAME.iso` must be replaced with the uploaded MikroTik CHR image filename from local Proxmox storage.
 
 Checkpoint:
 
 - Do not start dependent guests until `HQ-FW01` installs successfully.
-- Snapshot after OPNsense installation as `CP-FW-INSTALLED`.
+- Snapshot after MikroTik CHR installation as `CP-FW-INSTALLED`.
 
 ### Step 5: Create `HQ-DC01` VM shell
 
@@ -459,7 +459,7 @@ qm set 121 --boot order=ide2\;scsi0
 Create checkpoints at the defined gates:
 
 ```bash
-qm snapshot 100 CP-FW-INSTALLED --description "HQ-FW01 clean OPNsense install before VLAN policy"
+qm snapshot 100 CP-FW-INSTALLED --description "HQ-FW01 clean MikroTik CHR install before VLAN policy"
 qm snapshot 100 CP-FW-VLANS --description "HQ-FW01 VLAN gateways configured"
 qm snapshot 100 CP-FW-BASELINE-RULES --description "HQ-FW01 baseline firewall rules validated"
 qm snapshot 110 CP-DC01-OS --description "HQ-DC01 clean Windows Server 2025 OS before AD DS"
@@ -476,7 +476,7 @@ pveversion -v > /root/pveversion.CP-PVE-BASELINE.txt
 
 ## Management access validation
 
-From `HQ-MGMT01` after OPNsense and workstation network configuration:
+From `HQ-MGMT01` after MikroTik CHR and workstation network configuration:
 
 ```powershell
 Test-NetConnection 172.20.10.1 -Port 443
@@ -533,7 +533,7 @@ Use the appropriate VM ID and checkpoint name from the build evidence.
 | `HQ-FW01` WAN receives no address | Wrong WAN NIC or upstream issue | Verify `vmbr0` physical NIC mapping and ISP handoff |
 | Windows installer cannot see disk | VirtIO driver missing | Mount VirtIO ISO and load storage driver |
 | Windows guest has no network | VirtIO network driver missing or wrong VLAN tag | Install VirtIO driver and verify VM `tag` |
-| Management path works from console but not `HQ-MGMT01` | Firewall rule missing | Validate OPNsense management allow rules |
+| Management path works from console but not `HQ-MGMT01` | Firewall rule missing | Validate MikroTik CHR management allow rules |
 
 ## Evidence to capture
 
@@ -567,7 +567,7 @@ Deploy the GEIL-safe Proxmox foundation without disrupting the existing Proxmox 
 1. Confirm you have console or out-of-band access to `PVE-HQ01`.
 2. Confirm you can recover `/etc/network/interfaces` from local console if SSH or GUI access breaks.
 3. Confirm the current host uses `eno1` directly and that existing `PROD` and `TEST` bridges exist for non-GEIL workloads.
-4. Confirm GEIL uses `172.20.0.0/16` internally and `172.31.255.0/30` for the local Proxmox-to-OPNsense WAN transit.
+4. Confirm GEIL uses `172.20.0.0/16` internally and `172.31.255.0/30` for the local Proxmox-to-MikroTik CHR WAN transit.
 5. Do not proceed if you cannot identify `eno1`, `VSW4001`, `PROD`, and `TEST` in the current host configuration.
 
 !!! warning "Operator Notes"
@@ -768,7 +768,7 @@ Use these settings:
 | Disk | 40 GB |
 | NIC 1 | Bridge `GEILWAN`, no VLAN tag |
 | NIC 2 | Bridge `GEILLAN`, no VLAN tag |
-| ISO | Approved OPNsense ISO |
+| ISO | Approved MikroTik CHR image |
 
 CLI equivalent pattern:
 
@@ -777,7 +777,7 @@ qm create 100 --name HQ-FW01 --memory 4096 --cores 2 \
   --net0 virtio,bridge=GEILWAN \
   --net1 virtio,bridge=GEILLAN
 qm set 100 --scsihw virtio-scsi-pci --scsi0 local-lvm:40
-qm set 100 --ide2 local:iso/OPNsense-ISO-FILENAME.iso,media=cdrom
+qm set 100 --ide2 local-lvm:vm-100-disk-0
 qm set 100 --boot order=ide2\;scsi0
 qm config 100
 ```
@@ -871,7 +871,7 @@ Expected result:
 | Public access breaks | Existing `eno1`, `VSW4001`, `PROD`, or `TEST` changed | Restore `/root/interfaces.rollback-before-geil` from console |
 | GEIL VM lands on 10.10.x.x | VM attached to `PROD` or `TEST` instead of `GEILLAN` | Move VM NIC to `GEILLAN` with correct VLAN tag |
 | VLAN tags ignored | Bridge is not VLAN-aware | Confirm `bridge-vlan-aware yes` on `GEILLAN` |
-| HQ-FW01 WAN cannot reach transit | Wrong bridge on net0 | Set net0 to `GEILWAN`; confirm `172.31.255.2/30` inside OPNsense |
+| HQ-FW01 WAN cannot reach transit | Wrong bridge on net0 | Set net0 to `GEILWAN`; confirm `172.31.255.2/30` inside MikroTik CHR |
 
 ## Acceptance criteria for this runbook
 

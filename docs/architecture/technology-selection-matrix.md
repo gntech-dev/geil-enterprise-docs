@@ -3,7 +3,7 @@ title: Technology Selection Matrix
 document_id: GEIL-ARCH-TECH-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
+version: 2.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-ARCH-TECH-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
+| Version | 2.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -45,7 +45,8 @@ Technologies are implementations. Capabilities are permanent.
 | Technology | Capability Implemented | Business Justification | Alternatives Considered | Pros | Cons | Future Replacement Strategy |
 |---|---|---|---|---|---|---|
 | Proxmox VE | Enterprise Compute | Provides cost-effective virtualization for GNTECH infrastructure workloads at HQ. | VMware vSphere, Hyper-V, Azure Stack HCI, bare metal. | Cost-effective, flexible, supports clustering and VM lifecycle, strong fit for initial scale. | Smaller enterprise ecosystem than VMware, requires disciplined operational standards. | Abstract compute capability; document VM requirements, backup, network, and recovery so workloads can migrate to VMware, Hyper-V, or cloud infrastructure. |
-| OPNsense | Enterprise Networking | Provides firewall, routing, VPN, and segmentation for HQ. | pfSense, Fortinet, Palo Alto, Cisco, cloud SASE. | Flexible, transparent, cost-effective, suitable for VLAN segmentation. | Requires careful configuration governance; support model differs from large commercial firewalls. | Preserve network architecture as policy requirements; firewall rules, zones, and flows can be reimplemented on enterprise firewall or SASE platforms. |
+| MikroTik CHR / RouterOS | Enterprise Networking / Enterprise Edge Security | Provides the active Phase 1 HQ firewall, routing, NAT, VLAN gateway, management access, and guest isolation implementation. | OPNsense, pfSense, Fortinet, Palo Alto, Cisco, cloud SASE. | Aligns with implementation-owner RouterOS experience, supports CLI-driven evidence, is lightweight on Proxmox, and fits Phase 1 VLAN segmentation. | Requires RouterOS configuration governance, license management, and disciplined firewall rule review. | Preserve network architecture as policy requirements; firewall rules, zones, and flows can be reimplemented on OPNsense, commercial firewalls, or SASE platforms if future requirements change. |
+| OPNsense | Alternative Enterprise Networking / Enterprise Edge Security | Superseded as the active Phase 1 implementation by ADR-0002, but remains a viable alternative firewall platform for the same capability. | MikroTik CHR, pfSense, Fortinet, Palo Alto, Cisco, cloud SASE. | Strong web UI, transparent open-source firewall model, suitable VLAN and VPN feature set. | No longer aligned with current implementation-owner operational experience for Phase 1. | Retain historical docs as superseded reference; revisit only through a future ADR if operating model or support requirements change. |
 | Windows Server 2025 | Enterprise Identity and Server Platform | Provides AD DS, DNS, DHCP, GPO, PKI, NPS, and Windows infrastructure services. | Windows Server 2022, Samba AD, cloud-only identity, Linux DNS/DHCP. | Native Microsoft enterprise integration, mature AD capabilities, broad admin skill availability. | Licensing, patching, and legacy protocol exposure require discipline. | Separate identity/service capability requirements from host OS; migrate roles to newer Windows Server or cloud-native services when justified. |
 | Windows 11 Enterprise | Enterprise Endpoint Management | Provides managed endpoint platform for GNTECH users and administrators. | Windows 11 Pro, macOS, Linux desktops, virtual desktops. | Enterprise security controls, Intune integration, Defender, BitLocker, WHfB. | Licensing and hardware requirements; endpoint drift without management. | Maintain endpoint capability requirements; support alternate endpoint platforms through equivalent management and security baselines. |
 | Microsoft 365 | Enterprise Messaging and Collaboration | Provides email, collaboration, identity integration, productivity, and retention capabilities. | Google Workspace, self-hosted Exchange, Nextcloud, mixed SaaS. | Mature enterprise services, Entra integration, security and compliance ecosystem. | Licensing complexity and tenant dependency. | Treat messaging/collaboration as capabilities; document data ownership, identity, retention, and export paths to enable future SaaS transition if required. |

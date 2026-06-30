@@ -44,7 +44,7 @@ This LLD is derived from and subordinate to the E02.R02 High-Level Design baseli
 Phase 1 deploys the initial HQ foundation:
 
 - `PVE-HQ01` Proxmox bridge/VLAN baseline.
-- `HQ-FW01` OPNsense VM, interfaces, VLAN gateways, and baseline rules.
+- `HQ-FW01` MikroTik CHR VM, interfaces, VLAN gateways, and baseline rules.
 - `HQ-DC01` VM shell and static network settings.
 - `HQ-MGMT01` management workstation VM.
 - `HQ-W11-001` first Windows client VM.
@@ -66,7 +66,7 @@ sequenceDiagram
 
     Eng->>PVE: Configure host baseline and bridges
     Eng->>PVE: Capture CP-PVE-BASELINE
-    Eng->>FW: Create and install OPNsense VM
+    Eng->>FW: Create and install MikroTik CHR VM
     Eng->>FW: Capture CP-FW-INSTALLED
     Eng->>FW: Configure VLAN gateways and baseline routes
     Eng->>FW: Capture CP-FW-VLANS
@@ -126,7 +126,7 @@ Design inputs:
 
 Expected result:
 
-- OPNsense boots and presents separate WAN and LAN/trunk interfaces.
+- MikroTik CHR boots and presents separate WAN and LAN/trunk interfaces.
 
 Checkpoint:
 
@@ -155,7 +155,7 @@ Checkpoint:
 
 ### Step 4: Apply baseline firewall policy
 
-Apply the policy from [OPNsense HQ Foundation LLD](opnsense-hq-foundation-lld.md). Default posture is deny between zones unless explicitly allowed.
+Apply the policy from [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md). Default posture is deny between zones unless explicitly allowed.
 
 Checkpoint:
 
@@ -260,7 +260,7 @@ Execute the Phase 1 foundation build in a safe order that preserves existing Pro
 ### Before you begin
 
 - Review [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md).
-- Review [OPNsense HQ Foundation Implementation Runbook](opnsense-hq-foundation-implementation.md).
+- Review [MikroTik CHR HQ Foundation Implementation Guide](mikrotik-chr-hq-foundation-implementation.md).
 - Confirm `eno1`, `VSW4001`, `PROD`, and `TEST` are non-GEIL objects and are not modified.
 - Confirm `GEILWAN` uses `172.31.255.1/30` and `HQ-FW01` WAN uses `172.31.255.2/30`.
 
@@ -275,7 +275,7 @@ Execute the Phase 1 foundation build in a safe order that preserves existing Pro
 | 1 | Back up `/etc/network/interfaces` | Backup file exists in `/root` | Restore backup and run `ifreload -a` |
 | 2 | Add `GEILWAN` and `GEILLAN` to `/etc/network/interfaces` | `ip -brief addr` and Proxmox GUI show bridges | Restore previous interfaces file |
 | 3 | Create `HQ-FW01` attached to `GEILWAN` and `GEILLAN` | `qm config 100` shows correct bridges | Destroy/recreate VM before configuration |
-| 4 | Configure OPNsense WAN `172.31.255.2/30` | WAN status shows expected address | Reassign WAN from console |
+| 4 | Configure MikroTik CHR WAN `172.31.255.2/30` | WAN status shows expected address | Reassign WAN from console |
 | 5 | Create VLAN gateways on `HQ-FW01` | Each VLAN interface shows `172.20.x.1/24` | Revert `CP-FW-VLANS` |
 | 6 | Apply baseline firewall rules | Management pass, guest deny | Disable last rule or revert snapshot |
 | 7 | Create VM shells | `qm config` shows correct VLAN tags | Stop/destroy VM shell before OS role install |
@@ -301,4 +301,4 @@ qm listsnapshot 100 > /root/geil-e02r04-evidence/qm-snapshots-100-HQ-FW01.txt
 Acceptance handoff:
 
 - Transfer evidence to the E02.R05 protected evidence package.
-- Do not commit host evidence, config exports, screenshots, or OPNsense XML files to Git.
+- Do not commit host evidence, config exports, screenshots, or MikroTik CHR XML files to Git.

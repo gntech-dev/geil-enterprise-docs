@@ -32,7 +32,7 @@ Define minimum monitoring coverage for GEIL infrastructure.
 - Domain controller availability, replication, disk, CPU, memory, and event logs.
 - DNS and DHCP service health.
 - Certificate and CRL expiry.
-- OPNsense WAN status, gateway latency, VPN status, and config changes.
+- MikroTik CHR WAN status, gateway latency, VPN status, and config changes.
 - Proxmox host health, storage, backups, and VM status.
 - Microsoft 365 sign-in risk, service health, and admin role changes.
 

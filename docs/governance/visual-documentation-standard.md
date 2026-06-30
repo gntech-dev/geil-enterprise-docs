@@ -156,7 +156,7 @@ Examples:
 
 - `geil-pki-hierarchy-architecture.webp`
 - `geil-security-zone-model.webp`
-- `geil-opnsense-vlan-topology.webp`
+- `geil-mikrotik-chr-vlan-topology.webp`
 - `geil-proxmox-bridge-topology.webp`
 
 When local tooling cannot export WebP, commit the editable `.svg` source and a prompt file under `docs/assets/diagram-prompts/`, then track WebP generation as a follow-up task.
@@ -224,7 +224,7 @@ The following existing Mermaid diagrams should be prioritized for replacement wi
 | P1 | `docs/architecture/enterprise-reference-architecture.md` | Integrated target architecture and layer diagrams | `docs/assets/diagrams/enterprise-reference-architecture/integrated-target-architecture.webp` |
 | P1 | `docs/architecture/enterprise-capability-model.md` | Capability dependency overview | `docs/assets/diagrams/enterprise-capability-model/capability-dependency-map.webp` |
 | P1 | `docs/architecture/enterprise-lab-blueprint.md` | Target enterprise overview and physical topology | `docs/assets/diagrams/enterprise-lab-blueprint/target-enterprise-overview.webp` |
-| P1 | `docs/platform/opnsense-hq-foundation-lld.md` | OPNsense interface and VLAN topology | `docs/assets/diagrams/opnsense-hq-foundation-lld/interface-vlan-topology.webp` |
+| P1 | `docs/platform/mikrotik-chr-hq-foundation-lld.md` | RouterOS interface and VLAN topology | `docs/assets/diagrams/mikrotik-chr-hq-foundation-lld/interface-vlan-topology.webp` |
 | P1 | `docs/platform/proxmox-hq-foundation-lld.md` | Proxmox bridge topology | `docs/assets/diagrams/proxmox-hq-foundation-lld/proxmox-bridge-topology.webp` |
 | P2 | `docs/architecture/implementation-philosophy.md` | Stage evolution diagrams | Dedicated stage-by-stage visual set |
 | P2 | `docs/architecture/enterprise-lab-operations-hld.md` | Monitoring and disaster recovery architecture | Focused operations visual assets |

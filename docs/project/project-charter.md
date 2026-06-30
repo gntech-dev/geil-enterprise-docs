@@ -41,7 +41,7 @@ Create implementation-ready documentation that allows GNTECH Infrastructure Engi
 | Source control | GitHub private repository |
 | Static hosting | Cloudflare Pages protected by Cloudflare Access |
 | Virtualization | Proxmox VE |
-| Edge firewall | OPNsense |
+| Edge firewall | MikroTik CHR |
 | Server operating system | Windows Server 2025 |
 | Endpoint operating system | Windows 11 Enterprise |
 | Directory services | Active Directory Domain Services |
