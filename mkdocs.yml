@@ -24,20 +24,21 @@ theme:
     - scheme: slate
       primary: indigo
       accent: cyan
+extra_css:
+  - assets/stylesheets/geil-code.css
 markdown_extensions:
   - admonition
   - attr_list
   - def_list
   - footnotes
+  - fenced_code
+  - codehilite:
+      guess_lang: false
+      use_pygments: true
   - md_in_html
   - toc:
       permalink: true
   - pymdownx.details
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
