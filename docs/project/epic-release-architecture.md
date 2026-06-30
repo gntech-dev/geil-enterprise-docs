@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 9.0
+version: 10.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 9.0 |
+| Version | 10.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -165,6 +165,13 @@ flowchart TD
     WS[Windows Server 2025 Baseline]
     AD[Active Directory Implementation]
     ADORG[Active Directory Organizational Foundation]
+    NAMESTD[Enterprise Naming Standard]
+    GROUPSTRAT[Enterprise Group Strategy]
+    USERLIFE[Enterprise User Lifecycle]
+    SVCACCT[Enterprise Service Account Standard]
+    ADTIER[Administrative Tiering]
+    FWPORTS[Firewall Matrix and Port Reference]
+    DCBACKUP[Domain Controller Backup]
     DNS[DNS and DHCP Implementation]
     GPO[Group Policy Baseline]
     PKI[AD CS PKI]
@@ -220,9 +227,19 @@ flowchart TD
     FW --> WS
     WS --> AD
     AD --> ADORG
+    ADORG --> NAMESTD
+    NAMESTD --> GROUPSTRAT
+    GROUPSTRAT --> USERLIFE
+    GROUPSTRAT --> GPO
+    GROUPSTRAT --> PKI
+    USERLIFE --> SVCACCT
+    SVCACCT --> PKI
     ADORG --> DNS
-    ADORG --> GPO
-    ADORG --> PKI
+    ADORG --> DCBACKUP
+    ADORG --> ADTIER
+    FWPORTS --> DNS
+    FWPORTS --> NPS
+    DCBACKUP --> PKI
     PKI --> NPS
     IDARCH --> PAM
     ADORG --> PAM
@@ -321,6 +338,16 @@ The following register assigns every current published document to exactly one r
 | E05.R01 - Operations readiness | E05 | `operations/scaling-model.md` |
 | E05.R01 - Operations readiness | E05 | `operations/security-operations.md` |
 | E05.R01 - Operations readiness | E05 | `microsoft-core/windows-admin-center.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/firewall-rule-matrix.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/enterprise-port-reference.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-server-2025-golden-template.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-11-enterprise-golden-template.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-naming-standard.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/group-strategy.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/user-lifecycle.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/service-account-standard.md` |
+| E03.R03 - Privileged access control plane | E03 | `security/administrative-tiering.md` |
+| E05.R01 - Operations readiness | E05 | `operations/domain-controller-backup.md` |
 
 ## Future release slots
 

@@ -6,6 +6,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Added
 
+- Added GEIL Enterprise Identity Foundation prerequisite documentation: Enterprise Naming Standard, Enterprise Group Strategy, Enterprise User Lifecycle, Enterprise Service Account Standard, Enterprise Administrative Tiering, Firewall Rule Matrix, Enterprise Port Reference, Domain Controller Backup and Recovery, Windows Server 2025 Golden Template, and Windows 11 Enterprise Golden Template.
 - Added `GEIL-MSC-ADORG-001` Active Directory Organizational Foundation with canonical OU hierarchy, initial users, groups, service accounts, delegation boundaries, GPO readiness, Entra ID readiness, PowerShell implementation, validation, rollback, and evidence guidance.
 - Added `GEIL-ADR-0003` Hybrid Identity Namespace and updated canonical identity architecture so AD remains `corp.gntech.me`, NetBIOS is `GNTECH`, and users sign in as `username@gntech.me`.
 - Added `GEIL-GOV-DEPLOY-001` Deployment Style Guide as the canonical writing standard for GEIL deployment documentation.
@@ -64,6 +65,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Updated Microsoft Core dependency graph and existing AD, Windows Server, DNS/DHCP, Group Policy, PKI, NPS, security, environment, roadmap, backlog, document index, release assignment, and navigation references for the Enterprise Identity Foundation sequence.
 - Active Directory Implementation now routes operators to the organizational foundation before DNS/DHCP, Group Policy, PKI, Entra ID sync, or production onboarding. Updated GPO, privileged access, environment specification, roadmap, backlog, document index, release assignments, and navigation for the new AD foundation gate.
 - Audited GEIL after MikroTik CHR and Hybrid UPN architecture changes; corrected stale active firewall, RouterOS export, diagram, document-control, roadmap, backlog, and canonical identity references.
 - Improved existing Platform and Microsoft Core implementation guides from Phase 1 field validation lessons: LAN-to-WAN firewall allowance, disabled DHCP relay until scopes exist, RouterOS Safe Mode sequencing, protected Proxmox networking, Windows pre-AD internet/DNS validation, and stop-condition deployment gates.

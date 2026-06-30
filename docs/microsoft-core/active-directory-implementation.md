@@ -78,7 +78,9 @@ This guide creates the first GEIL directory service before production users or w
 
 ## Prerequisites
 
-- Windows Server 2025 baseline guide completed and validated on `HQ-DC01`.
+- [Windows Server 2025 Golden Template](../platform/windows-server-2025-golden-template.md) used or consciously bypassed with documented exception.
+- [Windows Server 2025 Baseline](windows-server-2025-baseline.md) completed and validated on `HQ-DC01`.
+- [Enterprise Naming Standard](active-directory-naming-standard.md) reviewed.
 
 - [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md) reviewed.
 - [Phase 1 Acceptance Package](../platform/phase-1-acceptance-package.md) approved or approved with accepted exceptions.

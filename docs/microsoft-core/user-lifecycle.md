@@ -1,0 +1,141 @@
+---
+title: Enterprise User Lifecycle
+document_id: GEIL-MSC-USERLIFE-001
+owner: Infrastructure Engineering
+status: Draft
+version: 1.0
+last_reviewed: 2026-06-30
+review_cycle: Quarterly
+classification: Internal Confidential
+---
+
+# Enterprise User Lifecycle
+
+## Document Control
+
+| Field | Value |
+|---|---|
+| Document ID | GEIL-MSC-USERLIFE-001 |
+| Owner | Infrastructure Engineering |
+| Status | Draft |
+| Version | 1.0 |
+| Last Reviewed | 2026-06-30 |
+| Review Cycle | Quarterly |
+| Classification | Internal Confidential |
+
+!!! note "Canonical GNTECH values"
+
+    Forest: `corp.gntech.me`; NetBIOS: `GNTECH`; primary UPN suffix: `gntech.me`; Microsoft 365 primary domain: `gntech.me`; hybrid identity plane: Microsoft Entra ID; primary firewall: MikroTik CHR `HQ-FW01`.
+
+
+## Purpose
+
+Define the lifecycle for human identities in `corp.gntech.me` so new hires, department changes, contractors, temporary users, guests, privilege elevation, password reset, account lockout, and offboarding are consistent and auditable.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+    Request[Approved request] --> Create[Create user]
+    Create --> Group[Assign groups]
+    Group --> Validate[Validate sign-in]
+    Validate --> Operate[Operate and review]
+    Operate --> Change[Change/terminate]
+    Change --> Disable[Disable and retain]
+```
+
+## Lifecycle states
+
+| State | OU | Key controls |
+|---|---|---|
+| New hire | `OU=Standard,OU=Users,OU=GNTECH,...` | Approved request, `@gntech.me` UPN, initial groups. |
+| Executive | `OU=Executives,OU=Users,OU=GNTECH,...` | Additional monitoring and data handling. |
+| Contractor | `OU=Contractors,OU=Users,OU=GNTECH,...` | Expiration date and sponsor. |
+| Temporary | Contractors or Standard with expiration | Expiration and access review. |
+| Disabled/offboarded | `OU=Disabled,OU=Users,OU=GNTECH,...` | Disabled, group removal, retention. |
+
+## New hire workflow
+
+### Why
+
+A new hire receives a durable identity used by Windows, Microsoft 365, Entra ID, Intune, and future services. The UPN must be correct before sync.
+
+### PowerShell
+
+```powershell
+$DomainDN = (Get-ADDomain).DistinguishedName
+$TargetOU = "OU=Standard,OU=Users,OU=GNTECH,$DomainDN"
+$Password = Read-Host "Enter temporary password" -AsSecureString
+New-ADUser -Name "G Nolasco" -SamAccountName "gnolasco" -UserPrincipalName "gnolasco@gntech.me" `
+    -Path $TargetOU -AccountPassword $Password -Enabled $true -ChangePasswordAtLogon $true
+Add-ADGroupMember -Identity "GG-IT-Operations" -Members "gnolasco"
+```
+
+### Validation
+
+```powershell
+Get-ADUser gnolasco -Properties UserPrincipalName,Enabled,MemberOf,DistinguishedName |
+    Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
+```
+
+Expected result: user is enabled, located under `OU=Standard`, and UPN is `gnolasco@gntech.me`.
+
+## Termination workflow
+
+```powershell
+Disable-ADAccount -Identity "gnolasco"
+Get-ADPrincipalGroupMembership "gnolasco" | Where-Object Name -ne "Domain Users" |
+    ForEach-Object { Remove-ADGroupMember -Identity $_.Name -Members "gnolasco" -Confirm:$false }
+Move-ADObject -Identity (Get-ADUser "gnolasco").DistinguishedName `
+    -TargetPath "OU=Disabled,OU=Users,OU=GNTECH,$((Get-ADDomain).DistinguishedName)"
+```
+
+STOP if legal hold, mailbox retention, or HR retention requirements are unknown. Disable first; delete later only after retention approval.
+
+## Department change
+
+Remove obsolete group membership and add new department groups. Do not move the user unless lifecycle category changes.
+
+## Privilege elevation
+
+Use separate admin accounts such as `admin.gnolasco@gntech.me`. Never add daily users to privileged groups.
+
+## Contractors and temporary users
+
+Set account expiration:
+
+```powershell
+Set-ADAccountExpiration -Identity "contractor.user" -DateTime "2026-12-31T17:00:00"
+```
+
+## Guest users
+
+External collaboration guests are primarily Entra ID objects and should not be created in AD unless a documented on-premises dependency exists.
+
+## Password reset and account lockout
+
+```powershell
+Unlock-ADAccount -Identity "gnolasco"
+Set-ADAccountPassword -Identity "gnolasco" -Reset -NewPassword (Read-Host "New temporary password" -AsSecureString)
+Set-ADUser -Identity "gnolasco" -ChangePasswordAtLogon $true
+```
+
+## Evidence Collection
+
+Capture request ID, user creation output, group membership, expiration date where applicable, and offboarding disable/move evidence. Never capture passwords.
+
+## Rollback
+
+If a user was created incorrectly, disable the account first. Correct UPN/OU/group membership if unused. Delete only after confirming no mailbox, Entra sync dependency, ACL, audit, or legal hold requirement exists.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| User cannot sign in to Microsoft 365 | Wrong UPN or sync not complete | Correct UPN to `@gntech.me`, run sync. |
+| User has wrong access | Incorrect group membership | Review `Get-ADPrincipalGroupMembership`. |
+| Lockouts continue | Cached credential or service misuse | Check lockout source before reset loops. |
+
+## Next Guide
+
+Continue to [Enterprise Service Account Standard](service-account-standard.md).

@@ -46,9 +46,28 @@ Define identity boundaries, authority, synchronization, and administrative tiers
 - Tier 1: Member servers, virtualization, backup, monitoring.
 - Tier 2: Workstations, endpoint management, help desk.
 
+## Enterprise identity foundation dependency graph
+
+```mermaid
+flowchart TD
+    INFRA[Proxmox + MikroTik CHR + Networking]
+    WS[Windows Server Baseline]
+    AD[Active Directory]
+    ORG[Organizational Foundation]
+    GROUPS[Group Strategy]
+    GPO[Group Policy]
+    PKI[PKI]
+    NPS[NPS]
+    ENTRA[Entra Connect / Entra ID]
+    INTUNE[Intune]
+    WHFB[Windows Hello for Business]
+
+    INFRA --> WS --> AD --> ORG --> GROUPS --> GPO --> PKI --> NPS --> ENTRA --> INTUNE --> WHFB
+```
+
 ## Synchronization rule
 
-Use Microsoft Entra Connect Cloud Sync or Entra Connect Sync only after documenting sourceAnchor, OU scope, UPN suffixes, and rollback.
+Use Microsoft Entra Connect Cloud Sync or Entra Connect Sync only after documenting sourceAnchor, OU scope, UPN suffixes, rollback, service account design, group strategy, and domain controller backup validation.
 
 ## Validation PowerShell
 

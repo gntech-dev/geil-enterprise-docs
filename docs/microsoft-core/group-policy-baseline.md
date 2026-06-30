@@ -72,6 +72,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 
 - [Active Directory Implementation](active-directory-implementation.md) completed.
 - [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) completed and validated.
+- [Enterprise Naming Standard](active-directory-naming-standard.md), [Enterprise Group Strategy](group-strategy.md), and [Enterprise Administrative Tiering](../security/administrative-tiering.md) reviewed.
 - `corp.gntech.me` forest exists.
 - Baseline OUs exist under `OU=GNTECH,DC=corp,DC=gntech,DC=me`, especially `Admin`, `Users`, `Groups`, `Computers`, `Service Accounts`, and `Policies`.
 - Group Policy Management Console is installed.
@@ -92,6 +93,9 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 - Rollback commands are captured.
 
 ## Architecture Overview
+
+Group Policy depends on the identity foundation sequence: infrastructure -> Windows Server Baseline -> Active Directory -> Organizational Foundation -> Group Strategy -> Group Policy.
+
 
 ```mermaid
 flowchart LR

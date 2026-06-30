@@ -246,6 +246,31 @@ Use a group Managed Service Account when:
 
 Do not use gMSA when the product cannot authenticate with it, when cross-platform credentials are required, or when Microsoft product guidance requires a specific service account model.
 
+## Future Regional OU Expansion
+
+GEIL starts with a single managed root `OU=GNTECH` for HQ. Future regional expansion must not create ad hoc root OUs. Add regions only after an approved architecture decision defines site, delegation, replication, data residency, and operational ownership.
+
+Future pattern:
+
+```text
+corp.gntech.me
+└── GNTECH
+    ├── HQ
+    │   ├── Users
+    │   ├── Computers
+    │   └── Groups
+    ├── Regional
+    │   ├── AMER
+    │   ├── EMEA
+    │   └── APAC
+    └── Global
+        ├── Admin
+        ├── Service Accounts
+        └── Policies
+```
+
+Do not create these regional OUs during the initial HQ deployment. They are documented so the current design can scale without restructuring.
+
 ## Step-by-Step Procedure
 
 ### Step 1: Validate domain and forest identity

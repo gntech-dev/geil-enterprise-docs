@@ -3,7 +3,7 @@ title: Environment Specification
 document_id: GEIL-PRJ-ENV-001
 owner: Infrastructure Engineering
 status: Approved
-version: 3.1
+version: 3.2
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ENV-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 3.1 |
+| Version | 3.2 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -122,7 +122,7 @@ Only use placeholders when the value cannot be known before deployment or must n
 
 ## Active Directory organizational foundation
 
-The canonical managed OU root is `OU=GNTECH,DC=corp,DC=gntech,DC=me`. Create and validate this structure with [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md) before Group Policy, PKI, Entra ID sync, or production onboarding.
+The canonical managed OU root is `OU=GNTECH,DC=corp,DC=gntech,DC=me`. Naming, group, user lifecycle, service account, administrative tiering, firewall matrix, port reference, backup, and golden-template standards are required identity-foundation prerequisites. Create and validate this structure with [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md) before Group Policy, PKI, Entra ID sync, or production onboarding.
 
 Initial users and service accounts use the primary UPN suffix `gntech.me`, for example `gnolasco@gntech.me`, `admin.gnolasco@gntech.me`, `svc-backup@gntech.me`, and `svc-monitoring@gntech.me`.
 

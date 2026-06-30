@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 17.0
+version: 18.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 17.0 |
+| Version | 18.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -57,6 +57,10 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PLAT-MTK-HQ-IMPL-001 | MikroTik CHR HQ Foundation Implementation Guide | Approved | `docs/platform/mikrotik-chr-hq-foundation-implementation.md` | RouterOS CHR image import, hardening, VLAN gateways, NAT, firewall, DHCP relay preparation, validation, rollback, and evidence |
 | GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
 | GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
+| GEIL-PLAT-FW-MATRIX-001 | Firewall Rule Matrix | Draft | `docs/platform/firewall-rule-matrix.md` | Canonical MikroTik CHR firewall flow matrix for Microsoft Core and enterprise services |
+| GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
+| GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
+| GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Draft | `docs/platform/windows-11-enterprise-golden-template.md` | Proxmox Windows 11 Enterprise template build, update, drivers, security, Sysprep, clone, validation, and rollback |
 
 ## Governance documents
 
@@ -77,6 +81,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-SEC-INDEX | Security | Draft | `docs/security/index.md` | Cross-platform security architecture and controls |
 | GEIL-SEC-PAM-001 | Privileged Access Model | Draft | `docs/security/privileged-access-model.md` | Tier 0/1/2 model, admin accounts, groups, workstations, sign-in controls, emergency access |
+| GEIL-SEC-TIER-001 | Enterprise Administrative Tiering | Draft | `docs/security/administrative-tiering.md` | Tier 0/1/2, PAWs, jump hosts, allowed/forbidden logons, and credential exposure controls |
 
 ## Architecture documents
 
@@ -111,6 +116,10 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
 | GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
 | GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy, users, groups, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
+| GEIL-MSC-NAME-001 | Enterprise Naming Standard | Draft | `docs/microsoft-core/active-directory-naming-standard.md` | Naming standards for users, computers, servers, groups, service accounts, GPOs, DNS, DFS, certificates, hypervisors, Proxmox, and MikroTik |
+| GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | AGDLP, AGUDLP, RBAC, group nesting, naming convention, examples, PowerShell, and validation |
+| GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | New hire, termination, department change, privilege elevation, contractors, guests, password reset, lockout, and offboarding |
+| GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Standard service accounts, gMSA, scheduled tasks, IIS, SQL, NPS, Entra Connect, backup, monitoring, rotation, and least privilege |
 | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
 | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model |
 | GEIL-MSC-PKI-001 | AD CS PKI | Draft | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI architecture |
@@ -134,6 +143,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-OPS-MON-001 | Monitoring and Alerting | Draft | `docs/operations/monitoring-alerting.md` | Required monitoring coverage |
 | GEIL-OPS-BACKUP-001 | Backup and Recovery | Draft | `docs/operations/backup-recovery.md` | Recovery requirements |
+| GEIL-OPS-DCBACKUP-001 | Domain Controller Backup and Recovery | Draft | `docs/operations/domain-controller-backup.md` | DC snapshots, System State, Bare Metal, authoritative/non-authoritative restore, and DR guidance |
 | GEIL-OPS-TS-001 | Troubleshooting | Draft | `docs/operations/troubleshooting.md` | Incident triage workflow |
 | GEIL-OPS-SCALE-001 | Scaling Model | Draft | `docs/operations/scaling-model.md` | Growth triggers |
 | GEIL-OPS-SEC-001 | Security Operations | Draft | `docs/operations/security-operations.md` | Security checks and response |
@@ -151,14 +161,14 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 5 |
-| E02 | E02.R04 - HQ Foundation Implementation Runbook | 3 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 7 |
+| E02 | E02.R04 - HQ Foundation Implementation Runbook | 5 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
-| E03 | E03.R01 - Core directory services | 7 |
+| E03 | E03.R01 - Core directory services | 11 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
-| E03 | E03.R03 - Privileged access control plane | 2 |
+| E03 | E03.R03 - Privileged access control plane | 3 |
 | E04 | E04.R01 - Cloud identity and endpoint management | 6 |
-| E05 | E05.R01 - Operations readiness | 7 |
+| E05 | E05.R01 - Operations readiness | 8 |
 
 ## Index maintenance procedure
 

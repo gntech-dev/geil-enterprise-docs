@@ -77,6 +77,10 @@ The first DHCP scope can affect clients on the target VLAN when DHCP relay is en
 
 ## Prerequisites
 
+- [Firewall Rule Matrix](../platform/firewall-rule-matrix.md) and [Enterprise Port Reference](../platform/enterprise-port-reference.md) reviewed for DNS/DHCP flows.
+- [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) completed before DHCP authorization and scope rollout.
+
+
 - [Active Directory Implementation](active-directory-implementation.md) completed.
 - `HQ-DC01` is promoted and healthy.
 - `HQ-DC01` static IP is `172.20.20.11/24`.

@@ -65,6 +65,10 @@ nav:
       - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
       - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
       - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
+      - Firewall Rule Matrix: platform/firewall-rule-matrix.md
+      - Enterprise Port Reference: platform/enterprise-port-reference.md
+      - Windows Server 2025 Golden Template: platform/windows-server-2025-golden-template.md
+      - Windows 11 Enterprise Golden Template: platform/windows-11-enterprise-golden-template.md
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
       - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
@@ -88,6 +92,7 @@ nav:
   - Security:
       - security/index.md
       - Privileged Access Model: security/privileged-access-model.md
+      - Enterprise Administrative Tiering: security/administrative-tiering.md
   - Architecture:
       - architecture/index.md
       - Architecture Principles: architecture/architecture-principles.md
@@ -113,6 +118,10 @@ nav:
       - Windows Server 2025 Baseline: microsoft-core/windows-server-2025-baseline.md
       - Active Directory Implementation: microsoft-core/active-directory-implementation.md
       - Active Directory Organizational Foundation: microsoft-core/active-directory-organizational-foundation.md
+      - Enterprise Naming Standard: microsoft-core/active-directory-naming-standard.md
+      - Enterprise Group Strategy: microsoft-core/group-strategy.md
+      - Enterprise User Lifecycle: microsoft-core/user-lifecycle.md
+      - Enterprise Service Account Standard: microsoft-core/service-account-standard.md
       - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
       - Group Policy Baseline: microsoft-core/group-policy-baseline.md
       - AD CS PKI: microsoft-core/ad-cs-pki.md
@@ -130,6 +139,7 @@ nav:
       - operations/index.md
       - Monitoring and Alerting: operations/monitoring-alerting.md
       - Backup and Recovery: operations/backup-recovery.md
+      - Domain Controller Backup and Recovery: operations/domain-controller-backup.md
       - Troubleshooting: operations/troubleshooting.md
       - Scaling Model: operations/scaling-model.md
       - Security Operations: operations/security-operations.md

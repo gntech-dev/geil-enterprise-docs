@@ -33,6 +33,10 @@ This document defines the GEIL privileged access model for Microsoft-centered en
 
 The model is designed to protect the highest-impact systems first: Active Directory Domain Services, Microsoft Entra ID, PKI, identity synchronization, domain controllers, security tooling, endpoint management, virtualization, network edge, and backup infrastructure.
 
+## Related foundation
+
+This document is implemented with [Enterprise Administrative Tiering](administrative-tiering.md), [Enterprise Group Strategy](../microsoft-core/group-strategy.md), and [Enterprise Service Account Standard](../microsoft-core/service-account-standard.md).
+
 ## Scope
 
 In scope:
