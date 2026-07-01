@@ -136,8 +136,22 @@ Confirm the required objects exist before creating or linking GPOs.
 #### Commands
 
 ```powershell
-Import-Module ActiveDirectory
-Import-Module GroupPolicy
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+foreach ($ModuleName in @("ActiveDirectory","GroupPolicy")) {
+    if (-not (Get-Module -ListAvailable -Name $ModuleName)) { throw "Required module missing: $ModuleName" }
+    Import-Module $ModuleName -ErrorAction Stop
+}
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions for GPO validation/creation."
+}
+
 $RequiredOUs = @(
   "OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me",
   "OU=Servers,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
@@ -145,8 +159,18 @@ $RequiredOUs = @(
   "OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me",
   "OU=Policies,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 )
-foreach ($OU in $RequiredOUs) { Get-ADOrganizationalUnit -Identity $OU | Select-Object Name,DistinguishedName }
+$Results = foreach ($OU in $RequiredOUs) {
+    $Object = Get-ADObject -Identity $OU -ErrorAction SilentlyContinue
+    if ($Object) {
+        [PSCustomObject]@{Status="Existing"; Name=$Object.Name; DistinguishedName=$Object.DistinguishedName; Parent="AD OU validation"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+    }
+    else {
+        [PSCustomObject]@{Status="Failed"; Name=$OU; DistinguishedName=$OU; Parent="AD OU validation"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+    }
+}
+$Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
 Get-Command New-GPO,New-GPLink,Get-GPO
+if ($Results.Status -contains "Failed") { throw "One or more required OUs are missing. Complete the Organizational Foundation guide before creating GPOs." }
 ```
 
 #### Expected result
@@ -166,19 +190,95 @@ Create baseline GPO shells without applying them yet.
 #### Commands — Step 2: Create GPOs before linking
 
 ```powershell
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+
+function Test-GEILModule {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Name)
+    if (-not (Get-Module -ListAvailable -Name $Name)) {
+        throw "Required PowerShell module missing: $Name"
+    }
+    Import-Module $Name -ErrorAction Stop
+}
+
+function Test-GEILDomainContext {
+    [CmdletBinding()]
+    param()
+    $Domain = Get-ADDomain -ErrorAction Stop
+    if ($Domain.DNSRoot -ne "corp.gntech.me") {
+        throw "Unexpected AD domain '$($Domain.DNSRoot)'. Expected corp.gntech.me."
+    }
+    $Domain
+}
+
+function Test-GEILGpoPermission {
+    [CmdletBinding()]
+    param()
+    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $Groups = foreach ($Sid in $Identity.Groups) {
+        try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    }
+    if (-not ($Groups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+        throw "Current user '$($Identity.Name)' lacks approved GPO creation rights. Use Domain Admins, Enterprise Admins, or Group Policy Creator Owners under change control."
+    }
+}
+
+function Ensure-GEILGpo {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Name)
+    $Timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssK"
+    try {
+        $Existing = Get-GPO -Name $Name -ErrorAction SilentlyContinue
+        if ($Existing) {
+            [PSCustomObject]@{Status="Existing"; Name=$Name; DistinguishedName=$Existing.Path; Parent="Group Policy Objects"; Timestamp=$Timestamp; Error=$null}
+            return
+        }
+        $New = New-GPO -Name $Name -ErrorAction Stop
+        [PSCustomObject]@{Status="Created"; Name=$Name; DistinguishedName=$New.Path; Parent="Group Policy Objects"; Timestamp=$Timestamp; Error=$null}
+    }
+    catch {
+        [PSCustomObject]@{Status="Failed"; Name=$Name; DistinguishedName=$null; Parent="Group Policy Objects"; Timestamp=$Timestamp; Error=$_.Exception.Message}
+    }
+}
+
+function Write-GEILSummary {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][object[]]$Results)
+    [PSCustomObject]@{
+        Created  = @($Results | Where-Object Status -eq "Created").Count
+        Existing = @($Results | Where-Object Status -eq "Existing").Count
+        Failed   = @($Results | Where-Object Status -eq "Failed").Count
+        Total    = @($Results).Count
+    }
+}
+
+Test-GEILModule -Name ActiveDirectory
+Test-GEILModule -Name GroupPolicy
+Test-GEILDomainContext | Out-Null
+Test-GEILGpoPermission
+
 $Gpos = @(
   "GEIL-DC-Security-Baseline",
   "GEIL-Server-Security-Baseline",
   "GEIL-Workstation-Security-Baseline",
   "GEIL-Admin-Tier0-Restrictions"
 )
-foreach ($Gpo in $Gpos) {
-  if (-not (Get-GPO -Name $Gpo -ErrorAction SilentlyContinue)) {
-    New-GPO -Name $Gpo | Out-Null
-  }
+
+$Results = foreach ($Gpo in $Gpos) { Ensure-GEILGpo -Name $Gpo }
+$Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
+$Summary = Write-GEILSummary -Results $Results
+$Summary | Format-List Created,Existing,Failed,Total
+
+$Failures = @($Results | Where-Object Status -eq "Failed")
+if ($Failures.Count -gt 0) {
+    $Failures | Format-Table Name,Error -Wrap
+    throw "GPO creation completed with $($Failures.Count) failure(s)."
 }
-Get-GPO -All | Where-Object DisplayName -like "GEIL-*" | Select-Object DisplayName,GpoStatus
 ```
+
 
 #### Rollback — Step 2: Create GPOs before linking
 
@@ -229,12 +329,43 @@ Expected result: filtering is visible and documented. Do not proceed if it would
 #### Commands — Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
 
 ```powershell
-New-GPLink -Name "GEIL-Workstation-Security-Baseline" `
-  -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me" `
-  -LinkEnabled Yes
+[CmdletBinding()]
+param()
 
-Get-GPInheritance -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
+$ErrorActionPreference = "Stop"
+Import-Module ActiveDirectory -ErrorAction Stop
+Import-Module GroupPolicy -ErrorAction Stop
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved GPO link permissions."
+}
+
+$GpoName = "GEIL-Workstation-Security-Baseline"
+$TargetOU = "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
+
+if (-not (Get-ADObject -Identity $TargetOU -ErrorAction SilentlyContinue)) {
+    throw "Target OU does not exist: $TargetOU"
+}
+if (-not (Get-GPO -Name $GpoName -ErrorAction SilentlyContinue)) {
+    throw "GPO does not exist: $GpoName. Complete Step 2 before linking."
+}
+
+$ExistingLink = (Get-GPInheritance -Target $TargetOU).GpoLinks | Where-Object DisplayName -eq $GpoName
+if ($ExistingLink) {
+    [PSCustomObject]@{Status="Existing"; Name=$GpoName; DistinguishedName=$TargetOU; Parent="GPO link target"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+else {
+    New-GPLink -Name $GpoName -Target $TargetOU -LinkEnabled Yes | Out-Null
+    [PSCustomObject]@{Status="Created"; Name=$GpoName; DistinguishedName=$TargetOU; Parent="GPO link target"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+
+Get-GPInheritance -Target $TargetOU
 ```
+
 
 #### Rollback — Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
 

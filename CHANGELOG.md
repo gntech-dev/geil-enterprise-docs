@@ -66,6 +66,8 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Reviewed and documented Active Directory Organizational Foundation OU script production-readiness limitations for domain-controller versus RSAT execution, Domain Admins/Enterprise Admins permission checks, future delegated OU creation, DN validation limits, future `SupportsShouldProcess`/`-WhatIf`, and helper-function reuse.
+- Refactored group, user, service account, GPO, DNS, and DHCP PowerShell examples toward the canonical GEIL Enterprise PowerShell object-creation pattern with module/context/permission checks, parent or container validation, safe existence checks, structured output, summary status, clear failures, verbose-capable script structure, and idempotent behavior where practical.
 - Refactored the Active Directory Organizational Foundation OU deployment script into the canonical GEIL Enterprise PowerShell object-creation pattern with module/domain/permission checks, parent-DN validation, helper functions, verbose logging, structured output, summary counts, failure aggregation, and non-zero termination on failures.
 - Updated PowerShell Operations to require the canonical GEIL Enterprise PowerShell object-creation pattern for future AD automation covering OUs, groups, users, service accounts, computers, GPOs, DNS objects, DHCP objects, and related object creation scripts.
 - Completed repository-wide production readiness audit across `docs/`, `MASTER_PLAN.md`, and `CHANGELOG.md`; corrected high-confidence AD PowerShell dependency/idempotency defects in group strategy, user lifecycle, service account, administrative tiering, and privileged access examples.

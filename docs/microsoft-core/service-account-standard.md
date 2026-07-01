@@ -65,6 +65,14 @@ flowchart TD
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
 $SvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
 $Password = Read-Host "Enter service account password" -AsSecureString
 
@@ -96,12 +104,48 @@ else {
 Prerequisite: KDS root key exists. In a new lab, create it only after understanding replication timing.
 
 ```powershell
-Get-KdsRootKey
-# Lab-only immediate availability. Production should allow normal propagation time.
-# Add-KdsRootKey -EffectiveTime ((Get-Date).AddHours(-10))
-New-ADServiceAccount -Name "gmsa-wac" -DNSHostName "gmsa-wac.corp.gntech.me" `
-    -PrincipalsAllowedToRetrieveManagedPassword "GG-T1-Server-Admins" `
-    -Path "OU=gMSA,OU=Service Accounts,OU=GNTECH,$((Get-ADDomain).DistinguishedName)"
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) { throw "Required module missing: ActiveDirectory" }
+Import-Module ActiveDirectory -ErrorAction Stop
+
+$DomainDN = (Get-ADDomain).DistinguishedName
+$GmsaOU = "OU=gMSA,OU=Service Accounts,OU=GNTECH,$DomainDN"
+$GmsaName = "gmsa-wac"
+$AllowedGroup = "GG-T1-Server-Admins"
+$Timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssK"
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved gMSA creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
+
+if (-not (Get-ADObject -Identity $GmsaOU -ErrorAction SilentlyContinue)) {
+    throw "Required OU missing: $GmsaOU. Complete the Organizational Foundation guide first."
+}
+if (-not (Get-ADGroup -LDAPFilter "(sAMAccountName=$AllowedGroup)" -ErrorAction Stop)) {
+    throw "Required group missing: $AllowedGroup. Complete group strategy before creating this gMSA."
+}
+if (-not (Get-KdsRootKey)) {
+    throw "KDS root key is missing. Create it under approved change control and allow normal replication before creating production gMSAs."
+}
+
+$Existing = Get-ADServiceAccount -LDAPFilter "(sAMAccountName=$GmsaName`$)" -ErrorAction Stop
+if ($Existing) {
+    [PSCustomObject]@{Status="Existing"; Name=$GmsaName; DistinguishedName=$Existing.DistinguishedName; Parent=$GmsaOU; Timestamp=$Timestamp}
+}
+else {
+    $New = New-ADServiceAccount -Name $GmsaName -DNSHostName "$GmsaName.corp.gntech.me" `
+        -PrincipalsAllowedToRetrieveManagedPassword $AllowedGroup `
+        -Path $GmsaOU `
+        -PassThru
+    [PSCustomObject]@{Status="Created"; Name=$GmsaName; DistinguishedName=$New.DistinguishedName; Parent=$GmsaOU; Timestamp=$Timestamp}
+}
 ```
 
 ## Service-specific guidance

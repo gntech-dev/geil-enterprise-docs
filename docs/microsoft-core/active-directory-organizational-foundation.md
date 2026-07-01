@@ -698,6 +698,18 @@ Total    : 23
 
 Second and later runs should show `Existing` for all previously created OUs and should not display `ADIdentityNotFoundException` errors.
 
+
+#### Production-readiness review — Step 3 OU deployment script
+
+| Review area | Assessment | Limitation or future action |
+|---|---|---|
+| Domain controller execution | Supported. `HQ-DC01` already has the Active Directory module and domain context. Running from a DC is acceptable during initial foundation build, but it should be done from an approved Tier 0 session. | For mature operations, prefer a secured management workstation or PAW rather than routine interactive work on a domain controller. |
+| RSAT workstation execution | Supported when the workstation is joined to `corp.gntech.me`, RSAT Active Directory tools are installed, and the operator uses an approved Tier 0 account. | The script intentionally stops on a workgroup host to avoid ambiguous authentication and domain locator failures. |
+| Permission model | The current script requires Domain Admins or Enterprise Admins because initial OU foundation is a Tier 0 bootstrap activity. | A future delegated OU creation model should replace this broad check with a documented delegated group, explicit ACLs on the domain root or managed parent OU, and a validation function that proves the exact rights required by `New-ADOrganizationalUnit`. |
+| `ValidatePattern('^(DC|OU|CN)=')` | The pattern intentionally accepts common AD container DN starts used by this guide and prevents accidental non-DN values. | It is not a complete RFC 4514 DN validator. Future generalized helper modules may replace it with a broader DN parser if GEIL automates configuration naming contexts, application partitions, or escaped leading characters. |
+| `-WhatIf` support | Not implemented in this copy/paste guide version. | Future module-based versions should add `SupportsShouldProcess = $true` and wrap `New-*`, `Set-*`, `Remove-*`, and membership changes in `$PSCmdlet.ShouldProcess()`. |
+| Reusable helper functions | The helper names and behavior are now the canonical GEIL AD PowerShell pattern. | Future guides should reuse these helpers or an extracted signed module rather than copying divergent function variants. |
+
 #### Validate this step — Step 3: Create the OU structure
 
 ```powershell
@@ -752,6 +764,14 @@ This script validates the target OU before creating groups. It uses LDAP filters
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
 $GroupPath = "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
 
 function ConvertTo-LdapFilterValue {
@@ -894,6 +914,14 @@ The command prompts for passwords so no secrets are stored in documentation or s
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
 $StandardUsersOU = "OU=Standard,OU=Users,OU=GNTECH,$DomainDN"
 $Tier0OU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"
 $StandardSvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
@@ -1066,6 +1094,14 @@ Use this command only when the account is needed by an approved implementation g
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
 $StandardSvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
 
 function ConvertTo-LdapFilterValue {

@@ -265,6 +265,14 @@ This procedure creates a named Tier 0 administrative account and places it in th
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
 $UserName = "adm0.j.smith"
 $DisplayName = "J. Smith Tier 0 Admin"
 $TargetOU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"

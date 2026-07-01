@@ -59,6 +59,8 @@ Every production AD object-creation script must:
 13. Continue auditing remaining planned objects after an individual object failure when safe.
 14. Throw at the end if any failures occurred so automation receives a non-zero exit condition.
 15. Include validation, rollback, troubleshooting, and evidence guidance immediately after the command block.
+16. Add `SupportsShouldProcess = $true` and `$PSCmdlet.ShouldProcess()` when the script is promoted from copy/paste guide block to reusable module or advanced function with `-WhatIf` / `-Confirm` support.
+17. Document whether the script requires Domain Admins/Enterprise Admins or a future delegated role, and validate the exact permission model before mutation.
 
 ### Canonical helper-function names
 

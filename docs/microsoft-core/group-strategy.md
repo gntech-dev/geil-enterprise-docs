@@ -87,6 +87,14 @@ AGUDLP adds Universal groups for multi-domain or forest-wide roles. GEIL starts 
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+}
 $SecurityOU = "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
 
 function ConvertTo-LdapFilterValue {

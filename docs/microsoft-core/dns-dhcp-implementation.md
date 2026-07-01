@@ -194,9 +194,36 @@ Secure updates reduce stale or malicious DNS records.
 #### Commands — Step 2: Enforce secure dynamic updates
 
 ```powershell
-Set-DnsServerPrimaryZone -Name "corp.gntech.me" -DynamicUpdate Secure
-Get-DnsServerZone -Name "corp.gntech.me" | Select-Object ZoneName,DynamicUpdate
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+if (-not (Get-Module -ListAvailable -Name DnsServer)) { throw "Required module missing: DnsServer" }
+Import-Module DnsServer -ErrorAction Stop
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
+}
+
+$ZoneName = "corp.gntech.me"
+$Zone = Get-DnsServerZone -Name $ZoneName -ErrorAction SilentlyContinue
+if (-not $Zone) { throw "DNS zone does not exist: $ZoneName. Validate AD DNS before continuing." }
+
+if ($Zone.DynamicUpdate -eq "Secure") {
+    [PSCustomObject]@{Status="Existing"; Name=$ZoneName; DistinguishedName=$Zone.ZoneName; Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+else {
+    Set-DnsServerPrimaryZone -Name $ZoneName -DynamicUpdate Secure -ErrorAction Stop
+    [PSCustomObject]@{Status="Updated"; Name=$ZoneName; DistinguishedName=$ZoneName; Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+
+Get-DnsServerZone -Name $ZoneName | Select-Object ZoneName,DynamicUpdate
 ```
+
 
 #### Expected results — Step 2: Enforce secure dynamic updates
 
@@ -221,10 +248,37 @@ Domain clients should use AD DNS. AD DNS can forward unknown public names upstre
 #### Commands — Step 3: Configure DNS forwarders
 
 ```powershell
-Set-DnsServerForwarder -IPAddress 1.1.1.1,1.0.0.1
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+if (-not (Get-Module -ListAvailable -Name DnsServer)) { throw "Required module missing: DnsServer" }
+Import-Module DnsServer -ErrorAction Stop
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
+}
+
+$RequiredForwarders = @("1.1.1.1","1.0.0.1")
+$ExistingForwarders = @((Get-DnsServerForwarder).IPAddress.IPAddressToString)
+$MissingForwarders = $RequiredForwarders | Where-Object { $_ -notin $ExistingForwarders }
+
+if ($MissingForwarders.Count -gt 0) {
+    Set-DnsServerForwarder -IPAddress $RequiredForwarders -ErrorAction Stop
+    [PSCustomObject]@{Status="Updated"; Name="DNS Forwarders"; DistinguishedName=($RequiredForwarders -join ','); Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+else {
+    [PSCustomObject]@{Status="Existing"; Name="DNS Forwarders"; DistinguishedName=($RequiredForwarders -join ','); Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+
 Get-DnsServerForwarder
 Resolve-DnsName www.microsoft.com
 ```
+
 
 #### Expected results — Step 3: Configure DNS forwarders
 
@@ -252,10 +306,54 @@ Windows DHCP servers must be authorized in AD before serving domain networks.
 #### Commands — Step 4: Install and authorize DHCP
 
 ```powershell
-Install-WindowsFeature DHCP -IncludeManagementTools
-Add-DhcpServerInDC -DnsName "HQ-DC01.corp.gntech.me" -IPAddress 172.20.20.11
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+if (-not (Get-Module -ListAvailable -Name ServerManager)) { throw "Required module missing: ServerManager" }
+Import-Module ServerManager -ErrorAction Stop
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
+}
+
+$ServerFqdn = "HQ-DC01.corp.gntech.me"
+$ServerIp = "172.20.20.11"
+$Results = @()
+
+$Feature = Get-WindowsFeature DHCP
+if (-not $Feature.Installed) {
+    Install-WindowsFeature DHCP -IncludeManagementTools -ErrorAction Stop | Out-Null
+    $Results += [PSCustomObject]@{Status="Created"; Name="DHCP role"; DistinguishedName=$env:COMPUTERNAME; Parent="Windows Features"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+else {
+    $Results += [PSCustomObject]@{Status="Existing"; Name="DHCP role"; DistinguishedName=$env:COMPUTERNAME; Parent="Windows Features"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+
+Import-Module DhcpServer -ErrorAction Stop
+$Authorized = Get-DhcpServerInDC | Where-Object { $_.DnsName -eq $ServerFqdn -and $_.IPAddress -eq $ServerIp }
+if ($Authorized) {
+    $Results += [PSCustomObject]@{Status="Existing"; Name=$ServerFqdn; DistinguishedName=$ServerIp; Parent="AD DHCP Authorization"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+else {
+    Add-DhcpServerInDC -DnsName $ServerFqdn -IPAddress $ServerIp -ErrorAction Stop
+    $Results += [PSCustomObject]@{Status="Created"; Name=$ServerFqdn; DistinguishedName=$ServerIp; Parent="AD DHCP Authorization"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+
+$Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
+[PSCustomObject]@{
+    Created  = @($Results | Where-Object Status -eq "Created").Count
+    Existing = @($Results | Where-Object Status -eq "Existing").Count
+    Failed   = 0
+    Total    = @($Results).Count
+}
 Get-DhcpServerInDC
 ```
+
 
 #### Expected results — Step 4: Install and authorize DHCP
 
@@ -284,22 +382,58 @@ VLAN 30 is the first user/client VLAN and supports `HQ-MGMT01` and `HQ-W11-001` 
 #### Commands — Step 5: Create the VLAN 30 workstation scope
 
 ```powershell
-Add-DhcpServerv4Scope `
-  -Name "WORKSTATIONS-HQ" `
-  -StartRange 172.20.30.50 `
-  -EndRange 172.20.30.250 `
-  -SubnetMask 255.255.255.0 `
-  -State Active
+[CmdletBinding()]
+param()
+
+$ErrorActionPreference = "Stop"
+if (-not (Get-Module -ListAvailable -Name DhcpServer)) { throw "Required module missing: DhcpServer" }
+Import-Module DhcpServer -ErrorAction Stop
+
+$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+}
+if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
+}
+
+$ScopeId = [IPAddress]"172.20.30.0"
+$Results = @()
+$ExistingScope = Get-DhcpServerv4Scope -ScopeId $ScopeId -ErrorAction SilentlyContinue
+if ($ExistingScope) {
+    $Results += [PSCustomObject]@{Status="Existing"; Name=$ExistingScope.Name; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scopes"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+else {
+    Add-DhcpServerv4Scope `
+      -Name "WORKSTATIONS-HQ" `
+      -StartRange 172.20.30.50 `
+      -EndRange 172.20.30.250 `
+      -SubnetMask 255.255.255.0 `
+      -State Active `
+      -ErrorAction Stop
+    $Results += [PSCustomObject]@{Status="Created"; Name="WORKSTATIONS-HQ"; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scopes"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
 
 Set-DhcpServerv4OptionValue `
-  -ScopeId 172.20.30.0 `
+  -ScopeId $ScopeId `
   -Router 172.20.30.1 `
   -DnsServer 172.20.20.11 `
-  -DnsDomain "corp.gntech.me"
+  -DnsDomain "corp.gntech.me" `
+  -ErrorAction Stop
 
-Get-DhcpServerv4Scope
-Get-DhcpServerv4OptionValue -ScopeId 172.20.30.0
+$Results += [PSCustomObject]@{Status="Updated"; Name="WORKSTATIONS-HQ options"; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scope Options"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+$Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
+[PSCustomObject]@{
+    Created  = @($Results | Where-Object Status -eq "Created").Count
+    Existing = @($Results | Where-Object Status -eq "Existing").Count
+    Failed   = @($Results | Where-Object Status -eq "Failed").Count
+    Total    = @($Results).Count
+}
+
+Get-DhcpServerv4Scope -ScopeId $ScopeId
+Get-DhcpServerv4OptionValue -ScopeId $ScopeId
 ```
+
 
 #### Expected results — Step 5: Create the VLAN 30 workstation scope
 
