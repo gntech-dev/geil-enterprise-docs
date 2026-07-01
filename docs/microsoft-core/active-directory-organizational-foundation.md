@@ -1030,9 +1030,13 @@ Exists  svc-backup       svc-backup@gntech.me        CN=svc-backup,OU=Standard,O
 #### Validate this step — Step 5: Create sample users and service accounts
 
 ```powershell
-Get-ADUser -Filter 'SamAccountName -in "gnolasco","admin.gnolasco","svc-backup","svc-monitoring"' `
-    -Properties UserPrincipalName,Enabled,DistinguishedName |
-    Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
+$ExpectedAccounts = "gnolasco","admin.gnolasco","svc-backup","svc-monitoring"
+foreach ($Sam in $ExpectedAccounts) {
+    $EscapedSam = $Sam.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+    Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedSam)" `
+        -Properties UserPrincipalName,Enabled,DistinguishedName |
+        Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
+}
 ```
 
 Expected output:
@@ -1207,10 +1211,15 @@ Exists  svc-print         False   CN=svc-print,OU=Standard,OU=Service Accounts,O
 #### Validate this step — Step 6: Create additional service account placeholders in the correct OU
 
 ```powershell
-Get-ADUser -Filter 'SamAccountName -like "svc-*"' `
-    -SearchBase "OU=Service Accounts,OU=GNTECH,$((Get-ADDomain).DistinguishedName)" `
-    -Properties UserPrincipalName,Enabled,Description |
-    Select-Object SamAccountName,UserPrincipalName,Enabled,Description
+$ExpectedServiceAccounts = "svc-radius","svc-entra-connect","svc-scan","svc-print"
+$ServiceAccountSearchBase = "OU=Service Accounts,OU=GNTECH,$((Get-ADDomain).DistinguishedName)"
+foreach ($Sam in $ExpectedServiceAccounts) {
+    $EscapedSam = $Sam.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+    Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedSam)" `
+        -SearchBase $ServiceAccountSearchBase `
+        -Properties UserPrincipalName,Enabled,Description |
+        Select-Object SamAccountName,UserPrincipalName,Enabled,Description
+}
 ```
 
 Expected output shows `svc-radius`, `svc-entra-connect`, `svc-scan`, and `svc-print` as disabled until used.
@@ -1223,17 +1232,17 @@ STOP. Do not deploy NPS, Entra Connect, scanning, print, monitoring, or backup s
 
 If a reserved service account is not needed, leave it disabled or delete it only after confirming it has never been used.
 
-### Step 7: Move default users and computers if needed
+### Optional Step 7: Review default users and computers
 
-#### Goal — Step 7: Move default users and computers if needed
+#### Goal — Optional default-container review
 
 Move non-built-in objects from default containers into the GEIL OU hierarchy.
 
-#### Why this step matters — Step 7: Move default users and computers if needed
+#### Why this optional review matters
 
 Objects left in default containers may not receive intended GPOs, delegation, lifecycle controls, or Entra ID sync scoping.
 
-#### Commands — Step 7: Move default users and computers if needed
+#### Commands — Review default containers
 
 Review first. Do not move built-in administrative groups or system objects.
 
@@ -1256,15 +1265,15 @@ $StagingComputersOU = "OU=Staging,OU=Computers,OU=GNTECH,$((Get-ADDomain).Distin
 # Get-ADComputer -Identity "SOME-PC" | Move-ADObject -TargetPath $StagingComputersOU
 ```
 
-#### Expected result — Step 7: Move default users and computers if needed
+#### Expected result — Default-container review
 
 Only reviewed, non-built-in objects move. Built-in groups and administrative objects remain in their Microsoft default locations unless a later approved design says otherwise.
 
-#### If validation fails — Step 7: Move default users and computers if needed
+#### If validation fails — Default-container review
 
 STOP. If a built-in object was moved by mistake, record the change and restore it to the appropriate default container before continuing.
 
-#### Rollback — Step 7: Move default users and computers if needed
+#### Rollback — Default-container review
 
 Move the object back to its prior container using `Move-ADObject` and the recorded original distinguished name.
 
@@ -1363,12 +1372,16 @@ Expected result: all OUs from the canonical hierarchy are present.
 ### Validate users
 
 ```powershell
-Get-ADUser -Filter 'UserPrincipalName -like "*@gntech.me"' `
-    -Properties UserPrincipalName,Enabled,DistinguishedName |
-    Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
+$ExpectedAccounts = "gnolasco","admin.gnolasco","svc-backup","svc-monitoring","svc-radius","svc-entra-connect","svc-scan","svc-print"
+foreach ($Sam in $ExpectedAccounts) {
+    $EscapedSam = $Sam.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+    Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedSam)" `
+        -Properties UserPrincipalName,Enabled,DistinguishedName |
+        Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
+}
 ```
 
-Expected result: sample users and service accounts use `@gntech.me` UPNs.
+Expected result: sample users and service accounts use `@gntech.me` UPNs where the account exists. Reserved service account placeholders should remain disabled until their product guide activates them.
 
 ### Validate groups
 
@@ -1396,6 +1409,10 @@ STOP. Do not continue beyond the AD organizational foundation if any validation 
 
 ## Troubleshooting
 
+!!! implementation "Real deployment validation"
+
+    Field deployment confirmed that the OU hierarchy, sample users, and initial security groups create successfully with this guide. Field validation also confirmed that exact account validation should use an LDAP-filter loop per expected `sAMAccountName`; do not use `Get-ADUser -Filter` with a PowerShell-style `-in` list for these checks.
+
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `New-ADOrganizationalUnit` fails with access denied | Account lacks rights or not elevated | Use approved Tier 0 account and elevated PowerShell. |
@@ -1404,7 +1421,7 @@ STOP. Do not continue beyond the AD organizational foundation if any validation 
 | Group creation fails | Target OU missing | Validate `OU=Security,OU=Groups,OU=GNTECH,...`. Step 4 now fails clearly before `New-ADGroup` if the target OU is missing. |
 | `New-ADGroup` reports that the path was not found | `OU=Security,OU=Groups,OU=GNTECH,...` was not created or replicated yet | Run Step 3, validate the OU path, then rerun Step 4. Do not manually change the group path. |
 | User or service account creation fails with object path errors | One of the target OUs is missing | Run Step 3 and verify `OU=Standard,OU=Users`, `OU=Tier 0,OU=Admin`, and `OU=Standard,OU=Service Accounts` before rerunning Steps 5 or 6. |
-| Objects still appear in `CN=Users` | Default containers were not reviewed | Use Step 7; move only approved non-built-in objects. |
+| Objects still appear in `CN=Users` | Default containers were not reviewed | Use Optional Step 7; move only approved non-built-in objects. |
 | Entra sync preview shows `@corp.gntech.me` | UPNs were not remediated | Correct UPNs before enabling sync. |
 
 ## Rollback
