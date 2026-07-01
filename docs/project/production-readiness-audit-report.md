@@ -261,3 +261,74 @@ The following are not unresolved documentation blockers; they are expected field
 ## Audit conclusion
 
 Engineering review passed with HIGH confidence for the corrections made in this audit. No known deployment issue remains undocumented from the Active Directory Organizational Foundation implementation lessons captured in this pass.
+
+## 2026-07-01 Pilot Deployment Corrections
+
+The pilot deployment of `HQ-FW01` and `HQ-DC01` found additional executable-documentation defects after the first audit pass.
+
+### Findings corrected
+
+| ID | Finding | Impact | Correction |
+|---|---|---|---|
+| PDA-20260701-001 | DNS/DHCP guide used a fragile permission regex that fails with `Too many )'s` | Operators could not complete DNS/DHCP steps | Replaced with short-name group validation that does not depend on NetBIOS prefix formatting |
+| PDA-20260701-002 | DNS/DHCP guide used interactive `if`/`else` blocks that fail when pasted line by line | Operators saw `else : The term 'else' is not recognized` | Replaced with independent validation `if` blocks in the verified DNS blocks |
+| PDA-20260701-003 | DNS/DHCP forwarder block was not copy/paste-safe | External name resolution configuration was confusing to validate | Replaced with the pilot-validated forwarder block |
+| PDA-20260701-004 | DHCP authorization and scope blocks reused the same invalid permission pattern | DHCP steps would fail before configuration | Updated with the same short-name permission pattern and explicit end-state validation |
+| PDA-20260701-005 | Group Policy, group strategy, user lifecycle, service-account, tiering, and privileged-access docs reused the fragile permission regex pattern | Future deployment guides could fail in the same way | Repository-wide replacement of the bad pattern with short-name group validation |
+| PDA-20260701-006 | Privileged Access Model used `Get-ADGroup -Filter 'Name -in ...'` and `Get-ADOrganizationalUnit -Identity` validation patterns | Read-only validation could fail or encourage unsafe existence checks | Replaced with explicit `Get-ADObject` validation and LDAP-filtered group checks |
+
+### New quality gate
+
+A new mandatory [Code Block Quality Standard](../governance/code-block-quality-standard.md) was added. The repository now includes two audit tools:
+
+- `tools/audit-doc-codeblocks.sh`
+- `tools/audit-doc-codeblocks.ps1`
+
+The audit tools detect known bad patterns that have already caused GEIL pilot deployment issues. Future implementation changes must pass both:
+
+```bash
+mkdocs build --strict
+./tools/audit-doc-codeblocks.sh .
+```
+
+### Remaining manual validation
+
+The repository has passed static pattern checks, but not every code block has been executed in a clean lab. Guides should remain **Draft** or **Lab Tested** until each guide is executed end-to-end without undocumented corrections.
+
+## 2026-07-01 Pilot DHCP Relay Finding
+
+The pilot deployment validated that DHCP relay on MikroTik CHR is not solved by forward-chain rules alone.
+
+### Finding
+
+`relay-vlan30` was enabled and Windows DHCP had the `WORKSTATIONS-HQ` scope, but VLAN 30 clients received no DHCPOFFER. Packet capture showed the DHCPDISCOVER reaching `vlan30-workstations`; the relay still failed until router-local DHCP relay traffic was explicitly allowed in `chain=input`.
+
+### Correction
+
+The following documentation was updated:
+
+- `docs/microsoft-core/dns-dhcp-implementation.md`
+- `docs/platform/mikrotik-chr-hq-foundation-implementation.md`
+- `docs/platform/mikrotik-chr-hq-foundation-lld.md`
+
+Corrected guidance now requires:
+
+- Remove duplicate `relay-vlan30` entries before recreating relay.
+- Use `local-address=172.20.30.1` for VLAN 30 relay.
+- Disable `relay-vlan40` and `relay-vlan60` until their Windows DHCP scopes exist.
+- Never create relay for VLAN 70 Guest WiFi.
+- Add DHCP relay firewall allowances in `chain=input` before `Default deny unapproved traffic to router`.
+- Validate from a VLAN 30 client with `dhclient -v eth0` and from `HQ-DC01` with `Get-DhcpServerv4Lease -ScopeId 172.20.30.0 -AllLeases`.
+
+### Status
+
+Pilot deployment confirmed the corrected approach works for VLAN 30 DHCP relay.
+
+## Pilot Deployment 001 - Group Policy findings
+
+- Group Policy foundation was validated on `HQ-DC01` after AD, DNS, DHCP, and MikroTik DHCP relay validation.
+- Central Store did not exist initially and was created successfully in SYSVOL.
+- GPO shells were created using the `GP - ...` naming convention.
+- `GP - Baseline - Workstations` was linked only to the Workstations OU.
+- PowerShell Script Block Logging was configured and verified with `Get-GPRegistryValue`.
+- Documentation must preserve the tested `GP - ...` names and avoid reverting to older `GEIL-*` GPO examples.

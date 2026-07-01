@@ -226,6 +226,7 @@ Before creating privileged accounts or assigning privileged group membership, va
 ### PowerShell validation
 
 ```powershell
+Import-Module ActiveDirectory -ErrorAction Stop
 $DomainDN = (Get-ADDomain).DistinguishedName
 $RequiredPaths = @(
     "OU=Admin,OU=GNTECH,$DomainDN",
@@ -235,17 +236,24 @@ $RequiredPaths = @(
     "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
 )
 foreach ($Path in $RequiredPaths) {
-    Get-ADObject -Identity $Path -ErrorAction Stop |
-        Select-Object Name,DistinguishedName,ObjectClass
+    $Object = Get-ADObject -Identity $Path -ErrorAction SilentlyContinue
+    if (-not $Object) {
+        throw "Required OU missing: $Path"
+    }
+    $Object | Select-Object Name,DistinguishedName
 }
 
-$RequiredGroups = "GG-T0-Domain-Admins","GG-T1-Server-Admins","GG-T2-Workstation-Admins"
-foreach ($Group in $RequiredGroups) {
-    $EscapedGroup = $Group.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
-    Get-ADGroup -LDAPFilter "(sAMAccountName=$EscapedGroup)" `
-        -SearchBase "OU=Security,OU=Groups,OU=GNTECH,$DomainDN" `
-        -Properties GroupScope |
-        Select-Object Name,GroupScope,DistinguishedName
+$ExpectedGroups = @(
+    "GG-T0-Domain-Admins",
+    "GG-T1-Server-Admins",
+    "GG-T2-Workstation-Admins"
+)
+foreach ($GroupName in $ExpectedGroups) {
+    $Group = Get-ADGroup -LDAPFilter "(sAMAccountName=$GroupName)" -SearchBase "OU=Security,OU=Groups,OU=GNTECH,$DomainDN" -ErrorAction SilentlyContinue
+    if (-not $Group) {
+        throw "Required privileged access group missing: $GroupName"
+    }
+    $Group | Select-Object Name,GroupScope,DistinguishedName
 }
 ```
 
@@ -275,10 +283,23 @@ $DomainDN = (Get-ADDomain).DistinguishedName
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    try {
+        $Sid.Translate([Security.Principal.NTAccount]).Value
+    }
+    catch {}
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
+
+$AllowedGroupNames = @(
+    "Domain Admins",
+    "Enterprise Admins"
+)
+
+$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
+    ($_ -split "\\")[-1]
+}
+
+if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
 }
 $UserName = "adm0.j.smith"
 $DisplayName = "J. Smith Tier 0 Admin"
@@ -840,15 +861,3 @@ Start with read-only validation. Confirm prerequisites, object existence, canoni
 Continue to:
 
 - [PowerShell Operations](../microsoft-core/powershell-operations.md)
-
-## Deployment Verified
-
-| Field | Value |
-|---|---|
-| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
-| Windows Server version | Not yet field validated |
-| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
-| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
-| Deployment date | Not yet field validated |
-| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
-| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

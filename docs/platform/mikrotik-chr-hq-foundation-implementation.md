@@ -837,41 +837,81 @@ Remove the most recent bad rule by comment, for example:
 
 Prepare DHCP relay without enabling it.
 
-### Step 13: Prepare DHCP relay commands but keep disabled
+### Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 
-#### Goal — Step 13: Prepare DHCP relay commands but keep disabled
+#### Goal — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 
-Document the future relay configuration without sending traffic before DHCP scopes exist.
+Configure DHCP relay safely for approved VLANs after the matching Windows DHCP scopes exist on `HQ-DC01`.
 
-#### Commands — Step 13: Prepare DHCP relay commands but keep disabled
+#### Why this step matters — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 
-Do not run until `HQ-DC01` DHCP scopes exist. When ready, add them disabled first:
+DHCP relay is handled by the router itself. In the GEIL pilot deployment, DHCP relay did not work until DHCP traffic to the relay process was allowed in `chain=input` before the default input deny rule. Forward-chain rules alone did not allow the router-local relay process to receive client requests.
+
+#### Commands — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
+
+Do not enable relay until `HQ-DC01` is authorized and the matching scope exists. For Phase 1, only VLAN 30 is enabled. VLAN 40 and VLAN 60 must remain disabled until their scopes are created.
 
 ```routeros
-/ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 disabled=yes
-/ip dhcp-relay add name=relay-vlan40 interface=vlan40-printers dhcp-server=172.20.20.11 disabled=yes
-/ip dhcp-relay add name=relay-vlan60 interface=vlan60-corpwifi dhcp-server=172.20.20.11 disabled=yes
+/ip dhcp-relay disable [find name="relay-vlan40"]
+/ip dhcp-relay disable [find name="relay-vlan60"]
+/ip dhcp-relay remove [find name="relay-vlan30"]
+/ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 local-address=172.20.30.1 disabled=no
+```
+
+Add the required input-chain firewall rules before the default input deny rule:
+
+```routeros
+/ip firewall filter remove [find comment~"ALLOW DHCP client requests VLAN30"]
+/ip firewall filter remove [find comment~"ALLOW DHCP server replies to CHR relay"]
+/ip firewall filter add chain=input action=accept protocol=udp in-interface=vlan30-workstations src-address=0.0.0.0/32 dst-address=255.255.255.255 dst-port=67 place-before=[find comment="Default deny unapproved traffic to router"] comment="ALLOW DHCP client requests VLAN30 to CHR relay"
+/ip firewall filter add chain=input action=accept protocol=udp src-address=172.20.20.11 dst-address=172.20.30.1 src-port=67 dst-port=67 place-before=[find comment="Default deny unapproved traffic to router"] comment="ALLOW DHCP server replies to CHR relay"
 ```
 
 Never create relay for VLAN 70 Guest WiFi.
 
-#### Validation — Step 13: Prepare DHCP relay commands but keep disabled
+#### Validation — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 
 ```routeros
 /ip/dhcp-relay/print
+/ip/firewall/filter/print where comment~"DHCP"
 ```
 
-Expected result before DHCP scopes exist: no enabled relay entries.
+Expected result:
 
-#### Rollback — Step 13: Prepare DHCP relay commands but keep disabled
+- `relay-vlan30` is enabled.
+- `local-address` is `172.20.30.1`.
+- `relay-vlan40` and `relay-vlan60` are disabled until their scopes exist.
+- DHCP input rules appear before `Default deny unapproved traffic to router`.
+
+From a VLAN 30 client:
+
+```bash
+dhclient -r eth0
+dhclient -v eth0
+ip -4 a
+ip route
+cat /etc/resolv.conf
+```
+
+From `HQ-DC01`:
+
+```powershell
+Get-DhcpServerv4Lease -ScopeId 172.20.30.0 -AllLeases
+```
+
+#### Rollback — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 
 ```routeros
-/ip dhcp-relay remove [find]
+/ip dhcp-relay disable [find name="relay-vlan30"]
+/ip dhcp-relay remove [find name="relay-vlan30"]
+/ip firewall filter remove [find comment~"ALLOW DHCP client requests VLAN30"]
+/ip firewall filter remove [find comment~"ALLOW DHCP server replies to CHR relay"]
 ```
 
-#### Next step — Step 13: Prepare DHCP relay commands but keep disabled
+#### Next step — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 
 Export and snapshot.
+
 
 ### Step 14: Export configuration and capture snapshots
 
@@ -1171,15 +1211,3 @@ Continue to:
 - Canonical GEIL values are visible in outputs.
 - No active OPNsense deployment path remains for Phase 1 firewall work.
 - `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
-
-## Deployment Verified
-
-| Field | Value |
-|---|---|
-| Validated on | RouterOS ordering lessons from field implementation incorporated: Safe Mode, interface lists before consumers, LAN-to-WAN allow before deny, DHCP relay after scopes. |
-| Windows Server version | Not applicable |
-| RouterOS version | RouterOS v7 target |
-| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
-| Deployment date | 2026-07-01 |
-| Deployment notes | RouterOS ordering lessons from field implementation incorporated: Safe Mode, interface lists before consumers, LAN-to-WAN allow before deny, DHCP relay after scopes. |
-| Known caveats | Validate against the exact RouterOS v7 build deployed on HQ-FW01. |
