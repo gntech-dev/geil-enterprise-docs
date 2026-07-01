@@ -65,6 +65,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Fixed Active Directory Organizational Foundation OU creation logic to use idempotent LDAP-filter existence checks, parent-first ordering, and `Created`/`Exists` deployment output instead of noisy `Get-ADOrganizationalUnit -Identity` checks against missing OUs.
 - Updated Microsoft Core dependency graph and existing AD, Windows Server, DNS/DHCP, Group Policy, PKI, NPS, security, environment, roadmap, backlog, document index, release assignment, and navigation references for the Enterprise Identity Foundation sequence.
 - Active Directory Implementation now routes operators to the organizational foundation before DNS/DHCP, Group Policy, PKI, Entra ID sync, or production onboarding. Updated GPO, privileged access, environment specification, roadmap, backlog, document index, release assignments, and navigation for the new AD foundation gate.
 - Audited GEIL after MikroTik CHR and Hybrid UPN architecture changes; corrected stale active firewall, RouterOS export, diagram, document-control, roadmap, backlog, and canonical identity references.

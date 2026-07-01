@@ -363,50 +363,114 @@ Future GPOs, delegation rules, Entra ID sync scope, user onboarding, computer li
 
 #### Commands — Step 3: Create the OU structure
 
+Use this idempotent version. It creates parent OUs before child OUs, checks for existing OUs with `-LDAPFilter` scoped to the intended parent, and prints `Created` or `Exists` for each OU.
+
+!!! implementation "Why this script does not use `Get-ADOrganizationalUnit -Identity` for existence checks"
+
+    `Get-ADOrganizationalUnit -Identity` is appropriate when you already know an OU exists and want to retrieve exactly that object. It is not a good existence check during first-time creation because a missing OU raises `ADIdentityNotFoundException`. Even with `-ErrorAction SilentlyContinue`, repeated missing-parent or missing-child checks can produce noisy deployment output and confuse junior operators. This guide uses `-LDAPFilter` with `-SearchBase` and `-SearchScope OneLevel` so a missing child OU returns no object instead of an exception.
+
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
+function Ensure-GEILOrganizationalUnit {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Path
+    )
+
+    $EscapedName = ConvertTo-LdapFilterValue -Value $Name
+    $ExistingOU = Get-ADOrganizationalUnit `
+        -LDAPFilter "(ou=$EscapedName)" `
+        -SearchBase $Path `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+
+    if ($ExistingOU) {
+        [PSCustomObject]@{
+            Status = "Exists"
+            Name   = $Name
+            Path   = $Path
+            DN     = $ExistingOU.DistinguishedName
+        }
+        return
+    }
+
+    $NewOU = New-ADOrganizationalUnit `
+        -Name $Name `
+        -Path $Path `
+        -ProtectedFromAccidentalDeletion $true `
+        -PassThru
+
+    [PSCustomObject]@{
+        Status = "Created"
+        Name   = $Name
+        Path   = $Path
+        DN     = $NewOU.DistinguishedName
+    }
+}
+
+# Parent-first order is intentional. Do not alphabetize this list.
 $OUs = @(
     @{Name="GNTECH"; Path=$DomainDN},
+
     @{Name="Admin"; Path="OU=GNTECH,$DomainDN"},
     @{Name="Tier 0"; Path="OU=Admin,OU=GNTECH,$DomainDN"},
     @{Name="Tier 1"; Path="OU=Admin,OU=GNTECH,$DomainDN"},
     @{Name="Tier 2"; Path="OU=Admin,OU=GNTECH,$DomainDN"},
+
     @{Name="Users"; Path="OU=GNTECH,$DomainDN"},
     @{Name="Standard"; Path="OU=Users,OU=GNTECH,$DomainDN"},
     @{Name="Executives"; Path="OU=Users,OU=GNTECH,$DomainDN"},
     @{Name="Contractors"; Path="OU=Users,OU=GNTECH,$DomainDN"},
     @{Name="Disabled"; Path="OU=Users,OU=GNTECH,$DomainDN"},
+
     @{Name="Groups"; Path="OU=GNTECH,$DomainDN"},
     @{Name="Security"; Path="OU=Groups,OU=GNTECH,$DomainDN"},
     @{Name="Microsoft 365"; Path="OU=Groups,OU=GNTECH,$DomainDN"},
     @{Name="Role-Based Access"; Path="OU=Groups,OU=GNTECH,$DomainDN"},
+
     @{Name="Computers"; Path="OU=GNTECH,$DomainDN"},
     @{Name="Workstations"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
     @{Name="Servers"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
     @{Name="Staging"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
+
     @{Name="Service Accounts"; Path="OU=GNTECH,$DomainDN"},
     @{Name="Standard"; Path="OU=Service Accounts,OU=GNTECH,$DomainDN"},
     @{Name="gMSA"; Path="OU=Service Accounts,OU=GNTECH,$DomainDN"},
     @{Name="Legacy"; Path="OU=Service Accounts,OU=GNTECH,$DomainDN"},
+
     @{Name="Policies"; Path="OU=GNTECH,$DomainDN"}
 )
 
-foreach ($OU in $OUs) {
-    $DN = "OU=$($OU.Name),$($OU.Path)"
-    if (-not (Get-ADOrganizationalUnit -Identity $DN -ErrorAction SilentlyContinue)) {
-        New-ADOrganizationalUnit `
-            -Name $OU.Name `
-            -Path $OU.Path `
-            -ProtectedFromAccidentalDeletion $true
-    }
+$Results = foreach ($OU in $OUs) {
+    Ensure-GEILOrganizationalUnit -Name $OU.Name -Path $OU.Path
 }
+
+$Results | Format-Table Status,Name,DN -AutoSize
 ```
 
 #### Expected result — Step 3: Create the OU structure
 
-The command completes without errors. Re-running it is safe because existing OUs are skipped.
+First run shows `Created` for new OUs and `Exists` for any OUs already present:
+
+```text
+Status  Name             DN
+------  ----             --
+Created GNTECH           OU=GNTECH,DC=corp,DC=gntech,DC=me
+Created Admin            OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Created Tier 0           OU=Tier 0,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Created Users            OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Created Service Accounts OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me
+```
+
+Second and later runs should show `Exists` for all previously created OUs and should not display `ADIdentityNotFoundException` errors.
 
 #### Validate this step — Step 3: Create the OU structure
 
@@ -830,6 +894,7 @@ STOP. Do not continue beyond the AD organizational foundation if any validation 
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `New-ADOrganizationalUnit` fails with access denied | Account lacks rights or not elevated | Use approved Tier 0 account and elevated PowerShell. |
+| Repeated `ADIdentityNotFoundException` appears while checking OUs | Script used `Get-ADOrganizationalUnit -Identity` against OUs that do not exist yet | Use the Step 3 LDAP-filter idempotent script. It returns no object for missing child OUs, creates parents first, and prints `Created` or `Exists`. |
 | User UPN suffix cannot be selected | `gntech.me` not added to forest | Run Step 2 and re-open ADUC. |
 | Group creation fails | Target OU missing | Validate `OU=Security,OU=Groups,OU=GNTECH,...`. |
 | Objects still appear in `CN=Users` | Default containers were not reviewed | Use Step 7; move only approved non-built-in objects. |
