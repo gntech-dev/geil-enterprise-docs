@@ -322,15 +322,55 @@ Users must sign in as `username@gntech.me`. Entra ID sync must not normalize pro
 
 #### Commands — Step 2: Add the hybrid UPN suffix if missing
 
+This script is idempotent. It reports `Created` when it adds the suffix and `Exists` when the suffix is already present.
+
 ```powershell
+Import-Module ActiveDirectory
+$RequiredUPNSuffix = "gntech.me"
 $Forest = Get-ADForest
-if ($Forest.UPNSuffixes -notcontains "gntech.me") {
-    Set-ADForest -Identity $Forest.Name -UPNSuffixes @{Add="gntech.me"}
+
+if ($Forest.UPNSuffixes -contains $RequiredUPNSuffix) {
+    [PSCustomObject]@{
+        Status = "Exists"
+        Name   = $RequiredUPNSuffix
+        Scope  = $Forest.Name
+    }
 }
-Get-ADForest | Select-Object Name,UPNSuffixes
+else {
+    Set-ADForest -Identity $Forest.Name -UPNSuffixes @{Add=$RequiredUPNSuffix}
+    [PSCustomObject]@{
+        Status = "Created"
+        Name   = $RequiredUPNSuffix
+        Scope  = $Forest.Name
+    }
+}
 ```
 
 #### Expected result — Step 2: Add the hybrid UPN suffix if missing
+
+First run, if `gntech.me` is missing:
+
+```text
+Status  Name      Scope
+------  ----      -----
+Created gntech.me corp.gntech.me
+```
+
+Later runs:
+
+```text
+Status Name      Scope
+------ ----      -----
+Exists gntech.me corp.gntech.me
+```
+
+#### Validate this step — Step 2: Add the hybrid UPN suffix if missing
+
+```powershell
+Get-ADForest | Select-Object Name,UPNSuffixes
+```
+
+Expected validation output:
 
 ```text
 Name        : corp.gntech.me
@@ -521,9 +561,80 @@ Groups provide a stable abstraction for permissions, delegation, WiFi authorizat
 
 #### Commands — Step 4: Create initial groups
 
+This script validates the target OU before creating groups. It uses LDAP filters for existence checks and prints `Created` or `Exists` for every group.
+
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $GroupPath = "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
+
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
+function Assert-GEILOrganizationalUnit {
+    param([Parameter(Mandatory)][string]$DistinguishedName)
+
+    $ParentPath = $DistinguishedName -replace '^OU=[^,]+,',''
+    $OuName = ($DistinguishedName -split ',',2)[0] -replace '^OU='
+    $EscapedName = ConvertTo-LdapFilterValue -Value $OuName
+    $OU = Get-ADOrganizationalUnit `
+        -LDAPFilter "(ou=$EscapedName)" `
+        -SearchBase $ParentPath `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+
+    if (-not $OU) {
+        throw "Required OU is missing: $DistinguishedName. Run and validate Step 3 before creating groups."
+    }
+
+    $OU
+}
+
+function Ensure-GEILGroup {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Path,
+        [Parameter(Mandatory)][string]$Description
+    )
+
+    $EscapedName = ConvertTo-LdapFilterValue -Value $Name
+    $ExistingGroup = Get-ADGroup `
+        -LDAPFilter "(sAMAccountName=$EscapedName)" `
+        -SearchBase $Path `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+
+    if ($ExistingGroup) {
+        [PSCustomObject]@{
+            Status = "Exists"
+            Name   = $Name
+            Path   = $Path
+            DN     = $ExistingGroup.DistinguishedName
+        }
+        return
+    }
+
+    $NewGroup = New-ADGroup `
+        -Name $Name `
+        -SamAccountName $Name `
+        -GroupScope Global `
+        -GroupCategory Security `
+        -Path $Path `
+        -Description $Description `
+        -PassThru
+
+    [PSCustomObject]@{
+        Status = "Created"
+        Name   = $Name
+        Path   = $Path
+        DN     = $NewGroup.DistinguishedName
+    }
+}
+
+Assert-GEILOrganizationalUnit -DistinguishedName $GroupPath | Out-Null
 
 $Groups = @(
     @{Name="GG-T0-Domain-Admins"; Description="Tier 0 domain administration eligibility"},
@@ -537,17 +648,23 @@ $Groups = @(
     @{Name="GG-FileShare-HR-RW"; Description="HR file share read/write access"}
 )
 
-foreach ($Group in $Groups) {
-    if (-not (Get-ADGroup -LDAPFilter "(sAMAccountName=$($Group.Name))" -ErrorAction SilentlyContinue)) {
-        New-ADGroup `
-            -Name $Group.Name `
-            -SamAccountName $Group.Name `
-            -GroupScope Global `
-            -GroupCategory Security `
-            -Path $GroupPath `
-            -Description $Group.Description
-    }
+$GroupResults = foreach ($Group in $Groups) {
+    Ensure-GEILGroup -Name $Group.Name -Path $GroupPath -Description $Group.Description
 }
+
+$GroupResults | Format-Table Status,Name,DN -AutoSize
+```
+
+#### Expected result — Step 4: Create initial groups
+
+First run shows `Created` for new groups. Later runs show `Exists` and do not create duplicates.
+
+```text
+Status  Name                       DN
+------  ----                       --
+Created GG-T0-Domain-Admins        CN=GG-T0-Domain-Admins,OU=Security,OU=Groups,OU=GNTECH,...
+Created GG-T1-Server-Admins        CN=GG-T1-Server-Admins,OU=Security,OU=Groups,OU=GNTECH,...
+Exists  GG-Helpdesk                CN=GG-Helpdesk,OU=Security,OU=Groups,OU=GNTECH,...
 ```
 
 #### Validate this step — Step 4: Create initial groups
@@ -562,7 +679,7 @@ Expected result includes all nine `GG-*` groups listed above.
 
 #### If validation fails — Step 4: Create initial groups
 
-STOP. Do not assign permissions, delegation, WiFi, VPN, or file share access until the correct groups exist in the correct OU.
+STOP. Do not assign permissions, delegation, WiFi, VPN, or file share access until the correct groups exist in the correct OU. If the script reports that `OU=Security,OU=Groups,OU=GNTECH,...` is missing, return to Step 3 and create the OU hierarchy first.
 
 #### Rollback — Step 4: Create initial groups
 
@@ -586,13 +703,86 @@ The sample accounts prove the OU model, UPN suffix, administrative tiering, and 
 
 #### Commands — Step 5: Create sample users and service accounts
 
-The command prompts for passwords so no secrets are stored in documentation or shell history.
+The command prompts for passwords so no secrets are stored in documentation or shell history. It validates every target OU before creating accounts, uses LDAP-filter existence checks, and prints `Created` or `Exists` for each account.
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $StandardUsersOU = "OU=Standard,OU=Users,OU=GNTECH,$DomainDN"
 $Tier0OU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"
 $StandardSvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
+
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
+function Assert-GEILOrganizationalUnit {
+    param([Parameter(Mandatory)][string]$DistinguishedName)
+
+    $ParentPath = $DistinguishedName -replace '^OU=[^,]+,',''
+    $OuName = ($DistinguishedName -split ',',2)[0] -replace '^OU='
+    $EscapedName = ConvertTo-LdapFilterValue -Value $OuName
+    $OU = Get-ADOrganizationalUnit `
+        -LDAPFilter "(ou=$EscapedName)" `
+        -SearchBase $ParentPath `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+
+    if (-not $OU) {
+        throw "Required OU is missing: $DistinguishedName. Run and validate Step 3 before creating users or service accounts."
+    }
+
+    $OU
+}
+
+function Ensure-GEILUser {
+    param(
+        [Parameter(Mandatory)][hashtable]$User
+    )
+
+    $EscapedSam = ConvertTo-LdapFilterValue -Value $User.Sam
+    $ExistingUser = Get-ADUser `
+        -LDAPFilter "(sAMAccountName=$EscapedSam)" `
+        -SearchBase $DomainDN `
+        -ErrorAction Stop
+
+    if ($ExistingUser) {
+        [PSCustomObject]@{
+            Status = "Exists"
+            Sam    = $User.Sam
+            UPN    = $ExistingUser.UserPrincipalName
+            DN     = $ExistingUser.DistinguishedName
+        }
+        return
+    }
+
+    $NewUser = New-ADUser `
+        -Name $User.Name `
+        -SamAccountName $User.Sam `
+        -UserPrincipalName $User.UPN `
+        -GivenName $User.GivenName `
+        -Surname $User.Surname `
+        -Path $User.Path `
+        -Description $User.Description `
+        -AccountPassword $User.Password `
+        -Enabled $User.Enabled `
+        -ChangePasswordAtLogon $User.ChangePassword `
+        -PassThru
+
+    [PSCustomObject]@{
+        Status = "Created"
+        Sam    = $User.Sam
+        UPN    = $User.UPN
+        DN     = $NewUser.DistinguishedName
+    }
+}
+
+$RequiredUserOUs = @($StandardUsersOU,$Tier0OU,$StandardSvcOU)
+foreach ($OU in $RequiredUserOUs) {
+    Assert-GEILOrganizationalUnit -DistinguishedName $OU | Out-Null
+}
 
 $UserPassword = Read-Host "Enter temporary password for sample human users" -AsSecureString
 $ServicePassword = Read-Host "Enter temporary password for sample service accounts" -AsSecureString
@@ -604,26 +794,24 @@ $Users = @(
     @{Name="svc-monitoring"; Sam="svc-monitoring"; UPN="svc-monitoring@gntech.me"; GivenName="svc"; Surname="monitoring"; Path=$StandardSvcOU; Description="Monitoring service account - least privilege only"; Password=$ServicePassword; Enabled=$true; ChangePassword=$false}
 )
 
-foreach ($User in $Users) {
-    if (-not (Get-ADUser -LDAPFilter "(sAMAccountName=$($User.Sam))" -ErrorAction SilentlyContinue)) {
-        New-ADUser `
-            -Name $User.Name `
-            -SamAccountName $User.Sam `
-            -UserPrincipalName $User.UPN `
-            -GivenName $User.GivenName `
-            -Surname $User.Surname `
-            -Path $User.Path `
-            -Description $User.Description `
-            -AccountPassword $User.Password `
-            -Enabled $User.Enabled `
-            -ChangePasswordAtLogon $User.ChangePassword
-    }
+$UserResults = foreach ($User in $Users) {
+    Ensure-GEILUser -User $User
 }
+
+$UserResults | Format-Table Status,Sam,UPN,DN -AutoSize
 ```
 
 #### Expected result — Step 5: Create sample users and service accounts
 
-The sample accounts are created in the intended OUs and use `@gntech.me` UPNs.
+The sample accounts are created in the intended OUs and use `@gntech.me` UPNs. Re-running the script shows `Exists` instead of creating duplicates.
+
+```text
+Status  Sam              UPN                         DN
+------  ---              ---                         --
+Created gnolasco         gnolasco@gntech.me          CN=GNolasco,OU=Standard,OU=Users,OU=GNTECH,...
+Created admin.gnolasco   admin.gnolasco@gntech.me    CN=Admin GNolasco,OU=Tier 0,OU=Admin,OU=GNTECH,...
+Exists  svc-backup       svc-backup@gntech.me        CN=svc-backup,OU=Standard,OU=Service Accounts,OU=GNTECH,...
+```
 
 #### Validate this step — Step 5: Create sample users and service accounts
 
@@ -646,15 +834,31 @@ svc-monitoring   svc-monitoring@gntech.me    True   CN=svc-monitoring,OU=Standar
 
 #### If validation fails — Step 5: Create sample users and service accounts
 
-STOP. Do not proceed to Entra ID sync, service deployment, or Group Policy security filtering until user UPNs and OU placement are correct.
+STOP. Do not proceed to Entra ID sync, service deployment, or Group Policy security filtering until user UPNs and OU placement are correct. If a required target OU is missing, return to Step 3 and rerun the OU creation script.
 
 #### Rollback — Step 5: Create sample users and service accounts
 
 If uncertain, disable sample users instead of deleting them:
 
 ```powershell
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
 "gnolasco","admin.gnolasco","svc-backup","svc-monitoring" |
-    ForEach-Object { Disable-ADAccount -Identity $_ }
+    ForEach-Object {
+        $EscapedSam = ConvertTo-LdapFilterValue -Value $_
+        $Account = Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedSam)" -ErrorAction Stop
+        if ($Account) {
+            Disable-ADAccount -Identity $Account.DistinguishedName
+            [PSCustomObject]@{Status="Disabled"; Sam=$_; DN=$Account.DistinguishedName}
+        }
+        else {
+            [PSCustomObject]@{Status="NotFound"; Sam=$_; DN=$null}
+        }
+    }
 ```
 
 Only delete accounts when you have verified they are not used in permissions, services, sync, scheduled tasks, NPS, backup, monitoring, or file ACLs.
@@ -671,11 +875,81 @@ Creating the naming plan early prevents ad hoc service identities later. Some ac
 
 #### Commands — Step 6: Create additional service account placeholders in the correct OU
 
-Use this command only when the account is needed by an approved implementation guide. It creates disabled accounts by default so they cannot be used before service-specific permissions are defined.
+Use this command only when the account is needed by an approved implementation guide. It validates the target OU first and creates disabled accounts by default so they cannot be used before service-specific permissions are defined.
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $StandardSvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
+
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
+function Assert-GEILOrganizationalUnit {
+    param([Parameter(Mandatory)][string]$DistinguishedName)
+
+    $ParentPath = $DistinguishedName -replace '^OU=[^,]+,',''
+    $OuName = ($DistinguishedName -split ',',2)[0] -replace '^OU='
+    $EscapedName = ConvertTo-LdapFilterValue -Value $OuName
+    $OU = Get-ADOrganizationalUnit `
+        -LDAPFilter "(ou=$EscapedName)" `
+        -SearchBase $ParentPath `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+
+    if (-not $OU) {
+        throw "Required OU is missing: $DistinguishedName. Run and validate Step 3 before creating service account placeholders."
+    }
+
+    $OU
+}
+
+function Ensure-GEILDisabledServiceAccount {
+    param(
+        [Parameter(Mandatory)][string]$Sam,
+        [Parameter(Mandatory)][string]$Description,
+        [Parameter(Mandatory)][securestring]$Password,
+        [Parameter(Mandatory)][string]$Path
+    )
+
+    $EscapedSam = ConvertTo-LdapFilterValue -Value $Sam
+    $ExistingUser = Get-ADUser `
+        -LDAPFilter "(sAMAccountName=$EscapedSam)" `
+        -SearchBase $DomainDN `
+        -ErrorAction Stop
+
+    if ($ExistingUser) {
+        [PSCustomObject]@{
+            Status  = "Exists"
+            Sam     = $Sam
+            Enabled = $ExistingUser.Enabled
+            DN      = $ExistingUser.DistinguishedName
+        }
+        return
+    }
+
+    $NewUser = New-ADUser `
+        -Name $Sam `
+        -SamAccountName $Sam `
+        -UserPrincipalName "$Sam@gntech.me" `
+        -Path $Path `
+        -Description $Description `
+        -AccountPassword $Password `
+        -Enabled $false `
+        -PassThru
+
+    [PSCustomObject]@{
+        Status  = "Created"
+        Sam     = $Sam
+        Enabled = $false
+        DN      = $NewUser.DistinguishedName
+    }
+}
+
+Assert-GEILOrganizationalUnit -DistinguishedName $StandardSvcOU | Out-Null
 $DisabledServicePassword = Read-Host "Enter temporary password for disabled service account placeholders" -AsSecureString
 
 $ServiceAccounts = @(
@@ -685,23 +959,28 @@ $ServiceAccounts = @(
     @{Sam="svc-print"; Description="Reserved for print service integration"}
 )
 
-foreach ($Svc in $ServiceAccounts) {
-    if (-not (Get-ADUser -LDAPFilter "(sAMAccountName=$($Svc.Sam))" -ErrorAction SilentlyContinue)) {
-        New-ADUser `
-            -Name $Svc.Sam `
-            -SamAccountName $Svc.Sam `
-            -UserPrincipalName "$($Svc.Sam)@gntech.me" `
-            -Path $StandardSvcOU `
-            -Description $Svc.Description `
-            -AccountPassword $DisabledServicePassword `
-            -Enabled $false
-    }
+$ServiceAccountResults = foreach ($Svc in $ServiceAccounts) {
+    Ensure-GEILDisabledServiceAccount `
+        -Sam $Svc.Sam `
+        -Description $Svc.Description `
+        -Password $DisabledServicePassword `
+        -Path $StandardSvcOU
 }
+
+$ServiceAccountResults | Format-Table Status,Sam,Enabled,DN -AutoSize
 ```
 
 #### Expected result — Step 6: Create additional service account placeholders in the correct OU
 
-Reserved service accounts exist but are disabled until their implementation guide defines permissions and activation criteria.
+Reserved service accounts exist but are disabled until their implementation guide defines permissions and activation criteria. Re-running the script shows `Exists` and does not create duplicates.
+
+```text
+Status  Sam               Enabled DN
+------  ---               ------- --
+Created svc-radius        False   CN=svc-radius,OU=Standard,OU=Service Accounts,OU=GNTECH,...
+Created svc-entra-connect False   CN=svc-entra-connect,OU=Standard,OU=Service Accounts,OU=GNTECH,...
+Exists  svc-print         False   CN=svc-print,OU=Standard,OU=Service Accounts,OU=GNTECH,...
+```
 
 #### Validate this step — Step 6: Create additional service account placeholders in the correct OU
 
@@ -713,6 +992,10 @@ Get-ADUser -Filter 'SamAccountName -like "svc-*"' `
 ```
 
 Expected output shows `svc-radius`, `svc-entra-connect`, `svc-scan`, and `svc-print` as disabled until used.
+
+#### If validation fails — Step 6: Create additional service account placeholders in the correct OU
+
+STOP. Do not deploy NPS, Entra Connect, scanning, print, monitoring, or backup services with undocumented accounts. If the service account OU is missing, return to Step 3.
 
 #### Rollback — Step 6: Create additional service account placeholders in the correct OU
 
@@ -896,7 +1179,9 @@ STOP. Do not continue beyond the AD organizational foundation if any validation 
 | `New-ADOrganizationalUnit` fails with access denied | Account lacks rights or not elevated | Use approved Tier 0 account and elevated PowerShell. |
 | Repeated `ADIdentityNotFoundException` appears while checking OUs | Script used `Get-ADOrganizationalUnit -Identity` against OUs that do not exist yet | Use the Step 3 LDAP-filter idempotent script. It returns no object for missing child OUs, creates parents first, and prints `Created` or `Exists`. |
 | User UPN suffix cannot be selected | `gntech.me` not added to forest | Run Step 2 and re-open ADUC. |
-| Group creation fails | Target OU missing | Validate `OU=Security,OU=Groups,OU=GNTECH,...`. |
+| Group creation fails | Target OU missing | Validate `OU=Security,OU=Groups,OU=GNTECH,...`. Step 4 now fails clearly before `New-ADGroup` if the target OU is missing. |
+| `New-ADGroup` reports that the path was not found | `OU=Security,OU=Groups,OU=GNTECH,...` was not created or replicated yet | Run Step 3, validate the OU path, then rerun Step 4. Do not manually change the group path. |
+| User or service account creation fails with object path errors | One of the target OUs is missing | Run Step 3 and verify `OU=Standard,OU=Users`, `OU=Tier 0,OU=Admin`, and `OU=Standard,OU=Service Accounts` before rerunning Steps 5 or 6. |
 | Objects still appear in `CN=Users` | Default containers were not reviewed | Use Step 7; move only approved non-built-in objects. |
 | Entra sync preview shows `@corp.gntech.me` | UPNs were not remediated | Correct UPNs before enabling sync. |
 
@@ -913,10 +1198,22 @@ Rollback depends on object state:
 Safe disable command for sample accounts:
 
 ```powershell
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
 "gnolasco","admin.gnolasco","svc-backup","svc-monitoring","svc-radius","svc-entra-connect","svc-scan","svc-print" |
     ForEach-Object {
-        if (Get-ADUser -Identity $_ -ErrorAction SilentlyContinue) {
-            Disable-ADAccount -Identity $_
+        $EscapedSam = ConvertTo-LdapFilterValue -Value $_
+        $Account = Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedSam)" -ErrorAction Stop
+        if ($Account) {
+            Disable-ADAccount -Identity $Account.DistinguishedName
+            [PSCustomObject]@{Status="Disabled"; Sam=$_; DN=$Account.DistinguishedName}
+        }
+        else {
+            [PSCustomObject]@{Status="NotFound"; Sam=$_; DN=$null}
         }
     }
 ```
