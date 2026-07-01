@@ -445,3 +445,15 @@ Use the least destructive rollback first: remove the last bad change, disable ra
 Continue to:
 
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

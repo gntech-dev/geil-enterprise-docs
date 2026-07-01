@@ -137,3 +137,15 @@ Capture VM config, update status, driver status, Defender status, Sysprep comman
 ## Next Guide
 
 Use this template for controlled workstation domain join, GPO validation, Intune enrollment, and Windows Hello for Business testing.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Proxmox VE 9 target |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

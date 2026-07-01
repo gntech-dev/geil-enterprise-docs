@@ -53,11 +53,15 @@ The current canonical model after ADR-0002 and ADR-0003 is: firewall `HQ-FW01` r
 
 GEIL implementation-phase documentation must pass engineering validation as well as MkDocs validation. The current repository-wide checkpoint is recorded in [Production Readiness Audit Report](production-readiness-audit-report.md). Future implementation guide changes must treat field deployment issues as engineering bugs, correct all affected documents, and avoid committing LOW-confidence deployment logic.
 
+## Documentation Quality Initiative checkpoint
+
+The permanent DQI gate is defined in [Code Block Quality Standard](../governance/code-block-quality-standard.md). Implementation-guide changes must run `./tools/audit-doc-codeblocks.sh` and `mkdocs build --strict`; both must pass before commit.
+
 ## Capability-first roadmap
 
 | Epic | Release | Capability | Status | Evidence / Primary Documents |
 |---|---|---|---|---|
-| E00 Documentation Governance and Publishing | E00.R01 | Governance foundation | Done | [Project Charter](project-charter.md), [Environment Specification](environment-specification.md), [Document Index](document-index.md), [Documentation Backlog](documentation-backlog.md), [Epic and Release Architecture](epic-release-architecture.md), [Production Readiness Audit Report](production-readiness-audit-report.md) |
+| E00 Documentation Governance and Publishing | E00.R01 | Governance foundation | Done | [Project Charter](project-charter.md), [Environment Specification](environment-specification.md), [Document Index](document-index.md), [Documentation Backlog](documentation-backlog.md), [Epic and Release Architecture](epic-release-architecture.md), [Production Readiness Audit Report](production-readiness-audit-report.md), [Code Block Quality Standard](../governance/code-block-quality-standard.md) |
 | E00 Documentation Governance and Publishing | E00.R01 | Visual documentation standard | Done | [Visual Documentation Standard](../governance/visual-documentation-standard.md) |
 | E00 Documentation Governance and Publishing | E00.R01 | Implementation guide standard | Done | [Implementation Guide Standard](../governance/implementation-guide-standard.md) |
 | E00 Documentation Governance and Publishing | E00.R01 | Educational documentation standard | Done | [Educational Documentation Standard](../governance/educational-documentation-standard.md) |

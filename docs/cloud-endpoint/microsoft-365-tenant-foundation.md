@@ -55,3 +55,15 @@ Do not delete emergency access accounts. For bad role assignments, remove the ro
 ## Identity namespace prerequisite
 
 The Microsoft 365 verified domain `gntech.me` is the production user authentication namespace. Active Directory uses `corp.gntech.me` for the forest and DNS, but users sign in to Microsoft 365 as `username@gntech.me`.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

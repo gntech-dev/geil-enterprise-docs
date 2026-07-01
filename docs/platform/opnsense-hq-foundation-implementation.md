@@ -970,3 +970,15 @@ STOP. Do not use this guide to deploy the active GEIL Phase 1 firewall.
 ```
 
 Use the MikroTik CHR implementation guide for active deployment. Keep this page only as historical/alternative reference.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

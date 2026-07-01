@@ -1171,3 +1171,15 @@ Continue to:
 - Canonical GEIL values are visible in outputs.
 - No active OPNsense deployment path remains for Phase 1 firewall work.
 - `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | RouterOS ordering lessons from field implementation incorporated: Safe Mode, interface lists before consumers, LAN-to-WAN allow before deny, DHCP relay after scopes. |
+| Windows Server version | Not applicable |
+| RouterOS version | RouterOS v7 target |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | 2026-07-01 |
+| Deployment notes | RouterOS ordering lessons from field implementation incorporated: Safe Mode, interface lists before consumers, LAN-to-WAN allow before deny, DHCP relay after scopes. |
+| Known caveats | Validate against the exact RouterOS v7 build deployed on HQ-FW01. |

@@ -51,3 +51,15 @@ Remove device from assignment group or exclude from policy. For Autopilot issues
 ## Identity namespace prerequisite
 
 Intune enrollment and Windows 11 cloud sign-in use the Microsoft 365 verified domain `gntech.me`. Do not use `username@corp.gntech.me` as the production enrollment identity.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

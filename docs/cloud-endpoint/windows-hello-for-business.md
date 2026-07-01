@@ -55,3 +55,15 @@ Disable WHfB assignment for pilot group in Intune. Users can continue password s
 ## Identity namespace prerequisite
 
 Windows Hello for Business must use the same user-facing sign-in namespace as Microsoft 365 and Entra ID. For GEIL, users sign in as `username@gntech.me`; the AD forest remains `corp.gntech.me`, and legacy logon remains `GNTECH\username`.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

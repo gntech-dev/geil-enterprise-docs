@@ -235,11 +235,18 @@ $RequiredPaths = @(
     "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
 )
 foreach ($Path in $RequiredPaths) {
-    Get-ADOrganizationalUnit -Identity $Path | Select-Object Name,DistinguishedName
+    Get-ADObject -Identity $Path -ErrorAction Stop |
+        Select-Object Name,DistinguishedName,ObjectClass
 }
-Get-ADGroup -Filter 'Name -in "GG-T0-Domain-Admins","GG-T1-Server-Admins","GG-T2-Workstation-Admins"' |
-    Select-Object Name,GroupScope,DistinguishedName |
-    Sort-Object Name
+
+$RequiredGroups = "GG-T0-Domain-Admins","GG-T1-Server-Admins","GG-T2-Workstation-Admins"
+foreach ($Group in $RequiredGroups) {
+    $EscapedGroup = $Group.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+    Get-ADGroup -LDAPFilter "(sAMAccountName=$EscapedGroup)" `
+        -SearchBase "OU=Security,OU=Groups,OU=GNTECH,$DomainDN" `
+        -Properties GroupScope |
+        Select-Object Name,GroupScope,DistinguishedName
+}
 ```
 
 ### Expected result
@@ -270,7 +277,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 $UserName = "adm0.j.smith"
@@ -833,3 +840,15 @@ Start with read-only validation. Confirm prerequisites, object existence, canoni
 Continue to:
 
 - [PowerShell Operations](../microsoft-core/powershell-operations.md)
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

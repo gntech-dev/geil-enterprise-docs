@@ -148,7 +148,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions for GPO validation/creation."
 }
 
@@ -221,7 +221,7 @@ function Test-GEILGpoPermission {
     $Groups = foreach ($Sid in $Identity.Groups) {
         try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
     }
-    if (-not ($Groups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+    if (-not ($Groups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
         throw "Current user '$($Identity.Name)' lacks approved GPO creation rights. Use Domain Admins, Enterprise Admins, or Group Policy Creator Owners under change control."
     }
 }
@@ -340,7 +340,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved GPO link permissions."
 }
 
@@ -558,3 +558,15 @@ Continue to:
 - Canonical GEIL values are visible in outputs.
 - No active OPNsense deployment path remains for Phase 1 firewall work.
 - `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Windows Server version | Not yet field validated |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | Not yet field validated |
+| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
+| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |

@@ -277,6 +277,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `governance/visual-documentation-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/implementation-guide-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/educational-documentation-standard.md` |
+| E00.R01 - Documentation governance foundation | E00 | `governance/code-block-quality-standard.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/deployment-style-guide.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/backlog.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/roadmap.md` |

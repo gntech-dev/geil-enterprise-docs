@@ -205,7 +205,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
@@ -259,7 +259,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
@@ -317,7 +317,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
@@ -393,7 +393,7 @@ $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
     try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
@@ -474,6 +474,7 @@ Expected result: approved scopes exist and `HQ-DC01.corp.gntech.me` is authorize
 Run on `HQ-FW01` only after the prerequisite validation succeeds:
 
 ```routeros
+/interface vlan print where name=vlan30-workstations
 /ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 disabled=yes
 /ip dhcp-relay print
 /ip dhcp-relay enable relay-vlan30
@@ -483,6 +484,8 @@ Run on `HQ-FW01` only after the prerequisite validation succeeds:
 Add VLAN 40 and VLAN 60 relay only after their scopes exist:
 
 ```routeros
+/interface vlan print where name=vlan40-printers
+/interface vlan print where name=vlan60-corpwifi
 /ip dhcp-relay add name=relay-vlan40 interface=vlan40-printers dhcp-server=172.20.20.11 disabled=yes
 /ip dhcp-relay add name=relay-vlan60 interface=vlan60-corpwifi dhcp-server=172.20.20.11 disabled=yes
 ```
@@ -597,7 +600,7 @@ Get-DhcpServerInDC
 
 ```text
 ScopeId       SubnetMask      Name
-172.20.30.0   255.255.255.0   VLAN30-Workstations
+172.20.30.0   255.255.255.0   WORKSTATIONS-HQ
 ```
 
 `Get-DhcpServerInDC` includes `HQ-DC01.corp.gntech.me` and `172.20.20.11`.
@@ -704,3 +707,15 @@ When a GUI action appears in this guide, capture the screenshot at that point in
 Continue to:
 
 - [Group Policy Baseline](group-policy-baseline.md)
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | Real deployment exposed broken validation/name patterns; guide now uses canonical DHCP scope name and idempotent DNS/DHCP blocks. Revalidate end-to-end before enabling additional relays. |
+| Windows Server version | Windows Server 2025 clean deployment target |
+| RouterOS version | RouterOS v7 target |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | 2026-07-01 |
+| Deployment notes | Real deployment exposed broken validation/name patterns; guide now uses canonical DHCP scope name and idempotent DNS/DHCP blocks. Revalidate end-to-end before enabling additional relays. |
+| Known caveats | DHCP relay must remain disabled/absent until Windows DHCP authorization and scopes validate. |

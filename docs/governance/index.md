@@ -33,6 +33,7 @@ Before implementing changes in this area, read the applicable standard, confirm 
 
 ## Documentation quality gate
 
+- [Code Block Quality Standard](code-block-quality-standard.md) defines mandatory execution-correctness gates and the automated code-block audit.
 - Implementation steps must include expected results.
 - PowerShell must include validation and rollback where practical.
 - Known GNTECH values must use the canonical values in the [Environment Specification](../project/environment-specification.md); only approved secret or deployment-unknown placeholders are permitted.
