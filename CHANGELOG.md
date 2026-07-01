@@ -1,15 +1,4 @@
 # Changelog
-## 2026-07-01 - Pilot Deployment 001 Group Policy Foundation validation
-
-- Validated the initial Group Policy foundation on `HQ-DC01`.
-- Confirmed the domain initially contained only `Default Domain Policy` and `Default Domain Controllers Policy`.
-- Confirmed `OU=GNTECH` and child computer OUs had no GEIL GPO links before pilot linking.
-- Validated `dcdiag /test:sysvolcheck`, `dcdiag /test:netlogons`, and `gpupdate /force`.
-- Added Central Store creation guidance for `\\corp.gntech.me\SYSVOL\corp.gntech.me\Policies\PolicyDefinitions`.
-- Replaced old `GEIL-*` GPO names with the pilot-validated `GP - ...` naming convention.
-- Documented creation of pilot GPO shells and the validated link from `GP - Baseline - Workstations` to the Workstations OU.
-- Documented PowerShell Script Block Logging validation through `Get-GPRegistryValue`.
-- Reinforced copy/paste-safe PowerShell patterns without fragile regex or fragmented `if/else` examples.
 
 All notable changes to GEIL are documented in this file.
 
@@ -77,6 +66,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Implemented the permanent GEIL Documentation Quality Initiative governance gate: added Code Block Quality Standard, automated shell/PowerShell code-block audits, mandatory Deployment Verified sections for implementation guides, DNS/DHCP validated-name corrections, RouterOS DHCP relay prerequisite validation, AD filter/regex corrections, and governance/index/backlog/roadmap registration.
 - Incorporated real Active Directory Organizational Foundation deployment validation: OU hierarchy, sample users, and security groups were successfully created; exact user/service-account validation now uses per-account LDAP-filter loops instead of invalid PowerShell-style `-in` filtering, and the optional default-container review step was de-duplicated/clarified.
 - Reviewed and documented Active Directory Organizational Foundation OU script production-readiness limitations for domain-controller versus RSAT execution, Domain Admins/Enterprise Admins permission checks, future delegated OU creation, DN validation limits, future `SupportsShouldProcess`/`-WhatIf`, and helper-function reuse.
 - Refactored group, user, service account, GPO, DNS, and DHCP PowerShell examples toward the canonical GEIL Enterprise PowerShell object-creation pattern with module/context/permission checks, parent or container validation, safe existence checks, structured output, summary status, clear failures, verbose-capable script structure, and idempotent behavior where practical.
@@ -178,21 +168,3 @@ All notable changes to GEIL are documented in this file.
 - Add a service account lifecycle and gMSA runbook.
 - Add a future Cloudflare Access policy administration runbook.
 - Add a future GitHub branch protection and repository security baseline runbook.
-
-## 2026-07-01 - Pilot deployment code-block quality corrections
-
-- Added `docs/governance/code-block-quality-standard.md`.
-- Added `tools/audit-doc-codeblocks.sh` and `tools/audit-doc-codeblocks.ps1`.
-- Replaced fragile PowerShell permission regex patterns with short-name group validation.
-- Replaced DNS/DHCP secure dynamic update and DNS forwarder blocks with pilot-validated copy/paste-safe versions.
-- Updated DHCP authorization and VLAN 30 scope blocks to avoid fragile regex and fragmented `if`/`else` patterns.
-- Corrected privileged-access validation that used unsafe AD existence/filter patterns.
-- Updated the Production Readiness Audit Report with pilot deployment findings.
-
-## 2026-07-01 - Pilot DHCP relay correction
-
-- Updated MikroTik CHR DHCP relay guidance based on pilot deployment validation.
-- Documented that RouterOS DHCP relay requires `chain=input` firewall allowances because the relay process is local to `HQ-FW01`.
-- Corrected DNS/DHCP Step 6 to remove duplicate `relay-vlan30`, use `local-address=172.20.30.1`, keep VLAN 40/60 relay disabled until scopes exist, and never relay VLAN 70 Guest WiFi to AD DHCP.
-- Updated MikroTik CHR implementation and LLD guidance to place DHCP relay rules before `Default deny unapproved traffic to router`.
-- Added Linux client validation with `dhclient`, route, resolver, and Windows DHCP lease verification commands.

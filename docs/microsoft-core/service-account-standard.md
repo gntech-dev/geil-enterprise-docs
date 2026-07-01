@@ -68,23 +68,10 @@ $DomainDN = (Get-ADDomain).DistinguishedName
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try {
-        $Sid.Translate([Security.Principal.NTAccount]).Value
-    }
-    catch {}
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-
-$AllowedGroupNames = @(
-    "Domain Admins",
-    "Enterprise Admins"
-)
-
-$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
-    ($_ -split "\\")[-1]
-}
-
-if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 $SvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
 $Password = Read-Host "Enter service account password" -AsSecureString
@@ -132,23 +119,10 @@ $Timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssK"
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try {
-        $Sid.Translate([Security.Principal.NTAccount]).Value
-    }
-    catch {}
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-
-$AllowedGroupNames = @(
-    "Domain Admins",
-    "Enterprise Admins"
-)
-
-$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
-    ($_ -split "\\")[-1]
-}
-
-if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved gMSA creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 
 if (-not (Get-ADObject -Identity $GmsaOU -ErrorAction SilentlyContinue)) {

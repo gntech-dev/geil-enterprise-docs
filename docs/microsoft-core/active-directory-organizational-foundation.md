@@ -767,23 +767,10 @@ $DomainDN = (Get-ADDomain).DistinguishedName
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try {
-        $Sid.Translate([Security.Principal.NTAccount]).Value
-    }
-    catch {}
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-
-$AllowedGroupNames = @(
-    "Domain Admins",
-    "Enterprise Admins"
-)
-
-$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
-    ($_ -split "\\")[-1]
-}
-
-if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 $GroupPath = "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
 
@@ -930,23 +917,10 @@ $DomainDN = (Get-ADDomain).DistinguishedName
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try {
-        $Sid.Translate([Security.Principal.NTAccount]).Value
-    }
-    catch {}
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-
-$AllowedGroupNames = @(
-    "Domain Admins",
-    "Enterprise Admins"
-)
-
-$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
-    ($_ -split "\\")[-1]
-}
-
-if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 $StandardUsersOU = "OU=Standard,OU=Users,OU=GNTECH,$DomainDN"
 $Tier0OU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"
@@ -1127,23 +1101,10 @@ $DomainDN = (Get-ADDomain).DistinguishedName
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try {
-        $Sid.Translate([Security.Principal.NTAccount]).Value
-    }
-    catch {}
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-
-$AllowedGroupNames = @(
-    "Domain Admins",
-    "Enterprise Admins"
-)
-
-$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
-    ($_ -split "\\")[-1]
-}
-
-if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 $StandardSvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
 
@@ -1528,3 +1489,15 @@ Do not commit screenshots containing passwords, sensitive attributes, tokens, or
 ## Next Guide
 
 Continue to [Group Policy Baseline](group-policy-baseline.md) only after every validation command in this guide succeeds.
+
+## Deployment Verified
+
+| Field | Value |
+|---|---|
+| Validated on | OU hierarchy, sample users, and initial security groups validated successfully during real clean Windows Server 2025 AD deployment. Account validation corrected to LDAPFilter loops. |
+| Windows Server version | Windows Server 2025 clean deployment |
+| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
+| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
+| Deployment date | 2026-07-01 |
+| Deployment notes | OU hierarchy, sample users, and initial security groups validated successfully during real clean Windows Server 2025 AD deployment. Account validation corrected to LDAPFilter loops. |
+| Known caveats | Future delegated OU creation and module-based WhatIf support remain planned enhancements. |

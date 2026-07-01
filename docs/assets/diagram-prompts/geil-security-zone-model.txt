@@ -1,0 +1,18 @@
+# GNTECH Security Zone Model
+
+Expected output path: `docs/assets/diagrams/geil-security-zone-model.webp`
+
+Create a 16:9 dark enterprise architecture diagram for GEIL/GNTECH. Use a near-black slate background, subtle grid, high contrast white text, GNTECH cyan/blue accents, large readable labels, no tiny text, and minimal branching. This is an architecture visual, not decoration. Use canonical GNTECH values exactly where shown. Keep the image readable at normal MkDocs page width. Export as WebP and preserve an editable source file.
+
+## Content requirements
+
+Show HQ-FW01 as policy enforcement point. Include VLAN 10 Management, VLAN 20 Servers, VLAN 30 Workstations, VLAN 60 Corporate WiFi, VLAN 70 Guest WiFi, VLAN 80 DMZ, VLAN 90 Backup, VLAN 100 Hypervisors. Show guest denied to internal.
+
+## Style constraints
+
+- 16:9 aspect ratio.
+- Dark background.
+- GNTECH cyan/blue accent style with limited amber/green/rose semantic highlights.
+- Minimum practical label size equivalent to 18px at 1600x900.
+- Maximum 3 short lines per node.
+- No secrets or credentials.

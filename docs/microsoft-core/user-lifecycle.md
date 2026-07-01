@@ -68,23 +68,10 @@ $DomainDN = (Get-ADDomain).DistinguishedName
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try {
-        $Sid.Translate([Security.Principal.NTAccount]).Value
-    }
-    catch {}
+    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
 }
-
-$AllowedGroupNames = @(
-    "Domain Admins",
-    "Enterprise Admins"
-)
-
-$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
-    ($_ -split "\\")[-1]
-}
-
-if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
+if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins)$' })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved AD object-creation permissions. Use an approved Tier 0 account or a documented delegated model."
 }
 $TargetOU = "OU=Standard,OU=Users,OU=GNTECH,$DomainDN"
 $Password = Read-Host "Enter temporary password" -AsSecureString

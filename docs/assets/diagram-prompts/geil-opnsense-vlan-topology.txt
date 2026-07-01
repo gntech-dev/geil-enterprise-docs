@@ -1,0 +1,18 @@
+# OPNsense VLAN Topology
+
+Expected output path: `docs/assets/diagrams/geil-opnsense-vlan-topology.webp`
+
+Create a 16:9 dark enterprise architecture diagram for GEIL/GNTECH. Use a near-black slate background, subtle grid, high contrast white text, GNTECH cyan/blue accents, large readable labels, no tiny text, and minimal branching. This is an architecture visual, not decoration. Use canonical GNTECH values exactly where shown. Keep the image readable at normal MkDocs page width. Export as WebP and preserve an editable source file.
+
+## Content requirements
+
+Show WAN vmbr0 into HQ-FW01, LAN trunk vmbr1, VLAN gateway fanout for 10/20/30/40/50/60/70/80/90/100 with guest isolation.
+
+## Style constraints
+
+- 16:9 aspect ratio.
+- Dark background.
+- GNTECH cyan/blue accent style with limited amber/green/rose semantic highlights.
+- Minimum practical label size equivalent to 18px at 1600x900.
+- Maximum 3 short lines per node.
+- No secrets or credentials.

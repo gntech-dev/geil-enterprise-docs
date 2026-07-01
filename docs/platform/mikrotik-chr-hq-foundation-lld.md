@@ -138,9 +138,7 @@ Baseline posture:
 
 ## DHCP relay decision
 
-Prepare relay for VLAN 30 only after the Windows DHCP scope exists and `HQ-DC01` is authorized. VLAN 40 and VLAN 60 relay definitions may be staged but must remain disabled until their scopes exist. VLAN 70 must never relay to AD DHCP.
-
-MikroTik CHR processes DHCP relay as router-local traffic. DHCP relay firewall allowances must be placed in `chain=input` before the default input deny rule. Forward-chain rules alone are not sufficient for client broadcast requests to reach the local relay process.
+Prepare relay for VLANs 30, 40, and 60 to future DHCP server `172.20.20.11`, but do not enable relay until `HQ-DC01` DHCP scopes exist. VLAN 70 must not relay to AD DHCP.
 
 ## Rollback checkpoints
 
