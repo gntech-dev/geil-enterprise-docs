@@ -403,60 +403,221 @@ Future GPOs, delegation rules, Entra ID sync scope, user onboarding, computer li
 
 #### Commands — Step 3: Create the OU structure
 
-Use this idempotent version. It creates parent OUs before child OUs, checks for existing OUs with `-LDAPFilter` scoped to the intended parent, and prints `Created` or `Exists` for each OU.
+This is the canonical GEIL Enterprise PowerShell object-creation pattern for Active Directory OUs. Future GEIL Active Directory guides must reuse this structure instead of inventing new object-creation patterns.
 
-!!! implementation "Why this script does not use `Get-ADOrganizationalUnit -Identity` for existence checks"
+!!! implementation "Engineering decisions in this script"
 
-    `Get-ADOrganizationalUnit -Identity` is appropriate when you already know an OU exists and want to retrieve exactly that object. It is not a good existence check during first-time creation because a missing OU raises `ADIdentityNotFoundException`. Even with `-ErrorAction SilentlyContinue`, repeated missing-parent or missing-child checks can produce noisy deployment output and confuse junior operators. This guide uses `-LDAPFilter` with `-SearchBase` and `-SearchScope OneLevel` so a missing child OU returns no object instead of an exception.
+    - The script validates that the Active Directory module exists before doing anything because deployment hosts may not have RSAT or AD DS tools installed.
+    - The script validates that the computer is domain joined because AD object creation from a workgroup host usually fails later with less useful authentication or locator errors.
+    - The script validates the current user is in a privileged AD administration group before creating OUs. GEIL initial OU foundation work is a Tier 0 action and should be performed by an approved Domain Admin or Enterprise Admin unless a future delegated-build model is formally documented.
+    - `Get-ADObject -Identity $Path` validates parent containers before `-SearchBase` is used. This prevents a missing parent from appearing as a confusing search failure.
+    - `-LDAPFilter` is preferred for existence checks because missing child OUs return no object rather than raising `ADIdentityNotFoundException`.
+    - `-SearchScope OneLevel` is used so the script checks only the immediate parent. This prevents a same-named OU somewhere else in the tree from being mistaken for the required child.
+    - LDAP escaping is required because OU names may contain characters that have special meaning in LDAP filters, such as `*`, `(`, `)`, backslash, or NUL.
+    - The script is idempotent. Re-running it reports `Existing` for objects already present and does not create duplicates.
+    - The script continues auditing remaining OUs after a failure, prints a complete summary, and throws at the end if any failure occurred. This provides full remediation evidence while still producing a non-zero exit condition.
 
 ```powershell
-Import-Module ActiveDirectory
-$DomainDN = (Get-ADDomain).DistinguishedName
+[CmdletBinding()]
+param()
 
-function ConvertTo-LdapFilterValue {
-    param([Parameter(Mandatory)][string]$Value)
+$ErrorActionPreference = "Stop"
+
+function Test-GEILActiveDirectoryModule {
+    [CmdletBinding()]
+    param()
+
+    Write-Verbose "Checking for the ActiveDirectory PowerShell module."
+    if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
+        throw "ActiveDirectory PowerShell module is not available. Install RSAT Active Directory tools or run this on a domain controller before continuing."
+    }
+
+    Import-Module ActiveDirectory -ErrorAction Stop
+}
+
+function Test-GEILDomainJoinedComputer {
+    [CmdletBinding()]
+    param()
+
+    Write-Verbose "Checking whether this computer is joined to an Active Directory domain."
+    $ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem -ErrorAction Stop
+    if (-not $ComputerSystem.PartOfDomain) {
+        throw "This computer is not joined to an Active Directory domain. Join it to corp.gntech.me or run this script from a domain controller."
+    }
+
+    [PSCustomObject]@{
+        ComputerName = $env:COMPUTERNAME
+        Domain       = $ComputerSystem.Domain
+    }
+}
+
+function Test-GEILActiveDirectoryPermission {
+    [CmdletBinding()]
+    param()
+
+    Write-Verbose "Checking whether the current user is in a privileged AD administration group."
+    $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $GroupNames = foreach ($GroupSid in $CurrentIdentity.Groups) {
+        try {
+            $GroupSid.Translate([Security.Principal.NTAccount]).Value
+        }
+        catch {
+            Write-Verbose "Could not translate SID $GroupSid to an NTAccount name."
+        }
+    }
+
+    $AllowedPattern = '\(Domain Admins|Enterprise Admins)$'
+    $PrivilegedGroups = $GroupNames | Where-Object { $_ -match $AllowedPattern }
+    if (-not $PrivilegedGroups) {
+        throw "Current user '$($CurrentIdentity.Name)' is not a member of Domain Admins or Enterprise Admins. OU foundation deployment is a Tier 0 change; use an approved privileged account or document a delegated OU-creation model before continuing."
+    }
+
+    [PSCustomObject]@{
+        User             = $CurrentIdentity.Name
+        PrivilegedGroups = ($PrivilegedGroups -join '; ')
+    }
+}
+
+function ConvertTo-GEILLdapFilterValue {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Value
+    )
 
     $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
 }
 
-function Ensure-GEILOrganizationalUnit {
+function Test-GEILParentContainer {
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)][string]$Path
+        [Parameter(Mandatory)]
+        [ValidatePattern('^(DC|OU|CN)=')]
+        [string]$DistinguishedName
     )
 
-    $EscapedName = ConvertTo-LdapFilterValue -Value $Name
-    $ExistingOU = Get-ADOrganizationalUnit `
-        -LDAPFilter "(ou=$EscapedName)" `
-        -SearchBase $Path `
-        -SearchScope OneLevel `
-        -ErrorAction Stop
-
-    if ($ExistingOU) {
-        [PSCustomObject]@{
-            Status = "Exists"
-            Name   = $Name
-            Path   = $Path
-            DN     = $ExistingOU.DistinguishedName
-        }
-        return
+    Write-Verbose "Validating parent container exists: $DistinguishedName"
+    $Parent = Get-ADObject -Identity $DistinguishedName -ErrorAction SilentlyContinue
+    if (-not $Parent) {
+        throw "Parent container does not exist: $DistinguishedName"
     }
 
-    $NewOU = New-ADOrganizationalUnit `
-        -Name $Name `
-        -Path $Path `
-        -ProtectedFromAccidentalDeletion $true `
-        -PassThru
+    $Parent
+}
 
-    [PSCustomObject]@{
-        Status = "Created"
-        Name   = $Name
-        Path   = $Path
-        DN     = $NewOU.DistinguishedName
+function Get-GEILOrganizationalUnit {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
+
+        [Parameter(Mandatory)]
+        [ValidatePattern('^(DC|OU|CN)=')]
+        [string]$Parent
+    )
+
+    Test-GEILParentContainer -DistinguishedName $Parent | Out-Null
+
+    $EscapedName = ConvertTo-GEILLdapFilterValue -Value $Name
+    Write-Verbose "Searching one level below '$Parent' for OU '$Name'."
+    Get-ADOrganizationalUnit `
+        -LDAPFilter "(ou=$EscapedName)" `
+        -SearchBase $Parent `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+}
+
+function Ensure-GEILOrganizationalUnit {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
+
+        [Parameter(Mandatory)]
+        [ValidatePattern('^(DC|OU|CN)=')]
+        [string]$Parent
+    )
+
+    $Timestamp = Get-Date -Format "yyyy-MM-ddTHH:mm:ssK"
+    $TargetDistinguishedName = "OU=$Name,$Parent"
+
+    try {
+        $ExistingOU = Get-GEILOrganizationalUnit -Name $Name -Parent $Parent
+        if ($ExistingOU) {
+            return [PSCustomObject]@{
+                Status              = "Existing"
+                Name                = $Name
+                DistinguishedName   = $ExistingOU.DistinguishedName
+                Parent              = $Parent
+                Timestamp           = $Timestamp
+                Error               = $null
+            }
+        }
+
+        Write-Verbose "Creating OU '$Name' under '$Parent'."
+        $NewOU = New-ADOrganizationalUnit `
+            -Name $Name `
+            -Path $Parent `
+            -ProtectedFromAccidentalDeletion $true `
+            -PassThru `
+            -ErrorAction Stop
+
+        [PSCustomObject]@{
+            Status              = "Created"
+            Name                = $Name
+            DistinguishedName   = $NewOU.DistinguishedName
+            Parent              = $Parent
+            Timestamp           = $Timestamp
+            Error               = $null
+        }
+    }
+    catch {
+        [PSCustomObject]@{
+            Status              = "Failed"
+            Name                = $Name
+            DistinguishedName   = $TargetDistinguishedName
+            Parent              = $Parent
+            Timestamp           = $Timestamp
+            Error               = $_.Exception.Message
+        }
     }
 }
 
-# Parent-first order is intentional. Do not alphabetize this list.
+function Write-GEILSummary {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [object[]]$Results
+    )
+
+    $Created = @($Results | Where-Object Status -eq "Created").Count
+    $Existing = @($Results | Where-Object Status -eq "Existing").Count
+    $Failed = @($Results | Where-Object Status -eq "Failed").Count
+    $Total = @($Results).Count
+
+    [PSCustomObject]@{
+        Created  = $Created
+        Existing = $Existing
+        Failed   = $Failed
+        Total    = $Total
+    }
+}
+
+Test-GEILActiveDirectoryModule
+$DomainJoinState = Test-GEILDomainJoinedComputer
+$PermissionState = Test-GEILActiveDirectoryPermission
+$DomainDN = (Get-ADDomain -ErrorAction Stop).DistinguishedName
+
+Write-Verbose "Running from computer '$($DomainJoinState.ComputerName)' in domain '$($DomainJoinState.Domain)'."
+Write-Verbose "Running as '$($PermissionState.User)' with groups '$($PermissionState.PrivilegedGroups)'."
+Write-Verbose "Domain distinguished name is '$DomainDN'."
+
+# Parent-first order is mandatory. Do not alphabetize or reorder this list.
+# Child OUs depend on their parent DN existing before Test-GEILParentContainer and
+# Get-GEILOrganizationalUnit can safely validate or search beneath that parent.
 $OUs = @(
     @{Name="GNTECH"; Path=$DomainDN},
 
@@ -490,27 +651,52 @@ $OUs = @(
 )
 
 $Results = foreach ($OU in $OUs) {
-    Ensure-GEILOrganizationalUnit -Name $OU.Name -Path $OU.Path
+    Ensure-GEILOrganizationalUnit -Name $OU.Name -Parent $OU.Path
 }
 
-$Results | Format-Table Status,Name,DN -AutoSize
+$Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
+$Summary = Write-GEILSummary -Results $Results
+$Summary | Format-List Created,Existing,Failed,Total
+
+$Failures = @($Results | Where-Object Status -eq "Failed")
+if ($Failures.Count -gt 0) {
+    Write-Host "OU deployment failures:" -ForegroundColor Red
+    $Failures | Format-Table Name,DistinguishedName,Parent,Error -Wrap
+    throw "OU deployment completed with $($Failures.Count) failure(s). Review the failure summary, correct the parent path, permission, or replication issue, and rerun the script."
+}
 ```
+
+#### Production Notes — Step 3: Create the OU structure
+
+| Topic | Guidance |
+|---|---|
+| Expected execution time | Usually under one minute in a healthy single-domain lab. Allow additional time if the domain controller is under load or the AD Web Services endpoint is slow. |
+| Rollback considerations | The script protects OUs from accidental deletion. Roll back only empty, incorrect OUs after reviewing child objects and disabling accidental deletion protection. Do not delete OUs containing users, groups, computers, service accounts, GPO links, or delegated ACLs. |
+| Common failure: missing AD module | Install RSAT Active Directory tools or run from a domain controller. Do not replace AD cmdlets with ADSI snippets in this guide. |
+| Common failure: workgroup computer | Join the management workstation to `corp.gntech.me` or run from `HQ-DC01`. |
+| Common failure: insufficient permissions | Use an approved Tier 0 account with Domain Admin or Enterprise Admin membership, or create a documented delegated-build model before continuing. |
+| Common failure: missing parent container | The script continues checking remaining OUs, then fails at the end with a complete summary. Correct the first missing parent in the parent-first sequence and rerun. |
+| Recovery | Fix the root cause and rerun the script. Existing OUs return `Existing`; missing OUs are created; failed entries are re-evaluated. |
+| Validation commands | Use the validation block below plus `Get-ADDomain`, `Get-ADForest`, and ADUC screenshots of the `GNTECH` OU tree. |
 
 #### Expected result — Step 3: Create the OU structure
 
-First run shows `Created` for new OUs and `Exists` for any OUs already present:
+First run shows `Created` for new OUs, `Existing` for OUs that were already present, and `Failed` only when a prerequisite, permission, replication, or parent-path issue blocks an individual OU.
 
 ```text
-Status  Name             DN
-------  ----             --
-Created GNTECH           OU=GNTECH,DC=corp,DC=gntech,DC=me
-Created Admin            OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me
-Created Tier 0           OU=Tier 0,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me
-Created Users            OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me
-Created Service Accounts OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Status   Name             DistinguishedName                                      Parent                                  Timestamp
+------   ----             -----------------                                      ------                                  ---------
+Created  GNTECH           OU=GNTECH,DC=corp,DC=gntech,DC=me                      DC=corp,DC=gntech,DC=me                2026-07-01T10:00:00-05:00
+Created  Admin            OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me             OU=GNTECH,DC=corp,DC=gntech,DC=me      2026-07-01T10:00:01-05:00
+Existing Users            OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me             OU=GNTECH,DC=corp,DC=gntech,DC=me      2026-07-01T10:00:02-05:00
+
+Created  : 20
+Existing : 3
+Failed   : 0
+Total    : 23
 ```
 
-Second and later runs should show `Exists` for all previously created OUs and should not display `ADIdentityNotFoundException` errors.
+Second and later runs should show `Existing` for all previously created OUs and should not display `ADIdentityNotFoundException` errors.
 
 #### Validate this step — Step 3: Create the OU structure
 

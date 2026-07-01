@@ -3,7 +3,7 @@ title: PowerShell Operations
 document_id: GEIL-MSC-PS-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-PS-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -34,6 +34,57 @@ Standardize safe PowerShell execution for GEIL operations.
 - Capture transcript for approved changes.
 - Prefer idempotent scripts.
 - Never hard-code secrets.
+
+
+## GEIL Enterprise PowerShell object-creation standard
+
+All future GEIL Active Directory automation that creates or modifies objects must follow the canonical pattern demonstrated in [Active Directory Organizational Foundation](active-directory-organizational-foundation.md). Do not create new one-off object-creation styles for OUs, groups, users, service accounts, computers, GPOs, DNS objects, DHCP objects, or future AD automation.
+
+### Mandatory pattern for AD object creation
+
+Every production AD object-creation script must:
+
+1. Use `[CmdletBinding()]` and support `-Verbose`.
+2. Validate that the required PowerShell module is available before any state-changing action.
+3. Validate domain context before attempting domain object changes.
+4. Validate permissions early and fail with a meaningful message.
+5. Validate parent containers before searching or creating beneath them.
+6. Use `Get-ADObject -Identity <ParentDN>` to confirm parent Distinguished Names exist before using them as `-SearchBase` values.
+7. Use `-LDAPFilter` for object existence checks when objects may not exist.
+8. Use `-SearchScope OneLevel` when checking for a child object directly under a known parent.
+9. LDAP-escape user-supplied or variable values before placing them in an LDAP filter.
+10. Return structured `PSCustomObject` output rather than relying on unstructured console text.
+11. Include at least `Status`, `Name`, `DistinguishedName`, `Parent`, and `Timestamp` in creation output when applicable.
+12. Report summary counts for `Created`, `Existing`, `Failed`, and `Total`.
+13. Continue auditing remaining planned objects after an individual object failure when safe.
+14. Throw at the end if any failures occurred so automation receives a non-zero exit condition.
+15. Include validation, rollback, troubleshooting, and evidence guidance immediately after the command block.
+
+### Canonical helper-function names
+
+Use consistent helper names so future guides are readable and reusable:
+
+- `Test-GEILParentContainer`
+- `Get-GEILOrganizationalUnit` or the matching object-specific `Get-GEIL*` function
+- `Ensure-GEILOrganizationalUnit` or the matching object-specific `Ensure-GEIL*` function
+- `Write-GEILSummary`
+- `ConvertTo-GEILLdapFilterValue`
+
+### Why this pattern is mandatory
+
+`mkdocs build --strict` cannot prove that a PowerShell block is deployable. The Active Directory Organizational Foundation implementation showed that syntactically valid documentation can still contain dependency-order and existence-check defects. The canonical GEIL Enterprise PowerShell pattern prevents recurring classes of deployment failures:
+
+- missing RSAT or AD module errors discovered after partial execution
+- workgroup or wrong-domain execution
+- insufficient permissions discovered only after several objects are created
+- `SearchBase` errors caused by missing parent containers
+- `ADIdentityNotFoundException` noise from using `Get-AD* -Identity` as a missing-object existence check
+- duplicate objects during repeat execution
+- partial failures without a complete summary
+
+### Reference implementation
+
+Use the OU creation script in [Active Directory Organizational Foundation](active-directory-organizational-foundation.md#step-3-create-the-ou-structure) as the reference implementation for future AD object-creation scripts.
 
 ## Change transcript pattern
 

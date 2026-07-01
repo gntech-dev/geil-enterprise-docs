@@ -66,6 +66,8 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Refactored the Active Directory Organizational Foundation OU deployment script into the canonical GEIL Enterprise PowerShell object-creation pattern with module/domain/permission checks, parent-DN validation, helper functions, verbose logging, structured output, summary counts, failure aggregation, and non-zero termination on failures.
+- Updated PowerShell Operations to require the canonical GEIL Enterprise PowerShell object-creation pattern for future AD automation covering OUs, groups, users, service accounts, computers, GPOs, DNS objects, DHCP objects, and related object creation scripts.
 - Completed repository-wide production readiness audit across `docs/`, `MASTER_PLAN.md`, and `CHANGELOG.md`; corrected high-confidence AD PowerShell dependency/idempotency defects in group strategy, user lifecycle, service account, administrative tiering, and privileged access examples.
 - Fixed Active Directory Organizational Foundation PowerShell blocks to use idempotent LDAP-filter existence checks, parent-container validation, clear prerequisite failures, and `Created`/`Exists` deployment output for UPN suffix, OU, group, user, and service-account creation.
 - Updated Microsoft Core dependency graph and existing AD, Windows Server, DNS/DHCP, Group Policy, PKI, NPS, security, environment, roadmap, backlog, document index, release assignment, and navigation references for the Enterprise Identity Foundation sequence.
