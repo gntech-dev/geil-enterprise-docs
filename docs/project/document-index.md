@@ -71,7 +71,6 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-GOV-VISUAL-001 | Visual Documentation Standard | Approved | `docs/governance/visual-documentation-standard.md` | Mermaid usage rules, complex diagram asset standards, and replacement candidates |
 | GEIL-GOV-IMPL-001 | Implementation Guide Standard | Approved | `docs/governance/implementation-guide-standard.md` | Microsoft Learn-style implementation guide template, teaching requirements, validation, rollback, evidence, screenshots, and knowledge checks |
 | GEIL-GOV-EDU-001 | Educational Documentation Standard | Approved | `docs/governance/educational-documentation-standard.md` | Teaching-first methodology for implementation guides, enterprise/implementation admonitions, visual learning, value explanations, FAQs, and key takeaways |
-| GEIL-GOV-CODE-001 | Code Block Quality Standard | Approved | `docs/governance/code-block-quality-standard.md` | Mandatory execution-correctness gates, Deployment Verified requirements, and automated code-block audit tools |
 | GEIL-GOV-NAME-001 | Naming and Addressing Standard | Draft | `docs/governance/naming-addressing-standard.md` | Names, tiers, VLANs, DNS |
 | GEIL-ADR-0001 | ADR-0001 MkDocs Material Documentation Platform | Draft | `docs/governance/adrs/ADR-0001-mkdocs-material.md` | Accepted static documentation platform decision |
 | GEIL-ADR-0003 | ADR-0003 Hybrid Identity Namespace | Accepted | `docs/governance/adrs/ADR-0003-hybrid-identity-namespace.md` | Accepted hybrid identity namespace decision for `corp.gntech.me`, `gntech.me`, and `GNTECH` |
@@ -179,3 +178,5 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 3. Keep the path exact and relative to the repository root.
 4. Keep related backlog and roadmap entries synchronized.
 5. Keep the release assignment register synchronized so each document belongs to exactly one Release.
+
+| GEIL-GOV-CODE-001 | Code Block Quality Standard | Approved | `docs/governance/code-block-quality-standard.md` | Mandatory quality gate for production-ready code blocks and copy/paste deployment commands |

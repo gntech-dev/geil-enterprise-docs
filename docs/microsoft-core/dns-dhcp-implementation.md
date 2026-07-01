@@ -194,33 +194,42 @@ Secure updates reduce stale or malicious DNS records.
 #### Commands — Step 2: Enforce secure dynamic updates
 
 ```powershell
-[CmdletBinding()]
-param()
-
 $ErrorActionPreference = "Stop"
-if (-not (Get-Module -ListAvailable -Name DnsServer)) { throw "Required module missing: DnsServer" }
 Import-Module DnsServer -ErrorAction Stop
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    try {
+        $Sid.Translate([Security.Principal.NTAccount]).Value
+    }
+    catch {}
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+$AllowedGroupNames = @(
+    "Domain Admins",
+    "Enterprise Admins",
+    "DHCP Administrators"
+)
+$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
+    ($_ -split "\\")[-1]
+}
+if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
 $ZoneName = "corp.gntech.me"
-$Zone = Get-DnsServerZone -Name $ZoneName -ErrorAction SilentlyContinue
-if (-not $Zone) { throw "DNS zone does not exist: $ZoneName. Validate AD DNS before continuing." }
+$Zone = Get-DnsServerZone -Name $ZoneName -ErrorAction Stop
 
-if ($Zone.DynamicUpdate -eq "Secure") {
-    [PSCustomObject]@{Status="Existing"; Name=$ZoneName; DistinguishedName=$Zone.ZoneName; Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
-}
-else {
+if ($Zone.DynamicUpdate -ne "Secure") {
     Set-DnsServerPrimaryZone -Name $ZoneName -DynamicUpdate Secure -ErrorAction Stop
-    [PSCustomObject]@{Status="Updated"; Name=$ZoneName; DistinguishedName=$ZoneName; Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+    Write-Host "DNS zone updated to secure dynamic updates: $ZoneName" -ForegroundColor Green
 }
 
+$Zone = Get-DnsServerZone -Name $ZoneName -ErrorAction Stop
+if ($Zone.DynamicUpdate -ne "Secure") {
+    throw "DNS zone dynamic update mode is not Secure. Current value: $($Zone.DynamicUpdate)"
+}
+
+Write-Host "DNS zone uses secure dynamic updates: $ZoneName" -ForegroundColor Green
 Get-DnsServerZone -Name $ZoneName | Select-Object ZoneName,DynamicUpdate
 ```
 
@@ -248,33 +257,49 @@ Domain clients should use AD DNS. AD DNS can forward unknown public names upstre
 #### Commands — Step 3: Configure DNS forwarders
 
 ```powershell
-[CmdletBinding()]
-param()
-
 $ErrorActionPreference = "Stop"
-if (-not (Get-Module -ListAvailable -Name DnsServer)) { throw "Required module missing: DnsServer" }
 Import-Module DnsServer -ErrorAction Stop
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    try {
+        $Sid.Translate([Security.Principal.NTAccount]).Value
+    }
+    catch {}
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+$AllowedGroupNames = @(
+    "Domain Admins",
+    "Enterprise Admins",
+    "DHCP Administrators"
+)
+$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
+    ($_ -split "\\")[-1]
+}
+if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
-$RequiredForwarders = @("1.1.1.1","1.0.0.1")
+$RequiredForwarders = @(
+    "1.1.1.1",
+    "1.0.0.1"
+)
+
 $ExistingForwarders = @((Get-DnsServerForwarder).IPAddress.IPAddressToString)
 $MissingForwarders = $RequiredForwarders | Where-Object { $_ -notin $ExistingForwarders }
 
 if ($MissingForwarders.Count -gt 0) {
     Set-DnsServerForwarder -IPAddress $RequiredForwarders -ErrorAction Stop
-    [PSCustomObject]@{Status="Updated"; Name="DNS Forwarders"; DistinguishedName=($RequiredForwarders -join ','); Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
-}
-else {
-    [PSCustomObject]@{Status="Existing"; Name="DNS Forwarders"; DistinguishedName=($RequiredForwarders -join ','); Parent="DNS Server"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+    Write-Host "DNS forwarders updated: $($RequiredForwarders -join ', ')" -ForegroundColor Green
 }
 
+$CurrentForwarders = @((Get-DnsServerForwarder).IPAddress.IPAddressToString)
+$StillMissing = $RequiredForwarders | Where-Object { $_ -notin $CurrentForwarders }
+
+if ($StillMissing.Count -gt 0) {
+    throw "DNS forwarder validation failed. Missing: $($StillMissing -join ', ')"
+}
+
+Write-Host "DNS forwarders validated: $($RequiredForwarders -join ', ')" -ForegroundColor Green
 Get-DnsServerForwarder
 Resolve-DnsName www.microsoft.com
 ```
@@ -306,18 +331,25 @@ Windows DHCP servers must be authorized in AD before serving domain networks.
 #### Commands — Step 4: Install and authorize DHCP
 
 ```powershell
-[CmdletBinding()]
-param()
-
 $ErrorActionPreference = "Stop"
-if (-not (Get-Module -ListAvailable -Name ServerManager)) { throw "Required module missing: ServerManager" }
 Import-Module ServerManager -ErrorAction Stop
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    try {
+        $Sid.Translate([Security.Principal.NTAccount]).Value
+    }
+    catch {}
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+$AllowedGroupNames = @(
+    "Domain Admins",
+    "Enterprise Admins",
+    "DHCP Administrators"
+)
+$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
+    ($_ -split "\\")[-1]
+}
+if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
@@ -330,20 +362,29 @@ if (-not $Feature.Installed) {
     Install-WindowsFeature DHCP -IncludeManagementTools -ErrorAction Stop | Out-Null
     $Results += [PSCustomObject]@{Status="Created"; Name="DHCP role"; DistinguishedName=$env:COMPUTERNAME; Parent="Windows Features"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
 }
-else {
+
+$Feature = Get-WindowsFeature DHCP
+if ($Feature.Installed) {
     $Results += [PSCustomObject]@{Status="Existing"; Name="DHCP role"; DistinguishedName=$env:COMPUTERNAME; Parent="Windows Features"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
 }
 
 Import-Module DhcpServer -ErrorAction Stop
-$Authorized = Get-DhcpServerInDC | Where-Object { $_.DnsName -eq $ServerFqdn -and $_.IPAddress -eq $ServerIp }
-if ($Authorized) {
-    $Results += [PSCustomObject]@{Status="Existing"; Name=$ServerFqdn; DistinguishedName=$ServerIp; Parent="AD DHCP Authorization"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+$Authorized = Get-DhcpServerInDC | Where-Object {
+    $_.DnsName -eq $ServerFqdn -and $_.IPAddress.IPAddressToString -eq $ServerIp
 }
-else {
+if (-not $Authorized) {
     Add-DhcpServerInDC -DnsName $ServerFqdn -IPAddress $ServerIp -ErrorAction Stop
-    $Results += [PSCustomObject]@{Status="Created"; Name=$ServerFqdn; DistinguishedName=$ServerIp; Parent="AD DHCP Authorization"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+    Write-Host "DHCP server authorized in AD: $ServerFqdn / $ServerIp" -ForegroundColor Green
 }
 
+$Authorized = Get-DhcpServerInDC | Where-Object {
+    $_.DnsName -eq $ServerFqdn -and $_.IPAddress.IPAddressToString -eq $ServerIp
+}
+if (-not $Authorized) {
+    throw "DHCP authorization validation failed for $ServerFqdn / $ServerIp"
+}
+
+$Results += [PSCustomObject]@{Status="Existing"; Name=$ServerFqdn; DistinguishedName=$ServerIp; Parent="AD DHCP Authorization"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
 $Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
 [PSCustomObject]@{
     Created  = @($Results | Where-Object Status -eq "Created").Count
@@ -382,54 +423,65 @@ VLAN 30 is the first user/client VLAN and supports `HQ-MGMT01` and `HQ-W11-001` 
 #### Commands — Step 5: Create the VLAN 30 workstation scope
 
 ```powershell
-[CmdletBinding()]
-param()
-
 $ErrorActionPreference = "Stop"
-if (-not (Get-Module -ListAvailable -Name DhcpServer)) { throw "Required module missing: DhcpServer" }
 Import-Module DhcpServer -ErrorAction Stop
 
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    try {
+        $Sid.Translate([Security.Principal.NTAccount]).Value
+    }
+    catch {}
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|DHCP Administrators)$' })) {
+$AllowedGroupNames = @(
+    "Domain Admins",
+    "Enterprise Admins",
+    "DHCP Administrators"
+)
+$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
+    ($_ -split "\\")[-1]
+}
+if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
     throw "Current user '$($CurrentIdentity.Name)' lacks approved DHCP/DNS change permissions."
 }
 
 $ScopeId = [IPAddress]"172.20.30.0"
+$ScopeName = "WORKSTATIONS-HQ"
 $Results = @()
+
 $ExistingScope = Get-DhcpServerv4Scope -ScopeId $ScopeId -ErrorAction SilentlyContinue
-if ($ExistingScope) {
-    $Results += [PSCustomObject]@{Status="Existing"; Name=$ExistingScope.Name; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scopes"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
-}
-else {
+if (-not $ExistingScope) {
     Add-DhcpServerv4Scope `
-      -Name "WORKSTATIONS-HQ" `
-      -StartRange 172.20.30.50 `
-      -EndRange 172.20.30.250 `
-      -SubnetMask 255.255.255.0 `
-      -State Active `
-      -ErrorAction Stop
-    $Results += [PSCustomObject]@{Status="Created"; Name="WORKSTATIONS-HQ"; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scopes"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+        -Name $ScopeName `
+        -StartRange 172.20.30.50 `
+        -EndRange 172.20.30.250 `
+        -SubnetMask 255.255.255.0 `
+        -State Active `
+        -ErrorAction Stop
+    $Results += [PSCustomObject]@{Status="Created"; Name=$ScopeName; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scopes"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+}
+
+$Scope = Get-DhcpServerv4Scope -ScopeId $ScopeId -ErrorAction Stop
+if ($Scope) {
+    $Results += [PSCustomObject]@{Status="Existing"; Name=$Scope.Name; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scopes"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
 }
 
 Set-DhcpServerv4OptionValue `
-  -ScopeId $ScopeId `
-  -Router 172.20.30.1 `
-  -DnsServer 172.20.20.11 `
-  -DnsDomain "corp.gntech.me" `
-  -ErrorAction Stop
+    -ScopeId $ScopeId `
+    -Router 172.20.30.1 `
+    -DnsServer 172.20.20.11 `
+    -DnsDomain "corp.gntech.me" `
+    -ErrorAction Stop
 
-$Results += [PSCustomObject]@{Status="Updated"; Name="WORKSTATIONS-HQ options"; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scope Options"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+$Results += [PSCustomObject]@{Status="Updated"; Name="$ScopeName options"; DistinguishedName=$ScopeId.IPAddressToString; Parent="DHCP IPv4 Scope Options"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
 $Results | Format-Table Status,Name,DistinguishedName,Parent,Timestamp -AutoSize
 [PSCustomObject]@{
     Created  = @($Results | Where-Object Status -eq "Created").Count
     Existing = @($Results | Where-Object Status -eq "Existing").Count
+    Updated  = @($Results | Where-Object Status -eq "Updated").Count
     Failed   = @($Results | Where-Object Status -eq "Failed").Count
     Total    = @($Results).Count
 }
-
 Get-DhcpServerv4Scope -ScopeId $ScopeId
 Get-DhcpServerv4OptionValue -ScopeId $ScopeId
 ```
@@ -454,63 +506,114 @@ Remove-DhcpServerv4Scope -ScopeId 172.20.30.0 -Force
 
 #### Goal — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
-Enable relay only after the Windows DHCP scope exists and is authorized.
+Enable DHCP relay for VLAN 30 only after the Windows DHCP server is authorized and the `WORKSTATIONS-HQ` scope exists.
 
 #### Why this step matters — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
-If relay is enabled before scopes exist, clients may fail to obtain leases or receive incomplete network options. Guest VLAN 70 must remain isolated and must not relay to AD DHCP.
+MikroTik CHR processes DHCP relay traffic as router-local traffic. During the pilot deployment, DHCP did not work when only `chain=forward` firewall rules were added. The client broadcast reaches `HQ-FW01`, and the relay process runs locally on the router, so the DHCP request must be allowed in `chain=input` before the default input deny rule.
+
+Guest VLAN 70 must remain isolated and must never relay to AD DHCP. VLAN 40 and VLAN 60 relays must remain disabled until their scopes exist.
+
+!!! implementation "Pilot deployment validated"
+
+    The pilot deployment confirmed that VLAN 30 clients received DHCP leases only after input-chain DHCP relay rules were added before `Default deny unapproved traffic to router`. Forward-chain DHCP relay rules alone were insufficient.
 
 #### Prerequisite validation
 
+Run on `HQ-DC01`:
+
 ```powershell
-Get-DhcpServerv4Scope
 Get-DhcpServerInDC
+Get-DhcpServerv4Scope -ScopeId 172.20.30.0
+Get-DhcpServerv4OptionValue -ScopeId 172.20.30.0
 ```
 
-Expected result: approved scopes exist and `HQ-DC01.corp.gntech.me` is authorized.
+Expected result:
+
+- `HQ-DC01.corp.gntech.me` is authorized with `172.20.20.11`.
+- Scope `WORKSTATIONS-HQ` exists and is active.
+- Scope options include router `172.20.30.1`, DNS server `172.20.20.11`, and DNS domain `corp.gntech.me`.
 
 #### RouterOS commands
 
-Run on `HQ-FW01` only after the prerequisite validation succeeds:
+Run on `HQ-FW01` only after prerequisite validation succeeds.
 
 ```routeros
-/interface vlan print where name=vlan30-workstations
-/ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 disabled=yes
-/ip dhcp-relay print
-/ip dhcp-relay enable relay-vlan30
-/ip dhcp-relay print
+/ip dhcp-relay disable [find name="relay-vlan40"]
+/ip dhcp-relay disable [find name="relay-vlan60"]
+/ip dhcp-relay remove [find name="relay-vlan30"]
+/ip dhcp-relay add name=relay-vlan30 interface=vlan30-workstations dhcp-server=172.20.20.11 local-address=172.20.30.1 disabled=no
 ```
 
-Add VLAN 40 and VLAN 60 relay only after their scopes exist:
+Add firewall rules in `chain=input`, not only in `chain=forward`:
 
 ```routeros
-/interface vlan print where name=vlan40-printers
-/interface vlan print where name=vlan60-corpwifi
-/ip dhcp-relay add name=relay-vlan40 interface=vlan40-printers dhcp-server=172.20.20.11 disabled=yes
-/ip dhcp-relay add name=relay-vlan60 interface=vlan60-corpwifi dhcp-server=172.20.20.11 disabled=yes
+/ip firewall filter remove [find comment~"ALLOW DHCP client requests VLAN30"]
+/ip firewall filter remove [find comment~"ALLOW DHCP server replies to CHR relay"]
+/ip firewall filter add chain=input action=accept protocol=udp in-interface=vlan30-workstations src-address=0.0.0.0/32 dst-address=255.255.255.255 dst-port=67 place-before=[find comment="Default deny unapproved traffic to router"] comment="ALLOW DHCP client requests VLAN30 to CHR relay"
+/ip firewall filter add chain=input action=accept protocol=udp src-address=172.20.20.11 dst-address=172.20.30.1 src-port=67 dst-port=67 place-before=[find comment="Default deny unapproved traffic to router"] comment="ALLOW DHCP server replies to CHR relay"
 ```
 
 Do not create or enable DHCP relay for `vlan70-guestwifi`.
 
 #### Validation
 
+Run on `HQ-FW01`:
+
 ```routeros
 /ip/dhcp-relay/print
+/ip/firewall/filter/print where comment~"DHCP"
 ```
+
+Expected result:
+
+```text
+relay-vlan30  vlan30-workstations  172.20.20.11  172.20.30.1
+relay-vlan40  disabled
+relay-vlan60  disabled
+```
+
+The DHCP input allow rules must appear before `Default deny unapproved traffic to router`.
+
+From a VLAN 30 client:
+
+```bash
+dhclient -r eth0
+dhclient -v eth0
+ip -4 a
+ip route
+cat /etc/resolv.conf
+```
+
+Expected result:
+
+- IPv4 lease from `172.20.30.50` through `172.20.30.250`.
+- Default gateway `172.20.30.1`.
+- DNS server `172.20.20.11`.
+- DNS search domain `corp.gntech.me`.
 
 From `HQ-DC01`:
 
 ```powershell
-Get-DhcpServerv4Lease -ScopeId 172.20.30.0
+Get-DhcpServerv4Lease -ScopeId 172.20.30.0 -AllLeases
+Get-DhcpServerv4ScopeStatistics -ScopeId 172.20.30.0
 ```
 
 #### Rollback — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
 
 ```routeros
-/ip dhcp-relay disable relay-vlan30
-/ip dhcp-relay remove [find name=relay-vlan30]
+/ip dhcp-relay disable [find name="relay-vlan30"]
+/ip dhcp-relay remove [find name="relay-vlan30"]
+/ip firewall filter remove [find comment~"ALLOW DHCP client requests VLAN30"]
+/ip firewall filter remove [find comment~"ALLOW DHCP server replies to CHR relay"]
 ```
 
+
+## Deployment Verified Notes
+
+!!! implementation "Pilot deployment lesson"
+
+    Pilot deployment confirmed that DNS secure dynamic updates and DNS forwarder configuration work when the PowerShell blocks avoid fragile regex permission checks and avoid fragmented `if`/`else` examples. GEIL implementation blocks should use short-name group checks and independent validation `if` statements so operators can paste safely in interactive PowerShell.
 
 ## Audit Correction Notes
 
@@ -707,15 +810,3 @@ When a GUI action appears in this guide, capture the screenshot at that point in
 Continue to:
 
 - [Group Policy Baseline](group-policy-baseline.md)
-
-## Deployment Verified
-
-| Field | Value |
-|---|---|
-| Validated on | Real deployment exposed broken validation/name patterns; guide now uses canonical DHCP scope name and idempotent DNS/DHCP blocks. Revalidate end-to-end before enabling additional relays. |
-| Windows Server version | Windows Server 2025 clean deployment target |
-| RouterOS version | RouterOS v7 target |
-| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
-| Deployment date | 2026-07-01 |
-| Deployment notes | Real deployment exposed broken validation/name patterns; guide now uses canonical DHCP scope name and idempotent DNS/DHCP blocks. Revalidate end-to-end before enabling additional relays. |
-| Known caveats | DHCP relay must remain disabled/absent until Windows DHCP authorization and scopes validate. |

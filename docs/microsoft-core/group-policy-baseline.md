@@ -3,8 +3,8 @@ title: Group Policy Baseline
 document_id: GEIL-MSC-GPO-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.2
-last_reviewed: 2026-06-29
+version: 2.3
+last_reviewed: 2026-07-01
 review_cycle: Quarterly
 classification: Internal Confidential
 ---
@@ -18,8 +18,8 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-GPO-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.2 |
-| Last Reviewed | 2026-06-29 |
+| Version | 2.3 |
+| Last Reviewed | 2026-07-01 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
@@ -101,7 +101,7 @@ Group Policy depends on the identity foundation sequence: infrastructure -> Wind
 flowchart LR
     Domain[corp.gntech.me]
     OU[OU=Workstations,OU=Computers,OU=GNTECH]
-    GPO[GEIL-Workstation-Security-Baseline]
+    GPO[GP - Baseline - Workstations]
     Client[HQ-W11-001]
     Domain --> OU
     GPO --> OU --> Client
@@ -146,10 +146,24 @@ foreach ($ModuleName in @("ActiveDirectory","GroupPolicy")) {
 }
 $CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
+    try {
+        $Sid.Translate([Security.Principal.NTAccount]).Value
+    }
+    catch {}
 }
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions for GPO validation/creation."
+
+$AllowedGroupNames = @(
+    "Domain Admins",
+    "Enterprise Admins",
+    "Group Policy Creator Owners"
+)
+
+$CurrentGroupShortNames = $CurrentGroups | ForEach-Object {
+    ($_ -split "\\")[-1]
+}
+
+if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
+    throw "Current user '$($CurrentIdentity.Name)' lacks approved permissions. Required group short name: $($AllowedGroupNames -join ', ')."
 }
 
 $RequiredOUs = @(
@@ -181,13 +195,61 @@ You should now see all required OUs and GroupPolicy commands.
 
 No rollback is required for read-only validation.
 
-### Step 2: Create GPOs before linking
+### Step 2: Create the Group Policy Central Store
 
-#### Goal — Step 2: Create GPOs before linking
+#### Goal — Step 2: Create the Group Policy Central Store
+
+Create the central ADMX/ADML store in SYSVOL so every administrator edits policies from the same template baseline.
+
+#### Why this step matters — Step 2: Create the Group Policy Central Store
+
+Without a Central Store, each management workstation may use its local policy definitions. That can cause inconsistent settings visibility between administrators.
+
+#### Commands — Step 2: Create the Group Policy Central Store
+
+```powershell
+$ErrorActionPreference = "Stop"
+
+Import-Module ActiveDirectory -ErrorAction Stop
+
+$Domain = (Get-ADDomain).DNSRoot
+$CentralStore = "\\$Domain\SYSVOL\$Domain\Policies\PolicyDefinitions"
+
+New-Item -ItemType Directory -Path $CentralStore -Force | Out-Null
+
+Copy-Item `
+    -Path "C:\Windows\PolicyDefinitions\*" `
+    -Destination $CentralStore `
+    -Recurse `
+    -Force
+
+if (-not (Test-Path $CentralStore)) {
+    throw "Central Store validation failed: $CentralStore"
+}
+
+Write-Host "Group Policy Central Store exists: $CentralStore" -ForegroundColor Green
+Get-ChildItem $CentralStore | Select-Object -First 10 Name
+```
+
+#### Expected result — Step 2: Create the Group Policy Central Store
+
+You should see `True` behavior through the success message and a list of `.admx` files or language folders such as `en-US`.
+
+#### Rollback — Step 2: Create the Group Policy Central Store
+
+Do not remove the Central Store after GPO editing begins unless a change record approves the rollback. To remove an incorrectly copied Central Store before use:
+
+```powershell
+Remove-Item "\\corp.gntech.me\SYSVOL\corp.gntech.me\Policies\PolicyDefinitions" -Recurse -Force
+```
+
+### Step 3: Create GPOs before linking
+
+#### Goal — Step 3: Create GPOs before linking
 
 Create baseline GPO shells without applying them yet.
 
-#### Commands — Step 2: Create GPOs before linking
+#### Commands — Step 3: Create GPOs before linking
 
 ```powershell
 [CmdletBinding()]
@@ -221,7 +283,9 @@ function Test-GEILGpoPermission {
     $Groups = foreach ($Sid in $Identity.Groups) {
         try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
     }
-    if (-not ($Groups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
+    $AllowedGroupNames = @("Domain Admins","Enterprise Admins","Group Policy Creator Owners")
+    $GroupShortNames = $Groups | ForEach-Object { ($_ -split "\\")[-1] }
+    if (-not ($GroupShortNames | Where-Object { $_ -in $AllowedGroupNames })) {
         throw "Current user '$($Identity.Name)' lacks approved GPO creation rights. Use Domain Admins, Enterprise Admins, or Group Policy Creator Owners under change control."
     }
 }
@@ -261,10 +325,16 @@ Test-GEILDomainContext | Out-Null
 Test-GEILGpoPermission
 
 $Gpos = @(
-  "GEIL-DC-Security-Baseline",
-  "GEIL-Server-Security-Baseline",
-  "GEIL-Workstation-Security-Baseline",
-  "GEIL-Admin-Tier0-Restrictions"
+    "GP - Baseline - Domain Security",
+    "GP - Baseline - Domain Controllers",
+    "GP - Baseline - Windows Servers",
+    "GP - Baseline - Workstations",
+    "GP - Security - PowerShell Logging",
+    "GP - Security - Windows Firewall",
+    "GP - Security - Microsoft Defender",
+    "GP - Security - Windows Update",
+    "GP - Tier0 - Admin Restrictions",
+    "GP - Preferences - Workstation Defaults"
 )
 
 $Results = foreach ($Gpo in $Gpos) { Ensure-GEILGpo -Name $Gpo }
@@ -280,7 +350,7 @@ if ($Failures.Count -gt 0) {
 ```
 
 
-#### Rollback — Step 2: Create GPOs before linking
+#### Rollback — Step 3: Create GPOs before linking
 
 If a GPO was created with the wrong name and has no links:
 
@@ -288,93 +358,116 @@ If a GPO was created with the wrong name and has no links:
 Remove-GPO -Name "Incorrect-GPO-Name" -Confirm:$false
 ```
 
-### Step 3: Configure a safe workstation baseline setting
+### Step 4: Configure a safe workstation baseline setting
 
-#### Goal — Step 3: Configure a safe workstation baseline setting
+#### Goal — Step 4: Configure a safe workstation baseline setting
 
 Enable PowerShell script block logging in the workstation baseline before linking.
 
-#### Commands — Step 3: Configure a safe workstation baseline setting
+#### Commands — Step 4: Configure a safe workstation baseline setting
 
 ```powershell
-Set-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
-  -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
-  -ValueName EnableScriptBlockLogging -Type DWord -Value 1
+$ErrorActionPreference = "Stop"
 
-Get-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
+Import-Module GroupPolicy -ErrorAction Stop
+
+$GpoName = "GP - Baseline - Workstations"
+
+Set-GPRegistryValue `
+    -Name $GpoName `
+    -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+    -ValueName EnableScriptBlockLogging `
+    -Type DWord `
+    -Value 1 `
+    -ErrorAction Stop
+
+Get-GPRegistryValue `
+    -Name $GpoName `
+    -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+    -ValueName EnableScriptBlockLogging
+```
+
+#### Expected result — Step 4: Configure a safe workstation baseline setting
+
+The command should return the GPO object after setting the value, then show:
+
+```text
+PolicyState : Set
+Value       : 1
+Type        : DWord
+ValueName   : EnableScriptBlockLogging
+HasValue    : True
+```
+
+#### Rollback — Step 4: Configure a safe workstation baseline setting
+
+```powershell
+Remove-GPRegistryValue -Name "GP - Baseline - Workstations" `
   -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
   -ValueName EnableScriptBlockLogging
 ```
 
-#### Rollback — Step 3: Configure a safe workstation baseline setting
+### Step 5: Validate security filtering before linking
+
+#### Commands — Step 5: Validate security filtering before linking
 
 ```powershell
-Remove-GPRegistryValue -Name "GEIL-Workstation-Security-Baseline" `
-  -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
-  -ValueName EnableScriptBlockLogging
-```
-
-### Step 4: Validate security filtering before linking
-
-#### Commands — Step 4: Validate security filtering before linking
-
-```powershell
-Get-GPPermission -Name "GEIL-Workstation-Security-Baseline" -All | Select-Object Trustee,Permission
+Get-GPPermission -Name "GP - Baseline - Workstations" -All | Select-Object Trustee,Permission
 ```
 
 Expected result: filtering is visible and documented. Do not proceed if it would apply to unintended computers.
 
-### Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
+### Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
 
-#### Commands — Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
+#### Commands — Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
 
 ```powershell
-[CmdletBinding()]
-param()
-
 $ErrorActionPreference = "Stop"
-Import-Module ActiveDirectory -ErrorAction Stop
+
 Import-Module GroupPolicy -ErrorAction Stop
+Import-Module ActiveDirectory -ErrorAction Stop
 
-$CurrentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
-$CurrentGroups = foreach ($Sid in $CurrentIdentity.Groups) {
-    try { $Sid.Translate([Security.Principal.NTAccount]).Value } catch { }
-}
-if (-not ($CurrentGroups | Where-Object { $_ -match '\\(Domain Admins|Enterprise Admins|Group Policy Creator Owners)$' })) {
-    throw "Current user '$($CurrentIdentity.Name)' lacks approved GPO link permissions."
-}
-
-$GpoName = "GEIL-Workstation-Security-Baseline"
+$GpoName = "GP - Baseline - Workstations"
 $TargetOU = "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 
 if (-not (Get-ADObject -Identity $TargetOU -ErrorAction SilentlyContinue)) {
     throw "Target OU does not exist: $TargetOU"
 }
+
 if (-not (Get-GPO -Name $GpoName -ErrorAction SilentlyContinue)) {
-    throw "GPO does not exist: $GpoName. Complete Step 2 before linking."
+    throw "GPO does not exist: $GpoName"
 }
 
-$ExistingLink = (Get-GPInheritance -Target $TargetOU).GpoLinks | Where-Object DisplayName -eq $GpoName
-if ($ExistingLink) {
-    [PSCustomObject]@{Status="Existing"; Name=$GpoName; DistinguishedName=$TargetOU; Parent="GPO link target"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+$ExistingLink = (Get-GPInheritance -Target $TargetOU).GpoLinks |
+    Where-Object { $_.DisplayName -eq $GpoName }
+
+if (-not $ExistingLink) {
+    New-GPLink -Name $GpoName -Target $TargetOU -LinkEnabled Yes -ErrorAction Stop | Out-Null
+    Write-Host "Linked GPO: $GpoName -> $TargetOU" -ForegroundColor Green
 }
-else {
-    New-GPLink -Name $GpoName -Target $TargetOU -LinkEnabled Yes | Out-Null
-    [PSCustomObject]@{Status="Created"; Name=$GpoName; DistinguishedName=$TargetOU; Parent="GPO link target"; Timestamp=(Get-Date -Format "yyyy-MM-ddTHH:mm:ssK")}
+
+$ExistingLink = (Get-GPInheritance -Target $TargetOU).GpoLinks |
+    Where-Object { $_.DisplayName -eq $GpoName }
+
+if (-not $ExistingLink) {
+    throw "GPO link validation failed: $GpoName"
 }
 
 Get-GPInheritance -Target $TargetOU
 ```
 
+#### Expected result — Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
 
-#### Rollback — Step 5: Link the GPO to the Workstations OU under the canonical Computers OU
+`GpoLinks` for the Workstations OU should include `GP - Baseline - Workstations`. `InheritedGpoLinks` should include this GPO and `Default Domain Policy`.
+
+#### Rollback — Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
 
 ```powershell
-Remove-GPLink -Name "GEIL-Workstation-Security-Baseline" `
+Remove-GPLink -Name "GP - Baseline - Workstations" `
   -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 ```
 
-### Step 6: Validate resultant policy
+### Step 7: Validate resultant policy
 
 From a test workstation such as `HQ-W11-001` after domain join:
 
@@ -384,7 +477,7 @@ gpresult /h C:\Temp\geil-gpresult.html
 Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20
 ```
 
-Expected result: `GEIL-Workstation-Security-Baseline` appears in applied computer policies for the test workstation.
+Expected result: `GP - Baseline - Workstations` appears in applied computer policies for the test workstation.
 
 ## Validation after each major stage
 
@@ -428,7 +521,7 @@ Rollback in this order:
 4. Delete only after impact is understood.
 
 ```powershell
-Set-GPO -Name "GEIL-Workstation-Security-Baseline" -GpoStatus AllSettingsDisabled
+Set-GPO -Name "GP - Baseline - Workstations" -GpoStatus AllSettingsDisabled
 ```
 
 ## Deployment Validation
@@ -471,10 +564,28 @@ STOP. Do not link the policy more broadly.
 Unlink or disable the affected GPO before troubleshooting:
 
 ```powershell
-Set-GPO -Name "GEIL-Workstation-Security-Baseline" -GpoStatus AllSettingsDisabled
+Set-GPO -Name "GP - Baseline - Workstations" -GpoStatus AllSettingsDisabled
 ```
 
 Continue only if successful.
+
+## Pilot Deployment Findings
+
+!!! success "Pilot validated"
+
+    The following Group Policy foundation steps were validated during GEIL Pilot Deployment 001 on `HQ-DC01`:
+
+    - The domain initially contained only `Default Domain Policy` and `Default Domain Controllers Policy`.
+    - `OU=GNTECH` inherited only `Default Domain Policy` before GEIL links were created.
+    - `dcdiag /test:sysvolcheck`, `dcdiag /test:netlogons`, and `gpupdate /force` completed successfully.
+    - The Central Store did not exist initially and was created under `\\corp.gntech.me\SYSVOL\corp.gntech.me\Policies\PolicyDefinitions`.
+    - The GPO shell set using the `GP - ...` naming convention was created successfully.
+    - `GP - Baseline - Workstations` was linked only to `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`.
+    - PowerShell Script Block Logging was configured and validated with `Get-GPRegistryValue`.
+
+!!! implementation "Copy/paste note"
+
+    This guide avoids fragile permission regex and fragmented `if/else` examples. Deployment blocks should remain safe when pasted interactively in PowerShell.
 
 ## Knowledge Check
 
@@ -558,15 +669,3 @@ Continue to:
 - Canonical GEIL values are visible in outputs.
 - No active OPNsense deployment path remains for Phase 1 firewall work.
 - `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
-
-## Deployment Verified
-
-| Field | Value |
-|---|---|
-| Validated on | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
-| Windows Server version | Not yet field validated |
-| RouterOS version | Not applicable unless the guide explicitly configures RouterOS |
-| Proxmox version | Not applicable unless the guide explicitly configures Proxmox |
-| Deployment date | Not yet field validated |
-| Deployment notes | Not yet field validated. Must pass this guide, the code-block audit, and clean-environment review before production execution. |
-| Known caveats | Treat as documentation-ready but not field-proven until deployment evidence is captured. |
