@@ -263,21 +263,41 @@ This procedure creates a named Tier 0 administrative account and places it in th
 ### PowerShell — PowerShell
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $UserName = "adm0.j.smith"
 $DisplayName = "J. Smith Tier 0 Admin"
 $TargetOU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"
 $InitialPassword = Read-Host "Enter initial password" -AsSecureString
 
-New-ADUser `
-    -Name $DisplayName `
-    -SamAccountName $UserName `
-    -UserPrincipalName "$UserName@gntech.me" `
-    -Path $TargetOU `
-    -AccountPassword $InitialPassword `
-    -Enabled $true `
-    -ChangePasswordAtLogon $true `
-    -Description "Tier 0 administrative account for J. Smith; no daily productivity use"
+$ParentOU = $TargetOU -replace '^OU=[^,]+,',''
+$Tier0OUObject = Get-ADOrganizationalUnit `
+    -LDAPFilter '(ou=Tier 0)' `
+    -SearchBase $ParentOU `
+    -SearchScope OneLevel `
+    -ErrorAction Stop
+if (-not $Tier0OUObject) {
+    throw "Required OU missing: $TargetOU. Complete the Active Directory Organizational Foundation guide first."
+}
+
+$EscapedUserName = $UserName.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29')
+$ExistingUser = Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedUserName)" -ErrorAction Stop
+if ($ExistingUser) {
+    [PSCustomObject]@{Status="Exists"; Sam=$UserName; DN=$ExistingUser.DistinguishedName}
+}
+else {
+    $NewUser = New-ADUser `
+        -Name $DisplayName `
+        -SamAccountName $UserName `
+        -UserPrincipalName "$UserName@gntech.me" `
+        -Path $TargetOU `
+        -AccountPassword $InitialPassword `
+        -Enabled $true `
+        -ChangePasswordAtLogon $true `
+        -Description "Tier 0 administrative account for J. Smith; no daily productivity use" `
+        -PassThru
+    [PSCustomObject]@{Status="Created"; Sam=$UserName; DN=$NewUser.DistinguishedName}
+}
 ```
 
 ### Expected result — Expected result

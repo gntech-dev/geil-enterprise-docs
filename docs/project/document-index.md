@@ -3,7 +3,7 @@ title: Document Index
 document_id: GEIL-PRJ-INDEX-001
 owner: Infrastructure Engineering
 status: Draft
-version: 18.0
+version: 19.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-INDEX-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 18.0 |
+| Version | 19.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -46,6 +46,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
 | GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Capability-first Epic/Release roadmap |
 | GEIL-PRJ-ERA-001 | Epic and Release Architecture | Approved | `docs/project/epic-release-architecture.md` | Epics, Releases, document assignments, dependency graphs, and scale model |
+| GEIL-PRJ-PROD-AUDIT-001 | Production Readiness Audit Report | Draft | `docs/project/production-readiness-audit-report.md` | Repository-wide engineering audit, code-block audit counts, corrected dependency/syntax/logic defects, remaining manual validation, and future quality-gate recommendations |
 
 ## Platform documents
 

@@ -63,12 +63,32 @@ flowchart TD
 ## PowerShell: create a standard service account
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $SvcOU = "OU=Standard,OU=Service Accounts,OU=GNTECH,$DomainDN"
 $Password = Read-Host "Enter service account password" -AsSecureString
-New-ADUser -Name "svc-monitoring" -SamAccountName "svc-monitoring" -UserPrincipalName "svc-monitoring@gntech.me" `
-    -Path $SvcOU -AccountPassword $Password -Enabled $true -Description "Monitoring service account; least privilege only"
-Set-ADUser -Identity "svc-monitoring" -PasswordNeverExpires $false
+
+$ParentOU = $SvcOU -replace '^OU=[^,]+,',''
+$SvcOUObject = Get-ADOrganizationalUnit `
+    -LDAPFilter '(ou=Standard)' `
+    -SearchBase $ParentOU `
+    -SearchScope OneLevel `
+    -ErrorAction Stop
+if (-not $SvcOUObject) {
+    throw "Required OU missing: $SvcOU. Complete the Organizational Foundation guide first."
+}
+
+$ExistingAccount = Get-ADUser -LDAPFilter '(sAMAccountName=svc-monitoring)' -ErrorAction Stop
+if ($ExistingAccount) {
+    Set-ADUser -Identity $ExistingAccount.DistinguishedName -PasswordNeverExpires $false
+    [PSCustomObject]@{Status="Exists"; Sam="svc-monitoring"; DN=$ExistingAccount.DistinguishedName}
+}
+else {
+    $NewAccount = New-ADUser -Name "svc-monitoring" -SamAccountName "svc-monitoring" -UserPrincipalName "svc-monitoring@gntech.me" `
+        -Path $SvcOU -AccountPassword $Password -Enabled $true -Description "Monitoring service account; least privilege only" -PassThru
+    Set-ADUser -Identity $NewAccount.DistinguishedName -PasswordNeverExpires $false
+    [PSCustomObject]@{Status="Created"; Sam="svc-monitoring"; DN=$NewAccount.DistinguishedName}
+}
 ```
 
 ## PowerShell: create a gMSA

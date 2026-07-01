@@ -3,7 +3,7 @@ title: Epic and Release Architecture
 document_id: GEIL-PRJ-ERA-001
 owner: Infrastructure Engineering
 status: Approved
-version: 10.0
+version: 11.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-ERA-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 10.0 |
+| Version | 11.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -270,6 +270,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `project/documentation-roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/implementation-guide-audit-report.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/documentation-quality-report.md` |
+| E00.R01 - Documentation governance foundation | E00 | `project/production-readiness-audit-report.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/epic-release-architecture.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/documentation-standard.md` |

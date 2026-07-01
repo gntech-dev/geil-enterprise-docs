@@ -60,6 +60,7 @@ nav:
       - Epic and Release Architecture: project/epic-release-architecture.md
       - Implementation Guide Audit Report: project/implementation-guide-audit-report.md
       - Documentation Quality Report: project/documentation-quality-report.md
+      - Production Readiness Audit Report: project/production-readiness-audit-report.md
   - Platform:
       - platform/index.md
       - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md

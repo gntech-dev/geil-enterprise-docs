@@ -85,8 +85,24 @@ AGUDLP adds Universal groups for multi-domain or forest-wide roles. GEIL starts 
 ## PowerShell implementation examples
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $SecurityOU = "OU=Security,OU=Groups,OU=GNTECH,$DomainDN"
+
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
+$ParentOU = $SecurityOU -replace '^OU=[^,]+,',''
+$SecurityOUObject = Get-ADOrganizationalUnit `
+    -LDAPFilter '(ou=Security)' `
+    -SearchBase $ParentOU `
+    -SearchScope OneLevel `
+    -ErrorAction Stop
+if (-not $SecurityOUObject) {
+    throw "Required OU missing: $SecurityOU. Complete Active Directory Organizational Foundation before creating groups."
+}
 
 $Groups = @(
     "GG-FileShare-Finance-RW",
@@ -94,13 +110,42 @@ $Groups = @(
     "GG-FileShare-HR-RW",
     "DL-HRShare-RW"
 )
-foreach ($Group in $Groups) {
-    if (-not (Get-ADGroup -Identity $Group -ErrorAction SilentlyContinue)) {
-        $Scope = if ($Group.StartsWith("DL-")) { "DomainLocal" } else { "Global" }
-        New-ADGroup -Name $Group -SamAccountName $Group -GroupScope $Scope -GroupCategory Security -Path $SecurityOU
+
+$Results = foreach ($Group in $Groups) {
+    $EscapedGroup = ConvertTo-LdapFilterValue -Value $Group
+    $ExistingGroup = Get-ADGroup `
+        -LDAPFilter "(sAMAccountName=$EscapedGroup)" `
+        -SearchBase $SecurityOU `
+        -SearchScope OneLevel `
+        -ErrorAction Stop
+
+    if ($ExistingGroup) {
+        [PSCustomObject]@{Status="Exists"; Name=$Group; DN=$ExistingGroup.DistinguishedName}
+        continue
     }
+
+    $Scope = if ($Group.StartsWith("DL-")) { "DomainLocal" } else { "Global" }
+    $NewGroup = New-ADGroup `
+        -Name $Group `
+        -SamAccountName $Group `
+        -GroupScope $Scope `
+        -GroupCategory Security `
+        -Path $SecurityOU `
+        -PassThru
+    [PSCustomObject]@{Status="Created"; Name=$Group; DN=$NewGroup.DistinguishedName}
 }
-Add-ADGroupMember -Identity "DL-FinanceShare-RW" -Members "GG-FileShare-Finance-RW"
+
+$Results | Format-Table Status,Name,DN -AutoSize
+
+$FinanceDL = Get-ADGroup -LDAPFilter '(sAMAccountName=DL-FinanceShare-RW)' -SearchBase $SecurityOU -SearchScope OneLevel -ErrorAction Stop
+$FinanceGG = Get-ADGroup -LDAPFilter '(sAMAccountName=GG-FileShare-Finance-RW)' -SearchBase $SecurityOU -SearchScope OneLevel -ErrorAction Stop
+if (-not (Get-ADGroupMember -Identity $FinanceDL.DistinguishedName | Where-Object DistinguishedName -eq $FinanceGG.DistinguishedName)) {
+    Add-ADGroupMember -Identity $FinanceDL.DistinguishedName -Members $FinanceGG.DistinguishedName
+    [PSCustomObject]@{Status="Created"; Relationship="GG-FileShare-Finance-RW -> DL-FinanceShare-RW"}
+}
+else {
+    [PSCustomObject]@{Status="Exists"; Relationship="GG-FileShare-Finance-RW -> DL-FinanceShare-RW"}
+}
 ```
 
 ## Validation

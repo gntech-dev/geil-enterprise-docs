@@ -79,11 +79,31 @@ Get-ADGroup -Identity "GG-T2-Workstation-Admins"
 Create a Tier 0 admin user only after the organizational foundation exists:
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
+$Tier0OU = "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN"
 $Password = Read-Host "Enter temporary password" -AsSecureString
-New-ADUser -Name "Admin GNolasco" -SamAccountName "admin.gnolasco" -UserPrincipalName "admin.gnolasco@gntech.me" `
-    -Path "OU=Tier 0,OU=Admin,OU=GNTECH,$DomainDN" `
-    -AccountPassword $Password -Enabled $true -ChangePasswordAtLogon $true
+
+$ParentOU = $Tier0OU -replace '^OU=[^,]+,',''
+$Tier0OUObject = Get-ADOrganizationalUnit `
+    -LDAPFilter '(ou=Tier 0)' `
+    -SearchBase $ParentOU `
+    -SearchScope OneLevel `
+    -ErrorAction Stop
+if (-not $Tier0OUObject) {
+    throw "Required OU missing: $Tier0OU. Complete the Organizational Foundation guide first."
+}
+
+$ExistingAdmin = Get-ADUser -LDAPFilter '(sAMAccountName=admin.gnolasco)' -ErrorAction Stop
+if ($ExistingAdmin) {
+    [PSCustomObject]@{Status="Exists"; Sam="admin.gnolasco"; DN=$ExistingAdmin.DistinguishedName}
+}
+else {
+    $NewAdmin = New-ADUser -Name "Admin GNolasco" -SamAccountName "admin.gnolasco" -UserPrincipalName "admin.gnolasco@gntech.me" `
+        -Path $Tier0OU `
+        -AccountPassword $Password -Enabled $true -ChangePasswordAtLogon $true -PassThru
+    [PSCustomObject]@{Status="Created"; Sam="admin.gnolasco"; DN=$NewAdmin.DistinguishedName}
+}
 ```
 
 ## Validation

@@ -63,12 +63,41 @@ A new hire receives a durable identity used by Windows, Microsoft 365, Entra ID,
 ### PowerShell
 
 ```powershell
+Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
 $TargetOU = "OU=Standard,OU=Users,OU=GNTECH,$DomainDN"
 $Password = Read-Host "Enter temporary password" -AsSecureString
-New-ADUser -Name "G Nolasco" -SamAccountName "gnolasco" -UserPrincipalName "gnolasco@gntech.me" `
-    -Path $TargetOU -AccountPassword $Password -Enabled $true -ChangePasswordAtLogon $true
-Add-ADGroupMember -Identity "GG-IT-Operations" -Members "gnolasco"
+
+$ParentOU = $TargetOU -replace '^OU=[^,]+,',''
+$TargetOUObject = Get-ADOrganizationalUnit `
+    -LDAPFilter '(ou=Standard)' `
+    -SearchBase $ParentOU `
+    -SearchScope OneLevel `
+    -ErrorAction Stop
+if (-not $TargetOUObject) {
+    throw "Required OU missing: $TargetOU. Complete the Organizational Foundation guide first."
+}
+
+$ExistingUser = Get-ADUser -LDAPFilter '(sAMAccountName=gnolasco)' -ErrorAction Stop
+if ($ExistingUser) {
+    [PSCustomObject]@{Status="Exists"; Sam="gnolasco"; DN=$ExistingUser.DistinguishedName}
+}
+else {
+    $NewUser = New-ADUser -Name "G Nolasco" -SamAccountName "gnolasco" -UserPrincipalName "gnolasco@gntech.me" `
+        -Path $TargetOU -AccountPassword $Password -Enabled $true -ChangePasswordAtLogon $true -PassThru
+    [PSCustomObject]@{Status="Created"; Sam="gnolasco"; DN=$NewUser.DistinguishedName}
+}
+
+$OperationsGroup = Get-ADGroup -LDAPFilter '(sAMAccountName=GG-IT-Operations)' -ErrorAction Stop
+$User = Get-ADUser -LDAPFilter '(sAMAccountName=gnolasco)' -ErrorAction Stop
+if (-not $OperationsGroup) { throw "Required group missing: GG-IT-Operations." }
+if (-not (Get-ADGroupMember -Identity $OperationsGroup.DistinguishedName | Where-Object DistinguishedName -eq $User.DistinguishedName)) {
+    Add-ADGroupMember -Identity $OperationsGroup.DistinguishedName -Members $User.DistinguishedName
+    [PSCustomObject]@{Status="Created"; Membership="gnolasco -> GG-IT-Operations"}
+}
+else {
+    [PSCustomObject]@{Status="Exists"; Membership="gnolasco -> GG-IT-Operations"}
+}
 ```
 
 ### Validation

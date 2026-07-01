@@ -3,7 +3,7 @@ title: Documentation Backlog
 document_id: GEIL-PRJ-BACKLOG-001
 owner: Infrastructure Engineering
 status: Draft
-version: 20.0
+version: 21.0
 last_reviewed: 2026-06-29
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PRJ-BACKLOG-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 20.0 |
+| Version | 21.0 |
 | Last Reviewed | 2026-06-29 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -72,6 +72,7 @@ The documentation backlog tracks missing or future GEIL documentation work. Item
 | DOC-032 | P0 | E03 | E03.R01 | Done | Complete Enterprise Identity Foundation prerequisite documentation | Naming standard, group strategy, user lifecycle, service account standard, administrative tiering, firewall matrix, port reference, domain controller backup, and golden-template documents created; existing Microsoft Core dependency references updated | [Enterprise Naming Standard](../microsoft-core/active-directory-naming-standard.md) |
 | DOC-033 | P0 | E02 | E02.R03/E02.R04 | Done | Add golden image and firewall dependency references | Windows Server 2025 and Windows 11 Enterprise golden templates, firewall rule matrix, and enterprise port reference documented for Microsoft Core readiness | [Windows Server 2025 Golden Template](../platform/windows-server-2025-golden-template.md) |
 | DOC-034 | P0 | E05 | E05.R01 | Done | Add domain controller backup and recovery foundation | System State, snapshots, bare metal, authoritative and non-authoritative restore, and DR guidance documented before PKI/NPS/Entra Connect | [Domain Controller Backup and Recovery](../operations/domain-controller-backup.md) |
+| DOC-035 | P0 | E00 | E00.R01 | Done | Complete repository production readiness audit | All `docs/` documents plus `MASTER_PLAN.md` and `CHANGELOG.md` audited for deployability; PowerShell, RouterOS, Linux/Bash, Windows/CMD, Mermaid, dependency-order, canonical-value, and rendered-output gates run; high-confidence AD dependency/idempotency defects corrected | [Production Readiness Audit Report](production-readiness-audit-report.md) |
 | DOC-003 | P1 | E03 | E03.R04 | Open | Add certificate lifecycle runbook | Renewal, template versioning, CRL validation, monitoring, and emergency revocation included | Target: `docs/microsoft-core/certificate-lifecycle-runbook.md` |
 | DOC-004 | P1 | E04 | E04.R02 | Open | Add Entra Conditional Access baseline | Break-glass exclusions, MFA, device compliance, risk policies, report-only testing, and rollback documented | Target: `docs/cloud-endpoint/conditional-access-baseline.md` |
 | DOC-007 | P1 | E03 | E03.R05 | Open | Add privileged access request and approval runbook | Request workflow, approvals, expiration, evidence, rollback, and review documented | Target: `docs/security/privileged-access-request-runbook.md` |
