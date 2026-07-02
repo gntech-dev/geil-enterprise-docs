@@ -77,6 +77,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Incorporated validated pilot finding that DHCP relay alone is not sufficient for Active Directory deployments: added least-privilege VLAN30-to-HQ-DC01 domain-controller service firewall rules, temporary-vs-production rule guidance, DNS/domain-join validation, and deployment checklist updates.
 - Incorporated real Active Directory Organizational Foundation deployment validation: OU hierarchy, sample users, and security groups were successfully created; exact user/service-account validation now uses per-account LDAP-filter loops instead of invalid PowerShell-style `-in` filtering, and the optional default-container review step was de-duplicated/clarified.
 - Reviewed and documented Active Directory Organizational Foundation OU script production-readiness limitations for domain-controller versus RSAT execution, Domain Admins/Enterprise Admins permission checks, future delegated OU creation, DN validation limits, future `SupportsShouldProcess`/`-WhatIf`, and helper-function reuse.
 - Refactored group, user, service account, GPO, DNS, and DHCP PowerShell examples toward the canonical GEIL Enterprise PowerShell object-creation pattern with module/context/permission checks, parent or container validation, safe existence checks, structured output, summary status, clear failures, verbose-capable script structure, and idempotent behavior where practical.

@@ -148,7 +148,7 @@ A VLAN interface is a tagged logical interface on `ether2`. It must exist before
 
 ### What is DHCP relay?
 
-DHCP relay forwards DHCP requests from a client VLAN to a DHCP server on another VLAN. GEIL prepares relay for VLANs 30, 40, and 60 but does not enable relay until Windows DHCP scopes exist on `HQ-DC01`.
+DHCP relay forwards DHCP requests from a client VLAN to a DHCP server on another VLAN. GEIL prepares relay for VLANs 30, 40, and 60 but does not enable relay until Windows DHCP scopes exist on `HQ-DC01`. DHCP relay only delivers address configuration; it does not allow clients to communicate with Active Directory services after they receive an address. Forward-chain firewall rules must also allow the required client-to-domain-controller service ports.
 
 
 ## Detailed Operator Walkthrough
@@ -782,7 +782,9 @@ Validate before adding drops:
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 out-interface-list=WAN action=accept comment="Allow guest to internet only"
 /ip firewall filter add chain=forward in-interface-list=LAN out-interface-list=WAN action=accept comment="Allow GEIL LAN to internet"
 /ip firewall filter add chain=forward src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 action=accept comment="Allow HQ-MGMT01 to Proxmox"
-/ip firewall filter add chain=forward src-address=172.20.30.10 dst-address=172.20.20.11 action=accept comment="Allow HQ-MGMT01 to HQ-DC01 management prep"
+/ip firewall filter add chain=forward src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 action=accept comment="Allow VLAN30 clients to HQ-DC01 AD TCP"
+/ip firewall filter add chain=forward src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=udp dst-port=53,88,389,123 action=accept comment="Allow VLAN30 clients to HQ-DC01 AD UDP"
+/ip firewall filter add chain=forward src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=636 action=accept disabled=yes comment="OPTIONAL LDAPS VLAN30 to HQ-DC01 if enabled"
 /ip firewall filter add chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
@@ -803,13 +805,46 @@ chain=forward action=drop src-address=172.20.70.0/24 dst-address=172.20.0.0/16 c
 chain=forward action=accept src-address=172.20.70.0/24 out-interface-list=WAN comment="Allow guest to internet only"
 chain=forward action=accept in-interface-list=LAN out-interface-list=WAN comment="Allow GEIL LAN to internet"
 chain=forward action=accept src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 comment="Allow HQ-MGMT01 to Proxmox"
-chain=forward action=accept src-address=172.20.30.10 dst-address=172.20.20.11 comment="Allow HQ-MGMT01 to HQ-DC01 management prep"
+chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="Allow VLAN30 clients to HQ-DC01 AD TCP"
+chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=udp dst-port=53,88,389,123 comment="Allow VLAN30 clients to HQ-DC01 AD UDP"
+chain=forward action=accept disabled=yes src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=636 comment="OPTIONAL LDAPS VLAN30 to HQ-DC01 if enabled"
 chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
 !!! implementation "Field deployment lesson"
 
     During Phase 1 deployment, Windows internet validation failed because the firewall allowed guest internet and management access but did not yet include a general `LAN -> WAN` forwarding rule. Do not continue to Windows deployment unless the `Allow GEIL LAN to internet` rule exists before the default deny rule.
+
+
+!!! warning "DHCP relay is not Active Directory connectivity"
+
+    Pilot validation proved that DHCP relay can succeed while domain join still fails. A VLAN 30 client received an address and DNS server option `172.20.20.11`, but DNS queries and domain join failed because only `172.20.30.10` could reach `HQ-DC01`; all other workstation addresses hit the default deny rule. Production policy must allow required AD service ports from `172.20.30.0/24` to `172.20.20.11` before the default deny rule.
+
+#### Temporary pilot validation rule — do not keep for production
+
+If a pilot client receives DHCP but cannot query DNS or contact AD, this broad rule can prove that the firewall is the blocker. Remove it immediately after validation and replace it with the least-privilege production rules above.
+
+```routeros
+/ip firewall filter add chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 place-before=[find comment="Default deny unapproved forwarding"] comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"
+/ip firewall filter remove [find comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"]
+```
+
+#### Production Active Directory service policy
+
+The production rules are intentionally service-specific. They permit VLAN 30 clients to use required domain-controller services without granting unrestricted access to `HQ-DC01`.
+
+| Service | Protocol | Port |
+|---|---|---:|
+| DNS | TCP/UDP | 53 |
+| Kerberos | TCP/UDP | 88 |
+| LDAP | TCP/UDP | 389 |
+| SMB / SYSVOL / GPO | TCP | 445 |
+| RPC Endpoint Mapper | TCP | 135 |
+| Dynamic RPC | TCP | 49152-65535 |
+| NTP | UDP | 123 |
+| Global Catalog | TCP | 3268 |
+| Global Catalog SSL | TCP | 3269 |
+| LDAPS | TCP | 636, disabled until LDAPS is enabled |
 
 #### If validation fails — Step 12: Apply baseline firewall rules in safe order
 
@@ -822,6 +857,7 @@ Check:
 - `WAN` interface list contains `ether1`.
 - `Allow GEIL LAN to internet` appears before `Default deny unapproved forwarding`.
 - NAT masquerade exists.
+- VLAN 30 to `HQ-DC01` AD service rules appear before `Default deny unapproved forwarding`.
 
 Continue only if successful.
 
@@ -835,7 +871,7 @@ Remove the most recent bad rule by comment, for example:
 
 #### Next step — Step 12: Apply baseline firewall rules in safe order
 
-Prepare DHCP relay without enabling it.
+Prepare DHCP relay without enabling it. Remember: relay validation proves address assignment only; DNS and domain join require the production Active Directory service rules above.
 
 ### Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 

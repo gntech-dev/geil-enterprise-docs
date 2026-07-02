@@ -62,7 +62,8 @@ This LLD is derived from and subordinate to the E02.R02 High-Level Design baseli
 | VAL-008 | Guest isolation | VLAN 70 cannot reach internal RFC1918 VLANs | Access to `172.20.20.11`, `172.20.30.10`, and `172.20.100.11` is denied | Firewall log or test output |
 | VAL-009 | Management access | `HQ-MGMT01` can reach `HQ-FW01`, `PVE-HQ01`, and `HQ-DC01` as allowed | Required management flows pass; unrelated flows deny | Test output |
 | VAL-010 | Backup path readiness | `PBS-HQ01` network path is reserved on VLAN 90 | Gateway `172.20.90.1` exists and `172.20.90.10` is reserved | IPAM or environment evidence |
-| VAL-011 | Snapshots | Required checkpoints exist | All checkpoints listed in the build plan are present or config exports exist | Snapshot inventory |
+| VAL-011 | VLAN30 to Active Directory services | Workstation clients can reach required `HQ-DC01` services after DHCP succeeds | DNS, Kerberos, LDAP, SMB/SYSVOL, RPC, NTP, and GC tests pass from a non-management VLAN30 client | Client command output and RouterOS firewall counters |
+| VAL-012 | Snapshots | Required checkpoints exist | All checkpoints listed in the build plan are present or config exports exist | Snapshot inventory |
 | VAL-012 | Config export | `HQ-FW01` baseline config exported | Export is stored outside the firewall VM and protected | Export location record |
 | VAL-013 | Documentation alignment | Build documents reference HLD and Environment Specification | Cross-references are present and MkDocs strict build passes | MkDocs build output |
 
@@ -318,6 +319,7 @@ Validate immediately after each change block. Do not continue when expected outp
 | Mistake | Impact | Correction |
 |---|---|---|
 | Running steps out of order | Commands fail or partial state is created | Return to the last validation gate |
+| DHCP works but domain join fails | DHCP relay is working but forward-chain AD service ports are blocked | Add least-privilege VLAN30-to-HQ-DC01 service rules before default deny; do not keep broad pilot allow rules. |
 | Referencing missing objects | Invalid commands or unsafe defaults | Create and validate the object first |
 | Skipping rollback capture | Recovery is slower | Capture snapshot/export before risky changes |
 
@@ -332,11 +334,38 @@ FAIL = stop, remediate, rerun validation, then continue.
 
 Minimum field validation set:
 
+- DHCP relay success is not sufficient for Active Directory readiness. A VLAN 30 client must also reach required `HQ-DC01` services through the forward chain.
 - RouterOS can ping `172.31.255.1`, `1.1.1.1`, and `cloudflare.com`.
 - RouterOS has `Allow GEIL LAN to internet` before default deny.
 - DHCP relay is disabled until Windows DHCP scopes exist.
 - Windows Server can ping gateway, reach internet, and resolve DNS before AD DS.
 - `dcdiag`, `repadmin`, and AD DNS SRV lookup pass before DNS/DHCP expansion.
+- A non-management VLAN30 client can resolve AD DNS, discover a domain controller, reach SYSVOL, sync time, and begin domain join without firewall timeouts.
+
+### VLAN30 Active Directory service validation
+
+Run from a DHCP client in VLAN 30 that is not `HQ-MGMT01`.
+
+```powershell
+ipconfig /all
+Resolve-DnsName corp.gntech.me -Server 172.20.20.11
+Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV -Server 172.20.20.11
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 445
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 135
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 3268
+w32tm /stripchart /computer:HQ-DC01.corp.gntech.me /samples:3
+nltest /dsgetdc:corp.gntech.me
+```
+
+Expected result: DNS queries return `HQ-DC01`, TCP tests succeed, time replies are received, and `nltest` discovers the domain controller.
+
+From `HQ-FW01`, confirm the least-privilege rules are matching before the default deny rule:
+
+```routeros
+/ip/firewall/filter/print stats where comment~"VLAN30 clients to HQ-DC01"
+```
+
+STOP if DHCP succeeds but DNS queries, SYSVOL access, RPC, time sync, or domain-controller discovery time out. Do not proceed to domain join until the production AD service rules are in place.
 
 ## Troubleshooting
 
