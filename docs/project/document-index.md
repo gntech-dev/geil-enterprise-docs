@@ -62,7 +62,8 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PLAT-AD-NET-001 | Active Directory Network Requirements | Approved | `docs/platform/active-directory-network-requirements.md` | Authoritative address-list based client-to-domain-controller firewall architecture, required AD service ports, pilot finding, validation, rollback, and evidence |
 | GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
 | GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
-| GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Draft | `docs/platform/windows-11-enterprise-golden-template.md` | Proxmox Windows 11 Enterprise template build, update, drivers, security, Sysprep, clone, validation, and rollback |
+| GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Approved | `docs/platform/windows-11-enterprise-golden-template.md` | Workgroup-only Proxmox Windows 11 template build with VirtIO, QEMU Guest Agent, Cloudbase-Init, Sysprep, and template conversion; domain join explicitly excluded |
+| GEIL-PLAT-W11-DOMJOIN-001 | Windows 11 Domain Join and GPO Validation | Approved | `docs/platform/windows-11-domain-join-gpo-validation.md` | Clone from template, attach VLAN30, validate DHCP/DNS/DC firewall, join `corp.gntech.me`, move computer object, and validate `GP - Baseline - Workstations` |
 
 ## Governance documents
 

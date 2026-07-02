@@ -77,6 +77,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Separated Windows 11 golden-template documentation from domain-join/GPO validation: the template guide is now workgroup-only with Cloudbase-Init/Sysprep/template conversion, and a new clone-stage Windows 11 Domain Join and GPO Validation guide covers VLAN30, DHCP, DNS, AD firewall validation, `corp.gntech.me` join, Workstations OU placement, `gpupdate`, `gpresult`, SYSVOL/NETLOGON, and `GP - Baseline - Workstations`.
 - Established the shared address-list based Active Directory network architecture: created Active Directory Network Requirements, refactored MikroTik/firewall/validation/Windows/AD/GPO references to use the standard, and replaced per-VLAN/per-host domain-controller firewall guidance with reusable RouterOS address lists.
 - Incorporated validated pilot finding that DHCP relay alone is not sufficient for Active Directory deployments: added least-privilege VLAN30-to-HQ-DC01 domain-controller service firewall rules, temporary-vs-production rule guidance, DNS/domain-join validation, and deployment checklist updates.
 - Incorporated real Active Directory Organizational Foundation deployment validation: OU hierarchy, sample users, and security groups were successfully created; exact user/service-account validation now uses per-account LDAP-filter loops instead of invalid PowerShell-style `-in` filtering, and the optional default-container review step was de-duplicated/clarified.
