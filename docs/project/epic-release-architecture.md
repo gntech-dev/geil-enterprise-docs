@@ -357,6 +357,14 @@ The following register assigns every current published document to exactly one r
 | E03.R01 - Core directory services | E03 | `microsoft-core/service-account-standard.md` |
 | E03.R03 - Privileged access control plane | E03 | `security/administrative-tiering.md` |
 | E05.R01 - Operations readiness | E05 | `operations/domain-controller-backup.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/windows-client-lifecycle/cloudbase-init-for-proxmox.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/windows-client-lifecycle/standard-windows-client-hq-w11-001.md` |
+| E05.R01 - Operations readiness | E05 | `microsoft-core/administration/rsat-remote-administration.md` |
+| E05.R01 - Operations readiness | E05 | `microsoft-core/administration/windows-server-remote-management.md` |
+| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/file-server.md` |
+| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/dfs.md` |
+| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/smb-shares-permissions.md` |
+| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/agdlp-access-model.md` |
 
 ## Future release slots
 

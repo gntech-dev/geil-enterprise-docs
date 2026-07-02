@@ -53,6 +53,10 @@ The current canonical model after ADR-0002 and ADR-0003 is: firewall `HQ-FW01` r
 
 GEIL implementation-phase documentation must pass engineering validation as well as MkDocs validation. The current repository-wide checkpoint is recorded in [Production Readiness Audit Report](production-readiness-audit-report.md). Future implementation guide changes must treat field deployment issues as engineering bugs, correct all affected documents, and avoid committing LOW-confidence deployment logic.
 
+## Microsoft Core navigation checkpoint
+
+Microsoft Core navigation is phase-based: Phase 1 Identity Foundation, Phase 2 Core Infrastructure Services, Phase 3 Windows Client Lifecycle, Phase 4 Administration, Phase 5 File Services Future, and Phase 6 Future Identity Expansion. Group Strategy, User Lifecycle, and Service Account Standard are references pending Identity and Access Standard consolidation, not loose deployment steps.
+
 ## Windows client lifecycle checkpoint
 
 Microsoft Core now exposes **Phase 3 - Windows Client Lifecycle** as the authoritative deployment sequence for Windows 11 Enterprise clients: golden template, Cloudbase-Init for Proxmox, `HQ-MGMT01`, domain join/GPO validation, and `HQ-W11-001`. The implementation files live under `docs/microsoft-core/windows-client-lifecycle/`.

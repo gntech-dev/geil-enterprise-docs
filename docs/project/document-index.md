@@ -113,23 +113,35 @@ The document index is the authoritative register of GEIL documents, their owners
 
 ## Microsoft Core documents
 
-| Document ID | Title | Status | Path | Notes |
-|---|---|---|---|---|
-| GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
-| GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
-| GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy including Management Workstations, users, groups, baseline memberships, pilot Tier 0 bootstrap nesting, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
-| GEIL-MSC-NAME-001 | Enterprise Naming Standard | Draft | `docs/microsoft-core/active-directory-naming-standard.md` | Naming standards for users, computers, servers, groups, service accounts, GPOs, DNS, DFS, certificates, hypervisors, Proxmox, and MikroTik |
-| GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | AGDLP, AGUDLP, RBAC, baseline membership model, group nesting, naming convention, examples, PowerShell, and validation |
-| GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | New hire, termination, department change, privilege elevation, contractors, guests, password reset, lockout, and offboarding |
-| GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Standard service accounts, gMSA, scheduled tasks, IIS, SQL, NPS, Entra Connect, backup, monitoring, rotation, and least privilege |
-| GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
-| GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model, including future Management Workstations GPO architecture |
-| GEIL-MSC-WCL-INDEX | Windows Client Lifecycle | Approved | `docs/microsoft-core/windows-client-lifecycle/index.md` | Phase 3 Windows Client Lifecycle entry point and deployment order |
-| GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` | Workgroup-only Proxmox Windows 11 template build with VirtIO, QEMU Guest Agent, Cloudbase-Init, Sysprep, and template conversion; domain join explicitly excluded |
-| GEIL-PLAT-W11-MGMT-001 | Windows 11 Management Workstation | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` | Deploy `HQ-MGMT01` as Windows 11 Enterprise management workstation / initial PAW on Management VLAN 10 with domain join after cloning, Management Workstations OU placement, RSAT/admin tools, and remote administration model |
-| GEIL-PLAT-W11-DOMJOIN-001 | Windows 11 Domain Join and GPO Validation | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` | Clone standard clients from template, attach VLAN30, validate DHCP/DNS/DC firewall, join `corp.gntech.me`, move computer object, and validate `GP - Baseline - Workstations` |
-| GEIL-MSC-WAC-001 | Windows Admin Center | Draft | `docs/microsoft-core/windows-admin-center.md` | Management gateway |
-| GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
+| Phase | Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|---|
+| Phase 1 - Identity Foundation | GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
+| Phase 1 - Identity Foundation | GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
+| Phase 1 - Identity Foundation | GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy including Management Workstations, users, groups, baseline memberships, pilot Tier 0 bootstrap nesting, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
+| Phase 1 - Identity Foundation | GEIL-MSC-NAME-001 | Enterprise Naming Standard | Draft | `docs/microsoft-core/active-directory-naming-standard.md` | Naming standards for users, computers, servers, groups, service accounts, GPOs, DNS, DFS, certificates, hypervisors, Proxmox, and MikroTik |
+| Phase 2 - Core Infrastructure Services | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
+| Phase 2 - Core Infrastructure Services | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model, including future Management Workstations GPO architecture |
+| Phase 3 - Windows Client Lifecycle | GEIL-MSC-WCL-INDEX | Windows Client Lifecycle | Approved | `docs/microsoft-core/windows-client-lifecycle/index.md` | Phase 3 Windows Client Lifecycle entry point and deployment order |
+| Phase 3 - Windows Client Lifecycle | GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` | Workgroup-only Proxmox Windows 11 template build with VirtIO, QEMU Guest Agent, Cloudbase-Init, Sysprep, and template conversion; domain join explicitly excluded |
+| Phase 3 - Windows Client Lifecycle | GEIL-MSC-WCL-CLOUDBASE-001 | Cloudbase-Init for Proxmox | Approved | `docs/microsoft-core/windows-client-lifecycle/cloudbase-init-for-proxmox.md` | Cloudbase-Init lifecycle reference for Proxmox Windows 11 clones |
+| Phase 3 - Windows Client Lifecycle | GEIL-PLAT-W11-MGMT-001 | Windows Management Workstation - HQ-MGMT01 | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` | Deploy `HQ-MGMT01` as Windows 11 Enterprise management workstation / initial PAW on Management VLAN 10 with domain join after cloning, Management Workstations OU placement, RSAT/admin tools, and remote administration model |
+| Phase 3 - Windows Client Lifecycle | GEIL-PLAT-W11-DOMJOIN-001 | Windows Domain Join and GPO Validation | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` | Clone standard clients from template, attach VLAN30, validate DHCP/DNS/DC firewall, join `corp.gntech.me`, move computer object, and validate `GP - Baseline - Workstations` |
+| Phase 3 - Windows Client Lifecycle | GEIL-MSC-WCL-STANDARD-001 | Standard Windows Client - HQ-W11-001 | Approved | `docs/microsoft-core/windows-client-lifecycle/standard-windows-client-hq-w11-001.md` | Standard Windows 11 client role on VLAN30 and the Workstations OU |
+| Phase 4 - Administration | GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
+| Phase 4 - Administration | GEIL-MSC-ADMIN-RSAT-001 | RSAT / Remote Administration | Approved | `docs/microsoft-core/administration/rsat-remote-administration.md` | RSAT and remote administration tooling on `HQ-MGMT01` |
+| Phase 4 - Administration | GEIL-MSC-ADMIN-WSRM-001 | Windows Server Remote Management | Approved | `docs/microsoft-core/administration/windows-server-remote-management.md` | Remote server administration model from approved management workstations |
+| Phase 5 - File Services (Future) | GEIL-MSC-FILE-FS-001 | File Server | Future | `docs/microsoft-core/file-services/file-server.md` | Future file server capability placeholder; not active deployment guidance |
+| Phase 5 - File Services (Future) | GEIL-MSC-FILE-DFS-001 | DFS | Future | `docs/microsoft-core/file-services/dfs.md` | Future DFS capability placeholder; not active deployment guidance |
+| Phase 5 - File Services (Future) | GEIL-MSC-FILE-SMB-001 | SMB Shares and Permissions | Future | `docs/microsoft-core/file-services/smb-shares-permissions.md` | Future SMB permissions capability placeholder; not active deployment guidance |
+| Phase 5 - File Services (Future) | GEIL-MSC-FILE-AGDLP-001 | AGDLP Access Model | Future | `docs/microsoft-core/file-services/agdlp-access-model.md` | Future file-services AGDLP application; not active deployment guidance |
+| Phase 6 - Future Identity Expansion | GEIL-MSC-PKI-001 | PKI | Future | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI planning; promote only after implementation |
+| Phase 6 - Future Identity Expansion | GEIL-MSC-NPS-001 | NPS / RADIUS | Future | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication planning; promote only after implementation |
+| Phase 6 - Future Identity Expansion | GEIL-CLD-ENTRA-001 | Entra Hybrid | Future | `docs/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync planning; promote only after implementation |
+| Phase 6 - Future Identity Expansion | GEIL-CLD-WHFB-001 | Windows Hello for Business | Future | `docs/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in planning; promote only after implementation |
+| Phase 6 - Future Identity Expansion | GEIL-MSC-WAC-001 | Windows Admin Center | Future | `docs/microsoft-core/windows-admin-center.md` | Management gateway planning; promote only after implementation |
+| Identity and Access Reference | GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
+| Identity and Access Reference | GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
+| Identity and Access Reference | GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
 
 ## Cloud and Endpoint / Future documents
 
@@ -137,12 +149,8 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-FUT-INDEX | Future | Draft | `docs/future/index.md` | Planning section for technologies and capabilities not yet laboratory-validated |
 | GEIL-CLD-M365-001 | Microsoft 365 Tenant Foundation | Future | `docs/cloud-endpoint/microsoft-365-tenant-foundation.md` | Tenant baseline planning; promote only after implementation |
-| GEIL-CLD-ENTRA-001 | Entra ID Hybrid Identity | Future | `docs/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync planning; promote only after implementation |
 | GEIL-CLD-INTUNE-001 | Intune Windows 11 Enterprise | Future | `docs/cloud-endpoint/intune-windows11-enterprise.md` | Endpoint management planning; promote only after implementation |
-| GEIL-CLD-WHFB-001 | Windows Hello for Business | Future | `docs/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in planning; promote only after implementation |
 | GEIL-CLD-DEF-001 | Microsoft Defender | Future | `docs/cloud-endpoint/microsoft-defender.md` | Endpoint protection planning; promote only after implementation |
-| GEIL-MSC-PKI-001 | AD CS PKI | Future | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI planning; promote only after implementation |
-| GEIL-MSC-NPS-001 | NPS RADIUS 802.1X | Future | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication planning; promote only after implementation |
 
 ## Archive documents
 
@@ -180,11 +188,12 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 8 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
-| E03 | E03.R01 - Core directory services | 12 |
+| E03 | E03.R01 - Core directory services | 14 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
 | E03 | E03.R03 - Privileged access control plane | 3 |
+| E03 | E03.R06 - Service account lifecycle | 4 |
 | E04 | E04.R01 - Cloud identity and endpoint management | 6 |
-| E05 | E05.R01 - Operations readiness | 8 |
+| E05 | E05.R01 - Operations readiness | 10 |
 
 ## Index maintenance procedure
 
