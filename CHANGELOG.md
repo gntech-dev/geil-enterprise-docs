@@ -10,6 +10,7 @@
 - Documented creation of pilot GPO shells and the validated link from `GP - Baseline - Workstations` to the Workstations OU.
 - Documented PowerShell Script Block Logging validation through `Get-GPRegistryValue`.
 - Reinforced copy/paste-safe PowerShell patterns without fragile regex or fragmented `if/else` examples.
+- Refined the Windows 11 Management Workstation guide to match the validated `HQ-MGMT01` pilot lifecycle: clone, Cloudbase-Init first boot, DHCP/DNS/AD connectivity validation, domain join/reboot, Management Workstations OU placement, Group Policy validation, RSAT/admin tooling, final validation, pilot findings, and roadmap-oriented next steps.
 
 All notable changes to GEIL are documented in this file.
 
