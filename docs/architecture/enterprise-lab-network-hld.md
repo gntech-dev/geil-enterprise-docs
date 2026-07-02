@@ -108,6 +108,10 @@ flowchart TD
 | 90 | Backup | `172.20.90.0/24` | `172.20.90.1` | High | `PBS-HQ01`, backup transport |
 | 100 | Hypervisors | `172.20.100.0/24` | `172.20.100.1` | High | `PVE-HQ01`, future cluster traffic |
 
+## Management workstation pilot decision
+
+Pilot validation established that `HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation and initial PAW. It belongs on Management VLAN 10, not Workstations VLAN 30. `HQ-W11-001` and future user workstations remain on VLAN 30. Only management workstations belong on the management VLAN.
+
 ## IP addressing allocation
 
 ```mermaid
@@ -142,7 +146,7 @@ flowchart LR
 | `HQ-FW01` | 10 | `172.20.10.1` |
 | `HQ-DC01` | 20 | `172.20.20.11` |
 | `HQ-DC02` | 20 | `172.20.20.12` |
-| `HQ-MGMT01` | 30 | `172.20.30.10` |
+| `HQ-MGMT01` | 10 | `172.20.10.10` |
 | `PBS-HQ01` | 90 | `172.20.90.10` |
 | `PVE-HQ01` | 100 | `172.20.100.11` |
 

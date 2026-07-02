@@ -74,7 +74,7 @@ sequenceDiagram
     Eng->>FW: Export baseline configuration
     Eng->>DC: Create HQ-DC01 VM and apply static IP
     Eng->>DC: Capture CP-DC01-OS
-    Eng->>MGMT: Clone HQ-MGMT01 from Windows 11 template and attach VLAN 30
+    Eng->>MGMT: Clone HQ-MGMT01 from Windows 11 template and attach VLAN 10
     Eng->>MGMT: Validate DHCP/DNS/DC access, join domain, install RSAT, capture CP-MGMT01-OS
     Eng->>W11: Create HQ-W11-001 VM
     Eng->>W11: Capture CP-W11-001-OS
@@ -90,7 +90,7 @@ sequenceDiagram
 | G3 VLAN Gateways | VLAN gateways exist and respond on expected addresses | Revert to `CP-FW-INSTALLED` |
 | G4 Baseline Firewall Policy | Management, server, workstation, guest, backup, hypervisor zones follow baseline rules | Revert to `CP-FW-VLANS` |
 | G5 Server VM Shell | `HQ-DC01` has static `172.20.20.11` and uses expected gateway | Revert `HQ-DC01` to clean OS snapshot |
-| G6 Management Workstation | `HQ-MGMT01` is Windows 11 Enterprise, cloned from the golden template, attached to VLAN 30, domain joined after network validation, RSAT-enabled, and reaches approved management targets | Revert `HQ-MGMT01` to clean clone snapshot |
+| G6 Management Workstation | `HQ-MGMT01` is Windows 11 Enterprise, cloned from the golden template, attached to VLAN 10, domain joined after network validation, RSAT-enabled, and reaches approved management targets | Revert `HQ-MGMT01` to clean clone snapshot |
 | G7 Client VM | `HQ-W11-001` exists on VLAN 30 and can obtain/reach expected network path when DHCP is available | Revert `HQ-W11-001` to clean OS snapshot |
 
 ## Detailed build plan
@@ -182,7 +182,7 @@ Checkpoint:
 
 ### Step 6: Deploy `HQ-MGMT01` management workstation
 
-`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation / initial PAW. Do not deploy it as Windows Server and do not use Windows Server as a daily admin workstation. Deploy it from the workgroup-only Windows 11 golden template, attach it to `GEILLAN` VLAN 30, validate DHCP/DNS/domain-controller access, join `corp.gntech.me`, install RSAT, and use it to administer `HQ-DC01` and future servers.
+`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation / initial PAW. Do not deploy it as Windows Server and do not use Windows Server as a daily admin workstation. Deploy it from the workgroup-only Windows 11 golden template, attach it to `GEILLAN` VLAN 10, validate management-network addressing, DNS, and domain-controller access, join `corp.gntech.me`, move it to the Management Workstations OU, install RSAT/admin tools, and use it to administer `HQ-DC01` and future servers.
 
 VM specification:
 
@@ -190,15 +190,15 @@ VM specification:
 |---|---|
 | VM name | `HQ-MGMT01` |
 | OS | Windows 11 Enterprise |
-| VLAN | 30 Workstations |
-| IP | `172.20.30.10/24` |
-| Gateway | `172.20.30.1` |
+| VLAN | 10 Management |
+| IP | `172.20.10.10/24` |
+| Gateway | `172.20.10.1` |
 | DNS before AD DS | Temporary upstream resolver through `HQ-FW01` |
 | DNS after AD DS | `172.20.20.11`; future `172.20.20.12` |
 
 Checkpoint:
 
-- Snapshot `CP-MGMT01-OS` after clone, VLAN30 validation, domain join, RSAT installation, and management tooling baseline.
+- Snapshot `CP-MGMT01-OS` after clone, VLAN10 management validation, domain join, RSAT installation, and management tooling baseline.
 
 Detailed procedure: [Windows 11 Management Workstation](windows-11-management-workstation.md).
 

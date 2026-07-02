@@ -77,6 +77,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Moved `HQ-MGMT01` to the Management VLAN 10 architecture and the new `OU=Management Workstations,OU=Computers,OU=GNTECH` placement; clarified that `HQ-W11-001` and future user workstations remain on VLAN 30, and prepared future `GP - Baseline - Management Workstations` architecture without implementing unvalidated settings.
 - Completed the GEIL documentation architecture review: added a repository-wide classification report, permanent single-source-of-truth rules, Future and Archive sections, and reorganized MkDocs navigation around Foundation, Platform, Microsoft Core, Security, Architecture, Operations, Project, Future, and Archive.
 - Added baseline Active Directory group-membership assignment to the Organizational Foundation guide: `admin.gnolasco -> GG-T0-Domain-Admins`, `gnolasco -> GG-IT-Operations`, optional VPN/WiFi memberships, and pilot/bootstrap-only `GG-T0-Domain-Admins -> Domain Admins` nesting without direct user membership in `Domain Admins`.
 - Corrected HQ-MGMT01 architecture: documented `HQ-MGMT01` as a Windows 11 Enterprise management workstation / initial PAW, separated it from `HQ-W11-001` standard client validation, added RSAT/admin-tool deployment from the golden template after VLAN30/DHCP/DNS/DC validation and domain join, and clarified that Windows Server must not be used as a daily admin workstation.
@@ -165,6 +166,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Moved `HQ-MGMT01` to the Management VLAN 10 architecture and the new `OU=Management Workstations,OU=Computers,OU=GNTECH` placement; clarified that `HQ-W11-001` and future user workstations remain on VLAN 30, and prepared future `GP - Baseline - Management Workstations` architecture without implementing unvalidated settings.
 - Updated `mkdocs.yml` navigation to include the Security section and Privileged Access Model.
 - Marked backlog item `DOC-002` as Done in the authoritative documentation backlog.
 - Updated roadmap Phase 2 and Phase 3 to show privileged access and tiered administration as Done.

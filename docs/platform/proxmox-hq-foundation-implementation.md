@@ -65,7 +65,7 @@ By the end of this guide you will have:
 - ✓ `GEILWAN` and `GEILLAN` visible in `PVE-HQ01 -> System -> Network`.
 - ✓ `HQ-FW01` VM shell with `net0` on `GEILWAN` and `net1` on `GEILLAN`.
 - ✓ `HQ-DC01` VM shell on `GEILLAN`, VLAN 20.
-- ✓ `HQ-MGMT01` VM shell on `GEILLAN`, VLAN 30.
+- ✓ `HQ-MGMT01` VM shell on `GEILLAN`, VLAN 10.
 - ✓ `HQ-W11-001` VM shell on `GEILLAN`, VLAN 30.
 - ✓ Evidence outputs captured for bridge and VM configuration.
 
@@ -153,7 +153,7 @@ flowchart LR
     FW[HQ-FW01 MikroTik CHR ether1 172.31.255.2/30]
     LAN[GEILLAN VLAN-aware trunk]
     DC[HQ-DC01 VLAN 20]
-    MGMT[HQ-MGMT01 VLAN 30]
+    MGMT[HQ-MGMT01 VLAN 10 Management]
     W11[HQ-W11-001 VLAN 30]
 
     PVE --> WAN --> FW
@@ -1176,7 +1176,7 @@ Create the VM shell or clone target for the Windows 11 Enterprise management wor
 
 #### Why this matters — Create `HQ-MGMT01`
 
-`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation / initial PAW. Windows Server must not be used as a daily administrative workstation. After the Windows 11 golden template exists, deploy `HQ-MGMT01` from that template, validate VLAN30 DHCP/DNS/domain-controller access, join `corp.gntech.me`, install RSAT/admin tools, and use it for remote administration of `HQ-DC01` and future servers.
+`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation / initial PAW. Windows Server must not be used as a daily administrative workstation. After the Windows 11 golden template exists, deploy `HQ-MGMT01` from that template, validate VLAN10 management addressing, DNS, and domain-controller access, join `corp.gntech.me`, move it to the Management Workstations OU, install RSAT/admin tools, and use it for remote administration of `HQ-DC01` and future servers.
 
 #### Estimated time — Create `HQ-MGMT01`
 
@@ -1198,12 +1198,12 @@ No Windows 11 OS is installed by this Proxmox shell step. Full management workst
 
 #### Expected ending state — Create `HQ-MGMT01`
 
-VM `120` exists as `HQ-MGMT01` with `net0` on `GEILLAN`, VLAN tag 30, or is ready to be cloned from `TPL-W11-ENT-GOLD` by the management workstation guide.
+VM `120` exists as `HQ-MGMT01` with `net0` on `GEILLAN`, VLAN tag 10, or is ready to be cloned from `TPL-W11-ENT-GOLD` by the management workstation guide.
 
 #### Commands — Create `HQ-MGMT01`
 
 ```bash
-qm create 120 --name HQ-MGMT01 --memory 8192 --cores 2 --net0 virtio,bridge=GEILLAN,tag=30
+qm create 120 --name HQ-MGMT01 --memory 8192 --cores 2 --net0 virtio,bridge=GEILLAN,tag=10
 ```
 
 ```bash
@@ -1224,7 +1224,7 @@ Expected `qm config 120` lines include:
 
 ```text
 name: HQ-MGMT01
-net0: virtio=...,bridge=GEILLAN,tag=30
+net0: virtio=...,bridge=GEILLAN,tag=10
 ```
 
 #### GUI validation — Create `HQ-MGMT01`
@@ -1234,7 +1234,7 @@ net0: virtio=...,bridge=GEILLAN,tag=30
 | Navigation path | `PVE-HQ01 -> HQ-MGMT01 -> Hardware` |
 | Window name | VM hardware |
 | Tab name | Hardware |
-| Expected result | Network Device uses `GEILLAN` with VLAN tag `30` |
+| Expected result | Network Device uses `GEILLAN` with VLAN tag `10` |
 
 !!! example "Screenshot Required"
 
@@ -1243,7 +1243,7 @@ net0: virtio=...,bridge=GEILLAN,tag=30
     Expected result:
 
     - Bridge = `GEILLAN`.
-    - VLAN tag = `30`.
+    - VLAN tag = `10`.
 
 #### Failure handling — Create `HQ-MGMT01`
 
@@ -1290,7 +1290,7 @@ No Windows 11 OS is installed by this Proxmox shell step. Full standard client d
 
 #### Expected ending state — Create `HQ-W11-001`
 
-VM `121` exists as `HQ-W11-001` with `net0` on `GEILLAN`, VLAN tag 30.
+VM `121` exists as `HQ-W11-001` with `net0` on `GEILLAN`, VLAN tag 10.
 
 #### Commands — Create `HQ-W11-001`
 
@@ -1316,7 +1316,7 @@ Expected `qm config 121` lines include:
 
 ```text
 name: HQ-W11-001
-net0: virtio=...,bridge=GEILLAN,tag=30
+net0: virtio=...,bridge=GEILLAN,tag=10
 ```
 
 #### GUI validation — Create `HQ-W11-001`
@@ -1326,7 +1326,7 @@ net0: virtio=...,bridge=GEILLAN,tag=30
 | Navigation path | `PVE-HQ01 -> HQ-W11-001 -> Hardware` |
 | Window name | VM hardware |
 | Tab name | Hardware |
-| Expected result | Network Device uses `GEILLAN` with VLAN tag `30` |
+| Expected result | Network Device uses `GEILLAN` with VLAN tag `10` |
 
 !!! example "Screenshot Required"
 
@@ -1335,7 +1335,7 @@ net0: virtio=...,bridge=GEILLAN,tag=30
     Expected result:
 
     - Bridge = `GEILLAN`.
-    - VLAN tag = `30`.
+    - VLAN tag = `10`.
 
 #### Failure handling — Create `HQ-W11-001`
 
@@ -1427,7 +1427,7 @@ Success looks like this:
 
 - `HQ-FW01` has `net0` on `GEILWAN` and `net1` on `GEILLAN`.
 - `HQ-DC01` has `net0` on `GEILLAN,tag=20`.
-- `HQ-MGMT01` has `net0` on `GEILLAN,tag=30`.
+- `HQ-MGMT01` has `net0` on `GEILLAN,tag=10`.
 - `HQ-W11-001` has `net0` on `GEILLAN,tag=30`.
 
 #### Failure handling — Capture final VM evidence
@@ -1486,8 +1486,8 @@ Expected results:
 - `GEILLAN` exists and is VLAN-aware.
 - `HQ-FW01` uses `GEILWAN` and `GEILLAN`.
 - `HQ-DC01` uses `GEILLAN` with VLAN tag 20.
-- `HQ-MGMT01` uses `GEILLAN` with VLAN tag 30.
-- `HQ-W11-001` uses `GEILLAN` with VLAN tag 30.
+- `HQ-MGMT01` uses `GEILLAN` with VLAN tag 10.
+- `HQ-W11-001` uses `GEILLAN` with VLAN tag 10.
 - Existing `eno1`, `VSW4001`, `PROD`, and `TEST` remain unchanged.
 
 ## Common Mistakes
@@ -1568,7 +1568,7 @@ This guide is complete only when all criteria below are true:
 4. Existing `eno1`, `VSW4001`, `PROD`, and `TEST` remain unchanged.
 5. `HQ-FW01` has `net0=GEILWAN` and `net1=GEILLAN`.
 6. `HQ-DC01` has `net0=GEILLAN,tag=20`.
-7. `HQ-MGMT01` has `net0=GEILLAN,tag=30`.
+7. `HQ-MGMT01` has `net0=GEILLAN,tag=10`.
 8. `HQ-W11-001` has `net0=GEILLAN,tag=30`.
 9. Evidence files and screenshots are captured.
 10. The next guide can configure MikroTik CHR without guessing Proxmox bridge state.

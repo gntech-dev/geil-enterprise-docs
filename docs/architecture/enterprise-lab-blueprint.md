@@ -90,6 +90,9 @@ flowchart TD
 
 ## Physical topology
 
+Pilot validation established that `HQ-MGMT01` is the dedicated management workstation / initial PAW on VLAN 10. User workstations such as `HQ-W11-001` remain on VLAN 30 and are not management endpoints.
+
+
 ```mermaid
 flowchart LR
     ISP[ISP Circuit]
@@ -120,7 +123,7 @@ Physical design assumptions:
 | Core switch | VLAN transport | Redundant switch stack |
 | `PVE-HQ01` | Primary virtualization host | Member of hypervisor cluster |
 | `PBS-HQ01` | Backup repository | Replicated backup node or regional backup tier |
-| `HQ-MGMT01` | Windows 11 Enterprise management workstation / initial PAW | Tiered PAW family with LAPS, WHfB, Entra ID, JIT, and JEA later |
+| `HQ-MGMT01` | Windows 11 Enterprise management workstation / initial PAW on Management VLAN 10 | Tiered PAW family with LAPS, WHfB, Entra ID, JIT, and JEA later |
 | Wireless APs | Corporate and guest access | 802.1X enterprise wireless estate |
 
 ## Logical topology
@@ -176,7 +179,7 @@ Phase 1 has one production site: `HQ`. The design reserves the ability to add re
 | Compute | `PVE-HQ01` | Clustered compute per region |
 | Backup | `PBS-HQ01` | Local plus replicated backup tiers |
 | Edge | `HQ-FW01` | HA edge per strategic site |
-| Management | `HQ-MGMT01` | Windows 11 Enterprise privileged administration workstation; remote administration origin, not Windows Server |
+| Management | `HQ-MGMT01` | Windows 11 Enterprise privileged administration workstation on VLAN 10; remote administration origin, not Windows Server or a standard user workstation |
 | Documentation | `docs.gntechlabs.me` | Globally available protected engineering portal |
 
 ## Capability alignment

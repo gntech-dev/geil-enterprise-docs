@@ -175,7 +175,7 @@ Default stance: deny inter-zone traffic unless explicitly allowed.
 ```mermaid
 flowchart LR
     Admin[Admin User]
-    MGMT[HQ-MGMT01 172.20.30.10]
+    MGMT[HQ-MGMT01 172.20.10.10 VLAN10]
     FW[HQ-FW01 Firewall Policy]
     PVE[PVE-HQ01 172.20.100.11]
     DC[HQ-DC01 172.20.20.11]

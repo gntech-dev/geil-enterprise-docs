@@ -48,6 +48,7 @@ By the end of this guide you will have:
 - ✓ Verified the baseline OU structure exists.
 - ✓ Created baseline GPO shells before linking them.
 - ✓ Linked the workstation baseline to the Workstations OU under the canonical Computers OU.
+- ✓ Prepared the architecture for a future management workstation baseline linked only to the Management Workstations OU.
 - ✓ Configured a safe example setting for PowerShell script block logging.
 - ✓ Validated security filtering and resultant policy.
 - ✓ Documented rollback for unlinking and disabling GPOs.
@@ -78,6 +79,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 - Group Policy Management Console is installed.
 - PowerShell GroupPolicy module is available.
 - Test workstation exists or is planned for validation.
+- `OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` exists for `HQ-MGMT01`.
 
 ## Expected Starting State
 
@@ -90,6 +92,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 
 - GPOs exist before links are configured.
 - Workstation baseline is linked only to the Workstations OU under the canonical Computers OU.
+- Management workstation GPO architecture is documented but settings are not implemented until validated.
 - Security filtering is reviewed and documented.
 - Rollback commands are captured.
 
@@ -101,16 +104,34 @@ Group Policy depends on the identity foundation sequence: infrastructure -> Wind
 ```mermaid
 flowchart LR
     Domain[corp.gntech.me]
-    OU[OU=Workstations,OU=Computers,OU=GNTECH]
-    GPO[GP - Baseline - Workstations]
-    Client[HQ-W11-001]
-    Domain --> OU
-    GPO --> OU --> Client
+    MgmtOU[OU=Management Workstations,OU=Computers,OU=GNTECH]
+    WorkOU[OU=Workstations,OU=Computers,OU=GNTECH]
+    MgmtGPO[Future GP - Baseline - Management Workstations]
+    WorkGPO[GP - Baseline - Workstations]
+    MgmtClient[HQ-MGMT01]
+    UserClient[HQ-W11-001]
+    Domain --> MgmtOU
+    Domain --> WorkOU
+    MgmtGPO -. future link .-> MgmtOU --> MgmtClient
+    WorkGPO --> WorkOU --> UserClient
 ```
 
 !!! enterprise "Enterprise pattern"
 
     Enterprises usually create GPOs as unlinked objects first, configure and review settings, validate security filtering, then link to a pilot OU before broad deployment.
+
+
+### Future management workstation baseline
+
+Prepare, but do not yet implement, a dedicated management workstation baseline named:
+
+`GP - Baseline - Management Workstations`
+
+Target OU:
+
+`OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
+
+Future validated settings may include Remote Desktop restrictions, RSAT defaults, Credential Guard, administrative hardening, PowerShell logging, and management firewall rules. Do not link or configure those settings until they are validated in the laboratory. `HQ-MGMT01` is the initial target for this future GPO. `HQ-W11-001` and future user workstations remain under `GP - Baseline - Workstations`.
 
 ## Background Knowledge
 
@@ -170,6 +191,7 @@ if (-not ($CurrentGroupShortNames | Where-Object { $_ -in $AllowedGroupNames }))
 $RequiredOUs = @(
   "OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me",
   "OU=Servers,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
+  "OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
   "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
   "OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me",
   "OU=Policies,OU=GNTECH,DC=corp,DC=gntech,DC=me"

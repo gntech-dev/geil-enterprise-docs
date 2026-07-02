@@ -25,13 +25,18 @@ classification: Internal Confidential
 
 !!! note "Canonical GNTECH values"
 
-    Forest: `corp.gntech.me`; NetBIOS: `GNTECH`; primary UPN suffix: `gntech.me`; Microsoft 365 primary domain: `gntech.me`; primary firewall: MikroTik CHR `HQ-FW01`; workstation client VLAN: VLAN 30.
+    Forest: `corp.gntech.me`; NetBIOS: `GNTECH`; primary UPN suffix: `gntech.me`; Microsoft 365 primary domain: `gntech.me`; primary firewall: MikroTik CHR `HQ-FW01`; management workstation VLAN: VLAN 10; standard workstation VLAN: VLAN 30.
 
 !!! danger "Never domain-join a golden template"
 
     The Windows 11 golden template must remain workgroup-only. Do not join `corp.gntech.me`, do not Entra join, do not Intune enroll, and do not sign in with production user identities inside the template. Domain join happens only after cloning and after network validation in [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md).
 
 ## Purpose
+
+!!! warning "No domain, OU, or GPO in the golden template"
+
+    The golden template remains workgroup-only, generalized, and free of domain join, OU placement, and GPO state. Domain join, OU placement, and GPO validation happen only after cloning.
+
 
 Create a reusable Windows 11 Enterprise golden template for Proxmox. This guide covers only the template image lifecycle: Windows installation, VirtIO drivers, QEMU Guest Agent, Cloudbase-Init, Cloud-Init metadata support, log validation, Sysprep, and Proxmox template conversion.
 
@@ -65,7 +70,8 @@ Pilot deployment confirmed that the template must remain workgroup-only. A templ
 GEIL therefore separates the model into two guides:
 
 1. This guide builds the workgroup-only template.
-2. [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md) clones the template, validates VLAN30 networking and Active Directory reachability, joins `corp.gntech.me`, moves the computer object to the Workstations OU, and validates `GP - Baseline - Workstations`.
+2. [Windows 11 Management Workstation](windows-11-management-workstation.md) clones the template for `HQ-MGMT01`, attaches it to Management VLAN 10, joins `corp.gntech.me` after validation, and moves the computer object to the Management Workstations OU.
+3. [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md) clones the template for `HQ-W11-001` and future standard clients, validates VLAN30 networking and Active Directory reachability, joins `corp.gntech.me`, moves the computer object to the Workstations OU, and validates `GP - Baseline - Workstations`.
 
 ## Architecture Overview
 

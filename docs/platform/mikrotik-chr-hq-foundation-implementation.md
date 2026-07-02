@@ -660,7 +660,7 @@ From an approved management context, validate WinBox or SSH reachability to `172
 #### Expected result — Step 9: Validate management path before restrictions
 
 - `MGMT` list exists and contains `vlan10-mgmt`.
-- `HQ-MGMT01` or approved management network has a path to `172.20.10.1` when VLAN 10/30 connectivity is available.
+- `HQ-MGMT01` on Management VLAN 10 or an approved management network has a path to `172.20.10.1` when VLAN 10 connectivity is available.
 
 #### Rollback — Step 9: Validate management path before restrictions
 
@@ -688,8 +688,8 @@ In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the blo
 
 ```routeros
 /ip service disable telnet,ftp,www,api,api-ssl
-/ip service set ssh address=172.20.10.0/24,172.20.30.10/32
-/ip service set winbox address=172.20.10.0/24,172.20.30.10/32
+/ip service set ssh address=172.20.10.0/24
+/ip service set winbox address=172.20.10.0/24
 /ip neighbor discovery-settings set discover-interface-list=MGMT
 /tool mac-server set allowed-interface-list=MGMT
 /tool mac-server mac-winbox set allowed-interface-list=MGMT
@@ -758,7 +758,7 @@ Allow required management and established traffic, block guest-to-internal traff
 /ip firewall filter add chain=input connection-state=established,related action=accept comment="Accept established/related to router"
 /ip firewall filter add chain=input connection-state=invalid action=drop comment="Drop invalid to router"
 /ip firewall filter add chain=input src-address=172.20.10.0/24 action=accept comment="Allow management VLAN to router"
-/ip firewall filter add chain=input src-address=172.20.30.10 action=accept comment="Allow HQ-MGMT01 to router"
+/ip firewall filter add chain=input src-address=172.20.10.10 action=accept comment="Allow HQ-MGMT01 to router"
 ```
 
 Validate before adding drops:
@@ -781,11 +781,11 @@ Validate before adding drops:
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 dst-address=172.20.0.0/16 action=drop comment="Block guest to internal GEIL"
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 out-interface-list=WAN action=accept comment="Allow guest to internet only"
 /ip firewall filter add chain=forward in-interface-list=LAN out-interface-list=WAN action=accept comment="Allow GEIL LAN to internet"
-/ip firewall filter add chain=forward src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 action=accept comment="Allow HQ-MGMT01 to Proxmox"
+/ip firewall filter add chain=forward src-address=172.20.10.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 action=accept comment="Allow HQ-MGMT01 to Proxmox"
 /ip firewall address-list add list=AD-DomainControllers address=172.20.20.11 comment="HQ-DC01 domain controller"
 /ip firewall address-list add list=AD-ClientNetworks address=172.20.30.0/24 comment="VLAN30 Workstations domain clients"
 /ip firewall address-list add list=ManagementNetworks address=172.20.10.0/24 comment="VLAN10 Management"
-/ip firewall address-list add list=ManagementNetworks address=172.20.30.10 comment="HQ-MGMT01 approved management workstation"
+/ip firewall address-list add list=ManagementNetworks address=172.20.10.0/24 comment="VLAN10 approved management workstations"
 /ip firewall address-list add list=ServerNetworks address=172.20.20.0/24 comment="VLAN20 Servers"
 /ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="AD TCP clients to DCs"
 /ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=udp dst-port=53,88,389,123 comment="AD UDP clients to DCs"
@@ -809,7 +809,7 @@ chain=forward action=drop connection-state=invalid comment="Drop invalid forward
 chain=forward action=drop src-address=172.20.70.0/24 dst-address=172.20.0.0/16 comment="Block guest to internal GEIL"
 chain=forward action=accept src-address=172.20.70.0/24 out-interface-list=WAN comment="Allow guest to internet only"
 chain=forward action=accept in-interface-list=LAN out-interface-list=WAN comment="Allow GEIL LAN to internet"
-chain=forward action=accept src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 comment="Allow HQ-MGMT01 to Proxmox"
+chain=forward action=accept src-address=172.20.10.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 comment="Allow HQ-MGMT01 to Proxmox"
 chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="AD TCP clients to DCs"
 chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=udp dst-port=53,88,389,123 comment="AD UDP clients to DCs"
 chain=forward action=accept disabled=yes src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=636 comment="OPTIONAL AD LDAPS clients to DCs if enabled"
@@ -823,7 +823,7 @@ chain=forward action=drop comment="Default deny unapproved forwarding"
 
 !!! warning "DHCP relay is not Active Directory connectivity"
 
-    Pilot validation proved that DHCP relay can succeed while domain join still fails. A VLAN 30 client received an address and DNS server option `172.20.20.11`, but DNS queries and domain join failed because only `172.20.30.10` could reach `HQ-DC01`; all other workstation addresses hit the default deny rule. Production policy must allow required AD service ports from `172.20.30.0/24` to `172.20.20.11` before the default deny rule.
+    Pilot validation proved that DHCP relay can succeed while domain join still fails. A VLAN 30 client received an address and DNS server option `172.20.20.11`, but DNS queries and domain join failed because the old design treated `172.20.30.10` as the only management/client source allowed to reach `HQ-DC01`; all other workstation addresses hit the default deny rule. Production policy must allow required AD service ports from `172.20.30.0/24` to `172.20.20.11` before the default deny rule.
 
 #### Temporary pilot validation rule — do not keep for production
 

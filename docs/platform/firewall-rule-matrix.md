@@ -46,7 +46,7 @@ flowchart LR
 
 ## Pilot finding: DHCP relay is not enough
 
-During pilot deployment, VLAN30 clients received DHCP leases and DNS option `172.20.20.11`, but could not reach `HQ-DC01` because the firewall only allowed `172.20.30.10` to communicate with the domain controller. DHCP relay, routing, and internet access were correct; the failure was forward-chain firewall policy.
+During pilot deployment, VLAN30 clients received DHCP leases and DNS option `172.20.20.11`, but could not reach `HQ-DC01` because the firewall only allowed the former single management workstation address `172.20.30.10` to communicate with the domain controller. DHCP relay, routing, and internet access were correct; the failure was forward-chain firewall policy.
 
 Production policy must use RouterOS address lists and least-privilege Active Directory service rules from [Active Directory Network Requirements](active-directory-network-requirements.md). Do not keep broad pilot rules as production policy.
 
@@ -66,6 +66,7 @@ Production policy must use RouterOS address lists and least-privilege Active Dir
 | `AD-ClientNetworks` | `AD-DomainControllers` | Least-privilege AD service ports | DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, GC, optional LDAPS | [Active Directory Network Requirements](active-directory-network-requirements.md) | DNS, domain join, SYSVOL, NETLOGON, `gpupdate`, `gpresult` |
 | `ManagementNetworks` | `HQ-FW01` | Approved management ports only | WinBox/SSH/HTTPS management | MikroTik CHR implementation guide | Approved admin source reaches RouterOS |
 | VLAN 20 Servers | Internet | TCP 80/443 | Updates and Microsoft cloud endpoints | Enterprise Port Reference | `Test-NetConnection` to update endpoints |
+| VLAN 10 Management | Infrastructure management targets | Approved management ports | Remote administration | Network Architecture / Windows 11 Management Workstation | Only `HQ-MGMT01` and future management workstations originate management traffic |
 | VLAN 30 Workstations | Internet | TCP 80/443 | User/cloud services | Endpoint guides | Browser and M365 sign-in validates |
 | Guest VLAN 70 | Internet only | DNS/HTTP/HTTPS; deny internal RFC1918 | Internet-only guest access | MikroTik CHR implementation guide | Guest cannot reach internal RFC1918 |
 | `HQ-DC01` | Microsoft cloud | TCP 443 | Future Entra sync/cloud health | Entra ID Hybrid Identity | Entra Connect health after deployment |

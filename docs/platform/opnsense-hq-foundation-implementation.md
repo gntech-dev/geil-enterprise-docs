@@ -227,7 +227,7 @@ Continue to:
 |---|---|---|
 | Proxmox console to `HQ-FW01` | Install, assign interfaces, recover access | Required before firewall web UI is available |
 | OPNsense administrative account | Configure firewall | Password must be stored in approved password manager, not Git |
-| `HQ-MGMT01` browser access | Validate web management path | Used after VLAN 30 and management rules exist |
+| `HQ-MGMT01` browser access | Validate web management path | Used after VLAN 10 management rules exist |
 | Protected storage location | Store `HQ-FW01-baseline.xml` | Do not store secrets or config exports in Git |
 
 ## Required ISO/files
@@ -362,9 +362,9 @@ Apply default deny between internal zones and then add minimum approved flows.
 | Rule | Interface | Source | Destination | Service | Action | Description |
 |---|---|---|---|---|---|---|
 | 1 | `MGMT` | `172.20.10.0/24` | `172.20.10.1` | HTTPS | Allow | Firewall management from management zone |
-| 2 | `WORKSTATIONS` | `172.20.30.10` | `172.20.10.1` | HTTPS | Allow | `HQ-MGMT01` firewall management |
-| 3 | `WORKSTATIONS` | `172.20.30.10` | `172.20.100.11` | TCP 8006 | Allow | `HQ-MGMT01` Proxmox management |
-| 4 | `WORKSTATIONS` | `172.20.30.10` | `172.20.20.11` | RDP/WinRM as approved | Allow | `HQ-MGMT01` management of `HQ-DC01` |
+| 2 | `MGMT` | `172.20.10.10` | `172.20.10.1` | HTTPS | Allow | `HQ-MGMT01` firewall management |
+| 3 | `MGMT` | `172.20.10.10` | `172.20.100.11` | TCP 8006 | Allow | `HQ-MGMT01` Proxmox management |
+| 4 | `MGMT` | `172.20.10.10` | `172.20.20.11` | RDP/WinRM as approved | Allow | `HQ-MGMT01` management of `HQ-DC01` |
 | 5 | `WORKSTATIONS` | `172.20.30.0/24` | `172.20.20.11` | DNS/Kerberos/LDAP/SMB/NTP after AD exists | Allow | Domain client prerequisites |
 | 6 | `CORPWIFI` | `172.20.60.0/24` | `172.20.20.11` | DNS/Kerberos/LDAP/NTP after AD exists | Allow | Corporate WiFi domain access |
 | 7 | `GUESTWIFI` | `172.20.70.0/24` | WAN | HTTP/HTTPS/DNS policy | Allow | Guest internet access |
@@ -715,8 +715,8 @@ Firewall -> Rules -> <Interface>
 
 Create rules in this order:
 
-1. Allow `HQ-MGMT01` `172.20.30.10` to `HQ-FW01` management `172.20.10.1` on HTTPS.
-2. Allow `HQ-MGMT01` `172.20.30.10` to `PVE-HQ01` `172.20.100.11` on TCP 8006.
+1. Allow `HQ-MGMT01` `172.20.10.10` to `HQ-FW01` management `172.20.10.1` on HTTPS.
+2. Allow `HQ-MGMT01` `172.20.10.10` to `PVE-HQ01` `172.20.100.11` on TCP 8006.
 3. Allow approved management flows from `HQ-MGMT01` to `HQ-DC01` `172.20.20.11`.
 4. Allow workstation-to-domain prerequisite flows only when `HQ-DC01` services exist.
 5. Allow guest WiFi to internet.

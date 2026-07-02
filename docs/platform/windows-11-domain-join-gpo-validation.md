@@ -29,20 +29,20 @@ classification: Internal Confidential
 
 ## Purpose
 
-Clone a Windows 11 workstation from the workgroup-only golden template, attach it to VLAN 30, validate network and Active Directory reachability, join `corp.gntech.me`, move the computer object to the canonical Workstations OU, and validate Group Policy application.
+Clone a standard Windows 11 workstation from the workgroup-only golden template, attach it to VLAN 30, validate network and Active Directory reachability, join `corp.gntech.me`, move the computer object to the canonical Workstations OU, and validate Group Policy application. This guide is for `HQ-W11-001` and future standard clients, not `HQ-MGMT01` management workstation.
 
 ## Scope
 
 Included:
 
 - Clone from `TPL-W11-ENT-GOLD`.
-- Attach the clone to `GEILLAN` VLAN 30.
+- Attach the standard client clone to `GEILLAN` VLAN 30.
 - Validate DHCP.
 - Validate DNS to `HQ-DC01`.
 - Validate firewall access to required domain-controller services.
 - Rename or confirm hostname.
 - Join `corp.gntech.me`.
-- Move the computer object to `OU=Workstations,OU=Computers,OU=GNTECH`.
+- Move the standard client computer object to `OU=Workstations,OU=Computers,OU=GNTECH`.
 - Run `gpupdate /force`.
 - Generate `gpresult`.
 - Validate `GP - Baseline - Workstations`.
@@ -96,7 +96,7 @@ flowchart LR
     DC[HQ-DC01\n172.20.20.11]
     GPO[GP - Baseline - Workstations]
 
-    Template --> Clone --> VLAN30 --> FW --> DC --> GPO
+    Template --> StandardClone[Standard client clone] --> VLAN30 --> FW --> DC --> GPO
 ```
 
 ## Step-by-Step Procedure

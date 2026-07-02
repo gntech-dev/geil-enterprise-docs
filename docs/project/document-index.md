@@ -64,7 +64,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
 | GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
 | GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Approved | `docs/platform/windows-11-enterprise-golden-template.md` | Workgroup-only Proxmox Windows 11 template build with VirtIO, QEMU Guest Agent, Cloudbase-Init, Sysprep, and template conversion; domain join explicitly excluded |
-| GEIL-PLAT-W11-MGMT-001 | Windows 11 Management Workstation | Approved | `docs/platform/windows-11-management-workstation.md` | Deploy `HQ-MGMT01` as Windows 11 Enterprise management workstation / initial PAW with VLAN30 validation, domain join after cloning, RSAT/admin tools, and remote administration model |
+| GEIL-PLAT-W11-MGMT-001 | Windows 11 Management Workstation | Approved | `docs/platform/windows-11-management-workstation.md` | Deploy `HQ-MGMT01` as Windows 11 Enterprise management workstation / initial PAW on Management VLAN 10 with domain join after cloning, Management Workstations OU placement, RSAT/admin tools, and remote administration model |
 | GEIL-PLAT-W11-DOMJOIN-001 | Windows 11 Domain Join and GPO Validation | Approved | `docs/platform/windows-11-domain-join-gpo-validation.md` | Clone from template, attach VLAN30, validate DHCP/DNS/DC firewall, join `corp.gntech.me`, move computer object, and validate `GP - Baseline - Workstations` |
 
 ## Governance documents
@@ -104,7 +104,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/architecture/reference-architecture.md` | Overall platform architecture |
 | GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/architecture/environment-tiers.md` | Lab, pilot, production, DR |
 | GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/architecture/identity-architecture.md` | Identity authorities and admin tiers |
-| GEIL-ARCH-NET-001 | Network Architecture | Draft | `docs/architecture/network-architecture.md` | VLAN and firewall model |
+| GEIL-ARCH-NET-001 | Network Architecture | Draft | `docs/architecture/network-architecture.md` | VLAN, management workstation, and firewall model |
 
 ## Foundation documents
 
@@ -120,13 +120,13 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
 | GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
-| GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy, users, groups, baseline memberships, pilot Tier 0 bootstrap nesting, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
+| GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy including Management Workstations, users, groups, baseline memberships, pilot Tier 0 bootstrap nesting, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
 | GEIL-MSC-NAME-001 | Enterprise Naming Standard | Draft | `docs/microsoft-core/active-directory-naming-standard.md` | Naming standards for users, computers, servers, groups, service accounts, GPOs, DNS, DFS, certificates, hypervisors, Proxmox, and MikroTik |
 | GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | AGDLP, AGUDLP, RBAC, baseline membership model, group nesting, naming convention, examples, PowerShell, and validation |
 | GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | New hire, termination, department change, privilege elevation, contractors, guests, password reset, lockout, and offboarding |
 | GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Standard service accounts, gMSA, scheduled tasks, IIS, SQL, NPS, Entra Connect, backup, monitoring, rotation, and least privilege |
 | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
-| GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model |
+| GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model, including future Management Workstations GPO architecture |
 | GEIL-MSC-WAC-001 | Windows Admin Center | Draft | `docs/microsoft-core/windows-admin-center.md` | Management gateway |
 | GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
 

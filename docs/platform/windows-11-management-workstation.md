@@ -25,7 +25,7 @@ classification: Internal Confidential
 
 !!! note "Canonical GNTECH values"
 
-    `HQ-MGMT01` is the Windows 11 Enterprise management workstation / initial privileged access workstation. `HQ-W11-001` is the standard Windows 11 Enterprise client validation VM. Both live on VLAN 30, but they have different security purposes.
+    `HQ-MGMT01` is the Windows 11 Enterprise management workstation / initial privileged access workstation on the Management network, VLAN 10. `HQ-W11-001` is the standard Windows 11 Enterprise client validation VM on the Workstations network, VLAN 30. They have different security purposes and must not share the same workstation security boundary.
 
 !!! warning "Do not use Windows Server as a daily admin workstation"
 
@@ -41,35 +41,37 @@ Pilot deployment established this model:
 
 | Host | Operating System | Role | Intended use |
 |---|---|---|---|
-| `HQ-MGMT01` | Windows 11 Enterprise | Dedicated management workstation / initial PAW | Privileged administration with RSAT/admin tools |
-| `HQ-W11-001` | Windows 11 Enterprise | Standard client validation VM | User/client validation, DHCP, domain join, GPO, endpoint policy |
+| `HQ-MGMT01` | Windows 11 Enterprise | Dedicated management workstation / initial PAW | VLAN 10 management endpoint for privileged administration with RSAT/admin tools |
+| `HQ-W11-001` | Windows 11 Enterprise | Standard client validation VM | VLAN 30 user/client validation, DHCP, domain join, GPO, endpoint policy |
 
-`HQ-MGMT01` is not Windows Server. It is a hardened workstation used to administer `HQ-DC01`, `HQ-FW01`, `PVE-HQ01`, and future servers remotely.
+`HQ-MGMT01` is not Windows Server and is not a standard user workstation. It is a hardened Management VLAN workstation used to administer `HQ-DC01`, `HQ-FW01`, `PVE-HQ01`, switches, file servers, and future infrastructure services remotely. Only management workstations belong on VLAN 10; standard user workstations remain on VLAN 30.
 
 ## Rationale
 
 - Remote administration from a hardened workstation reduces routine interactive logons to servers.
 - The model supports administrative tiering by giving privileged accounts a known administrative endpoint.
 - It prepares GEIL for PAW hardening, LAPS, Windows Hello for Business, Microsoft Entra ID, Just-in-Time access, and Just Enough Administration.
-- It keeps `HQ-W11-001` available as a normal standard-user/client validation VM instead of overloading it with privileged tooling.
+- It keeps `HQ-W11-001` and future user workstations on VLAN 30 as standard clients instead of overloading them with privileged tooling.
+- Pilot validation demonstrated that a dedicated management workstation should be isolated from user networks and prepared for future PAW implementation.
 
 ## Prerequisites
 
 - [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md) completed and validated as workgroup-only.
 - [Active Directory Network Requirements](active-directory-network-requirements.md) implemented.
 - [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md) reviewed for common clone/domain-join validation flow.
-- VLAN 30 DHCP and DNS are operational.
+- VLAN 10 Management network addressing, DNS, and domain-controller access are operational for `HQ-MGMT01`.
 - Domain join credentials are approved for the change window.
 
 ## Deployment sequence
 
 1. Clone `HQ-MGMT01` from `TPL-W11-ENT-GOLD`.
-2. Attach the clone to `GEILLAN` VLAN 30.
+2. Attach the clone to `GEILLAN` VLAN 10.
 3. Validate DHCP, DNS, and domain-controller access.
 4. Confirm or set hostname `HQ-MGMT01`.
 5. Join `corp.gntech.me` after cloning and validation.
-6. Install RSAT/admin tools.
-7. Use `HQ-MGMT01` for remote administration of `HQ-DC01` and future servers.
+6. Move the computer object to `OU=Management Workstations,OU=Computers,OU=GNTECH`.
+7. Install RSAT/admin tools plus PowerShell 7, Windows Terminal, Visual Studio Code, and Git.
+8. Use `HQ-MGMT01` for remote administration of `HQ-DC01`, future servers, `HQ-FW01`, `PVE-HQ01`, switches, and infrastructure services.
 
 ## Step 1: Clone from the golden template
 
@@ -77,7 +79,7 @@ Run from `PVE-HQ01`:
 
 ```bash
 qm clone 9201 120 --name HQ-MGMT01 --full true
-qm set 120 --net0 virtio,bridge=GEILLAN,tag=30
+qm set 120 --net0 virtio,bridge=GEILLAN,tag=10
 qm set 120 --agent enabled=1
 qm start 120
 ```
@@ -88,9 +90,9 @@ Validate:
 qm config 120
 ```
 
-Expected result: `name: HQ-MGMT01`, `bridge=GEILLAN`, and `tag=30`.
+Expected result: `name: HQ-MGMT01`, `bridge=GEILLAN`, and `tag=10`.
 
-## Step 2: Validate VLAN 30 DHCP and DNS
+## Step 2: Validate Management VLAN 10 addressing and DNS
 
 Run inside `HQ-MGMT01` before domain join:
 
@@ -103,8 +105,8 @@ Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV -Server 172.20.20.
 
 Expected result:
 
-- IPv4 address is `172.20.30.10` by reservation/static assignment or a valid VLAN30 lease during staging.
-- Default gateway is `172.20.30.1`.
+- IPv4 address is `172.20.10.10` by reservation/static assignment or a valid VLAN10 management lease during staging.
+- Default gateway is `172.20.10.1`.
 - DNS server is `172.20.20.11`.
 - SRV lookup discovers `HQ-DC01`.
 
@@ -156,6 +158,22 @@ else {
 
 ## Step 5: Install RSAT and administration tools
 
+After domain join, move `HQ-MGMT01` into the dedicated Management Workstations OU from `HQ-MGMT01` or another approved administrative endpoint:
+
+```powershell
+Import-Module ActiveDirectory
+$DomainDN = (Get-ADDomain).DistinguishedName
+$TargetOU = "OU=Management Workstations,OU=Computers,OU=GNTECH,$DomainDN"
+$Computer = Get-ADComputer -Identity "HQ-MGMT01"
+if ($Computer.DistinguishedName -notlike "*$TargetOU") {
+    Move-ADObject -Identity $Computer.DistinguishedName -TargetPath $TargetOU
+    [PSCustomObject]@{Status="Moved"; Computer="HQ-MGMT01"; TargetOU=$TargetOU}
+}
+else {
+    [PSCustomObject]@{Status="Existing"; Computer="HQ-MGMT01"; TargetOU=$TargetOU}
+}
+```
+
 Run inside `HQ-MGMT01` after domain join:
 
 ```powershell
@@ -169,9 +187,19 @@ foreach ($Capability in $Capabilities) {
     Add-WindowsCapability -Online -Name $Capability
 }
 Get-WindowsCapability -Online | Where-Object Name -like "Rsat*" | Select-Object Name,State
+
+$WingetPackages = @(
+    "Microsoft.PowerShell",
+    "Microsoft.WindowsTerminal",
+    "Microsoft.VisualStudioCode",
+    "Git.Git"
+)
+foreach ($Package in $WingetPackages) {
+    winget install --id $Package --source winget --accept-package-agreements --accept-source-agreements --silent
+}
 ```
 
-Expected result: required RSAT capabilities show `Installed`.
+Expected result: required RSAT capabilities show `Installed`, and PowerShell 7, Windows Terminal, Visual Studio Code, and Git are available for approved administration and documentation workflows.
 
 ## Step 6: Validate remote administration
 
@@ -183,6 +211,8 @@ Get-Command Get-GPO
 Resolve-DnsName HQ-DC01.corp.gntech.me
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 3389
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 5985
+Test-NetConnection 172.20.100.11 -Port 8006
+Test-NetConnection 172.20.10.1 -Port 8291
 ```
 
 Expected result: RSAT cmdlets are available, DNS resolves, and approved management ports are reachable when enabled by policy.
@@ -193,8 +223,9 @@ STOP if:
 
 - `HQ-MGMT01` is not Windows 11 Enterprise.
 - The VM was built as Windows Server.
+- The VM is attached to VLAN 30 instead of VLAN 10.
 - The golden template was domain joined before cloning.
-- DHCP, DNS, or domain-controller reachability fails.
+- DHCP/static addressing, DNS, or domain-controller reachability fails.
 - RSAT tools do not install.
 - Administration requires routine interactive logon to `HQ-DC01` instead of remote administration from `HQ-MGMT01`.
 
@@ -202,8 +233,8 @@ STOP if:
 
 Capture:
 
-- Proxmox `qm config 120`.
-- `ipconfig /all`.
+- Proxmox `qm config 120` showing `tag=10`.
+- `ipconfig /all` showing Management VLAN addressing.
 - DNS/SRV lookup output.
 - Domain-controller connectivity output.
 - Domain membership output.
@@ -215,7 +246,7 @@ Capture:
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `HQ-MGMT01` is Windows Server | Wrong architecture applied | Rebuild from Windows 11 golden template. |
-| Domain join fails | DNS or AD firewall path missing | Validate Active Directory Network Requirements. |
+| Domain join fails | DNS or AD firewall path missing from Management VLAN | Validate Active Directory Network Requirements and ManagementNetworks access to domain-controller services. |
 | RSAT install fails | Windows Update/FoD source unavailable | Restore internet/update access or provide approved FoD source. |
 | Admins still log on to servers interactively | Operational habit or missing tooling | Install RSAT/admin tools on `HQ-MGMT01` and document remote workflow. |
 
@@ -227,10 +258,10 @@ Use `HQ-MGMT01` to administer Microsoft Core guides such as Active Directory org
 
 | Field | Value |
 |---|---|
-| Validated on | Pilot decision incorporated: `HQ-MGMT01` is Windows 11 Enterprise, not Windows Server. |
+| Validated on | Pilot decision incorporated: `HQ-MGMT01` is Windows 11 Enterprise on Management VLAN 10, not Windows Server and not a standard user workstation. |
 | Windows Server version | Not applicable; Windows Server is not the management workstation OS |
 | RouterOS version | RouterOS v7 target through `HQ-FW01` |
 | Proxmox version | Proxmox VE 9 target |
 | Deployment date | 2026-07-01 pilot decision incorporated |
-| Deployment notes | `HQ-MGMT01` is the initial PAW and remote administration origin. |
+| Deployment notes | `HQ-MGMT01` is the initial PAW, Management Workstations OU member, and remote administration origin. |
 | Known caveats | Future PAW hardening, LAPS, WHfB, Entra ID, JIT, and JEA controls should build on this model. |

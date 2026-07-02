@@ -59,7 +59,7 @@ GEIL uses reusable RouterOS address lists instead of one firewall rule per VLAN.
 ```mermaid
 flowchart LR
     CLIENTS[AD-ClientNetworks\nVLAN30 Workstations]
-    MGMT[ManagementNetworks\nVLAN10 + HQ-MGMT01]
+    MGMT[ManagementNetworks\nVLAN10 management workstations]
     SERVERS[ServerNetworks\nVLAN20]
     FW[HQ-FW01\nMikroTik CHR]
     DCS[AD-DomainControllers\nHQ-DC01 172.20.20.11]
@@ -86,7 +86,7 @@ Create address lists before firewall rules reference them.
 /ip firewall address-list add list=AD-DomainControllers address=172.20.20.11 comment="HQ-DC01 domain controller"
 /ip firewall address-list add list=AD-ClientNetworks address=172.20.30.0/24 comment="VLAN30 Workstations domain clients"
 /ip firewall address-list add list=ManagementNetworks address=172.20.10.0/24 comment="VLAN10 Management"
-/ip firewall address-list add list=ManagementNetworks address=172.20.30.10 comment="HQ-MGMT01 approved management workstation"
+/ip firewall address-list add list=ManagementNetworks address=172.20.10.0/24 comment="VLAN10 approved management workstations"
 /ip firewall address-list add list=ServerNetworks address=172.20.20.0/24 comment="VLAN20 Servers"
 ```
 
@@ -144,9 +144,23 @@ This broad rule is allowed only to prove that firewall policy is the blocker. It
 
 Use it only long enough to prove causality. Remove it immediately and replace it with the production address-list rules.
 
+## Validation from the Management VLAN
+
+Run from `HQ-MGMT01` on VLAN10 to prove the management workstation can reach required domain-controller services before domain join and RSAT administration.
+
+```powershell
+ping 172.20.20.11
+Resolve-DnsName corp.gntech.me -Server 172.20.20.11
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 88
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 389
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 445
+```
+
+Expected result: `HQ-MGMT01` can reach AD services from `ManagementNetworks` without granting infrastructure-management access to VLAN30 clients.
+
 ## Validation from a VLAN30 client
 
-Run from a normal VLAN30 workstation, not only from `HQ-MGMT01`.
+Run from a normal VLAN30 workstation such as `HQ-W11-001`. `HQ-MGMT01` is on VLAN10 and validates management-workstation reachability separately.
 
 ```powershell
 ping 172.20.20.11

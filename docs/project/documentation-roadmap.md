@@ -53,6 +53,10 @@ The current canonical model after ADR-0002 and ADR-0003 is: firewall `HQ-FW01` r
 
 GEIL implementation-phase documentation must pass engineering validation as well as MkDocs validation. The current repository-wide checkpoint is recorded in [Production Readiness Audit Report](production-readiness-audit-report.md). Future implementation guide changes must treat field deployment issues as engineering bugs, correct all affected documents, and avoid committing LOW-confidence deployment logic.
 
+## Management workstation architecture checkpoint
+
+Pilot validation established that `HQ-MGMT01` now belongs to Management VLAN 10 and `OU=Management Workstations,OU=Computers,OU=GNTECH`. `HQ-W11-001` and future user workstations remain on VLAN 30 and `OU=Workstations,OU=Computers,OU=GNTECH`. Group Policy documentation prepares `GP - Baseline - Management Workstations` as future architecture only; settings are not implemented until validated.
+
 ## Documentation architecture checkpoint
 
 GEIL now follows a single-source-of-truth architecture recorded in [Documentation Architecture Review](documentation-architecture-review.md). Active navigation is organized around Foundation, Platform, Microsoft Core, Security, Architecture, Operations, Project, Future, and Archive. New Markdown documents require a new platform, major capability, required section index, or approved control-plane/architecture record. Pilot findings update the existing authoritative document instead of creating parallel reports.

@@ -91,7 +91,7 @@ Only use placeholders when the value cannot be known before deployment or must n
 
 | Host | Operating System | Purpose | VLAN/IP | Administrative role |
 |---|---|---|---|---|
-| `HQ-MGMT01` | Windows 11 Enterprise | Dedicated management workstation / initial PAW | VLAN 30, `172.20.30.10` | RSAT/admin tools, privileged administration of `HQ-DC01`, `HQ-FW01`, `PVE-HQ01`, and future servers |
+| `HQ-MGMT01` | Windows 11 Enterprise | Dedicated management workstation / initial PAW | VLAN 10, `172.20.10.10` | RSAT/admin tools, privileged administration of `HQ-DC01`, `HQ-FW01`, `PVE-HQ01`, switches, file servers, and infrastructure services |
 | `HQ-W11-001` | Windows 11 Enterprise | Standard user and client validation VM | VLAN 30, DHCP reservation or dynamic lease | Validates DHCP, DNS, domain join, Group Policy, endpoint controls, Intune, and WHfB as a normal client |
 
 Rationale:
@@ -99,7 +99,7 @@ Rationale:
 - Remote administration from a hardened workstation reduces routine interactive server logons.
 - Administrative tiering is easier to enforce when admin activity originates from a known endpoint.
 - The model prepares for PAW hardening, LAPS, Windows Hello for Business, Microsoft Entra ID, Just-in-Time access, and Just Enough Administration.
-- `HQ-MGMT01` is deployed from the Windows 11 golden template, attached to `GEILLAN` VLAN 30, validated for DHCP/DNS/domain-controller access, joined to `corp.gntech.me` after cloning, and then equipped with RSAT/admin tools.
+- `HQ-MGMT01` is deployed from the Windows 11 golden template, attached to `GEILLAN` VLAN 10, validated for management-network addressing, DNS, and domain-controller access, joined to `corp.gntech.me` after cloning, moved to `OU=Management Workstations,OU=Computers,OU=GNTECH`, and then equipped with RSAT/admin tools.
 
 ## DNS naming
 
@@ -132,6 +132,7 @@ Rationale:
 | Tier 2 admin OU | `OU=Tier 2,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Standard users OU | `OU=Standard,OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Groups security OU | `OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Management Workstations OU | `OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Workstations OU | `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Servers OU | `OU=Servers,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Service Accounts OU | `OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
@@ -164,7 +165,7 @@ Production user accounts must use `username@gntech.me`. Do not use `username@cor
 
 | VLAN | Name | CIDR | Gateway Convention | Primary Use |
 |---:|---|---|---|---|
-| 10 | Management | `172.20.10.0/24` | `172.20.10.1` | Firewall, switch, and management interfaces |
+| 10 | Management | `172.20.10.0/24` | `172.20.10.1` | Management workstations, firewall, switch, hypervisor, and infrastructure management interfaces |
 | 20 | Servers | `172.20.20.0/24` | `172.20.20.1` | Windows servers and infrastructure services |
 | 30 | Workstations | `172.20.30.0/24` | `172.20.30.1` | Windows 11 Enterprise clients |
 | 40 | Printers | `172.20.40.0/24` | `172.20.40.1` | Printers and MFPs |
@@ -199,7 +200,7 @@ This is the active GEIL firewall model. OPNsense material is retained only where
 | `HQ-FW01` | VLAN 10 Management gateway | `172.20.10.1` |
 | `HQ-DC01` | VLAN 20 Servers | `172.20.20.11` |
 | `HQ-DC02` | VLAN 20 Servers | `172.20.20.12` |
-| `HQ-MGMT01` | VLAN 30 Workstations | `172.20.30.10` |
+| `HQ-MGMT01` | VLAN 10 Management | `172.20.10.10` |
 | `HQ-W11-001` | VLAN 30 Workstations | DHCP reservation or dynamic lease in `172.20.30.0/24` |
 | `PBS-HQ01` | VLAN 90 Backup | `172.20.90.10` |
 | `PVE-HQ01` | VLAN 100 Hypervisors | `172.20.100.11` |

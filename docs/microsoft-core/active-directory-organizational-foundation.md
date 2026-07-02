@@ -153,7 +153,7 @@ Each category has different lifecycle, risk, and policy requirements:
 | `Admin` | Separates privileged identities by administrative tier. |
 | `Users` | Separates daily users by lifecycle and business risk. |
 | `Groups` | Keeps security, Microsoft 365, and RBAC groups predictable for access reviews. |
-| `Computers` | Separates workstation, server, and staging policy targets. |
+| `Computers` | Separates management workstation, standard workstation, server, and staging policy targets. |
 | `Service Accounts` | Separates non-human identities for monitoring, backup, RADIUS, sync, scan, and print services. |
 | `Policies` | Reserves a documented anchor for policy staging and future control-plane objects. |
 
@@ -180,6 +180,7 @@ corp.gntech.me
     │   ├── Microsoft 365
     │   └── Role-Based Access
     ├── Computers
+    │   ├── Management Workstations
     │   ├── Workstations
     │   ├── Servers
     │   └── Staging
@@ -189,6 +190,19 @@ corp.gntech.me
     │   └── Legacy
     └── Policies
 ```
+
+
+## Management workstation OU pilot decision
+
+Pilot validation established that `HQ-MGMT01` is not a standard user workstation. It is the Windows 11 Enterprise management workstation and initial PAW on Management VLAN 10. Its computer object belongs in:
+
+`OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
+
+Standard clients such as `HQ-W11-001` and future user workstations remain in:
+
+`OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
+
+This separation prepares the directory for a future dedicated management-workstation GPO without applying privileged administration settings to user endpoints.
 
 ## Administrative Tiering Model
 
@@ -643,6 +657,7 @@ $OUs = @(
     @{Name="Role-Based Access"; Path="OU=Groups,OU=GNTECH,$DomainDN"},
 
     @{Name="Computers"; Path="OU=GNTECH,$DomainDN"},
+    @{Name="Management Workstations"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
     @{Name="Workstations"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
     @{Name="Servers"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
     @{Name="Staging"; Path="OU=Computers,OU=GNTECH,$DomainDN"},
@@ -732,6 +747,7 @@ Admin             OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me
 Tier 0            OU=Tier 0,OU=Admin,OU=GNTECH,DC=corp,DC=gntech,DC=me
 Users             OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me
 Security          OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Management Workstations OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me
 Workstations      OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me
 Standard          OU=Standard,OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me
 Policies          OU=Policies,OU=GNTECH,DC=corp,DC=gntech,DC=me
@@ -1561,7 +1577,7 @@ Initial delegation intent:
 | Delegate group | Target OU | Intended future permission |
 |---|---|---|
 | `GG-Helpdesk` | `OU=Standard,OU=Users,OU=GNTECH,...` | Reset passwords and unlock standard user accounts. |
-| `GG-T2-Workstation-Admins` | `OU=Workstations,OU=Computers,OU=GNTECH,...` | Manage workstation computer objects. |
+| `GG-T2-Workstation-Admins` | `OU=Workstations,OU=Computers,OU=GNTECH,...` | Manage standard workstation computer objects. |
 | `GG-T1-Server-Admins` | `OU=Servers,OU=Computers,OU=GNTECH,...` | Manage server computer objects, excluding domain controllers. |
 | `GG-T0-Domain-Admins` | Tier 0 systems only | Controlled identity administration eligibility. |
 
@@ -1587,6 +1603,7 @@ Future Group Policy links use the OU structure created in this guide:
 | Tier 0 restrictions | `OU=Tier 0,OU=Admin,OU=GNTECH,...` |
 | Tier 1 restrictions | `OU=Tier 1,OU=Admin,OU=GNTECH,...` |
 | Tier 2 restrictions | `OU=Tier 2,OU=Admin,OU=GNTECH,...` |
+| Management workstation baseline | `OU=Management Workstations,OU=Computers,OU=GNTECH,...` |
 | Workstation baseline | `OU=Workstations,OU=Computers,OU=GNTECH,...` |
 | Server baseline | `OU=Servers,OU=Computers,OU=GNTECH,...` |
 | Staging baseline | `OU=Staging,OU=Computers,OU=GNTECH,...` |
