@@ -51,6 +51,8 @@ By the end of this guide you will have:
 - ✓ Added or validated UPN suffix `gntech.me`.
 - ✓ Created initial global security groups.
 - ✓ Created sample daily, admin, and service accounts using `@gntech.me` UPNs.
+- ✓ Assigned baseline group memberships so `admin.gnolasco` and `gnolasco` can function according to the GEIL model.
+- ✓ Documented pilot/bootstrap nesting of `GG-T0-Domain-Admins` into `Domain Admins` without directly adding `admin.gnolasco` to the built-in group.
 - ✓ Created service account OUs for standard, gMSA, and legacy service identities.
 - ✓ Moved default users and computers only when safe.
 - ✓ Validated the resulting AD structure.
@@ -103,6 +105,9 @@ Low before production onboarding. This guide should run before production users 
 - Canonical child OUs exist and are protected from accidental deletion.
 - Initial groups exist under `OU=Security,OU=Groups,OU=GNTECH,...`.
 - Sample accounts use `@gntech.me` UPNs.
+- `admin.gnolasco` is a member of `GG-T0-Domain-Admins`.
+- `gnolasco` is a member of `GG-IT-Operations`.
+- In pilot/bootstrap only, `GG-T0-Domain-Admins` may be nested into `Domain Admins`; `admin.gnolasco` must not be added directly to `Domain Admins`.
 - Service account OUs exist under `OU=Service Accounts,OU=GNTECH,...`.
 - Default Users and Computers containers are reviewed and moved only when safe.
 
@@ -1107,17 +1112,238 @@ function ConvertTo-LdapFilterValue {
 
 Only delete accounts when you have verified they are not used in permissions, services, sync, scheduled tasks, NPS, backup, monitoring, or file ACLs.
 
-### Step 6: Create additional service account placeholders in the correct OU
+### Step 6: Assign baseline group memberships
 
-#### Goal — Step 6: Create additional service account placeholders in the correct OU
+#### Goal — Step 6: Assign baseline group memberships
+
+Assign the baseline users and administrative groups created by Steps 4 and 5 to the GEIL groups that make them useful.
+
+#### Why this step matters — Step 6: Assign baseline group memberships
+
+Creating users and groups is not enough. The pilot deployment created `admin.gnolasco` and the GEIL security groups, but `admin.gnolasco` had an empty `MemberOf` list. As a result, `admin.gnolasco` could not function as the intended privileged administrative account, and `HQ-MGMT01` domain sign-in and administration validation could not proceed as expected.
+
+GEIL therefore requires an explicit baseline membership step:
+
+| Member | Target group | Required? | Purpose |
+|---|---|---:|---|
+| `admin.gnolasco` | `GG-T0-Domain-Admins` | Yes | Initial Tier 0 administrative eligibility. |
+| `gnolasco` | `GG-IT-Operations` | Yes | Initial IT operations baseline access. |
+| `gnolasco` | `GG-VPN-Users` | Optional | Future VPN policy validation. |
+| `gnolasco` | `GG-WiFi-Corporate` | Optional | Future corporate WiFi/NPS policy validation. |
+| `GG-T0-Domain-Admins` | `Domain Admins` | Pilot/bootstrap only | Bootstrap Tier 0 administration through group-based access. |
+
+!!! warning "Pilot/bootstrap only"
+
+    During the pilot bootstrap, `GG-T0-Domain-Admins` may be nested into the built-in `Domain Admins` group so the initial Tier 0 admin account can administer the domain from `HQ-MGMT01`. Do not add `admin.gnolasco` directly to `Domain Admins`. Add the GEIL group to `Domain Admins` so the access path remains group-based and auditable.
+
+    Long-term GEIL should replace direct permanent `Domain Admins` membership with the privileged access model: PAW, LAPS, Windows Hello for Business, approval workflow, JIT/JEA, and time-bound privileged access.
+
+#### Commands — Step 6: Assign baseline group memberships
+
+This block is idempotent. It validates every user and group before mutation, adds each membership only when missing, and outputs membership validation. Optional access groups are disabled by default and can be enabled only when the corresponding VPN or WiFi guide is being validated.
+
+```powershell
+Import-Module ActiveDirectory
+$DomainDN = (Get-ADDomain).DistinguishedName
+
+# Optional pilot toggles. Keep optional access groups disabled until their guides need them.
+$EnableOptionalVpnMembership = $false
+$EnableOptionalWifiMembership = $false
+
+# Pilot/bootstrap only. This nests the GEIL Tier 0 group into Domain Admins.
+# Do not add admin.gnolasco directly to Domain Admins.
+$EnablePilotTier0Bootstrap = $true
+
+function ConvertTo-LdapFilterValue {
+    param([Parameter(Mandatory)][string]$Value)
+
+    $Value.Replace('\','\5c').Replace('*','\2a').Replace('(','\28').Replace(')','\29').Replace([string][char]0,'\00')
+}
+
+function Get-GEILUserBySam {
+    param([Parameter(Mandatory)][string]$SamAccountName)
+
+    $EscapedSam = ConvertTo-LdapFilterValue -Value $SamAccountName
+    $User = Get-ADUser -LDAPFilter "(sAMAccountName=$EscapedSam)" -SearchBase $DomainDN -ErrorAction Stop
+    if (-not $User) {
+        throw "Required user missing: $SamAccountName. Run and validate Step 5 before assigning group memberships."
+    }
+
+    $User
+}
+
+function Get-GEILGroupBySam {
+    param([Parameter(Mandatory)][string]$SamAccountName)
+
+    $EscapedSam = ConvertTo-LdapFilterValue -Value $SamAccountName
+    $Group = Get-ADGroup -LDAPFilter "(sAMAccountName=$EscapedSam)" -SearchBase $DomainDN -ErrorAction Stop
+    if (-not $Group) {
+        throw "Required group missing: $SamAccountName. Run and validate Step 4 before assigning group memberships."
+    }
+
+    $Group
+}
+
+function Test-GEILGroupContainsMember {
+    param(
+        [Parameter(Mandatory)][string]$GroupDistinguishedName,
+        [Parameter(Mandatory)][string]$MemberDistinguishedName
+    )
+
+    $Group = Get-ADGroup -Identity $GroupDistinguishedName -Properties member -ErrorAction Stop
+    $Group.member -contains $MemberDistinguishedName
+}
+
+function Ensure-GEILGroupMembership {
+    param(
+        [Parameter(Mandatory)][ValidateSet("User","Group")][string]$MemberType,
+        [Parameter(Mandatory)][string]$MemberSamAccountName,
+        [Parameter(Mandatory)][string]$TargetGroupSamAccountName,
+        [Parameter(Mandatory)][string]$Reason
+    )
+
+    if ($MemberType -eq "User") {
+        $Member = Get-GEILUserBySam -SamAccountName $MemberSamAccountName
+    }
+    else {
+        $Member = Get-GEILGroupBySam -SamAccountName $MemberSamAccountName
+    }
+
+    $TargetGroup = Get-GEILGroupBySam -SamAccountName $TargetGroupSamAccountName
+
+    if (Test-GEILGroupContainsMember -GroupDistinguishedName $TargetGroup.DistinguishedName -MemberDistinguishedName $Member.DistinguishedName) {
+        [PSCustomObject]@{
+            Status      = "Exists"
+            Member      = $MemberSamAccountName
+            MemberType  = $MemberType
+            TargetGroup = $TargetGroupSamAccountName
+            Reason      = $Reason
+        }
+        return
+    }
+
+    Add-ADGroupMember -Identity $TargetGroup.DistinguishedName -Members $Member.DistinguishedName -ErrorAction Stop
+    [PSCustomObject]@{
+        Status      = "Created"
+        Member      = $MemberSamAccountName
+        MemberType  = $MemberType
+        TargetGroup = $TargetGroupSamAccountName
+        Reason      = $Reason
+    }
+}
+
+$MembershipPlan = @(
+    @{MemberType="User"; Member="admin.gnolasco"; Target="GG-T0-Domain-Admins"; Enabled=$true; Reason="Initial Tier 0 administrative eligibility"},
+    @{MemberType="User"; Member="gnolasco"; Target="GG-IT-Operations"; Enabled=$true; Reason="Initial IT operations baseline access"},
+    @{MemberType="User"; Member="gnolasco"; Target="GG-VPN-Users"; Enabled=$EnableOptionalVpnMembership; Reason="Optional VPN authorization validation"},
+    @{MemberType="User"; Member="gnolasco"; Target="GG-WiFi-Corporate"; Enabled=$EnableOptionalWifiMembership; Reason="Optional corporate WiFi authorization validation"},
+    @{MemberType="Group"; Member="GG-T0-Domain-Admins"; Target="Domain Admins"; Enabled=$EnablePilotTier0Bootstrap; Reason="Pilot/bootstrap Tier 0 administration only"}
+)
+
+$MembershipResults = foreach ($Entry in $MembershipPlan) {
+    if (-not $Entry.Enabled) {
+        [PSCustomObject]@{
+            Status      = "Skipped"
+            Member      = $Entry.Member
+            MemberType  = $Entry.MemberType
+            TargetGroup = $Entry.Target
+            Reason      = $Entry.Reason
+        }
+        continue
+    }
+
+    Ensure-GEILGroupMembership `
+        -MemberType $Entry.MemberType `
+        -MemberSamAccountName $Entry.Member `
+        -TargetGroupSamAccountName $Entry.Target `
+        -Reason $Entry.Reason
+}
+
+$MembershipResults | Format-Table Status,Member,MemberType,TargetGroup,Reason -AutoSize
+
+# Membership validation output.
+$ValidationTargets = "admin.gnolasco","gnolasco"
+foreach ($Sam in $ValidationTargets) {
+    $User = Get-GEILUserBySam -SamAccountName $Sam
+    Get-ADPrincipalGroupMembership -Identity $User.DistinguishedName |
+        Sort-Object Name |
+        Select-Object @{Name="Principal";Expression={$Sam}},Name,GroupScope,GroupCategory
+}
+
+Get-ADGroupMember -Identity "Domain Admins" |
+    Where-Object { $_.SamAccountName -eq "GG-T0-Domain-Admins" } |
+    Select-Object Name,SamAccountName,ObjectClass
+```
+
+#### Expected result — Step 6: Assign baseline group memberships
+
+First pilot run:
+
+```text
+Status  Member              MemberType TargetGroup           Reason
+------  ------              ---------- -----------           ------
+Created admin.gnolasco      User       GG-T0-Domain-Admins   Initial Tier 0 administrative eligibility
+Created gnolasco            User       GG-IT-Operations      Initial IT operations baseline access
+Skipped gnolasco            User       GG-VPN-Users          Optional VPN authorization validation
+Skipped gnolasco            User       GG-WiFi-Corporate     Optional corporate WiFi authorization validation
+Created GG-T0-Domain-Admins Group      Domain Admins         Pilot/bootstrap Tier 0 administration only
+```
+
+Later runs show `Exists` for memberships already present and do not create duplicates.
+
+#### Validate this step — Step 6: Assign baseline group memberships
+
+```powershell
+Get-ADUser admin.gnolasco -Properties MemberOf |
+    Select-Object SamAccountName,@{Name="MemberOf";Expression={$_.MemberOf -join '; '}}
+
+Get-ADUser gnolasco -Properties MemberOf |
+    Select-Object SamAccountName,@{Name="MemberOf";Expression={$_.MemberOf -join '; '}}
+
+Get-ADGroupMember "Domain Admins" |
+    Where-Object { $_.SamAccountName -eq "GG-T0-Domain-Admins" } |
+    Select-Object Name,SamAccountName,ObjectClass
+```
+
+Expected result:
+
+- `admin.gnolasco` is a member of `GG-T0-Domain-Admins`.
+- `gnolasco` is a member of `GG-IT-Operations`.
+- Optional `GG-VPN-Users` and `GG-WiFi-Corporate` memberships exist only if intentionally enabled.
+- In the pilot/bootstrap environment only, `GG-T0-Domain-Admins` is visible as a group member of `Domain Admins`.
+- `admin.gnolasco` is not directly visible as a user member of `Domain Admins`.
+
+#### If validation fails — Step 6: Assign baseline group memberships
+
+STOP. Do not continue to `HQ-MGMT01` domain sign-in, RSAT administration, Group Policy validation, or privileged-access testing until baseline memberships validate. Creating groups without assigning members leaves privileged accounts unusable.
+
+#### Rollback — Step 6: Assign baseline group memberships
+
+Remove only the incorrect membership under change control. For pilot Tier 0 bootstrap rollback:
+
+```powershell
+Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins" -Confirm:$true
+```
+
+To remove a user from a GEIL group:
+
+```powershell
+Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "admin.gnolasco" -Confirm:$true
+```
+
+Do not delete the users or groups unless you have verified they are unused by permissions, GPO filters, service configuration, VPN, WiFi, or file ACLs.
+
+### Step 7: Create additional service account placeholders in the correct OU
+
+#### Goal — Step 7: Create additional service account placeholders in the correct OU
 
 Document the expected service accounts before the dependent products are deployed.
 
-#### Why this step matters — Step 6: Create additional service account placeholders in the correct OU
+#### Why this step matters — Step 7: Create additional service account placeholders in the correct OU
 
 Creating the naming plan early prevents ad hoc service identities later. Some accounts may not be created until the product guide requires them.
 
-#### Commands — Step 6: Create additional service account placeholders in the correct OU
+#### Commands — Step 7: Create additional service account placeholders in the correct OU
 
 Use this command only when the account is needed by an approved implementation guide. It validates the target OU first and creates disabled accounts by default so they cannot be used before service-specific permissions are defined.
 
@@ -1235,7 +1461,7 @@ $ServiceAccountResults = foreach ($Svc in $ServiceAccounts) {
 $ServiceAccountResults | Format-Table Status,Sam,Enabled,DN -AutoSize
 ```
 
-#### Expected result — Step 6: Create additional service account placeholders in the correct OU
+#### Expected result — Step 7: Create additional service account placeholders in the correct OU
 
 Reserved service accounts exist but are disabled until their implementation guide defines permissions and activation criteria. Re-running the script shows `Exists` and does not create duplicates.
 
@@ -1247,7 +1473,7 @@ Created svc-entra-connect False   CN=svc-entra-connect,OU=Standard,OU=Service Ac
 Exists  svc-print         False   CN=svc-print,OU=Standard,OU=Service Accounts,OU=GNTECH,...
 ```
 
-#### Validate this step — Step 6: Create additional service account placeholders in the correct OU
+#### Validate this step — Step 7: Create additional service account placeholders in the correct OU
 
 ```powershell
 $ExpectedServiceAccounts = "svc-radius","svc-entra-connect","svc-scan","svc-print"
@@ -1263,11 +1489,11 @@ foreach ($Sam in $ExpectedServiceAccounts) {
 
 Expected output shows `svc-radius`, `svc-entra-connect`, `svc-scan`, and `svc-print` as disabled until used.
 
-#### If validation fails — Step 6: Create additional service account placeholders in the correct OU
+#### If validation fails — Step 7: Create additional service account placeholders in the correct OU
 
 STOP. Do not deploy NPS, Entra Connect, scanning, print, monitoring, or backup services with undocumented accounts. If the service account OU is missing, return to Step 3.
 
-#### Rollback — Step 6: Create additional service account placeholders in the correct OU
+#### Rollback — Step 7: Create additional service account placeholders in the correct OU
 
 If a reserved service account is not needed, leave it disabled or delete it only after confirming it has never been used.
 

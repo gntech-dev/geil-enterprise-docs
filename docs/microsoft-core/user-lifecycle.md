@@ -128,7 +128,7 @@ Get-ADUser gnolasco -Properties UserPrincipalName,Enabled,MemberOf,Distinguished
     Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
 ```
 
-Expected result: user is enabled, located under `OU=Standard`, and UPN is `gnolasco@gntech.me`.
+Expected result: user is enabled, located under `OU=Standard`, UPN is `gnolasco@gntech.me`, and baseline membership includes `GG-IT-Operations` when the organizational foundation membership step has run.
 
 ## Termination workflow
 
@@ -148,7 +148,7 @@ Remove obsolete group membership and add new department groups. Do not move the 
 
 ## Privilege elevation
 
-Use separate admin accounts such as `admin.gnolasco@gntech.me`. Never add daily users to privileged groups.
+Use separate admin accounts such as `admin.gnolasco@gntech.me`. Never add daily users to privileged groups. The Active Directory Organizational Foundation guide assigns the initial `gnolasco -> GG-IT-Operations` membership and `admin.gnolasco -> GG-T0-Domain-Admins` membership. Daily users such as `gnolasco` must not be added directly to `Domain Admins`; pilot Tier 0 bootstrap uses `GG-T0-Domain-Admins -> Domain Admins` instead.
 
 ## Contractors and temporary users
 

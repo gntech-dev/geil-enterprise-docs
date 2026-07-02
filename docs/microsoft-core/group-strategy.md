@@ -82,6 +82,22 @@ AGUDLP adds Universal groups for multi-domain or forest-wide roles. GEIL starts 
 | `GG-Helpdesk` | User support | Password reset/unlock delegation. |
 | `GG-WiFi-Corporate` | Corporate WiFi authorization | NPS policy group. |
 
+
+## Baseline membership model
+
+Groups are authorization containers, not access by themselves. Creating `GG-T0-Domain-Admins`, `GG-IT-Operations`, `GG-VPN-Users`, or `GG-WiFi-Corporate` does not grant any user access until membership and delegation/nesting are assigned.
+
+GEIL baseline memberships are assigned in [Active Directory Organizational Foundation](active-directory-organizational-foundation.md):
+
+| Member | Target group | Purpose |
+|---|---|---|
+| `admin.gnolasco` | `GG-T0-Domain-Admins` | Initial Tier 0 administrative eligibility. |
+| `gnolasco` | `GG-IT-Operations` | Initial IT operations baseline access. |
+| `gnolasco` | `GG-VPN-Users` | Optional future VPN authorization validation. |
+| `gnolasco` | `GG-WiFi-Corporate` | Optional future corporate WiFi/NPS validation. |
+
+For pilot/bootstrap only, `GG-T0-Domain-Admins` may be nested into the built-in `Domain Admins` group. Do not add `admin.gnolasco` directly to `Domain Admins`; group-based access is easier to audit and remove. Mature GEIL operations should replace permanent built-in privileged-group nesting with PAW, approval workflow, JIT/JEA, and time-bound access.
+
 ## PowerShell implementation examples
 
 ```powershell

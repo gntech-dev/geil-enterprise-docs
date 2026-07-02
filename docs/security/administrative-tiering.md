@@ -66,6 +66,13 @@ Tier 0 work must originate from a dedicated Tier 0 PAW or approved jump host wit
 | Daily user | Productivity systems only | Administrative consoles. |
 | Service account | Service runtime only | Interactive logon unless documented exception. |
 
+
+## Tier 0 bootstrap membership
+
+The Active Directory Organizational Foundation guide assigns `admin.gnolasco` to `GG-T0-Domain-Admins`. For the pilot/bootstrap environment only, `GG-T0-Domain-Admins` may be nested into `Domain Admins`. Do not add `admin.gnolasco` directly to `Domain Admins`; the built-in group should contain the controlled GEIL group, not individual pilot users.
+
+Long-term, replace permanent built-in privileged membership with PAW-based administration, LAPS, Windows Hello for Business, approval workflow, JIT/JEA, and time-bound elevation.
+
 ## Implementation examples
 
 Validate tier group existence:
@@ -140,13 +147,14 @@ Expected result: Tier 0 users are separate from daily users, use `@gntech.me`, a
 
 ## Stop conditions
 
-STOP if a daily user is placed in Domain Admins, if Tier 0 credentials are used on a workstation, or if service accounts are assigned interactive privileged rights.
+STOP if a daily user is placed in Domain Admins, if `admin.gnolasco` is added directly to Domain Admins instead of through `GG-T0-Domain-Admins`, if Tier 0 credentials are used on a non-PAW workstation, or if service accounts are assigned interactive privileged rights.
 
 ## Rollback
 
 Remove incorrect membership first, then disable compromised accounts and reset credentials:
 
 ```powershell
+Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins" -Confirm:$true
 Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "admin.gnolasco" -Confirm:$true
 Disable-ADAccount -Identity "admin.gnolasco"
 ```

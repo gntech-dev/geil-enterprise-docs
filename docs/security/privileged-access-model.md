@@ -366,27 +366,39 @@ Do not delete privileged accounts immediately if they have been used. Disable, i
 
 ### Explanation — Implementation procedure: privileged group membership assignment 2
 
-Privileged membership must be explicit, change-controlled, and validated. The example below grants Tier 0 AD administration by adding a named admin account to the GEIL-controlled group and then adding that group to a built-in privileged group where required.
+Privileged membership must be explicit, change-controlled, idempotent, and validated. The organizational foundation guide assigns the pilot baseline `admin.gnolasco -> GG-T0-Domain-Admins`. For pilot/bootstrap only, the GEIL-controlled group may be nested into the built-in `Domain Admins` group. Do not add `admin.gnolasco` directly to `Domain Admins`.
 
 ### PowerShell — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
-Add-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "adm0.j.smith"
-Add-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins"
+Import-Module ActiveDirectory
+
+$Tier0Group = Get-ADGroup -Identity "GG-T0-Domain-Admins" -ErrorAction Stop
+$BuiltInGroup = Get-ADGroup -Identity "Domain Admins" -Properties member -ErrorAction Stop
+
+if ($BuiltInGroup.member -contains $Tier0Group.DistinguishedName) {
+    [PSCustomObject]@{Status="Exists"; Member="GG-T0-Domain-Admins"; TargetGroup="Domain Admins"}
+}
+else {
+    Add-ADGroupMember -Identity $BuiltInGroup.DistinguishedName -Members $Tier0Group.DistinguishedName
+    [PSCustomObject]@{Status="Created"; Member="GG-T0-Domain-Admins"; TargetGroup="Domain Admins"}
+}
 ```
 
 ### Expected result — Implementation procedure: privileged group membership assignment 2
 
-The named Tier 0 account receives Domain Admin rights through the controlled GEIL group.
+Tier 0 rights are granted through the controlled GEIL group, not through direct user membership in `Domain Admins`.
 
 ### Validation — Implementation procedure: privileged group membership assignment 2
 
 ```powershell
 Get-ADGroupMember "GG-T0-Domain-Admins" | Select-Object Name,SamAccountName,ObjectClass
-Get-ADGroupMember "Domain Admins" | Select-Object Name,SamAccountName,ObjectClass
+Get-ADGroupMember "Domain Admins" |
+    Where-Object { $_.SamAccountName -eq "GG-T0-Domain-Admins" } |
+    Select-Object Name,SamAccountName,ObjectClass
 ```
 
-Expected result: the user is a member of `GG-T0-Domain-Admins`; `GG-T0-Domain-Admins` is the member visible in `Domain Admins`.
+Expected result: the user is a member of `GG-T0-Domain-Admins`; `GG-T0-Domain-Admins` is the member visible in `Domain Admins`. Long-term GEIL should replace permanent built-in group nesting with PAW, approval workflow, JIT/JEA, and time-bound privileged access.
 
 ### Rollback — Implementation procedure: privileged group membership assignment 2
 

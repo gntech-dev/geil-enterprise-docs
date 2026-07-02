@@ -84,7 +84,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
 | GEIL-SEC-INDEX | Security | Draft | `docs/security/index.md` | Cross-platform security architecture and controls |
-| GEIL-SEC-PAM-001 | Privileged Access Model | Draft | `docs/security/privileged-access-model.md` | Tier 0/1/2 model, admin accounts, groups, workstations, sign-in controls, emergency access |
+| GEIL-SEC-PAM-001 | Privileged Access Model | Draft | `docs/security/privileged-access-model.md` | Tier 0/1/2 model, admin accounts, controlled group-based privileged membership, workstations, sign-in controls, emergency access |
 | GEIL-SEC-TIER-001 | Enterprise Administrative Tiering | Draft | `docs/security/administrative-tiering.md` | Tier 0/1/2, PAWs, jump hosts, allowed/forbidden logons, and credential exposure controls |
 
 ## Architecture documents
@@ -119,9 +119,9 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-MSC-WS2025-001 | Windows Server 2025 Baseline | Draft | `docs/microsoft-core/windows-server-2025-baseline.md` | Server baseline |
 | GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
-| GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy, users, groups, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
+| GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy, users, groups, baseline memberships, pilot Tier 0 bootstrap nesting, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
 | GEIL-MSC-NAME-001 | Enterprise Naming Standard | Draft | `docs/microsoft-core/active-directory-naming-standard.md` | Naming standards for users, computers, servers, groups, service accounts, GPOs, DNS, DFS, certificates, hypervisors, Proxmox, and MikroTik |
-| GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | AGDLP, AGUDLP, RBAC, group nesting, naming convention, examples, PowerShell, and validation |
+| GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | AGDLP, AGUDLP, RBAC, baseline membership model, group nesting, naming convention, examples, PowerShell, and validation |
 | GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | New hire, termination, department change, privilege elevation, contractors, guests, password reset, lockout, and offboarding |
 | GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Standard service accounts, gMSA, scheduled tasks, IIS, SQL, NPS, Entra Connect, backup, monitoring, rotation, and least privilege |
 | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |

@@ -58,6 +58,7 @@ flowchart TD
 - Deny interactive logon unless explicitly required.
 - Store credentials only in the approved password manager.
 - Assign permissions through groups where practical.
+- Service accounts are not part of the pilot Tier 0 bootstrap membership model; never place service accounts in `GG-T0-Domain-Admins` or `Domain Admins`.
 - Document owner, purpose, system, rotation interval, and rollback.
 
 ## PowerShell: create a standard service account
