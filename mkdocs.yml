@@ -64,9 +64,6 @@ nav:
       - Active Directory Network Requirements: platform/active-directory-network-requirements.md
       - Enterprise Port Reference: platform/enterprise-port-reference.md
       - Windows Server 2025 Golden Template: platform/windows-server-2025-golden-template.md
-      - Windows 11 Enterprise Golden Template: platform/windows-11-enterprise-golden-template.md
-      - Windows 11 Management Workstation: platform/windows-11-management-workstation.md
-      - Windows 11 Domain Join and GPO Validation: platform/windows-11-domain-join-gpo-validation.md
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
       - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
@@ -81,6 +78,13 @@ nav:
       - Enterprise Service Account Standard: microsoft-core/service-account-standard.md
       - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
       - Group Policy Baseline: microsoft-core/group-policy-baseline.md
+      - Phase 3 - Windows Client Lifecycle:
+          - microsoft-core/windows-client-lifecycle/index.md
+          - Windows 11 Enterprise Golden Template: microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md
+          - Cloudbase-Init for Proxmox: microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md
+          - Windows Management Workstation - HQ-MGMT01: microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md
+          - Windows Domain Join and GPO Validation: microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md
+          - Standard Windows Client - HQ-W11-001: microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md
       - Windows Admin Center: microsoft-core/windows-admin-center.md
       - PowerShell Operations: microsoft-core/powershell-operations.md
   - Security:

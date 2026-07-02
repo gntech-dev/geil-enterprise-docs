@@ -200,7 +200,7 @@ Checkpoint:
 
 - Snapshot `CP-MGMT01-OS` after clone, VLAN10 management validation, domain join, RSAT installation, and management tooling baseline.
 
-Detailed procedure: [Windows 11 Management Workstation](windows-11-management-workstation.md).
+Detailed procedure: [Windows 11 Management Workstation](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md).
 
 ### Step 7: Create `HQ-W11-001`
 

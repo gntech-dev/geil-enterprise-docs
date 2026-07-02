@@ -57,7 +57,7 @@ Pilot deployment established this model:
 ## Prerequisites
 
 - [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md) completed and validated as workgroup-only.
-- [Active Directory Network Requirements](active-directory-network-requirements.md) implemented.
+- [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) implemented.
 - [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md) reviewed for common clone/domain-join validation flow.
 - VLAN 10 Management network addressing, DNS, and domain-controller access are operational for `HQ-MGMT01`.
 - Domain join credentials are approved for the change window.

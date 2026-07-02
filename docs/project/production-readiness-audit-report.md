@@ -149,7 +149,7 @@ The following files were included in the repository-wide audit:
 - `docs/platform/phase-1-validation-plan.md`
 - `docs/platform/proxmox-hq-foundation-implementation.md`
 - `docs/platform/proxmox-hq-foundation-lld.md`
-- `docs/platform/windows-11-enterprise-golden-template.md`
+- `docs/microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md`
 - `docs/platform/windows-server-2025-golden-template.md`
 - `docs/project/document-index.md`
 - `docs/project/documentation-backlog.md`

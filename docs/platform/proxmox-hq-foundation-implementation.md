@@ -1190,11 +1190,11 @@ Medium. Incorrect VLAN mapping prevents management validation.
 
 - `GEILLAN` validates.
 - VM ID `120` is available or an approved replacement ID is documented.
-- For full OS deployment, [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md) exists and remains workgroup-only.
+- For full OS deployment, [Windows 11 Enterprise Golden Template](../microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md) exists and remains workgroup-only.
 
 #### Starting state — Create `HQ-MGMT01`
 
-No Windows 11 OS is installed by this Proxmox shell step. Full management workstation deployment is completed by cloning the workgroup-only Windows 11 golden template in [Windows 11 Management Workstation](windows-11-management-workstation.md).
+No Windows 11 OS is installed by this Proxmox shell step. Full management workstation deployment is completed by cloning the workgroup-only Windows 11 golden template in [Windows 11 Management Workstation](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md).
 
 #### Expected ending state — Create `HQ-MGMT01`
 
@@ -1286,7 +1286,7 @@ Medium. Incorrect VLAN mapping invalidates client testing.
 
 #### Starting state — Create `HQ-W11-001`
 
-No Windows 11 OS is installed by this Proxmox shell step. Full standard client deployment and domain/GPO validation are completed by cloning the workgroup-only Windows 11 golden template in [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md).
+No Windows 11 OS is installed by this Proxmox shell step. Full standard client deployment and domain/GPO validation are completed by cloning the workgroup-only Windows 11 golden template in [Windows 11 Domain Join and GPO Validation](../microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md).
 
 #### Expected ending state — Create `HQ-W11-001`
 

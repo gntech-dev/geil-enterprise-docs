@@ -101,6 +101,12 @@ Rationale:
 - The model prepares for PAW hardening, LAPS, Windows Hello for Business, Microsoft Entra ID, Just-in-Time access, and Just Enough Administration.
 - `HQ-MGMT01` is deployed from the Windows 11 golden template, attached to `GEILLAN` VLAN 10, validated for management-network addressing, DNS, and domain-controller access, joined to `corp.gntech.me` after cloning, moved to `OU=Management Workstations,OU=Computers,OU=GNTECH`, and then equipped with RSAT/admin tools.
 
+## Windows client lifecycle placement
+
+Microsoft Core Phase 3 owns the Windows Client Lifecycle under `docs/microsoft-core/windows-client-lifecycle/`. The deployment order is: Windows 11 Enterprise Golden Template, Cloudbase-Init for Proxmox, Windows Management Workstation - `HQ-MGMT01`, Windows Domain Join and GPO Validation, and Standard Windows Client - `HQ-W11-001`.
+
+The golden template must never be domain-joined. `HQ-MGMT01` belongs to VLAN 10 Management and `OU=Management Workstations,OU=Computers,OU=GNTECH,...`. `HQ-W11-001` and future user workstations belong to VLAN 30 Workstations and `OU=Workstations,OU=Computers,OU=GNTECH,...`.
+
 ## DNS naming
 
 | Zone or Record Type | Canonical Value |

@@ -77,6 +77,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Moved Windows 11 client lifecycle implementation guides into Microsoft Core Phase 3 under `docs/microsoft-core/windows-client-lifecycle/`, added a clear Windows Client Lifecycle entry point, and updated navigation/control-plane references for golden template, Cloudbase-Init, `HQ-MGMT01`, domain join/GPO validation, and `HQ-W11-001`.
 - Moved `HQ-MGMT01` to the Management VLAN 10 architecture and the new `OU=Management Workstations,OU=Computers,OU=GNTECH` placement; clarified that `HQ-W11-001` and future user workstations remain on VLAN 30, and prepared future `GP - Baseline - Management Workstations` architecture without implementing unvalidated settings.
 - Completed the GEIL documentation architecture review: added a repository-wide classification report, permanent single-source-of-truth rules, Future and Archive sections, and reorganized MkDocs navigation around Foundation, Platform, Microsoft Core, Security, Architecture, Operations, Project, Future, and Archive.
 - Added baseline Active Directory group-membership assignment to the Organizational Foundation guide: `admin.gnolasco -> GG-T0-Domain-Admins`, `gnolasco -> GG-IT-Operations`, optional VPN/WiFi memberships, and pilot/bootstrap-only `GG-T0-Domain-Admins -> Domain Admins` nesting without direct user membership in `Domain Admins`.
@@ -166,6 +167,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Moved Windows 11 client lifecycle implementation guides into Microsoft Core Phase 3 under `docs/microsoft-core/windows-client-lifecycle/`, added a clear Windows Client Lifecycle entry point, and updated navigation/control-plane references for golden template, Cloudbase-Init, `HQ-MGMT01`, domain join/GPO validation, and `HQ-W11-001`.
 - Moved `HQ-MGMT01` to the Management VLAN 10 architecture and the new `OU=Management Workstations,OU=Computers,OU=GNTECH` placement; clarified that `HQ-W11-001` and future user workstations remain on VLAN 30, and prepared future `GP - Baseline - Management Workstations` architecture without implementing unvalidated settings.
 - Updated `mkdocs.yml` navigation to include the Security section and Privileged Access Model.
 - Marked backlog item `DOC-002` as Done in the authoritative documentation backlog.

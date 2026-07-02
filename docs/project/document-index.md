@@ -63,9 +63,6 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PLAT-AD-NET-001 | Active Directory Network Requirements | Approved | `docs/platform/active-directory-network-requirements.md` | Authoritative address-list based client-to-domain-controller firewall architecture, required AD service ports, pilot finding, validation, rollback, and evidence |
 | GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
 | GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
-| GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Approved | `docs/platform/windows-11-enterprise-golden-template.md` | Workgroup-only Proxmox Windows 11 template build with VirtIO, QEMU Guest Agent, Cloudbase-Init, Sysprep, and template conversion; domain join explicitly excluded |
-| GEIL-PLAT-W11-MGMT-001 | Windows 11 Management Workstation | Approved | `docs/platform/windows-11-management-workstation.md` | Deploy `HQ-MGMT01` as Windows 11 Enterprise management workstation / initial PAW on Management VLAN 10 with domain join after cloning, Management Workstations OU placement, RSAT/admin tools, and remote administration model |
-| GEIL-PLAT-W11-DOMJOIN-001 | Windows 11 Domain Join and GPO Validation | Approved | `docs/platform/windows-11-domain-join-gpo-validation.md` | Clone from template, attach VLAN30, validate DHCP/DNS/DC firewall, join `corp.gntech.me`, move computer object, and validate `GP - Baseline - Workstations` |
 
 ## Governance documents
 
@@ -127,6 +124,10 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Standard service accounts, gMSA, scheduled tasks, IIS, SQL, NPS, Entra Connect, backup, monitoring, rotation, and least privilege |
 | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
 | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model, including future Management Workstations GPO architecture |
+| GEIL-MSC-WCL-INDEX | Windows Client Lifecycle | Approved | `docs/microsoft-core/windows-client-lifecycle/index.md` | Phase 3 Windows Client Lifecycle entry point and deployment order |
+| GEIL-PLAT-W11-GOLD-001 | Windows 11 Enterprise Golden Template | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` | Workgroup-only Proxmox Windows 11 template build with VirtIO, QEMU Guest Agent, Cloudbase-Init, Sysprep, and template conversion; domain join explicitly excluded |
+| GEIL-PLAT-W11-MGMT-001 | Windows 11 Management Workstation | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` | Deploy `HQ-MGMT01` as Windows 11 Enterprise management workstation / initial PAW on Management VLAN 10 with domain join after cloning, Management Workstations OU placement, RSAT/admin tools, and remote administration model |
+| GEIL-PLAT-W11-DOMJOIN-001 | Windows 11 Domain Join and GPO Validation | Approved | `docs/microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` | Clone standard clients from template, attach VLAN30, validate DHCP/DNS/DC firewall, join `corp.gntech.me`, move computer object, and validate `GP - Baseline - Workstations` |
 | GEIL-MSC-WAC-001 | Windows Admin Center | Draft | `docs/microsoft-core/windows-admin-center.md` | Management gateway |
 | GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
 
@@ -179,7 +180,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 8 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
-| E03 | E03.R01 - Core directory services | 11 |
+| E03 | E03.R01 - Core directory services | 12 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
 | E03 | E03.R03 - Privileged access control plane | 3 |
 | E04 | E04.R01 - Cloud identity and endpoint management | 6 |

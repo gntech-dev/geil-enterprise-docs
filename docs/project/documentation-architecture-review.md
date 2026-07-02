@@ -197,9 +197,9 @@ If the recommended merges are completed, GEIL can reduce active document count b
 | `platform/phase-1-validation-plan.md` | Phase 1 Validation Plan | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
 | `platform/proxmox-hq-foundation-implementation.md` | Proxmox HQ Foundation Implementation Runbook | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `platform/proxmox-hq-foundation-lld.md` | Proxmox HQ Foundation LLD | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/windows-11-domain-join-gpo-validation.md` | Windows 11 Domain Join and GPO Validation | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/windows-11-enterprise-golden-template.md` | Windows 11 Enterprise Golden Template | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/windows-11-management-workstation.md` | Windows 11 Management Workstation | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` | Windows 11 Domain Join and GPO Validation | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` | Windows 11 Enterprise Golden Template | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` | Windows 11 Management Workstation | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `platform/windows-server-2025-golden-template.md` | Windows Server 2025 Golden Template | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `project/document-index.md` | Document Index | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `project/documentation-architecture-review.md` | Documentation Architecture Review | KEEP | Current authoritative document or required control-plane/implementation guide. |

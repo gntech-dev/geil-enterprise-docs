@@ -325,6 +325,7 @@ The following register assigns every current published document to exactly one r
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-organizational-foundation.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/dns-dhcp-implementation.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/group-policy-baseline.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/windows-client-lifecycle/index.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/powershell-operations.md` |
 | E03.R02 - Trust and network authentication | E03 | `microsoft-core/ad-cs-pki.md` |
 | E03.R02 - Trust and network authentication | E03 | `microsoft-core/nps-radius-8021x.md` |
@@ -347,9 +348,9 @@ The following register assigns every current published document to exactly one r
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/active-directory-network-requirements.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/enterprise-port-reference.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-server-2025-golden-template.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-11-enterprise-golden-template.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-11-management-workstation.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-11-domain-join-gpo-validation.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-naming-standard.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/group-strategy.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/user-lifecycle.md` |
