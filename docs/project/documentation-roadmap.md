@@ -120,7 +120,7 @@ A release is Done only when:
 
 ## Next recommended release
 
-The next recommended guide is **Group Policy Baseline** after Active Directory Organizational Foundation validation. The next recommended new release remains **E03.R04 Certificate lifecycle management**, delivered by backlog item `DOC-003`. All E03.R04 documents must reference the Enterprise Lab Blueprint HLD and the E02.R03/E02.R04/E02.R05 HQ Foundation design, implementation, and acceptance baseline before defining implementation details.
+The next recommended guide is **Group Policy Baseline** after Active Directory Organizational Foundation validation. Active Directory Organizational Foundation validation now includes baseline group membership assignment: `admin.gnolasco -> GG-T0-Domain-Admins`, `gnolasco -> GG-IT-Operations`, optional VPN/WiFi groups, and pilot/bootstrap-only `GG-T0-Domain-Admins -> Domain Admins` nesting without direct user membership in `Domain Admins`. The next recommended new release remains **E03.R04 Certificate lifecycle management**, delivered by backlog item `DOC-003`. All E03.R04 documents must reference the Enterprise Lab Blueprint HLD and the E02.R03/E02.R04/E02.R05 HQ Foundation design, implementation, and acceptance baseline before defining implementation details.
 
 
 ## Documentation Quality Initiative
