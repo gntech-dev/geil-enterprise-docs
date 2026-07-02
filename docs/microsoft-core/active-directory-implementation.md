@@ -80,6 +80,7 @@ This guide creates the first GEIL directory service before production users or w
 
 - [Windows Server 2025 Golden Template](../platform/windows-server-2025-golden-template.md) used or consciously bypassed with documented exception.
 - [Windows Server 2025 Baseline](windows-server-2025-baseline.md) completed and validated on `HQ-DC01`.
+- [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) reviewed so client VLANs can reach `HQ-DC01` after AD DS is installed.
 - [Enterprise Naming Standard](active-directory-naming-standard.md) reviewed.
 
 - [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md) reviewed.
@@ -109,7 +110,7 @@ This guide creates the first GEIL directory service before production users or w
 - `HQ-DC01` is a domain controller and DNS server.
 - DNS points to `HQ-DC01` after promotion.
 - Baseline OUs are created in the dedicated Active Directory Organizational Foundation guide after forest health and Hybrid UPN validation pass.
-- AD DS, DNS SRV records, FSMO roles, replication commands, and event logs validate successfully.
+- AD DS, DNS SRV records, FSMO roles, replication commands, event logs, and client-to-domain-controller firewall paths validate successfully.
 
 ## Architecture Overview
 

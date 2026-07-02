@@ -79,6 +79,7 @@ This baseline is performed before the server provides production services.
 
 - [Windows Server 2025 Golden Template](../platform/windows-server-2025-golden-template.md) reviewed if this server is cloned from a template.
 - [Enterprise Naming Standard](active-directory-naming-standard.md) reviewed for server naming, DNS, certificates, and evidence naming.
+- [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) reviewed before domain clients are introduced.
 
 
 - [Phase 1 Build Plan](../platform/phase-1-build-plan.md) completed for the target VM.
@@ -151,7 +152,7 @@ Without a baseline, each server would have different settings, different update 
 
 The server baseline interacts with:
 
-- `HQ-FW01` for routing and firewall policy.
+- `HQ-FW01` for routing, firewall policy, and the address-list based Active Directory client-to-domain-controller model.
 - AD DNS after domain services exist.
 - Proxmox snapshots for rollback before production role installation.
 - Operations evidence packages for proof of readiness.

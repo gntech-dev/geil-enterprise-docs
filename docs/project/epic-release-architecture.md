@@ -341,6 +341,7 @@ The following register assigns every current published document to exactly one r
 | E05.R01 - Operations readiness | E05 | `operations/security-operations.md` |
 | E05.R01 - Operations readiness | E05 | `microsoft-core/windows-admin-center.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/firewall-rule-matrix.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/active-directory-network-requirements.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/enterprise-port-reference.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-server-2025-golden-template.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-11-enterprise-golden-template.md` |

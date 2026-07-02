@@ -344,17 +344,29 @@ Minimum field validation set:
 
 ### VLAN30 Active Directory service validation
 
+This validation implements [Active Directory Network Requirements](active-directory-network-requirements.md). Do not validate only from `HQ-MGMT01`; use a normal VLAN30 client as well.
+
+
 Run from a DHCP client in VLAN 30 that is not `HQ-MGMT01`.
 
 ```powershell
 ipconfig /all
+ping 172.20.20.11
 Resolve-DnsName corp.gntech.me -Server 172.20.20.11
 Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV -Server 172.20.20.11
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 88
+Test-NetConnection HQ-DC01.corp.gntech.me -Port 389
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 445
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 135
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 3268
 w32tm /stripchart /computer:HQ-DC01.corp.gntech.me /samples:3
 nltest /dsgetdc:corp.gntech.me
+Test-Path \\corp.gntech.me\SYSVOL
+Test-Path \\corp.gntech.me\NETLOGON
+# Run domain join only on the intended pilot workstation and only once.
+# Add-Computer -DomainName corp.gntech.me -Restart
+gpupdate /force
+gpresult /r
 ```
 
 Expected result: DNS queries return `HQ-DC01`, TCP tests succeed, time replies are received, and `nltest` discovers the domain controller.
@@ -362,7 +374,7 @@ Expected result: DNS queries return `HQ-DC01`, TCP tests succeed, time replies a
 From `HQ-FW01`, confirm the least-privilege rules are matching before the default deny rule:
 
 ```routeros
-/ip/firewall/filter/print stats where comment~"VLAN30 clients to HQ-DC01"
+/ip/firewall/filter/print stats where comment~"AD "
 ```
 
 STOP if DHCP succeeds but DNS queries, SYSVOL access, RPC, time sync, or domain-controller discovery time out. Do not proceed to domain join until the production AD service rules are in place.

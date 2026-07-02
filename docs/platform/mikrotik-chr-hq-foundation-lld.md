@@ -121,6 +121,8 @@ All VLAN interfaces are created on `ether2`.
 
 ## Firewall baseline
 
+Active Directory client-to-domain-controller policy uses the address-list architecture in [Active Directory Network Requirements](active-directory-network-requirements.md): `AD-DomainControllers`, `AD-ClientNetworks`, `ManagementNetworks`, and `ServerNetworks`. Do not create a separate firewall rule set per client VLAN.
+
 Baseline posture:
 
 - Drop invalid traffic.

@@ -55,6 +55,9 @@ Release `E02.R03` translates the Enterprise Lab Blueprint HLD into deployable Ph
 
 - [Proxmox HQ Foundation LLD](proxmox-hq-foundation-lld.md)
 - [MikroTik CHR HQ Foundation LLD](mikrotik-chr-hq-foundation-lld.md)
+- [Firewall Rule Matrix](firewall-rule-matrix.md)
+- [Active Directory Network Requirements](active-directory-network-requirements.md)
+- [Enterprise Port Reference](enterprise-port-reference.md)
 - [Phase 1 Build Plan](phase-1-build-plan.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)
 

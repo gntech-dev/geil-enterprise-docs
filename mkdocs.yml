@@ -67,6 +67,7 @@ nav:
       - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
       - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
       - Firewall Rule Matrix: platform/firewall-rule-matrix.md
+      - Active Directory Network Requirements: platform/active-directory-network-requirements.md
       - Enterprise Port Reference: platform/enterprise-port-reference.md
       - Windows Server 2025 Golden Template: platform/windows-server-2025-golden-template.md
       - Windows 11 Enterprise Golden Template: platform/windows-11-enterprise-golden-template.md

@@ -83,6 +83,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 
 - Domain exists.
 - OUs exist.
+- [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) is implemented so workstation clients can reach DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, and Global Catalog services on `HQ-DC01`.
 - No GEIL baseline GPO is linked to production OUs unless it was created by a previous approved change.
 
 ## Expected Ending State
@@ -472,6 +473,8 @@ Remove-GPLink -Name "GP - Baseline - Workstations" `
 From a test workstation such as `HQ-W11-001` after domain join:
 
 ```powershell
+Test-Path \corp.gntech.me\SYSVOL
+Test-Path \corp.gntech.me\NETLOGON
 gpupdate /force
 gpresult /h C:\Temp\geil-gpresult.html
 Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20

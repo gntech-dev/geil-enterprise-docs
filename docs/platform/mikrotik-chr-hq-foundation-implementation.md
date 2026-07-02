@@ -782,9 +782,14 @@ Validate before adding drops:
 /ip firewall filter add chain=forward src-address=172.20.70.0/24 out-interface-list=WAN action=accept comment="Allow guest to internet only"
 /ip firewall filter add chain=forward in-interface-list=LAN out-interface-list=WAN action=accept comment="Allow GEIL LAN to internet"
 /ip firewall filter add chain=forward src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 action=accept comment="Allow HQ-MGMT01 to Proxmox"
-/ip firewall filter add chain=forward src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 action=accept comment="Allow VLAN30 clients to HQ-DC01 AD TCP"
-/ip firewall filter add chain=forward src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=udp dst-port=53,88,389,123 action=accept comment="Allow VLAN30 clients to HQ-DC01 AD UDP"
-/ip firewall filter add chain=forward src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=636 action=accept disabled=yes comment="OPTIONAL LDAPS VLAN30 to HQ-DC01 if enabled"
+/ip firewall address-list add list=AD-DomainControllers address=172.20.20.11 comment="HQ-DC01 domain controller"
+/ip firewall address-list add list=AD-ClientNetworks address=172.20.30.0/24 comment="VLAN30 Workstations domain clients"
+/ip firewall address-list add list=ManagementNetworks address=172.20.10.0/24 comment="VLAN10 Management"
+/ip firewall address-list add list=ManagementNetworks address=172.20.30.10 comment="HQ-MGMT01 approved management workstation"
+/ip firewall address-list add list=ServerNetworks address=172.20.20.0/24 comment="VLAN20 Servers"
+/ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="AD TCP clients to DCs"
+/ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=udp dst-port=53,88,389,123 comment="AD UDP clients to DCs"
+/ip firewall filter add chain=forward action=accept disabled=yes src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=636 comment="OPTIONAL AD LDAPS clients to DCs if enabled"
 /ip firewall filter add chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
@@ -805,9 +810,9 @@ chain=forward action=drop src-address=172.20.70.0/24 dst-address=172.20.0.0/16 c
 chain=forward action=accept src-address=172.20.70.0/24 out-interface-list=WAN comment="Allow guest to internet only"
 chain=forward action=accept in-interface-list=LAN out-interface-list=WAN comment="Allow GEIL LAN to internet"
 chain=forward action=accept src-address=172.20.30.10 dst-address=172.20.100.11 protocol=tcp dst-port=8006 comment="Allow HQ-MGMT01 to Proxmox"
-chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="Allow VLAN30 clients to HQ-DC01 AD TCP"
-chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=udp dst-port=53,88,389,123 comment="Allow VLAN30 clients to HQ-DC01 AD UDP"
-chain=forward action=accept disabled=yes src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=636 comment="OPTIONAL LDAPS VLAN30 to HQ-DC01 if enabled"
+chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="AD TCP clients to DCs"
+chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=udp dst-port=53,88,389,123 comment="AD UDP clients to DCs"
+chain=forward action=accept disabled=yes src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=636 comment="OPTIONAL AD LDAPS clients to DCs if enabled"
 chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
@@ -831,20 +836,16 @@ If a pilot client receives DHCP but cannot query DNS or contact AD, this broad r
 
 #### Production Active Directory service policy
 
-The production rules are intentionally service-specific. They permit VLAN 30 clients to use required domain-controller services without granting unrestricted access to `HQ-DC01`.
+The production rules use RouterOS address lists so future domain controllers or client VLANs can be added without creating a new rule set for every VLAN. The authoritative service list, port rationale, and validation commands live in [Active Directory Network Requirements](active-directory-network-requirements.md).
 
-| Service | Protocol | Port |
-|---|---|---:|
-| DNS | TCP/UDP | 53 |
-| Kerberos | TCP/UDP | 88 |
-| LDAP | TCP/UDP | 389 |
-| SMB / SYSVOL / GPO | TCP | 445 |
-| RPC Endpoint Mapper | TCP | 135 |
-| Dynamic RPC | TCP | 49152-65535 |
-| NTP | UDP | 123 |
-| Global Catalog | TCP | 3268 |
-| Global Catalog SSL | TCP | 3269 |
-| LDAPS | TCP | 636, disabled until LDAPS is enabled |
+| Address list | Current members |
+|---|---|
+| `AD-DomainControllers` | `172.20.20.11` (`HQ-DC01`) |
+| `AD-ClientNetworks` | `172.20.30.0/24` (VLAN30 Workstations) |
+| `ManagementNetworks` | `172.20.10.0/24`, `172.20.30.10` |
+| `ServerNetworks` | `172.20.20.0/24` |
+
+Do not duplicate AD service-port rationale in this guide. Use [Active Directory Network Requirements](active-directory-network-requirements.md) as the single source of truth.
 
 #### If validation fails — Step 12: Apply baseline firewall rules in safe order
 
@@ -857,7 +858,7 @@ Check:
 - `WAN` interface list contains `ether1`.
 - `Allow GEIL LAN to internet` appears before `Default deny unapproved forwarding`.
 - NAT masquerade exists.
-- VLAN 30 to `HQ-DC01` AD service rules appear before `Default deny unapproved forwarding`.
+- `AD-DomainControllers` and `AD-ClientNetworks` address lists exist, and AD service rules using those lists appear before `Default deny unapproved forwarding`.
 
 Continue only if successful.
 
@@ -871,7 +872,7 @@ Remove the most recent bad rule by comment, for example:
 
 #### Next step — Step 12: Apply baseline firewall rules in safe order
 
-Prepare DHCP relay without enabling it. Remember: relay validation proves address assignment only; DNS and domain join require the production Active Directory service rules above.
+Prepare DHCP relay without enabling it. Remember: relay validation proves address assignment only; DNS and domain join require the address-list based Active Directory service rules from [Active Directory Network Requirements](active-directory-network-requirements.md).
 
 ### Step 13: Prepare and enable DHCP relay only after Windows scopes exist
 

@@ -514,7 +514,7 @@ MikroTik CHR processes DHCP relay traffic as router-local traffic. During the pi
 
 Guest VLAN 70 must remain isolated and must never relay to AD DHCP. VLAN 40 and VLAN 60 relays must remain disabled until their scopes exist.
 
-DHCP relay is only the address-assignment path. It does not authorize workstation traffic to reach Active Directory after a lease is issued. VLAN 30 clients must also be permitted through the `HQ-FW01` forward chain to reach required `HQ-DC01` services.
+DHCP relay is only the address-assignment path. It does not authorize workstation traffic to reach Active Directory after a lease is issued. VLAN 30 clients must also be permitted through the `HQ-FW01` forward chain to reach required `HQ-DC01` services. The authoritative address-list model and service rules are defined in [Active Directory Network Requirements](../platform/active-directory-network-requirements.md).
 
 !!! implementation "Pilot deployment validated"
 

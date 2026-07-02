@@ -3,7 +3,7 @@ title: Enterprise Port Reference
 document_id: GEIL-PLAT-PORTS-001
 owner: Infrastructure Engineering
 status: Draft
-version: 1.0
+version: 1.1
 last_reviewed: 2026-06-30
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-PORTS-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 1.0 |
+| Version | 1.1 |
 | Last Reviewed | 2026-06-30 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -30,7 +30,7 @@ classification: Internal Confidential
 
 ## Purpose
 
-Document Microsoft Core and enterprise management ports required before firewall rules, host firewalls, monitoring, and troubleshooting workflows are finalized.
+Document Microsoft Core and enterprise management ports required before firewall rules, host firewalls, monitoring, and troubleshooting workflows are finalized. Active Directory client-to-domain-controller firewall architecture is authoritative in [Active Directory Network Requirements](active-directory-network-requirements.md).
 
 ## Port table
 
@@ -42,7 +42,7 @@ Document Microsoft Core and enterprise management ports required before firewall
 | LDAP | TCP/UDP | 389 | Clients to DC | Directory lookup | `nltest /dsgetdc:corp.gntech.me` |
 | LDAPS | TCP | 636 | Clients to DC | Secure LDAP | `Test-NetConnection HQ-DC01 636` |
 | Global Catalog | TCP | 3268,3269 | Clients to DC | Forest-wide lookup | AD query validates |
-| SMB/SYSVOL | TCP | 445 | Clients to DC/file | GPO, file access | `Test-Path \corp.gntech.me\SYSVOL` |
+| SMB/SYSVOL/NETLOGON | TCP | 445 | Clients to DC/file | Domain join, GPO, file access | `Test-Path \corp.gntech.me\SYSVOL`; `Test-Path \corp.gntech.me\NETLOGON` |
 | RPC endpoint mapper | TCP | 135 | Clients/admin to servers | RPC discovery | AD/GPO operations |
 | RPC dynamic | TCP | 49152-65535 | Windows RPC | AD/GPO/management | Event logs/gpupdate |
 | NTP | UDP | 123 | Clients to time source | Time sync | `w32tm /query /status` |
@@ -62,7 +62,7 @@ Operators often troubleshoot symptoms at the wrong layer. This reference links e
 
 ```powershell
 $Targets = @("HQ-DC01.corp.gntech.me")
-$Ports = 53,88,389,445,636,3268,5985
+$Ports = 53,88,389,445,135,3268,3269
 foreach ($Target in $Targets) {
     foreach ($Port in $Ports) {
         Test-NetConnection -ComputerName $Target -Port $Port | Select-Object ComputerName,RemotePort,TcpTestSucceeded
@@ -93,4 +93,4 @@ Capture port tests, RouterOS rule output, Windows Firewall rule output, and serv
 
 ## Next Guide
 
-Use this with [Firewall Rule Matrix](firewall-rule-matrix.md) and Microsoft Core implementation guides.
+Use this with [Firewall Rule Matrix](firewall-rule-matrix.md), [Active Directory Network Requirements](active-directory-network-requirements.md), and Microsoft Core implementation guides.
