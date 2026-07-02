@@ -290,6 +290,12 @@ Execute the Phase 1 foundation build in a safe order that preserves existing Pro
 
 Run on `PVE-HQ01` after core build:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 mkdir -p /root/geil-e02r04-evidence
 ip -brief addr > /root/geil-e02r04-evidence/ip-brief.txt

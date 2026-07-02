@@ -48,6 +48,12 @@ A single-tier enterprise CA requires an ADR and is acceptable only for constrain
 
 ## Validation PowerShell
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 certutil -config "HQ-DC01\GNTECH-Issuing-CA01" -ping
 certutil -urlfetch -verify C:\Temp\issued-test.cer
@@ -71,6 +77,12 @@ If templates are wrong, supersede template versions instead of editing blindly. 
 ## Deployment Validation
 
 Validate PKI only after AD DS and DNS health are proven.
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 certutil -config "HQ-DC01\GNTECH-Issuing-CA01" -ping

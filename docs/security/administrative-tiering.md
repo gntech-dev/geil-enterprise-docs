@@ -77,6 +77,12 @@ Long-term, replace permanent built-in privileged membership with PAW-based admin
 
 Validate tier group existence:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADGroup -Identity "GG-T0-Domain-Admins"
 Get-ADGroup -Identity "GG-T1-Server-Admins"
@@ -84,6 +90,12 @@ Get-ADGroup -Identity "GG-T2-Workstation-Admins"
 ```
 
 Create a Tier 0 admin user only after the organizational foundation exists:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -136,6 +148,12 @@ else {
 
 ## Validation
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADUser -SearchBase "OU=Admin,OU=GNTECH,$((Get-ADDomain).DistinguishedName)" -Filter * `
     -Properties UserPrincipalName,Enabled,DistinguishedName |
@@ -152,6 +170,12 @@ STOP if a daily user is placed in Domain Admins, if `admin.gnolasco` is added di
 ## Rollback
 
 Remove incorrect membership first, then disable compromised accounts and reset credentials:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins" -Confirm:$true

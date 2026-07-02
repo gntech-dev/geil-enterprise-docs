@@ -263,6 +263,12 @@ Open the console path for `PVE-HQ01` and confirm you can log in as an approved a
 
 Run from the console:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 hostname
 ```
@@ -274,6 +280,12 @@ PVE-HQ01
 ```
 
 #### Validation — Confirm console access
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 whoami
@@ -324,29 +336,71 @@ Evidence files exist under `/root/geil-evidence/`.
 
 #### Commands — Capture the pre-change network state
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 mkdir -p /root/geil-evidence
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 hostname | tee /root/geil-evidence/01-pre-hostname.txt
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ip -brief addr | tee /root/geil-evidence/02-pre-ip-brief.txt
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip route | tee /root/geil-evidence/03-pre-ip-route.txt
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 bridge link | tee /root/geil-evidence/04-pre-bridge-link.txt
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 bridge vlan show | tee /root/geil-evidence/05-pre-bridge-vlan.txt
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 cp /etc/network/interfaces /root/geil-evidence/06-pre-interfaces.txt
@@ -357,6 +411,12 @@ cp /etc/network/interfaces /root/geil-evidence/06-pre-interfaces.txt
 You should see command output saved to `/root/geil-evidence/`.
 
 #### Validation — Capture the pre-change network state
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ls -lh /root/geil-evidence
@@ -425,9 +485,21 @@ Pre-change evidence exists.
 
 #### Commands — Create a rollback copy
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 cp /etc/network/interfaces /root/interfaces.rollback-before-geil
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ls -l /root/interfaces.rollback-before-geil
@@ -442,6 +514,12 @@ ls -l /root/interfaces.rollback-before-geil
 The timestamp and size may differ.
 
 #### Validation — Create a rollback copy
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 test -s /root/interfaces.rollback-before-geil
@@ -492,9 +570,21 @@ The operator knows which existing objects are protected.
 
 #### Commands — Inspect protected objects
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 grep -nE 'eno1|VSW4001|PROD|TEST|GEILWAN|GEILLAN' /etc/network/interfaces || true
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip -brief link | grep -E 'eno1|VSW4001|PROD|TEST|GEILWAN|GEILLAN' || true
@@ -512,6 +602,12 @@ Success looks like this:
 #### Validation — Inspect protected objects
 
 Review `/root/geil-evidence/06-pre-interfaces.txt` and confirm it matches the current file before editing.
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 diff -u /root/geil-evidence/06-pre-interfaces.txt /etc/network/interfaces || true
@@ -565,6 +661,12 @@ High. This step edits host networking.
 
 Open the file from console or SSH:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 nano /etc/network/interfaces
 ```
@@ -590,6 +692,12 @@ No shell output is expected from saving the file.
 
 #### Validation — Add `GEILWAN`
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ifquery --list | grep '^GEILWAN$'
 ```
@@ -609,6 +717,12 @@ Can you safely continue? No. Continue only when `GEILWAN` is detected.
 #### Rollback — Add `GEILWAN`
 
 If the file is incorrect and you want to return to the pre-change state:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 cp /root/interfaces.rollback-before-geil /etc/network/interfaces
@@ -669,6 +783,12 @@ No shell output is expected from saving the file.
 
 #### Validation — Add `GEILLAN`
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ifquery --list | grep '^GEILLAN$'
 ```
@@ -686,6 +806,12 @@ If `GEILLAN` does not appear, check spelling, indentation, and duplicate definit
 Can you safely continue? No. Continue only when `GEILLAN` is detected.
 
 #### Rollback — Add `GEILLAN`
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 cp /root/interfaces.rollback-before-geil /etc/network/interfaces
@@ -727,6 +853,12 @@ High. A syntax or bridge error can interrupt network access.
 
 #### Commands — Apply networking changes
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ifreload -a
 ```
@@ -736,6 +868,12 @@ ifreload -a
 The command should complete without fatal errors. Some informational output is acceptable.
 
 #### Validation — Apply networking changes
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip -brief addr show GEILWAN
@@ -747,6 +885,12 @@ Expected output includes:
 GEILWAN          UP             172.31.255.1/30
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ip -brief addr show GEILLAN
 ```
@@ -756,6 +900,12 @@ Expected output includes:
 ```text
 GEILLAN          UP
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 bridge vlan show dev GEILLAN
@@ -795,13 +945,31 @@ Can you safely continue? No. Continue only after both bridges validate.
 
 #### Rollback — Apply networking changes
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 cp /root/interfaces.rollback-before-geil /etc/network/interfaces
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ifreload -a
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip -brief addr
@@ -839,17 +1007,41 @@ Post-change evidence files exist.
 
 #### Commands — Capture post-bridge evidence
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ip -brief addr | tee /root/geil-evidence/07-post-ip-brief.txt
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip route | tee /root/geil-evidence/08-post-ip-route.txt
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 bridge vlan show | tee /root/geil-evidence/09-post-bridge-vlan.txt
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 cp /etc/network/interfaces /root/geil-evidence/10-post-interfaces.txt
@@ -860,6 +1052,12 @@ cp /etc/network/interfaces /root/geil-evidence/10-post-interfaces.txt
 Each command prints output and writes a file under `/root/geil-evidence/`.
 
 #### Validation — Capture post-bridge evidence
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ls -lh /root/geil-evidence/07-post-ip-brief.txt /root/geil-evidence/08-post-ip-route.txt /root/geil-evidence/09-post-bridge-vlan.txt /root/geil-evidence/10-post-interfaces.txt
@@ -905,9 +1103,21 @@ Existing protected objects remain unchanged.
 
 #### Commands — Verify protected networks
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 grep -nE 'eno1|VSW4001|PROD|TEST' /etc/network/interfaces || true
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip -brief link | grep -E 'eno1|VSW4001|PROD|TEST' || true
@@ -918,6 +1128,12 @@ ip -brief link | grep -E 'eno1|VSW4001|PROD|TEST' || true
 Expected output depends on the current Proxmox host. Existing protected objects should still be present if they existed before.
 
 #### Validation — Verify protected networks
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 diff -u /root/geil-evidence/06-pre-interfaces.txt /root/geil-evidence/10-post-interfaces.txt | grep -E 'eno1|VSW4001|PROD|TEST' || true
@@ -933,9 +1149,21 @@ If protected objects changed unexpectedly, stop and roll back before creating VM
 
 #### Rollback — Verify protected networks
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 cp /root/interfaces.rollback-before-geil /etc/network/interfaces
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ifreload -a
@@ -976,13 +1204,31 @@ VM `100` exists as `HQ-FW01` with `net0` on `GEILWAN` and `net1` on `GEILLAN`.
 
 #### Commands — Create `HQ-FW01`
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm create 100 --name HQ-FW01 --memory 4096 --cores 2 --net0 virtio,bridge=GEILWAN --net1 virtio,bridge=GEILLAN
 ```
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm set 100 --scsihw virtio-scsi-pci
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 100
@@ -1026,9 +1272,21 @@ Can you safely continue? Only if `net0` and `net1` match the expected bridges.
 
 Use only before the VM contains required configuration:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm stop 100
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm destroy 100 --purge
@@ -1054,11 +1312,23 @@ Low. This step is read-only.
 
 #### Commands — Capture `HQ-FW01` evidence
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 100 | tee /root/geil-evidence/11-hq-fw01-qm-config.txt
 ```
 
 #### Validation — Capture `HQ-FW01` evidence
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 grep -E 'name|net0|net1' /root/geil-evidence/11-hq-fw01-qm-config.txt
@@ -1109,17 +1379,41 @@ VM `110` exists as `HQ-DC01` with `net0` on `GEILLAN`, VLAN tag 20.
 
 #### Commands — Create `HQ-DC01`
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm create 110 --name HQ-DC01 --memory 6144 --cores 2 --net0 virtio,bridge=GEILLAN,tag=20
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm set 110 --scsihw virtio-scsi-pci
 ```
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm set 110 --scsi0 local-lvm:100
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 110
@@ -1160,9 +1454,21 @@ If the VLAN tag is missing or wrong, correct it before installing Windows Server
 
 Use only before the VM contains required configuration:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm stop 110
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm destroy 110 --purge
@@ -1202,17 +1508,41 @@ VM `120` exists as `HQ-MGMT01` with `net0` on `GEILLAN`, VLAN tag 10, or is read
 
 #### Commands — Create `HQ-MGMT01`
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm create 120 --name HQ-MGMT01 --memory 8192 --cores 2 --net0 virtio,bridge=GEILLAN,tag=10
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm set 120 --scsihw virtio-scsi-pci
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm set 120 --scsi0 local-lvm:100
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 120
@@ -1253,9 +1583,21 @@ If the VLAN tag is missing or wrong, correct it before installing Windows.
 
 Use only before the VM contains required configuration:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm stop 120
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm destroy 120 --purge
@@ -1294,17 +1636,41 @@ VM `121` exists as `HQ-W11-001` with `net0` on `GEILLAN`, VLAN tag 10.
 
 #### Commands — Create `HQ-W11-001`
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm create 121 --name HQ-W11-001 --memory 6144 --cores 2 --net0 virtio,bridge=GEILLAN,tag=30
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm set 121 --scsihw virtio-scsi-pci
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm set 121 --scsi0 local-lvm:80
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 121
@@ -1345,9 +1711,21 @@ If the VLAN tag is missing or wrong, correct it before installing Windows.
 
 Use only before the VM contains required configuration:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm stop 121
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm destroy 121 --purge
@@ -1385,17 +1763,41 @@ Final VM evidence files exist.
 
 #### Commands — Capture final VM evidence
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 100 | tee /root/geil-evidence/12-final-hq-fw01-qm-config.txt
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 110 | tee /root/geil-evidence/13-final-hq-dc01-qm-config.txt
 ```
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 120 | tee /root/geil-evidence/14-final-hq-mgmt01-qm-config.txt
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 121 | tee /root/geil-evidence/15-final-hq-w11-001-qm-config.txt
@@ -1407,17 +1809,41 @@ Each command prints the VM configuration and writes an evidence file.
 
 #### Validation — Capture final VM evidence
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 grep -E 'name|net0|net1' /root/geil-evidence/12-final-hq-fw01-qm-config.txt
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 grep -E 'name|net0' /root/geil-evidence/13-final-hq-dc01-qm-config.txt
 ```
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 grep -E 'name|net0' /root/geil-evidence/14-final-hq-mgmt01-qm-config.txt
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 grep -E 'name|net0' /root/geil-evidence/15-final-hq-w11-001-qm-config.txt
@@ -1452,29 +1878,71 @@ No rollback is required because this step is read-only.
 
 Run this final validation bundle after all steps complete.
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ip -brief addr show GEILWAN
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip -brief addr show GEILLAN
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 bridge vlan show dev GEILLAN
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 100
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 110
 ```
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 120
 ```
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 121
@@ -1516,13 +1984,31 @@ Use rollback in the least destructive order.
 
 ### Roll back Proxmox network changes
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 cp /root/interfaces.rollback-before-geil /etc/network/interfaces
 ```
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ifreload -a
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 ip -brief addr
@@ -1530,9 +2016,21 @@ ip -brief addr
 
 ### Roll back a VM shell before guest OS installation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm stop VMID
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm destroy VMID --purge

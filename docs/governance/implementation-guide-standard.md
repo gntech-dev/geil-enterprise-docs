@@ -183,6 +183,10 @@ Use the heading pattern:
 #### Rollback
 ```
 
+### Command execution context
+
+Every operator-facing command block must be introduced with `Run on:`, `When:`, and `Expected outcome:`. The execution host must be explicit, for example `HQ-MGMT01`, `HQ-DC01`, `PVE-HQ01`, `HQ-FW01`, `Windows Client`, or `Management Workstation`. Routine administration originates from `HQ-MGMT01` whenever possible; domain-controller-local execution is limited to initial deployment, bootstrap, disaster recovery, break-glass, or Microsoft-required local execution.
+
 ### Copy/Paste Blocks
 
 Commands must be complete and immediately usable. Avoid incomplete snippets, unexplained variables, and commands that require hidden context.

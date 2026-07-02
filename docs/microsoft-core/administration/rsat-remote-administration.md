@@ -54,6 +54,12 @@ The current implementation procedure is maintained in:
 
 From `HQ-MGMT01`, validate that administration can occur remotely:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-Command Get-ADDomain
 Get-Command Get-GPO

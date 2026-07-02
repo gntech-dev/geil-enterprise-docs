@@ -157,6 +157,12 @@ Confirm the required objects exist before creating or linking GPOs.
 
 #### Commands
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 [CmdletBinding()]
 param()
@@ -230,6 +236,12 @@ Without a Central Store, each management workstation may use its local policy de
 
 #### Commands — Step 2: Create the Group Policy Central Store
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $ErrorActionPreference = "Stop"
 
@@ -262,6 +274,12 @@ You should see `True` behavior through the success message and a list of `.admx`
 
 Do not remove the Central Store after GPO editing begins unless a change record approves the rollback. To remove an incorrectly copied Central Store before use:
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-Item "\\corp.gntech.me\SYSVOL\corp.gntech.me\Policies\PolicyDefinitions" -Recurse -Force
 ```
@@ -273,6 +291,12 @@ Remove-Item "\\corp.gntech.me\SYSVOL\corp.gntech.me\Policies\PolicyDefinitions" 
 Create baseline GPO shells without applying them yet.
 
 #### Commands — Step 3: Create GPOs before linking
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 [CmdletBinding()]
@@ -377,6 +401,12 @@ if ($Failures.Count -gt 0) {
 
 If a GPO was created with the wrong name and has no links:
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-GPO -Name "Incorrect-GPO-Name" -Confirm:$false
 ```
@@ -388,6 +418,12 @@ Remove-GPO -Name "Incorrect-GPO-Name" -Confirm:$false
 Enable PowerShell script block logging in the workstation baseline before linking.
 
 #### Commands — Step 4: Configure a safe workstation baseline setting
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $ErrorActionPreference = "Stop"
@@ -424,6 +460,12 @@ HasValue    : True
 
 #### Rollback — Step 4: Configure a safe workstation baseline setting
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-GPRegistryValue -Name "GP - Baseline - Workstations" `
   -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
@@ -434,6 +476,12 @@ Remove-GPRegistryValue -Name "GP - Baseline - Workstations" `
 
 #### Commands — Step 5: Validate security filtering before linking
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-GPPermission -Name "GP - Baseline - Workstations" -All | Select-Object Trustee,Permission
 ```
@@ -443,6 +491,12 @@ Expected result: filtering is visible and documented. Do not proceed if it would
 ### Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
 
 #### Commands — Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $ErrorActionPreference = "Stop"
@@ -485,6 +539,12 @@ Get-GPInheritance -Target $TargetOU
 
 #### Rollback — Step 6: Link the GPO to the Workstations OU under the canonical Computers OU
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-GPLink -Name "GP - Baseline - Workstations" `
   -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
@@ -493,6 +553,12 @@ Remove-GPLink -Name "GP - Baseline - Workstations" `
 ### Step 7: Validate resultant policy
 
 From a test workstation such as `HQ-W11-001` after domain join:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-Path \corp.gntech.me\SYSVOL
@@ -545,6 +611,12 @@ Rollback in this order:
 3. Remove or correct settings.
 4. Delete only after impact is understood.
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Set-GPO -Name "GP - Baseline - Workstations" -GpoStatus AllSettingsDisabled
 ```
@@ -561,13 +633,31 @@ Prove that baseline GPOs apply to the intended pilot object and do not apply bro
 
 #### Commands — GPO application validation
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 gpupdate /force
 ```
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 gpresult /h C:\Temp\geil-gpresult.html
 ```
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20
@@ -587,6 +677,12 @@ The generated `geil-gpresult.html` shows only the expected GEIL baseline GPOs fo
 STOP. Do not link the policy more broadly.
 
 Unlink or disable the affected GPO before troubleshooting:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Set-GPO -Name "GP - Baseline - Workstations" -GpoStatus AllSettingsDisabled

@@ -167,6 +167,12 @@ Use an elevated PowerShell session on `HQ-DC01`.
 
 #### Commands
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 hostname
 Get-NetIPConfiguration
@@ -184,6 +190,12 @@ You should now see:
 - Gateway test succeeds.
 
 #### Validate this step
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Resolve-DnsName corp.gntech.me -ErrorAction SilentlyContinue
@@ -207,6 +219,12 @@ The clean OS checkpoint is the safest rollback path if forest creation fails bef
 
 #### Commands from `PVE-HQ01`
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm snapshot 110 CP-DC01-PRE-ADDS --description "HQ-DC01 before first AD DS forest promotion"
 qm listsnapshot 110
@@ -219,6 +237,12 @@ You should now see:
 - Snapshot `CP-DC01-PRE-ADDS` listed for VM 110.
 
 #### Rollback — Step 2: Create a pre-promotion checkpoint
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm rollback 110 CP-DC01-PRE-ADDS
@@ -240,6 +264,12 @@ The role binaries must exist before forest creation can begin.
 
 #### Commands — Step 3: Install AD DS and DNS roles
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Install-WindowsFeature AD-Domain-Services,DNS -IncludeManagementTools
 Get-WindowsFeature AD-Domain-Services,DNS
@@ -256,6 +286,12 @@ You should now see:
 
 Before promotion, remove the features if required:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Uninstall-WindowsFeature AD-Domain-Services,DNS -Remove
 ```
@@ -271,6 +307,12 @@ Promote `HQ-DC01` as the first domain controller.
 This creates the identity authority for GEIL. All future Microsoft identity services depend on this forest and domain name.
 
 #### Commands — Step 4: Create the corp.gntech.me forest
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $SafeModePassword = Read-Host "Enter Directory Services Restore Mode password" -AsSecureString
@@ -296,6 +338,12 @@ You should now see:
 #### Validate this step — Step 4: Create the corp.gntech.me forest
 
 After reboot, log in with an approved domain admin context and run:
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADDomain | Select-Object DNSRoot,NetBIOSName,DomainMode
@@ -362,13 +410,31 @@ gntech.me
 
 Use PowerShell to validate and update the built-in Administrator account after adding the suffix in the GUI.
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADForest | Select-Object Name,UPNSuffixes
 ```
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Set-ADUser -Identity Administrator -UserPrincipalName "Administrator@gntech.me"
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADUser -Identity Administrator -Properties UserPrincipalName,SamAccountName | Select-Object SamAccountName,UserPrincipalName
@@ -443,6 +509,12 @@ STOP. Do not proceed to DNS/DHCP expansion, Group Policy, PKI, Entra ID, Intune,
 
 Run:
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 dcdiag /v
 repadmin /replsummary
@@ -480,17 +552,41 @@ Prove that `HQ-DC01` is a healthy first domain controller for `corp.gntech.me`.
 
 #### Commands — Domain controller health validation
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 dcdiag /v
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 repadmin /replsummary
 ```
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADDomain | Select-Object DNSRoot,NetBIOSName,DomainMode
@@ -544,6 +640,12 @@ Continue only if successful.
 ## Rollback
 
 Rollback before production use:
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm shutdown 110

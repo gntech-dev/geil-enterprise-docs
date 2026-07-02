@@ -94,6 +94,38 @@ A guide should feel like this:
 
 Do not force the operator to scroll to another section to find validation, rollback, or explanation.
 
+
+## Command Execution Context Standard
+
+Every operator-facing command block must identify the execution context immediately before the block. Do not assume the reader knows where the command runs.
+
+Use this format before every command block that changes, validates, or queries infrastructure state:
+
+```markdown
+Run on: `HQ-MGMT01`
+
+When: after the prerequisite step is complete and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms success.
+```
+
+Approved execution contexts include, but are not limited to:
+
+- `HQ-MGMT01`
+- `HQ-DC01`
+- `PVE-HQ01`
+- `HQ-FW01`
+- `Windows Client`
+- `Management Workstation`
+
+Routine administration must originate from `HQ-MGMT01` whenever possible. Commands should execute directly on domain controllers only for initial deployment, bootstrap, disaster recovery, break-glass procedures, or when Microsoft explicitly requires local execution.
+
+Every command block must make clear:
+
+1. Where the command runs.
+2. When it should be executed.
+3. Expected outcome.
+
 ## Command Formatting Standard
 
 ### RouterOS

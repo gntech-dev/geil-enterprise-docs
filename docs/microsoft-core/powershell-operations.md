@@ -90,6 +90,12 @@ Use the OU creation script in [Active Directory Organizational Foundation](activ
 
 ## Change transcript pattern
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $Transcript = "C:\ChangeLogs\CHG-20260629-001-$(Get-Date -Format yyyyMMdd-HHmmss).log"
 Start-Transcript -Path $Transcript
@@ -102,6 +108,12 @@ Expected result: transcript file exists and is attached to the change record.
 ## Validation pattern
 
 Every script must include:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 try {
@@ -116,6 +128,12 @@ catch {
 ## Rollback pattern
 
 Record pre-change state before modifying objects:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADUser j.smith -Properties * | Export-Clixml C:\ChangeLogs\j.smith-before.xml
@@ -234,6 +252,12 @@ Validate immediately after each change block. Do not continue when expected outp
 ## Deployment Validation
 
 Before using a PowerShell operation in a deployment guide, validate that the command is safe, reversible, and produces evidence.
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $PSVersionTable.PSVersion

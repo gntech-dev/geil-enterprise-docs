@@ -100,6 +100,12 @@ For pilot/bootstrap only, `GG-T0-Domain-Admins` may be nested into the built-in 
 
 ## PowerShell implementation examples
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
@@ -187,6 +193,12 @@ else {
 
 ## Validation
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADGroup -Filter 'Name -like "GG-*" -or Name -like "DL-*" -or Name -like "AG-*"' |
     Select-Object Name,GroupScope,GroupCategory,DistinguishedName
@@ -202,6 +214,12 @@ STOP if a permission is assigned directly to a user, if a `DL-*` resource group 
 ## Rollback
 
 Remove incorrect nesting before deleting groups:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-ADGroupMember -Identity "DL-FinanceShare-RW" -Members "GG-FileShare-Finance-RW" -Confirm:$true

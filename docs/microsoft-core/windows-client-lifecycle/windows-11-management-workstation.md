@@ -100,6 +100,12 @@ Create the `HQ-MGMT01` VM from the generalized, workgroup-only Windows 11 Enterp
 
 Run from `PVE-HQ01`:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm clone 9201 120 --name HQ-MGMT01 --full true
 qm set 120 --net0 virtio,bridge=GEILLAN,tag=10
@@ -135,6 +141,12 @@ Allow the cloned VM to complete its first boot and consume Cloudbase-Init metada
 ### Commands
 
 Run inside `HQ-MGMT01` after first sign-in:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $Computer = Get-CimInstance Win32_ComputerSystem
@@ -173,6 +185,12 @@ Validate that `HQ-MGMT01` receives or uses the correct Management VLAN addressin
 
 Run inside `HQ-MGMT01`:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 ipconfig /renew
 ipconfig /all
@@ -203,6 +221,12 @@ Confirm that `HQ-MGMT01` can resolve the AD DS namespace and discover `HQ-DC01` 
 
 Run inside `HQ-MGMT01`:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Resolve-DnsName corp.gntech.me -Server 172.20.20.11
 Resolve-DnsName HQ-DC01.corp.gntech.me -Server 172.20.20.11
@@ -232,6 +256,12 @@ Confirm that the Management VLAN firewall policy allows required AD DS services 
 ### Commands
 
 Run inside `HQ-MGMT01`:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 ping 172.20.20.11
@@ -266,6 +296,12 @@ Join `HQ-MGMT01` to the AD DS domain only after Cloudbase-Init, addressing, DNS,
 
 Run inside `HQ-MGMT01`:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $DesiredName = "HQ-MGMT01"
 if ($env:COMPUTERNAME -ne $DesiredName) {
@@ -277,6 +313,12 @@ else {
 ```
 
 After any required rename reboot, run:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $DomainName = "corp.gntech.me"
@@ -311,6 +353,12 @@ Confirm the domain join completed after restart before moving the computer objec
 
 Run after restart:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $ComputerInfo = Get-CimInstance Win32_ComputerSystem
 $ComputerInfo | Select-Object Name,Domain,PartOfDomain
@@ -341,6 +389,12 @@ Place `HQ-MGMT01` under the dedicated Management Workstations OU so future manag
 ### Commands
 
 Run from `HQ-MGMT01` with RSAT AD tools available, from `HQ-DC01`, or from another approved administrative endpoint:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -386,6 +440,12 @@ Force initial Group Policy processing after domain join and OU placement.
 
 Run inside `HQ-MGMT01`:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 gpupdate /force
 ```
@@ -412,6 +472,12 @@ Confirm that `HQ-MGMT01` is in the correct OU, that expected baseline policies a
 
 Run inside `HQ-MGMT01`:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 gpresult /r
 whoami /groups
@@ -419,11 +485,23 @@ whoami /groups
 
 Optionally capture an HTML result for evidence:
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 gpresult /h C:\Windows\Temp\gpresult-HQ-MGMT01.html /f
 ```
 
 From an approved administrative endpoint, confirm OU placement:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -456,6 +534,12 @@ Install the management tools required for `HQ-MGMT01` to administer Microsoft Co
 ### Commands
 
 Run inside `HQ-MGMT01` after domain join and GPO validation:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $Capabilities = @(
@@ -502,6 +586,12 @@ Validate that `HQ-MGMT01` is ready to act as the initial PAW and remote administ
 ### Commands
 
 Run inside `HQ-MGMT01` with approved privileged credentials:
+
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-Command Get-ADDomain

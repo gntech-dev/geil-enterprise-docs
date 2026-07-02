@@ -86,6 +86,12 @@ Names appear in logs, certificates, DNS records, Kerberos SPNs, firewall rules, 
 
 ## PowerShell validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $InvalidUsers = Get-ADUser -Filter * -Properties UserPrincipalName |
     Where-Object { $_.UserPrincipalName -and $_.UserPrincipalName -notlike "*@gntech.me" }

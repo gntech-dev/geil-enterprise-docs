@@ -174,6 +174,12 @@ This section expands the deployment into the exact operator actions to perform b
 
 Example on `PVE-HQ01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 mkdir -p /var/lib/vz/template/iso/mikrotik
 cd /var/lib/vz/template/iso/mikrotik
@@ -295,6 +301,12 @@ VM NIC mapping is safe only after the bridge names are known and visible.
 
 Run on `PVE-HQ01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ip -brief addr show GEILWAN
 ip -brief addr show GEILLAN
@@ -339,6 +351,12 @@ A wrong NIC mapping reverses WAN/LAN policy and can expose internal networks or 
 
 Run on `PVE-HQ01` after copying the extracted CHR `.img` file to `/var/lib/vz/template/iso/mikrotik/chr.img`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 mkdir -p /var/lib/vz/template/iso/mikrotik
 qm create 100 --name HQ-FW01 --memory 2048 --cores 2 --net0 virtio,bridge=GEILWAN --net1 virtio,bridge=GEILLAN
@@ -360,6 +378,12 @@ You should now see:
 
 #### Validation — Step 2: Import CHR image and create VM
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 100 | egrep 'name|net0|net1|scsi0|boot'
 ```
@@ -369,6 +393,12 @@ qm config 100 | egrep 'name|net0|net1|scsi0|boot'
 Capture `qm config 100` output.
 
 #### Rollback — Step 2: Import CHR image and create VM
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm stop 100
@@ -393,6 +423,12 @@ This step is safe because it does not restrict management services or firewall a
 
 Run from the RouterOS console:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /user set admin password=<PASSWORD>
 /system identity set name=HQ-FW01
@@ -404,6 +440,12 @@ Run from the RouterOS console:
 You should now see identity `HQ-FW01`.
 
 #### Validation — Step 3: Set identity and admin password only
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /user print
@@ -434,6 +476,12 @@ RouterOS commands that reference a missing interface list fail or partially appl
 
 #### Commands — Step 4: Create interface lists before referencing them
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /interface list add name=WAN comment="External/transit interfaces"
 /interface list add name=LAN comment="Internal non-guest interfaces"
@@ -450,6 +498,12 @@ You should now see all required interface lists.
 
 #### Validation — Step 4: Create interface lists before referencing them
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /interface/list/print
 /interface/list/member/print
@@ -460,6 +514,12 @@ You should now see all required interface lists.
 Capture interface list output.
 
 #### Rollback — Step 4: Create interface lists before referencing them
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /interface list member remove [find]
@@ -483,6 +543,12 @@ Make CHR reachable on the GEILWAN transit network.
 
 #### Commands — Step 5: Configure WAN IP, default route, and DNS
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip address add address=172.31.255.2/30 interface=ether1 comment="GEILWAN CHR WAN"
 /ip route add dst-address=0.0.0.0/0 gateway=172.31.255.1 comment="Default route via GEILWAN Proxmox peer"
@@ -494,6 +560,12 @@ Make CHR reachable on the GEILWAN transit network.
 You should now see `172.31.255.2/30` on `ether1` and default route via `172.31.255.1`.
 
 #### Validation — Step 5: Configure WAN IP, default route, and DNS
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/address/print
@@ -507,6 +579,12 @@ You should now see `172.31.255.2/30` on `ether1` and default route via `172.31.2
 Capture address, route, DNS, and ping output.
 
 #### Rollback — Step 5: Configure WAN IP, default route, and DNS
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip route remove [find comment="Default route via GEILWAN Proxmox peer"]
@@ -524,6 +602,12 @@ Create VLAN interfaces.
 Create the VLAN interface objects before assigning IPs or interface-list membership.
 
 #### Commands — Step 6: Create VLAN interfaces on ether2
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /interface vlan add name=vlan10-mgmt interface=ether2 vlan-id=10
@@ -544,12 +628,24 @@ You should now see ten VLAN interfaces on `ether2`.
 
 #### Validation — Step 6: Create VLAN interfaces on ether2
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /interface/print
 /interface/vlan/print
 ```
 
 #### Rollback — Step 6: Create VLAN interfaces on ether2
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /interface vlan remove [find interface=ether2]
@@ -567,6 +663,12 @@ Assign canonical gateway IPs only after VLAN interfaces exist.
 
 #### Commands — Step 7: Assign VLAN gateway IP addresses
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip address add address=172.20.10.1/24 interface=vlan10-mgmt comment="VLAN10 Management gateway"
 /ip address add address=172.20.20.1/24 interface=vlan20-servers comment="VLAN20 Servers gateway"
@@ -582,11 +684,23 @@ Assign canonical gateway IPs only after VLAN interfaces exist.
 
 #### Validation — Step 7: Assign VLAN gateway IP addresses
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/address/print
 ```
 
 #### Rollback — Step 7: Assign VLAN gateway IP addresses
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip address remove [find comment~"gateway"]
@@ -603,6 +717,12 @@ Add VLAN interfaces to interface lists.
 Populate lists only after the VLAN interfaces exist.
 
 #### Commands — Step 8: Add VLAN interfaces to interface lists
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /interface list member add list=MGMT interface=vlan10-mgmt
@@ -622,11 +742,23 @@ Populate lists only after the VLAN interfaces exist.
 
 #### Validation — Step 8: Add VLAN interfaces to interface lists
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /interface/list/member/print
 ```
 
 #### Rollback — Step 8: Add VLAN interfaces to interface lists
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /interface list member remove [find list=LAN]
@@ -649,6 +781,12 @@ Confirm an approved management source can reach RouterOS before limiting managem
 #### Validation — Step 9: Validate management path before restrictions
 
 From an approved management context, validate WinBox or SSH reachability to `172.20.10.1` when the network path exists. From RouterOS, print current state:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /interface/list/print
@@ -686,6 +824,12 @@ In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the blo
 
 #### Commands — Step 10: Enter Safe Mode and restrict RouterOS services
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip service disable telnet,ftp,www,api,api-ssl
 /ip service set ssh address=172.20.10.0/24
@@ -696,6 +840,12 @@ In a RouterOS terminal, press `Ctrl+X` to enter Safe Mode before running the blo
 ```
 
 #### Validation — Step 10: Enter Safe Mode and restrict RouterOS services
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/service/print
@@ -712,6 +862,12 @@ Capture sanitized service and MAC-server output.
 
 If management disconnects, Safe Mode should revert the changes. If using console, manually relax the settings:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip service enable ssh,winbox
 /tool mac-server set allowed-interface-list=all
@@ -726,17 +882,35 @@ Configure NAT and firewall filters.
 
 #### Commands — Step 11: Configure NAT masquerade
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall nat add chain=srcnat out-interface-list=WAN action=masquerade comment="GEIL outbound masquerade to GEILWAN"
 ```
 
 #### Validation — Step 11: Configure NAT masquerade
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/firewall/nat/print
 ```
 
 #### Rollback — Step 11: Configure NAT masquerade
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall nat remove [find comment="GEIL outbound masquerade to GEILWAN"]
@@ -754,6 +928,12 @@ Allow required management and established traffic, block guest-to-internal traff
 
 #### Commands: input chain foundation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall filter add chain=input connection-state=established,related action=accept comment="Accept established/related to router"
 /ip firewall filter add chain=input connection-state=invalid action=drop comment="Drop invalid to router"
@@ -763,17 +943,35 @@ Allow required management and established traffic, block guest-to-internal traff
 
 Validate before adding drops:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/firewall/filter/print
 ```
 
 #### Commands: WAN input drop
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall filter add chain=input in-interface-list=WAN action=drop comment="Drop WAN access to router"
 ```
 
 #### Commands: forwarding policy
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall filter add chain=forward connection-state=established,related action=accept comment="Accept established/related forwarding"
@@ -794,6 +992,12 @@ Validate before adding drops:
 ```
 
 #### Validation — Step 12: Apply baseline firewall rules in safe order
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/firewall/filter/print stats
@@ -828,6 +1032,12 @@ chain=forward action=drop comment="Default deny unapproved forwarding"
 #### Temporary pilot validation rule — do not keep for production
 
 If a pilot client receives DHCP but cannot query DNS or contact AD, this broad rule can prove that the firewall is the blocker. Remove it immediately after validation and replace it with the least-privilege production rules above.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall filter add chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 place-before=[find comment="Default deny unapproved forwarding"] comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"
@@ -866,6 +1076,12 @@ Continue only if successful.
 
 Remove the most recent bad rule by comment, for example:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall filter remove [find comment="Default deny unapproved forwarding"]
 ```
@@ -888,6 +1104,12 @@ DHCP relay is handled by the router itself. In the GEIL pilot deployment, DHCP r
 
 Do not enable relay until `HQ-DC01` is authorized and the matching scope exists. For Phase 1, only VLAN 30 is enabled. VLAN 40 and VLAN 60 must remain disabled until their scopes are created.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip dhcp-relay disable [find name="relay-vlan40"]
 /ip dhcp-relay disable [find name="relay-vlan60"]
@@ -896,6 +1118,12 @@ Do not enable relay until `HQ-DC01` is authorized and the matching scope exists.
 ```
 
 Add the required input-chain firewall rules before the default input deny rule:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall filter remove [find comment~"ALLOW DHCP client requests VLAN30"]
@@ -907,6 +1135,12 @@ Add the required input-chain firewall rules before the default input deny rule:
 Never create relay for VLAN 70 Guest WiFi.
 
 #### Validation — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/dhcp-relay/print
@@ -922,6 +1156,12 @@ Expected result:
 
 From a VLAN 30 client:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 dhclient -r eth0
 dhclient -v eth0
@@ -932,11 +1172,23 @@ cat /etc/resolv.conf
 
 From `HQ-DC01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-DhcpServerv4Lease -ScopeId 172.20.30.0 -AllLeases
 ```
 
 #### Rollback — Step 13: Prepare and enable DHCP relay only after Windows scopes exist
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip dhcp-relay disable [find name="relay-vlan30"]
@@ -956,12 +1208,24 @@ Export and snapshot.
 
 RouterOS export:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /export hide-sensitive file=HQ-FW01-baseline
 /file/print where name~"HQ-FW01-baseline"
 ```
 
 Proxmox snapshots:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm snapshot 100 CP-FW-CHR-IMPORTED --description "HQ-FW01 CHR imported and booted"
@@ -974,6 +1238,12 @@ qm listsnapshot 100
 ## Validation after each major stage
 
 Run this final validation bundle from RouterOS:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /system/identity/print
@@ -1052,6 +1322,12 @@ Use the least destructive rollback that restores access:
 
 Snapshot rollback example:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm shutdown 100
 qm rollback 100 CP-FW-VLANS
@@ -1059,6 +1335,12 @@ qm start 100
 ```
 
 Full rebuild before production use:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm stop 100
@@ -1077,13 +1359,31 @@ Prove that the firewall can reach its Proxmox transit peer, the internet, and DN
 
 #### Commands — RouterOS gateway validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ping 172.31.255.1 count=4
 ```
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ping 1.1.1.1 count=4
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ping cloudflare.com count=4
@@ -1115,9 +1415,21 @@ Prove that internal GEIL networks can use the firewall for internet access befor
 
 #### Commands — LAN-to-WAN validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/firewall/filter/print where comment="Allow GEIL LAN to internet"
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/firewall/nat/print where comment="GEIL outbound masquerade to GEILWAN"
@@ -1144,6 +1456,12 @@ Prove that DHCP relay is not active before Windows DHCP scopes exist.
 
 #### Commands — DHCP relay validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/dhcp-relay/print
 ```
@@ -1159,6 +1477,12 @@ Before `HQ-DC01` DHCP scopes exist, every relay entry must be disabled, or the l
 #### If validation fails — DHCP relay validation
 
 STOP. Disable relay before continuing.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip dhcp-relay disable [find]

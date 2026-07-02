@@ -45,11 +45,23 @@ Deploy or administer Windows Admin Center as a controlled management path for Wi
 
 Download the current Windows Admin Center MSI from Microsoft and install in gateway mode.
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 msiexec /i WindowsAdminCenter.msi /qn /L*v C:\Temp\WACInstall.log SME_PORT=443 SSL_CERTIFICATE_OPTION=installed SME_THUMBPRINT=<CERTIFICATE_THUMBPRINT>
 ```
 
 ## Validation
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-NetConnection <WAC-GATEWAY-FQDN> -Port 443
@@ -66,6 +78,12 @@ Uninstall from Programs and Features or with MSI product code. Revoke the gatewa
 ## Deployment Validation
 
 Validate Windows Admin Center only after DNS and firewall prerequisites exist.
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-NetConnection <WAC-GATEWAY-FQDN> -Port 443

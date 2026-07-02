@@ -74,6 +74,12 @@ Production policy must use RouterOS address lists and least-privilege Active Dir
 
 ## RouterOS validation examples
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall address-list print where list~"AD-|ManagementNetworks|ServerNetworks"
 /ip firewall filter print stats where comment~"AD "
@@ -91,6 +97,12 @@ STOP if a rule references an address list or interface list before it exists, pe
 ## Rollback
 
 Use Safe Mode before changing RouterOS firewall policy. Export before changes:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /export file=HQ-FW01-before-firewall-change

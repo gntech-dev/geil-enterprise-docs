@@ -62,6 +62,12 @@ A new hire receives a durable identity used by Windows, Microsoft 365, Entra ID,
 
 ### PowerShell
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
@@ -123,6 +129,12 @@ else {
 
 ### Validation
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADUser gnolasco -Properties UserPrincipalName,Enabled,MemberOf,DistinguishedName |
     Select-Object SamAccountName,UserPrincipalName,Enabled,DistinguishedName
@@ -131,6 +143,12 @@ Get-ADUser gnolasco -Properties UserPrincipalName,Enabled,MemberOf,Distinguished
 Expected result: user is enabled, located under `OU=Standard`, UPN is `gnolasco@gntech.me`, and baseline membership includes `GG-IT-Operations` when the organizational foundation membership step has run.
 
 ## Termination workflow
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Disable-ADAccount -Identity "gnolasco"
@@ -154,6 +172,12 @@ Use separate admin accounts such as `admin.gnolasco@gntech.me`. Never add daily 
 
 Set account expiration:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Set-ADAccountExpiration -Identity "contractor.user" -DateTime "2026-12-31T17:00:00"
 ```
@@ -163,6 +187,12 @@ Set-ADAccountExpiration -Identity "contractor.user" -DateTime "2026-12-31T17:00:
 External collaboration guests are primarily Entra ID objects and should not be created in AD unless a documented on-premises dependency exists.
 
 ## Password reset and account lockout
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Unlock-ADAccount -Identity "gnolasco"

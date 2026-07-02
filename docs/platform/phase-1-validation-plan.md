@@ -188,6 +188,12 @@ Validate that the HQ foundation was implemented as designed and that no legacy P
 
 Run on `PVE-HQ01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 ip -brief addr show GEILWAN
 ip -brief addr show GEILLAN
@@ -349,6 +355,12 @@ This validation implements [Active Directory Network Requirements](active-direct
 
 Run from a DHCP client in VLAN 30 that is not `HQ-MGMT01`.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 ipconfig /all
 ping 172.20.20.11
@@ -372,6 +384,12 @@ gpresult /r
 Expected result: DNS queries return `HQ-DC01`, TCP tests succeed, time replies are received, and `nltest` discovers the domain controller.
 
 From `HQ-FW01`, confirm the least-privilege rules are matching before the default deny rule:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/firewall/filter/print stats where comment~"AD "

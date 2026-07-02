@@ -58,6 +58,12 @@ Use Proxmox on `PVE-HQ01`. Attach the Windows Server 2025 ISO and VirtIO drivers
 
 Install Windows updates, VirtIO drivers, QEMU guest agent, and time synchronization settings.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-WindowsUpdateLog
 Get-Service QEMU-GA -ErrorAction SilentlyContinue
@@ -68,6 +74,12 @@ Get-PnpDevice | Where-Object Status -ne "OK"
 
 Apply local security settings that are safe before domain join. Do not apply domain-specific GPO settings inside the image.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ComputerInfo | Select-Object WindowsProductName,OsHardwareAbstractionLayer
 Get-MpComputerStatus | Select-Object AMServiceEnabled,AntivirusEnabled,RealTimeProtectionEnabled
@@ -75,17 +87,35 @@ Get-MpComputerStatus | Select-Object AMServiceEnabled,AntivirusEnabled,RealTimeP
 
 ### Step 4: Snapshot before Sysprep
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm snapshot <VMID> CP-TPL-WS2025-PRE-SYSPREP --description "Windows Server 2025 template before sysprep"
 ```
 
 ### Step 5: Sysprep
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 C:\Windows\System32\Sysprep\Sysprep.exe /generalize /oobe /shutdown
 ```
 
 ### Step 6: Convert to template
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm template <VMID>
@@ -94,6 +124,12 @@ qm template <VMID>
 ## Validation
 
 Clone a test VM, boot it, set hostname such as `TEST-WS2025-001`, and validate:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname

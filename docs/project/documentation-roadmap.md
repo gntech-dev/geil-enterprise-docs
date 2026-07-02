@@ -53,6 +53,10 @@ The current canonical model after ADR-0002 and ADR-0003 is: firewall `HQ-FW01` r
 
 GEIL implementation-phase documentation must pass engineering validation as well as MkDocs validation. The current repository-wide checkpoint is recorded in [Production Readiness Audit Report](production-readiness-audit-report.md). Future implementation guide changes must treat field deployment issues as engineering bugs, correct all affected documents, and avoid committing LOW-confidence deployment logic.
 
+## Command execution context checkpoint
+
+Pilot validation established that every operator-facing command block must state where it runs, when it runs, and the expected outcome. Routine administration should originate from `HQ-MGMT01` whenever possible; direct domain-controller execution is limited to initial deployment, bootstrap, disaster recovery, break-glass, or Microsoft-required local execution. This rule is now part of the Deployment Style Guide and Implementation Guide Standard.
+
 ## Microsoft Core navigation checkpoint
 
 Microsoft Core navigation is phase-based: Phase 1 Identity Foundation, Phase 2 Core Infrastructure Services, Phase 3 Windows Client Lifecycle, Phase 4 Administration, Phase 5 File Services Future, and Phase 6 Future Identity Expansion. Group Strategy, User Lifecycle, and Service Account Standard are references pending Identity and Access Standard consolidation, not loose deployment steps.

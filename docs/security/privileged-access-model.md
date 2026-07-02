@@ -225,6 +225,12 @@ Before creating privileged accounts or assigning privileged group membership, va
 
 ### PowerShell validation
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Import-Module ActiveDirectory -ErrorAction Stop
 $DomainDN = (Get-ADDomain).DistinguishedName
@@ -276,6 +282,12 @@ No rollback is required for this read-only validation. Roll back OU or group mis
 This procedure creates a named Tier 0 administrative account and places it in the Tier 0 Users OU. It does not automatically grant Domain Admin membership. Membership assignment requires a separate approved change.
 
 ### PowerShell — PowerShell
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -342,6 +354,12 @@ A dedicated Tier 0 administrative user is created, enabled, and required to chan
 
 ### Validation — Validation
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADUser "adm0.j.smith" -Properties Enabled,Description,DistinguishedName,LastLogonDate |
     Select-Object SamAccountName,UserPrincipalName,Enabled,Description,DistinguishedName,LastLogonDate
@@ -352,6 +370,12 @@ Expected result: account exists in `OU=Tier 0,OU=Admin,OU=GNTECH`, has a `gntech
 ### Rollback — Rollback
 
 If the account was created incorrectly and has not been used:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Disable-ADAccount "adm0.j.smith"
@@ -369,6 +393,12 @@ Do not delete privileged accounts immediately if they have been used. Disable, i
 Privileged membership must be explicit, change-controlled, idempotent, and validated. The organizational foundation guide assigns the pilot baseline `admin.gnolasco -> GG-T0-Domain-Admins`. For pilot/bootstrap only, the GEIL-controlled group may be nested into the built-in `Domain Admins` group. Do not add `admin.gnolasco` directly to `Domain Admins`.
 
 ### PowerShell — Implementation procedure: privileged group membership assignment 2
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -391,6 +421,12 @@ Tier 0 rights are granted through the controlled GEIL group, not through direct 
 
 ### Validation — Implementation procedure: privileged group membership assignment 2
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADGroupMember "GG-T0-Domain-Admins" | Select-Object Name,SamAccountName,ObjectClass
 Get-ADGroupMember "Domain Admins" |
@@ -402,11 +438,23 @@ Expected result: the user is a member of `GG-T0-Domain-Admins`; `GG-T0-Domain-Ad
 
 ### Rollback — Implementation procedure: privileged group membership assignment 2
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "adm0.j.smith" -Confirm:$true
 ```
 
 If the controlled group was incorrectly nested in a built-in group:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins" -Confirm:$true
@@ -467,6 +515,12 @@ Minimum controls:
 
 Validation from an administrative workstation:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 dsregcmd /status
 Get-BitLockerVolume
@@ -501,6 +555,12 @@ Required controls:
 - Privileged role assignments must be reviewed monthly.
 
 Microsoft Graph validation example:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Connect-MgGraph -Scopes "RoleManagement.Read.Directory","User.Read.All"
@@ -552,6 +612,12 @@ Requirements:
 
 Validation:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADUser -Filter 'SamAccountName -like "svc.*"' -Properties Description,Enabled,PasswordLastSet,LastLogonDate |
     Select-Object SamAccountName,Enabled,PasswordLastSet,LastLogonDate,Description
@@ -577,6 +643,12 @@ Monitor these events and conditions:
 | Domain controller RDP sign-in | Domain controller security log | High |
 
 PowerShell spot-check for privileged AD groups:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $PrivilegedGroups = "Domain Admins","Enterprise Admins","Schema Admins","Administrators","Account Operators","Server Operators","Backup Operators"
@@ -640,6 +712,12 @@ A GEIL environment satisfies the privileged access baseline only when:
 
 Validation command set:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADGroupMember "Domain Admins"
 Get-ADGroupMember "Enterprise Admins"
@@ -657,11 +735,23 @@ Use rollback when privileged access was granted incorrectly or when a tier bound
 
 ### Remove incorrect AD group membership
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "adm0.j.smith" -Confirm:$true
 ```
 
 Validation:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADGroupMember "GG-T0-Domain-Admins" | Where-Object {$_.SamAccountName -eq "adm0.j.smith"}
@@ -670,6 +760,12 @@ Get-ADGroupMember "GG-T0-Domain-Admins" | Where-Object {$_.SamAccountName -eq "a
 Expected result: no object is returned.
 
 ### Disable a suspected compromised privileged account
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Disable-ADAccount "adm0.j.smith"

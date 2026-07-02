@@ -249,6 +249,12 @@ Confirm the VM shell before starting Windows setup.
 
 Proxmox validation before Windows install:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 110 | egrep 'name|net|scsi|ide|sata|virtio|boot'
 ```
@@ -292,6 +298,12 @@ If Windows has no network adapter after login:
 5. Reboot if prompted.
 6. Validate with:
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-NetAdapter
 ```
@@ -314,6 +326,12 @@ After the first administrator login:
 ### Static IP detail for `HQ-DC01`
 
 If the adapter alias is not `Ethernet`, replace `$InterfaceAlias` with the discovered alias.
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $InterfaceAlias = (Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object -First 1 -ExpandProperty Name)
@@ -340,6 +358,12 @@ Run updates until no more approved updates are available:
 
 PowerShell evidence:
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
 Get-ComputerInfo | Select-Object CsName,WindowsProductName,OsBuildNumber,OsHardwareAbstractionLayer
@@ -350,6 +374,12 @@ Get-ComputerInfo | Select-Object CsName,WindowsProductName,OsBuildNumber,OsHardw
 After hostname, network, patching, drivers, Defender, and firewall validation are complete, create a checkpoint from Proxmox before installing AD DS.
 
 Run on `PVE-HQ01`:
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm shutdown 110
@@ -415,6 +445,12 @@ You should now see a Windows Server desktop or Server Core prompt.
 
 #### Validation
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ComputerInfo | Select-Object WindowsProductName,WindowsVersion,OsBuildNumber
 ```
@@ -457,6 +493,12 @@ Server names become part of logs, certificates, DNS records, monitoring, and ope
 
 For `HQ-DC01`:
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Rename-Computer -NewName "HQ-DC01" -Restart
 ```
@@ -470,6 +512,12 @@ Rename-Computer -NewName "HQ-DC01" -Restart
 You should now see `HQ-DC01` after reboot.
 
 #### Validation — Step 2: Set hostname
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname
@@ -509,6 +557,12 @@ Infrastructure services must be reachable at stable IP addresses. Domain service
 
 #### Commands — Step 3: Configure static IP and DNS
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "172.20.20.11" -PrefixLength 24 -DefaultGateway "172.20.20.1"
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "172.20.20.11"
@@ -530,6 +584,12 @@ You should now see:
 
 #### Validation — Step 3: Configure static IP and DNS
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Test-NetConnection 172.20.20.1
 Get-DnsClientServerAddress -AddressFamily IPv4
@@ -543,11 +603,23 @@ Capture `Get-NetIPConfiguration` output.
 
 If the interface alias is not `Ethernet`, discover it with:
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-NetAdapter
 ```
 
 #### Rollback — Step 3: Configure static IP and DNS
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "172.20.20.11" -Confirm:$false
@@ -570,6 +642,12 @@ Installing infrastructure roles on an unpatched server creates avoidable risk an
 
 #### Commands — Step 4: Apply updates and enable security controls
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-MpComputerStatus | Select-Object AMServiceEnabled,AntivirusEnabled,RealTimeProtectionEnabled
 Get-NetFirewallProfile | Select-Object Name,Enabled
@@ -590,6 +668,12 @@ You should now see:
 - Firewall profiles enabled.
 
 #### Validation — Step 4: Apply updates and enable security controls
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5
@@ -624,6 +708,12 @@ Role-specific guides sometimes require local management cmdlets during bootstrap
 
 #### Commands — Step 5: Install management tools
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Install-WindowsFeature -Name RSAT-AD-PowerShell,RSAT-DNS-Server -IncludeAllSubFeature
 Get-WindowsFeature RSAT-AD-PowerShell,RSAT-DNS-Server
@@ -639,6 +729,12 @@ You should now see RSAT tools installed.
 
 #### Validation — Step 5: Install management tools
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-Command Get-ADDomain -ErrorAction SilentlyContinue
 Get-Command Get-DnsServerZone -ErrorAction SilentlyContinue
@@ -652,6 +748,12 @@ Capture `Get-WindowsFeature` output.
 
 #### Rollback — Step 5: Install management tools
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Uninstall-WindowsFeature RSAT-AD-PowerShell,RSAT-DNS-Server
 ```
@@ -663,6 +765,12 @@ Capture the pre-role checkpoint.
 ## Validation
 
 Run:
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname
@@ -759,17 +867,41 @@ Prove that `HQ-DC01` can reach its VLAN gateway, the internet, and DNS resolutio
 
 #### Commands — Windows network validation
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-NetIPAddress -AddressFamily IPv4
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-NetConnection 172.20.20.1
 ```
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Test-NetConnection 1.1.1.1 -Port 443
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Resolve-DnsName cloudflare.com
@@ -818,9 +950,21 @@ Confirm that the server is a clean baseline and no domain role has been installe
 
 #### Commands — AD DS readiness validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-WindowsFeature AD-Domain-Services,DNS,DHCP
 ```
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname

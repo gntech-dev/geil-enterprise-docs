@@ -63,6 +63,12 @@ flowchart TD
 
 ## PowerShell: create a standard service account
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Import-Module ActiveDirectory
 $DomainDN = (Get-ADDomain).DistinguishedName
@@ -116,6 +122,12 @@ else {
 ## PowerShell: create a gMSA
 
 Prerequisite: KDS root key exists. In a new lab, create it only after understanding replication timing.
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 [CmdletBinding()]
@@ -190,6 +202,12 @@ else {
 
 ## Validation
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADUser -Filter 'SamAccountName -like "svc-*"' -SearchBase "OU=Service Accounts,OU=GNTECH,$((Get-ADDomain).DistinguishedName)" `
     -Properties Enabled,PasswordLastSet,PasswordNeverExpires,Description |
@@ -209,6 +227,12 @@ STOP if a service account requires Domain Admin, interactive logon, broad file a
 ## Rollback
 
 Disable first:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Disable-ADAccount -Identity "svc-monitoring"

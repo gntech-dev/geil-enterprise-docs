@@ -129,6 +129,12 @@ Template identity must be generic. Do not use the final workstation name and do 
 
 Run from `PVE-HQ01` and adjust only the VMID if already used:
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm create 9201 \
   --name TPL-W11-ENT-GOLD \
@@ -148,6 +154,12 @@ Attach the Windows 11 ISO and VirtIO ISO from the Proxmox GUI, then install Wind
 
 #### Validation
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 9201
 ```
@@ -155,6 +167,12 @@ qm config 9201
 Expected output includes `name: TPL-W11-ENT-GOLD`, `bridge=GEILLAN`, `tag=30`, and `agent: enabled=1`.
 
 #### Rollback
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm stop 9201
@@ -170,6 +188,12 @@ Install Windows 11 Enterprise and ensure all storage/network devices use support
 #### Commands
 
 Inside Windows, use Device Manager or the VirtIO ISO to install missing drivers. Then validate:
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-PnpDevice | Where-Object Status -ne "OK"
@@ -193,6 +217,12 @@ Enable Proxmox guest integration for clean shutdown, IP reporting, and clone ope
 #### Commands
 
 Install `qemu-ga-x86_64.msi` from the VirtIO ISO. Validate:
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-Service QEMU-GA | Select-Object Name,Status,StartType
@@ -220,6 +250,12 @@ Install Cloudbase-Init for Windows. Configure the metadata service to include Co
 
 Open the Cloudbase-Init configuration file as Administrator:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 notepad 'C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf'
 ```
@@ -234,6 +270,12 @@ first_logon_behaviour=no
 ```
 
 #### Validation
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-Service cloudbase-init | Select-Object Name,Status,StartType
@@ -253,6 +295,12 @@ If Cloudbase-Init logs show fatal metadata or plugin failures before Sysprep, un
 Prove the image contains no domain, Entra, or Intune identity state.
 
 #### Commands
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 (Get-CimInstance Win32_ComputerSystem) | Select-Object Name,Domain,PartOfDomain,Workgroup
@@ -278,17 +326,35 @@ Create a recovery checkpoint before generalization.
 
 #### Commands
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm snapshot 9201 CP-TPL-W11-PRE-SYSPREP --description "Windows 11 Enterprise template before sysprep"
 ```
 
 #### Validation
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm listsnapshot 9201
 ```
 
 #### Rollback
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm rollback 9201 CP-TPL-W11-PRE-SYSPREP
@@ -303,6 +369,12 @@ Generalize the image so each clone receives a unique identity.
 #### Commands
 
 Run inside Windows as Administrator:
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 C:\Windows\System32\Sysprep\Sysprep.exe /generalize /oobe /shutdown
@@ -324,11 +396,23 @@ Convert the shutdown generalized VM into a reusable Proxmox template.
 
 #### Commands
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm template 9201
 ```
 
 #### Validation
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm config 9201
@@ -343,6 +427,12 @@ If conversion was premature, clone the pre-sysprep snapshot or rebuild from the 
 ## Deployment Validation
 
 Clone one disposable validation VM and confirm it boots uniquely without joining a domain.
+
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname

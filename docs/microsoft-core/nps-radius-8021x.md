@@ -43,6 +43,12 @@ Implement certificate-backed network authentication for wired and wireless acces
 
 ## Install NPS
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Install-WindowsFeature NPAS -IncludeManagementTools
 netsh nps add registeredserver
@@ -51,6 +57,12 @@ netsh nps add registeredserver
 Expected result: NPS role is installed and registered in Active Directory.
 
 ## Add RADIUS clients
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 netsh nps add client name="HQ-FW01" address="172.20.10.1" sharedsecret="<PASSWORD>" vendor=RADIUS_Standard
@@ -69,6 +81,12 @@ Replace `<PASSWORD>` with the generated RADIUS shared secret for HQ-FW01. Store 
 
 On NPS:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-WinEvent -LogName Security -MaxEvents 20 | Where-Object {$_.Id -in 6272,6273}
 ```
@@ -83,6 +101,12 @@ Disable the switch port or SSID 802.1X enforcement and return to the previous ac
 ## Deployment Validation
 
 Validate NPS only after AD DS, DNS, PKI, and firewall reachability are healthy.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-WinEvent -LogName Security -MaxEvents 20 | Where-Object {$_.Id -in 6272,6273}

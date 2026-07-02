@@ -304,6 +304,12 @@ OU, user, group, and service account objects depend on the correct domain. If th
 
 #### Commands — Step 1: Validate domain and forest identity
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Import-Module ActiveDirectory
 Get-ADForest | Select-Object Name,UPNSuffixes
@@ -342,6 +348,12 @@ Users must sign in as `username@gntech.me`. Entra ID sync must not normalize pro
 #### Commands — Step 2: Add the hybrid UPN suffix if missing
 
 This script is idempotent. It reports `Created` when it adds the suffix and `Exists` when the suffix is already present.
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -385,6 +397,12 @@ Exists gntech.me corp.gntech.me
 
 #### Validate this step — Step 2: Add the hybrid UPN suffix if missing
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADForest | Select-Object Name,UPNSuffixes
 ```
@@ -403,6 +421,12 @@ STOP. Do not create production users. Confirm you are using a Tier 0 account wit
 #### Rollback — Step 2: Add the hybrid UPN suffix if missing
 
 If `gntech.me` was added during testing before any users or Entra sync depend on it, remove it only under change control:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Set-ADForest -Identity "corp.gntech.me" -UPNSuffixes @{Remove="gntech.me"}
@@ -435,6 +459,12 @@ This is the canonical GEIL Enterprise PowerShell object-creation pattern for Act
     - LDAP escaping is required because OU names may contain characters that have special meaning in LDAP filters, such as `*`, `(`, `)`, backslash, or NUL.
     - The script is idempotent. Re-running it reports `Existing` for objects already present and does not create duplicates.
     - The script continues auditing remaining OUs after a failure, prints a complete summary, and throws at the end if any failure occurred. This provides full remediation evidence while still producing a non-zero exit condition.
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 [CmdletBinding()]
@@ -732,6 +762,12 @@ Second and later runs should show `Existing` for all previously created OUs and 
 
 #### Validate this step — Step 3: Create the OU structure
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADOrganizationalUnit -SearchBase "OU=GNTECH,$((Get-ADDomain).DistinguishedName)" -Filter * |
     Sort-Object DistinguishedName |
@@ -761,6 +797,12 @@ STOP. Do not create groups, users, GPOs, or delegation rules until every require
 
 Only remove an OU if it is empty. Do not delete OUs containing users, computers, groups, service accounts, or linked policies.
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $WrongOU = "OU=WrongName,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 Get-ADObject -SearchBase $WrongOU -SearchScope OneLevel -Filter *
@@ -781,6 +823,12 @@ Groups provide a stable abstraction for permissions, delegation, WiFi authorizat
 #### Commands — Step 4: Create initial groups
 
 This script validates the target OU before creating groups. It uses LDAP filters for existence checks and prints `Created` or `Exists` for every group.
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -909,6 +957,12 @@ Exists  GG-Helpdesk                CN=GG-Helpdesk,OU=Security,OU=Groups,OU=GNTEC
 
 #### Validate this step — Step 4: Create initial groups
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADGroup -SearchBase "OU=Security,OU=Groups,OU=GNTECH,$((Get-ADDomain).DistinguishedName)" -Filter 'Name -like "GG-*"' |
     Sort-Object Name |
@@ -924,6 +978,12 @@ STOP. Do not assign permissions, delegation, WiFi, VPN, or file share access unt
 #### Rollback — Step 4: Create initial groups
 
 If a group was created with the wrong name and has no members or permissions, remove it under change control:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-ADGroup -Identity "Wrong-Group-Name" -Confirm:$true
@@ -944,6 +1004,12 @@ The sample accounts prove the OU model, UPN suffix, administrative tiering, and 
 #### Commands — Step 5: Create sample users and service accounts
 
 The command prompts for passwords so no secrets are stored in documentation or shell history. It validates every target OU before creating accounts, uses LDAP-filter existence checks, and prints `Created` or `Exists` for each account.
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -1076,6 +1142,12 @@ Exists  svc-backup       svc-backup@gntech.me        CN=svc-backup,OU=Standard,O
 
 #### Validate this step — Step 5: Create sample users and service accounts
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $ExpectedAccounts = "gnolasco","admin.gnolasco","svc-backup","svc-monitoring"
 foreach ($Sam in $ExpectedAccounts) {
@@ -1104,6 +1176,12 @@ STOP. Do not proceed to Entra ID sync, service deployment, or Group Policy secur
 #### Rollback — Step 5: Create sample users and service accounts
 
 If uncertain, disable sample users instead of deleting them:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 function ConvertTo-LdapFilterValue {
@@ -1157,6 +1235,12 @@ GEIL therefore requires an explicit baseline membership step:
 #### Commands — Step 6: Assign baseline group memberships
 
 This block is idempotent. It validates every user and group before mutation, adds each membership only when missing, and outputs membership validation. Optional access groups are disabled by default and can be enabled only when the corresponding VPN or WiFi guide is being validated.
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -1309,6 +1393,12 @@ Later runs show `Exists` for memberships already present and do not create dupli
 
 #### Validate this step — Step 6: Assign baseline group memberships
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADUser admin.gnolasco -Properties MemberOf |
     Select-Object SamAccountName,@{Name="MemberOf";Expression={$_.MemberOf -join '; '}}
@@ -1337,11 +1427,23 @@ STOP. Do not continue to `HQ-MGMT01` domain sign-in, RSAT administration, Group 
 
 Remove only the incorrect membership under change control. For pilot Tier 0 bootstrap rollback:
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-ADGroupMember -Identity "Domain Admins" -Members "GG-T0-Domain-Admins" -Confirm:$true
 ```
 
 To remove a user from a GEIL group:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-ADGroupMember -Identity "GG-T0-Domain-Admins" -Members "admin.gnolasco" -Confirm:$true
@@ -1362,6 +1464,12 @@ Creating the naming plan early prevents ad hoc service identities later. Some ac
 #### Commands — Step 7: Create additional service account placeholders in the correct OU
 
 Use this command only when the account is needed by an approved implementation guide. It validates the target OU first and creates disabled accounts by default so they cannot be used before service-specific permissions are defined.
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Import-Module ActiveDirectory
@@ -1491,6 +1599,12 @@ Exists  svc-print         False   CN=svc-print,OU=Standard,OU=Service Accounts,O
 
 #### Validate this step — Step 7: Create additional service account placeholders in the correct OU
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $ExpectedServiceAccounts = "svc-radius","svc-entra-connect","svc-scan","svc-print"
 $ServiceAccountSearchBase = "OU=Service Accounts,OU=GNTECH,$((Get-ADDomain).DistinguishedName)"
@@ -1527,6 +1641,12 @@ Objects left in default containers may not receive intended GPOs, delegation, li
 
 Review first. Do not move built-in administrative groups or system objects.
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $DomainDN = (Get-ADDomain).DistinguishedName
 Get-ADUser -SearchBase "CN=Users,$DomainDN" -Filter * |
@@ -1536,6 +1656,12 @@ Get-ADComputer -SearchBase "CN=Computers,$DomainDN" -Filter * |
 ```
 
 Move only approved non-built-in users or computers:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $StandardUsersOU = "OU=Standard,OU=Users,OU=GNTECH,$((Get-ADDomain).DistinguishedName)"
@@ -1627,6 +1753,12 @@ Run these commands before continuing to Group Policy, DNS/DHCP expansion, PKI, N
 
 ### Validate forest and domain
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADForest | Select-Object Name,UPNSuffixes
 Get-ADDomain | Select-Object DNSRoot,NetBIOSName,DistinguishedName
@@ -1643,6 +1775,12 @@ NetBIOSName : GNTECH
 
 ### Validate OUs
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-ADOrganizationalUnit -SearchBase "OU=GNTECH,$((Get-ADDomain).DistinguishedName)" -Filter * |
     Sort-Object DistinguishedName |
@@ -1652,6 +1790,12 @@ Get-ADOrganizationalUnit -SearchBase "OU=GNTECH,$((Get-ADDomain).DistinguishedNa
 Expected result: all OUs from the canonical hierarchy are present.
 
 ### Validate users
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $ExpectedAccounts = "gnolasco","admin.gnolasco","svc-backup","svc-monitoring","svc-radius","svc-entra-connect","svc-scan","svc-print"
@@ -1666,6 +1810,12 @@ foreach ($Sam in $ExpectedAccounts) {
 Expected result: sample users and service accounts use `@gntech.me` UPNs where the account exists. Reserved service account placeholders should remain disabled until their product guide activates them.
 
 ### Validate groups
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADGroup -SearchBase "OU=Security,OU=Groups,OU=GNTECH,$((Get-ADDomain).DistinguishedName)" -Filter * |
@@ -1717,6 +1867,12 @@ Rollback depends on object state:
 5. If the wrong UPN suffix was used, correct UPNs before Entra ID sync rather than deleting users.
 
 Safe disable command for sample accounts:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 function ConvertTo-LdapFilterValue {

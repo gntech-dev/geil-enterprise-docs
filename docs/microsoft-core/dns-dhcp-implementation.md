@@ -165,6 +165,12 @@ DHCP and domain joins depend on reliable DNS. If DNS is wrong, clients cannot fi
 
 #### Commands
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-DnsServerZone -Name "corp.gntech.me"
 Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
@@ -192,6 +198,12 @@ Allow domain-joined systems to update DNS securely while preventing unauthentica
 Secure updates reduce stale or malicious DNS records.
 
 #### Commands — Step 2: Enforce secure dynamic updates
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $ErrorActionPreference = "Stop"
@@ -256,6 +268,12 @@ Domain clients should use AD DNS. AD DNS can forward unknown public names upstre
 
 #### Commands — Step 3: Configure DNS forwarders
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $ErrorActionPreference = "Stop"
 Import-Module DnsServer -ErrorAction Stop
@@ -314,6 +332,12 @@ You should now see:
 
 #### Rollback — Step 3: Configure DNS forwarders
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-DnsServerForwarder -IPAddress 1.1.1.1,1.0.0.1 -Force
 ```
@@ -329,6 +353,12 @@ Install DHCP on `HQ-DC01` and authorize it in Active Directory.
 Windows DHCP servers must be authorized in AD before serving domain networks.
 
 #### Commands — Step 4: Install and authorize DHCP
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $ErrorActionPreference = "Stop"
@@ -405,6 +435,12 @@ You should now see:
 
 #### Rollback — Step 4: Install and authorize DHCP
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-DhcpServerInDC -DnsName "HQ-DC01.corp.gntech.me" -IPAddress 172.20.20.11
 Uninstall-WindowsFeature DHCP
@@ -421,6 +457,12 @@ Provide DHCP addresses to workstation clients on VLAN 30.
 VLAN 30 is the first user/client VLAN and supports `HQ-MGMT01` and `HQ-W11-001` testing.
 
 #### Commands — Step 5: Create the VLAN 30 workstation scope
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $ErrorActionPreference = "Stop"
@@ -498,6 +540,12 @@ You should now see:
 
 #### Rollback — Step 5: Create the VLAN 30 workstation scope
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Remove-DhcpServerv4Scope -ScopeId 172.20.30.0 -Force
 ```
@@ -524,6 +572,12 @@ DHCP relay is only the address-assignment path. It does not authorize workstatio
 
 Run on `HQ-DC01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-DhcpServerInDC
 Get-DhcpServerv4Scope -ScopeId 172.20.30.0
@@ -540,6 +594,12 @@ Expected result:
 
 Run on `HQ-FW01` only after prerequisite validation succeeds.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip dhcp-relay disable [find name="relay-vlan40"]
 /ip dhcp-relay disable [find name="relay-vlan60"]
@@ -548,6 +608,12 @@ Run on `HQ-FW01` only after prerequisite validation succeeds.
 ```
 
 Add firewall rules in `chain=input`, not only in `chain=forward`:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall filter remove [find comment~"ALLOW DHCP client requests VLAN30"]
@@ -561,6 +627,12 @@ Do not create or enable DHCP relay for `vlan70-guestwifi`.
 #### Validation
 
 Run on `HQ-FW01`:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip/dhcp-relay/print
@@ -579,6 +651,12 @@ The DHCP input allow rules must appear before `Default deny unapproved traffic t
 
 From a VLAN 30 client:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 dhclient -r eth0
 dhclient -v eth0
@@ -596,12 +674,24 @@ Expected result:
 
 From `HQ-DC01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-DhcpServerv4Lease -ScopeId 172.20.30.0 -AllLeases
 Get-DhcpServerv4ScopeStatistics -ScopeId 172.20.30.0
 ```
 
 #### Rollback — Step 6: Enable MikroTik CHR DHCP relay only after scopes exist
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip dhcp-relay disable [find name="relay-vlan30"]
@@ -665,9 +755,21 @@ Prove that AD DNS resolves internal SRV records and external names through appro
 
 #### Commands — DNS validation
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Resolve-DnsName cloudflare.com
@@ -693,9 +795,21 @@ Prove that DHCP scopes exist before enabling MikroTik relay.
 
 #### Commands — DHCP scope validation
 
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Get-DhcpServerv4Scope
 ```
+
+Run on: `HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-DhcpServerInDC
@@ -724,6 +838,12 @@ Enable relay only after DHCP scopes exist and prove no guest relay exists.
 
 #### Commands — MikroTik relay validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/dhcp-relay/print
 ```
@@ -739,6 +859,12 @@ relay-vlan30  interface=vlan30-workstations  dhcp-server=172.20.20.11  disabled=
 #### If validation fails — MikroTik relay validation
 
 STOP. Disable or remove incorrect relay entries.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip dhcp-relay disable [find]

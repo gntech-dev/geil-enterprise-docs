@@ -82,6 +82,12 @@ flowchart LR
 
 Create address lists before firewall rules reference them.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall address-list add list=AD-DomainControllers address=172.20.20.11 comment="HQ-DC01 domain controller"
 /ip firewall address-list add list=AD-ClientNetworks address=172.20.30.0/24 comment="VLAN30 Workstations domain clients"
@@ -92,6 +98,12 @@ Create address lists before firewall rules reference them.
 
 Validation:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/firewall/address-list/print where list~"AD-|ManagementNetworks|ServerNetworks"
 ```
@@ -101,6 +113,12 @@ Expected result: all address lists exist before any Active Directory firewall ru
 ## Production Active Directory firewall policy
 
 Add these rules before `Default deny unapproved forwarding`.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53 place-before=[find comment="Default deny unapproved forwarding"] comment="AD DNS TCP clients to DCs"
@@ -137,6 +155,12 @@ Add these rules before `Default deny unapproved forwarding`.
 
 This broad rule is allowed only to prove that firewall policy is the blocker. It is not a production rule.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip firewall filter add chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 place-before=[find comment="Default deny unapproved forwarding"] comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"
 /ip firewall filter remove [find comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"]
@@ -147,6 +171,12 @@ Use it only long enough to prove causality. Remove it immediately and replace it
 ## Validation from the Management VLAN
 
 Run from `HQ-MGMT01` on VLAN10 to prove the management workstation can reach required domain-controller services before domain join and RSAT administration.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 ping 172.20.20.11
@@ -161,6 +191,12 @@ Expected result: `HQ-MGMT01` can reach AD services from `ManagementNetworks` wit
 ## Validation from a VLAN30 client
 
 Run from a normal VLAN30 workstation such as `HQ-W11-001`. `HQ-MGMT01` is on VLAN10 and validates management-workstation reachability separately.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 ping 172.20.20.11
@@ -188,6 +224,12 @@ Expected result:
 
 ## Validation from RouterOS
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```routeros
 /ip/firewall/address-list/print where list~"AD-|ManagementNetworks|ServerNetworks"
 /ip/firewall/filter/print stats where comment~"AD "
@@ -210,6 +252,12 @@ STOP if any of the following occur:
 ## Rollback
 
 Remove only the AD service rules or address-list entries added during the current change if validation fails.
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
 /ip firewall filter remove [find comment~"AD "]

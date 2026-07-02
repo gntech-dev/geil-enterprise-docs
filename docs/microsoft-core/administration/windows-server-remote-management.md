@@ -49,6 +49,12 @@ Use remote methods instead of routine console or interactive server sign-in:
 
 ## Validation
 
+Run on: `HQ-MGMT01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 5985
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 3389

@@ -268,6 +268,12 @@ Expected result:
 
 Checkpoint from Proxmox:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm snapshot 100 CP-FW-INSTALLED --description "HQ-FW01 clean OPNsense install before VLAN policy"
 ```
@@ -315,6 +321,12 @@ In OPNsense web UI or console-assisted GUI:
 | `HYPERVISORS` | 100 | `172.20.100.1/24` |
 
 Checkpoint from Proxmox after interface validation:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm snapshot 100 CP-FW-VLANS --description "HQ-FW01 VLAN gateways configured"
@@ -397,6 +409,12 @@ After `HQ-DC01` DHCP is ready, configure relay only for the approved VLANs and v
 
 From `HQ-MGMT01`:
 
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Test-NetConnection 172.20.10.1 -Port 443
 Test-NetConnection 172.20.100.11 -Port 8006
@@ -404,6 +422,12 @@ Test-NetConnection 172.20.20.11 -Port 3389
 ```
 
 From a guest VLAN 70 test client:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-NetConnection 172.20.20.11 -Port 53
@@ -419,6 +443,12 @@ Expected result:
 
 After baseline policy validation:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm snapshot 100 CP-FW-BASELINE-RULES --description "HQ-FW01 baseline firewall rules validated"
 ```
@@ -433,6 +463,12 @@ From OPNsense:
 
 ### Revert firewall VM to clean install
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm rollback 100 CP-FW-INSTALLED
 ```
@@ -440,6 +476,12 @@ qm rollback 100 CP-FW-INSTALLED
 Use when VLAN/interface configuration is unrecoverable.
 
 ### Revert to VLAN gateway baseline
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm rollback 100 CP-FW-VLANS
@@ -459,12 +501,24 @@ Use when firewall rules break management or routing.
 
 From Proxmox:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 100
 qm listsnapshot 100
 ```
 
 From `HQ-MGMT01`:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-NetConnection 172.20.10.1 -Port 443
@@ -557,6 +611,12 @@ Deploy `HQ-FW01` as the GEIL routing and firewall boundary without touching the 
 
 Run on `PVE-HQ01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 100 | egrep 'name|net0|net1'
 ```
@@ -570,6 +630,12 @@ net1: virtio=...,bridge=GEILLAN
 ```
 
 Rollback if incorrect:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm stop 100
@@ -725,6 +791,12 @@ Create rules in this order:
 
 Validation from `HQ-MGMT01`:
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Test-NetConnection 172.20.10.1 -Port 443
 Test-NetConnection 172.20.100.11 -Port 8006
@@ -732,6 +804,12 @@ Test-NetConnection 172.20.20.11 -Port 3389
 ```
 
 Guest isolation validation from VLAN 70:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Test-NetConnection 172.20.20.11 -Port 53
@@ -792,6 +870,12 @@ Do not commit OPNsense configuration XML to Git.
 ### Step 10: Snapshot checkpoints
 
 From `PVE-HQ01`:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm snapshot 100 CP-FW-INSTALLED --description "HQ-FW01 clean install"

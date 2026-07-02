@@ -111,6 +111,12 @@ Create a unique workstation VM from the generalized workgroup-only template.
 
 Run from `PVE-HQ01`. Adjust VMID only if `9301` is already used.
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm clone 9201 9301 --name HQ-W11-001 --full true
 qm set 9301 --net0 virtio,bridge=GEILLAN,tag=30
@@ -120,6 +126,12 @@ qm start 9301
 
 #### Validation
 
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 qm config 9301
 ```
@@ -127,6 +139,12 @@ qm config 9301
 Expected output includes `name: HQ-W11-001`, `bridge=GEILLAN`, and `tag=30`.
 
 #### Rollback
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 qm stop 9301
@@ -142,6 +160,12 @@ Confirm the cloned workstation receives a VLAN30 address and the DNS server opti
 #### Commands
 
 Run inside `HQ-W11-001` before domain join:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 ipconfig /renew
@@ -168,6 +192,12 @@ Prove the workstation can reach Active Directory services before domain join.
 #### Commands
 
 Run inside `HQ-W11-001`:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 ping 172.20.20.11
@@ -205,6 +235,12 @@ Ensure the clone has the intended workstation name before domain join.
 
 Run inside `HQ-W11-001`:
 
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 $DesiredName = "HQ-W11-001"
 $CurrentName = $env:COMPUTERNAME
@@ -217,6 +253,12 @@ else {
 ```
 
 After restart, confirm:
+
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname
@@ -235,6 +277,12 @@ Join the workstation to the Active Directory domain only after network validatio
 #### Commands
 
 Run inside `HQ-W11-001` with approved domain join credentials:
+
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 $DomainName = "corp.gntech.me"
@@ -265,6 +313,12 @@ Place the computer object under the OU where `GP - Baseline - Workstations` is l
 
 Run from `HQ-DC01` or an approved RSAT workstation after the domain join succeeds:
 
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 Import-Module ActiveDirectory
 $ComputerName = "HQ-W11-001"
@@ -281,6 +335,12 @@ else {
 ```
 
 #### Validation
+
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Get-ADComputer -Identity HQ-W11-001 | Select-Object Name,DistinguishedName
@@ -301,6 +361,12 @@ Force policy retrieval after OU placement.
 #### Commands
 
 Run inside `HQ-W11-001` after reboot/domain sign-in:
+
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 gpupdate /force
@@ -324,6 +390,12 @@ Capture evidence that `GP - Baseline - Workstations` applies.
 
 Run inside `HQ-W11-001`:
 
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```powershell
 New-Item -ItemType Directory -Path C:\Temp -Force | Out-Null
 gpresult /h C:\Temp\geil-hq-w11-001-gpresult.html
@@ -343,6 +415,12 @@ Expected result:
 ## Deployment Validation
 
 Run this complete validation inside `HQ-W11-001` after domain join:
+
+Run on: `Windows Client`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 hostname
@@ -385,6 +463,12 @@ Capture:
 ## Rollback
 
 If domain join was a test and must be reversed:
+
+Run on: `HQ-FW01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Remove-Computer -UnjoinDomainCredential GNTECH\Administrator -WorkgroupName WORKGROUP -Restart

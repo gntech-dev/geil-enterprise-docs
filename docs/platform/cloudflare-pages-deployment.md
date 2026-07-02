@@ -108,6 +108,12 @@ tenant-id.txt
 
 Run from the repository root.
 
+Run on: `PVE-HQ01 or Management Workstation as specified by the step`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
@@ -138,6 +144,12 @@ Configure these controls before connecting Cloudflare Pages.
 | Actions permissions | Restricted to approved workflows if GitHub Actions is later used |
 
 Validation command:
+
+Run on: `PVE-HQ01 or Management Workstation as specified by the step`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 git remote -v
@@ -199,6 +211,12 @@ Procedure:
 5. Confirm SSL/TLS certificate issuance.
 
 Validation from an admin workstation:
+
+Run on: `HQ-MGMT01 unless this is an initial bootstrap step that explicitly requires HQ-DC01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
 Resolve-DnsName docs.gntechlabs.me
@@ -283,6 +301,12 @@ sequenceDiagram
 
 Local validation:
 
+Run on: `PVE-HQ01 or Management Workstation as specified by the step`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 . .venv/bin/activate
 mkdocs build --strict
@@ -311,6 +335,12 @@ Use this procedure if a deployment publishes incorrect, incomplete, or unsafe gu
 
 Use when the repository must reflect the rollback immediately.
 
+Run on: `PVE-HQ01`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+
 ```bash
 git checkout main
 git pull --ff-only
@@ -338,6 +368,12 @@ Do not disable Cloudflare Access for GEIL except during an approved emergency an
 ## Deployment Validation
 
 Before publishing documentation changes, verify the rendered site rather than relying only on Markdown.
+
+Run on: `PVE-HQ01 or Management Workstation as specified by the step`
+
+When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+
+Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```bash
 mkdocs build --strict
