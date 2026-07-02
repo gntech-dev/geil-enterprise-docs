@@ -47,7 +47,7 @@ Before implementing changes in this area, read the applicable standard, confirm 
 | Order | Document | Purpose |
 |---:|---|---|
 | 1 | [DNS and DHCP Implementation](dns-dhcp-implementation.md) | Implement Microsoft DNS and DHCP after AD DS is healthy. |
-| 2 | [Group Policy Baseline](group-policy-baseline.md) | Create Central Store, baseline GPO shells, workstation policy validation, and future Management Workstations GPO architecture. |
+| 2 | [Group Policy Baseline](group-policy-baseline.md) | Create Central Store, baseline GPO shells, `GP - Baseline - Workstations`, and `GP - Baseline - Management Workstations` with validated initial management workstation settings. |
 
 ### Phase 3 - Windows Client Lifecycle
 

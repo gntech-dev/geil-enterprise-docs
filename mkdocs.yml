@@ -76,7 +76,7 @@ nav:
           - Enterprise Naming Standard: microsoft-core/active-directory-naming-standard.md
       - Phase 2 - Core Infrastructure Services:
           - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
-          - Group Policy Baseline: microsoft-core/group-policy-baseline.md
+          - Group Policy Baseline - Workstations and Management Workstations: microsoft-core/group-policy-baseline.md
       - Phase 3 - Windows Client Lifecycle:
           - microsoft-core/windows-client-lifecycle/index.md
           - Windows 11 Enterprise Golden Template: microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md

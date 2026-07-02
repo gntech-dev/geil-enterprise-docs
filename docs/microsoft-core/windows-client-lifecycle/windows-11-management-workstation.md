@@ -3,7 +3,7 @@ title: Windows 11 Management Workstation
 document_id: GEIL-PLAT-W11-MGMT-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.1
+version: 1.2
 last_reviewed: 2026-07-01
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-PLAT-W11-MGMT-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.1 |
+| Version | 1.2 |
 | Last Reviewed | 2026-07-01 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -71,7 +71,7 @@ The authoritative template build and Cloudbase-Init configuration details remain
 - Cloudbase-Init is installed and validated in the template.
 - [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) implemented.
 - [Active Directory Organizational Foundation](../active-directory-organizational-foundation.md) completed, including `OU=Management Workstations,OU=Computers,OU=GNTECH`.
-- [Group Policy Baseline](../group-policy-baseline.md) reviewed. The future `GP - Baseline - Management Workstations` is architecture only until validated.
+- [Group Policy Baseline](../group-policy-baseline.md) completed through creation and linking of `GP - Baseline - Management Workstations`. This GPO is separate from `GP - Baseline - Workstations`.
 - Management VLAN 10 addressing, DNS, and domain-controller access are operational for `HQ-MGMT01`.
 - Domain join credentials are approved for the change window.
 
@@ -86,9 +86,10 @@ The authoritative template build and Cloudbase-Init configuration details remain
 7. Reboot.
 8. Move computer to `OU=Management Workstations,OU=Computers,OU=GNTECH`.
 9. Force Group Policy.
-10. Validate applied GPOs.
-11. Install RSAT and administration tools.
-12. Final validation.
+10. Validate applied GPOs, including `GP - Baseline - Management Workstations`.
+11. Validate Remote Desktop and Network Level Authentication policy state without broadly exposing RDP.
+12. Install RSAT and administration tools.
+13. Final validation.
 
 ## Step 1: Clone from Windows 11 Enterprise Golden Template
 
@@ -466,7 +467,7 @@ Capture `gpupdate /force` output.
 
 ### Purpose
 
-Confirm that `HQ-MGMT01` is in the correct OU, that expected baseline policies apply, and that future management-workstation policy is clearly understood as upcoming architecture.
+Confirm that `HQ-MGMT01` is in the correct OU and applies `GP - Baseline - Management Workstations`, not the standard `GP - Baseline - Workstations` intended for user endpoints.
 
 ### Commands
 
@@ -512,20 +513,59 @@ Get-ADComputer -Identity "HQ-MGMT01" -Properties DistinguishedName |
 ### Expected Result
 
 - Computer object is in `OU=Management Workstations,OU=Computers,OU=GNTECH,...`.
-- Expected baseline domain policies are visible in `gpresult`.
-- No standard workstation-only policy is incorrectly applied to `HQ-MGMT01`.
-- `GP - Baseline - Management Workstations` is noted as upcoming/future unless it has been explicitly validated and linked in a later change.
+- `GP - Baseline - Management Workstations` appears in applied computer policies.
+- `GP - Baseline - Workstations` does not apply to `HQ-MGMT01` as a standard user-workstation baseline.
+- Remote Desktop, Network Level Authentication, and PowerShell Script Block Logging settings are in scope for the Management Workstations GPO.
 - `whoami /groups` shows expected domain identity context for the signed-in account.
 
 ### Stop Conditions
 
-STOP if the computer remains in the default `Computers` container, lands in `OU=Workstations`, cannot read SYSVOL/NETLOGON, or receives standard workstation policy incorrectly.
+STOP if the computer remains in the default `Computers` container, lands in `OU=Workstations`, cannot read SYSVOL/NETLOGON, fails to apply `GP - Baseline - Management Workstations`, or receives standard workstation policy incorrectly.
 
 ### Evidence
 
 Capture `gpresult /r`, `whoami /groups`, optional HTML GPResult, and AD distinguished name output.
 
-## Step 11: Install RSAT and administration tools
+## Step 11: Validate Remote Desktop and NLA policy state
+
+### Purpose
+
+Confirm the initial Management Workstations GPO settings are present while reinforcing that RDP exposure is controlled by firewall and network policy, not by broad access.
+
+### Commands
+
+Run on: `HQ-MGMT01`
+
+When: after `gpupdate /force` and `gpresult /r` show `GP - Baseline - Management Workstations` applied.
+
+Expected outcome: Remote Desktop is enabled, Network Level Authentication is required, and access remains restricted to approved management paths.
+
+```powershell
+Get-ItemProperty `
+    -Path "HKLM:\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+    -Name fDenyTSConnections,UserAuthentication
+
+Get-ItemProperty `
+    -Path "HKLM:\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+    -Name EnableScriptBlockLogging
+```
+
+### Expected Result
+
+- `fDenyTSConnections` is `0`.
+- `UserAuthentication` is `1`.
+- `EnableScriptBlockLogging` is `1`.
+- RDP access is limited by Management VLAN and firewall/network policy. It must not be broadly exposed to standard workstation, guest, or untrusted networks.
+
+### Stop Conditions
+
+STOP if RDP is reachable from broad user or guest networks, if NLA is not required, or if Script Block Logging is not enabled.
+
+### Evidence
+
+Capture registry policy output and firewall/network validation evidence showing RDP is constrained to approved management paths.
+
+## Step 12: Install RSAT and administration tools
 
 ### Purpose
 
@@ -577,7 +617,7 @@ STOP if Windows capability installation fails, Windows Update/FoD source is unav
 
 Capture RSAT capability output and installed tool validation.
 
-## Step 12: Final validation
+## Step 13: Final validation
 
 ### Purpose
 
@@ -662,8 +702,10 @@ Capture:
 - Domain membership output.
 - Management Workstations OU distinguished name output.
 - `gpupdate /force` output.
-- `gpresult /r` output and optional HTML GPResult.
+- `gpresult /r` output and optional HTML GPResult showing `GP - Baseline - Management Workstations`.
 - `whoami /groups` output.
+- Registry policy output for Remote Desktop, NLA, and Script Block Logging.
+- Firewall/network evidence showing RDP is restricted to approved management paths.
 - RSAT installed capability output.
 - Remote administration validation output.
 
@@ -678,6 +720,8 @@ Capture:
 | Domain join fails | DNS or AD firewall path missing from Management VLAN | Validate Active Directory Network Requirements and `ManagementNetworks` access to domain-controller services. |
 | Computer lands in default Computers container | OU move step skipped or failed | Move to `OU=Management Workstations,OU=Computers,OU=GNTECH`. |
 | Standard workstation GPO applies | Computer in wrong OU or GPO linked too broadly | Correct OU placement and GPO links before continuing. |
+| `GP - Baseline - Management Workstations` does not apply | GPO missing, not linked, or computer remains in wrong OU | Create/link the GPO, move `HQ-MGMT01` to the Management Workstations OU, then run `gpupdate /force`. |
+| RDP reachable too broadly | Firewall or network policy exposes management access outside approved paths | Restrict RDP at firewall/network layer; do not expose RDP to user, guest, or untrusted networks. |
 | RSAT install fails | Windows Update/FoD source unavailable | Restore internet/update access or provide approved FoD source. |
 | Admins still log on to servers interactively | Operational habit or missing tooling | Install RSAT/admin tools on `HQ-MGMT01` and document remote workflow. |
 
@@ -717,4 +761,4 @@ Entra Hybrid
 | Proxmox version | Proxmox VE 9 target |
 | Deployment date | 2026-07-01 pilot decision incorporated |
 | Deployment notes | `HQ-MGMT01` is the initial PAW, Management Workstations OU member, and remote administration origin. |
-| Known caveats | Future PAW hardening, LAPS, WHfB, Entra ID, JIT, JEA, and `GP - Baseline - Management Workstations` controls should build on this model after validation. |
+| Known caveats | Future PAW hardening, LAPS, WHfB, Entra ID, JIT, JEA, Credential Guard, administrative hardening, and management firewall refinements should build on the validated `GP - Baseline - Management Workstations` model. |

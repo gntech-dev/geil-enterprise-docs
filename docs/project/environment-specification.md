@@ -99,7 +99,7 @@ Rationale:
 - Remote administration from a hardened workstation reduces routine interactive server logons.
 - Administrative tiering is easier to enforce when admin activity originates from a known endpoint.
 - The model prepares for PAW hardening, LAPS, Windows Hello for Business, Microsoft Entra ID, Just-in-Time access, and Just Enough Administration.
-- `HQ-MGMT01` is deployed from the Windows 11 golden template, attached to `GEILLAN` VLAN 10, validated for management-network addressing, DNS, and domain-controller access, joined to `corp.gntech.me` after cloning, moved to `OU=Management Workstations,OU=Computers,OU=GNTECH`, and then equipped with RSAT/admin tools.
+- `HQ-MGMT01` is deployed from the Windows 11 golden template, attached to `GEILLAN` VLAN 10, validated for management-network addressing, DNS, and domain-controller access, joined to `corp.gntech.me` after cloning, moved to `OU=Management Workstations,OU=Computers,OU=GNTECH`, applies `GP - Baseline - Management Workstations`, and then is equipped with RSAT/admin tools.
 
 ## Windows client lifecycle placement
 
@@ -139,7 +139,9 @@ The golden template must never be domain-joined. `HQ-MGMT01` belongs to VLAN 10 
 | Standard users OU | `OU=Standard,OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Groups security OU | `OU=Security,OU=Groups,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Management Workstations OU | `OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Management Workstations GPO | `GP - Baseline - Management Workstations` linked only to the Management Workstations OU |
 | Workstations OU | `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
+| Workstations GPO | `GP - Baseline - Workstations` linked only to the Workstations OU |
 | Servers OU | `OU=Servers,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Service Accounts OU | `OU=Service Accounts,OU=GNTECH,DC=corp,DC=gntech,DC=me` |
 | Disabled users OU | `OU=Disabled,OU=Users,OU=GNTECH,DC=corp,DC=gntech,DC=me` |

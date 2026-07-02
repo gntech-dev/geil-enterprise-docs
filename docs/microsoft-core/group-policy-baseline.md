@@ -3,7 +3,7 @@ title: Group Policy Baseline
 document_id: GEIL-MSC-GPO-001
 owner: Infrastructure Engineering
 status: Draft
-version: 2.3
+version: 2.4
 last_reviewed: 2026-07-01
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -18,7 +18,7 @@ classification: Internal Confidential
 | Document ID | GEIL-MSC-GPO-001 |
 | Owner | Infrastructure Engineering |
 | Status | Draft |
-| Version | 2.3 |
+| Version | 2.4 |
 | Last Reviewed | 2026-07-01 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -48,8 +48,9 @@ By the end of this guide you will have:
 - ✓ Verified the baseline OU structure exists.
 - ✓ Created baseline GPO shells before linking them.
 - ✓ Linked the workstation baseline to the Workstations OU under the canonical Computers OU.
-- ✓ Prepared the architecture for a future management workstation baseline linked only to the Management Workstations OU.
-- ✓ Configured a safe example setting for PowerShell script block logging.
+- ✓ Created and linked `GP - Baseline - Management Workstations` to the Management Workstations OU.
+- ✓ Configured initial validated settings for management workstations: Remote Desktop enabled, Network Level Authentication required, and PowerShell Script Block Logging enabled.
+- ✓ Configured a safe example setting for PowerShell script block logging on standard workstations.
 - ✓ Validated security filtering and resultant policy.
 - ✓ Documented rollback for unlinking and disabling GPOs.
 
@@ -92,7 +93,9 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 
 - GPOs exist before links are configured.
 - Workstation baseline is linked only to the Workstations OU under the canonical Computers OU.
-- Management workstation GPO architecture is documented but settings are not implemented until validated.
+- `GP - Baseline - Management Workstations` is linked only to `OU=Management Workstations,OU=Computers,OU=GNTECH,...`.
+- `HQ-MGMT01` is not left in `OU=Workstations`; it is moved to the Management Workstations OU.
+- Initial management workstation settings enable Remote Desktop, require Network Level Authentication, and enable PowerShell Script Block Logging.
 - Security filtering is reviewed and documented.
 - Rollback commands are captured.
 
@@ -106,13 +109,13 @@ flowchart LR
     Domain[corp.gntech.me]
     MgmtOU[OU=Management Workstations,OU=Computers,OU=GNTECH]
     WorkOU[OU=Workstations,OU=Computers,OU=GNTECH]
-    MgmtGPO[Future GP - Baseline - Management Workstations]
+    MgmtGPO[GP - Baseline - Management Workstations]
     WorkGPO[GP - Baseline - Workstations]
     MgmtClient[HQ-MGMT01]
     UserClient[HQ-W11-001]
     Domain --> MgmtOU
     Domain --> WorkOU
-    MgmtGPO -. future link .-> MgmtOU --> MgmtClient
+    MgmtGPO --> MgmtOU --> MgmtClient
     WorkGPO --> WorkOU --> UserClient
 ```
 
@@ -121,9 +124,9 @@ flowchart LR
     Enterprises usually create GPOs as unlinked objects first, configure and review settings, validate security filtering, then link to a pilot OU before broad deployment.
 
 
-### Future management workstation baseline
+### Management workstation baseline
 
-Prepare, but do not yet implement, a dedicated management workstation baseline named:
+Create and link a dedicated management workstation baseline named:
 
 `GP - Baseline - Management Workstations`
 
@@ -131,7 +134,7 @@ Target OU:
 
 `OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
 
-Future validated settings may include Remote Desktop restrictions, RSAT defaults, Credential Guard, administrative hardening, PowerShell logging, and management firewall rules. Do not link or configure those settings until they are validated in the laboratory. `HQ-MGMT01` is the initial target for this future GPO. `HQ-W11-001` and future user workstations remain under `GP - Baseline - Workstations`.
+Initial validated settings are Remote Desktop enabled, Network Level Authentication required, and PowerShell Script Block Logging enabled. This GPO is separate from `GP - Baseline - Workstations`; `HQ-MGMT01` is the initial target. `HQ-W11-001` and future user workstations remain under `GP - Baseline - Workstations`. RDP exposure must be restricted by firewall and network policy, not broadly exposed to user or guest networks.
 
 ## Background Knowledge
 
@@ -376,6 +379,7 @@ $Gpos = @(
     "GP - Baseline - Domain Controllers",
     "GP - Baseline - Windows Servers",
     "GP - Baseline - Workstations",
+    "GP - Baseline - Management Workstations",
     "GP - Security - PowerShell Logging",
     "GP - Security - Windows Firewall",
     "GP - Security - Microsoft Defender",
@@ -411,13 +415,13 @@ Expected outcome: the command completes successfully and the following expected 
 Remove-GPO -Name "Incorrect-GPO-Name" -Confirm:$false
 ```
 
-### Step 4: Configure a safe workstation baseline setting
+### Step 4: Configure baseline workstation and management workstation settings
 
-#### Goal — Step 4: Configure a safe workstation baseline setting
+#### Goal — Step 4: Configure baseline workstation and management workstation settings
 
-Enable PowerShell script block logging in the workstation baseline before linking.
+Enable PowerShell Script Block Logging for standard workstations, and configure the initial validated management workstation settings for `HQ-MGMT01`: Remote Desktop enabled, Network Level Authentication required, and PowerShell Script Block Logging enabled.
 
-#### Commands — Step 4: Configure a safe workstation baseline setting
+#### Commands — Step 4: Configure baseline workstation and management workstation settings
 
 Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
 
@@ -430,25 +434,56 @@ $ErrorActionPreference = "Stop"
 
 Import-Module GroupPolicy -ErrorAction Stop
 
-$GpoName = "GP - Baseline - Workstations"
+$StandardWorkstationGpo = "GP - Baseline - Workstations"
+$ManagementWorkstationGpo = "GP - Baseline - Management Workstations"
+
+foreach ($GpoName in @($StandardWorkstationGpo,$ManagementWorkstationGpo)) {
+    Set-GPRegistryValue `
+        -Name $GpoName `
+        -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+        -ValueName EnableScriptBlockLogging `
+        -Type DWord `
+        -Value 1 `
+        -ErrorAction Stop
+}
 
 Set-GPRegistryValue `
-    -Name $GpoName `
-    -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
-    -ValueName EnableScriptBlockLogging `
+    -Name $ManagementWorkstationGpo `
+    -Key "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+    -ValueName fDenyTSConnections `
+    -Type DWord `
+    -Value 0 `
+    -ErrorAction Stop
+
+Set-GPRegistryValue `
+    -Name $ManagementWorkstationGpo `
+    -Key "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+    -ValueName UserAuthentication `
     -Type DWord `
     -Value 1 `
     -ErrorAction Stop
 
+foreach ($GpoName in @($StandardWorkstationGpo,$ManagementWorkstationGpo)) {
+    Get-GPRegistryValue `
+        -Name $GpoName `
+        -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+        -ValueName EnableScriptBlockLogging
+}
+
 Get-GPRegistryValue `
-    -Name $GpoName `
-    -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
-    -ValueName EnableScriptBlockLogging
+    -Name $ManagementWorkstationGpo `
+    -Key "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+    -ValueName fDenyTSConnections
+
+Get-GPRegistryValue `
+    -Name $ManagementWorkstationGpo `
+    -Key "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+    -ValueName UserAuthentication
 ```
 
-#### Expected result — Step 4: Configure a safe workstation baseline setting
+#### Expected result — Step 4: Configure baseline workstation and management workstation settings
 
-The command should return the GPO object after setting the value, then show:
+The command should return registry policy entries showing `EnableScriptBlockLogging = 1` for both workstation GPOs, `fDenyTSConnections = 0` for `GP - Baseline - Management Workstations`, and `UserAuthentication = 1` for Network Level Authentication. RDP must still be restricted by firewall and network policy; this GPO must not be interpreted as broad RDP exposure. Example output:
 
 ```text
 PolicyState : Set
@@ -458,7 +493,7 @@ ValueName   : EnableScriptBlockLogging
 HasValue    : True
 ```
 
-#### Rollback — Step 4: Configure a safe workstation baseline setting
+#### Rollback — Step 4: Configure baseline workstation and management workstation settings
 
 Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
 
@@ -467,9 +502,19 @@ When: execute at this point in the procedure after the stated prerequisites are 
 Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
-Remove-GPRegistryValue -Name "GP - Baseline - Workstations" `
-  -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
-  -ValueName EnableScriptBlockLogging
+foreach ($GpoName in @("GP - Baseline - Workstations","GP - Baseline - Management Workstations")) {
+    Remove-GPRegistryValue -Name $GpoName `
+      -Key "HKLM\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+      -ValueName EnableScriptBlockLogging
+}
+
+Remove-GPRegistryValue -Name "GP - Baseline - Management Workstations" `
+  -Key "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+  -ValueName fDenyTSConnections
+
+Remove-GPRegistryValue -Name "GP - Baseline - Management Workstations" `
+  -Key "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" `
+  -ValueName UserAuthentication
 ```
 
 ### Step 5: Validate security filtering before linking
@@ -484,6 +529,7 @@ Expected outcome: the command completes successfully and the following expected 
 
 ```powershell
 Get-GPPermission -Name "GP - Baseline - Workstations" -All | Select-Object Trustee,Permission
+Get-GPPermission -Name "GP - Baseline - Management Workstations" -All | Select-Object Trustee,Permission
 ```
 
 Expected result: filtering is visible and documented. Do not proceed if it would apply to unintended computers.
@@ -550,25 +596,103 @@ Remove-GPLink -Name "GP - Baseline - Workstations" `
   -Target "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 ```
 
-### Step 7: Validate resultant policy
+### Step 7: Link the Management Workstations GPO and move `HQ-MGMT01`
 
-From a test workstation such as `HQ-W11-001` after domain join:
+#### Goal — Step 7: Link the Management Workstations GPO and move `HQ-MGMT01`
+
+Link `GP - Baseline - Management Workstations` only to `OU=Management Workstations,OU=Computers,OU=GNTECH,...` and ensure `HQ-MGMT01` is not left in the standard Workstations OU.
+
+#### Commands — Step 7: Link the Management Workstations GPO and move `HQ-MGMT01`
 
 Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
 
-When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+When: after the management workstation GPO exists and the Management Workstations OU exists.
 
-Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+Expected outcome: the management workstation GPO is linked to the Management Workstations OU and `HQ-MGMT01` is placed in that OU.
+
+```powershell
+$ErrorActionPreference = "Stop"
+
+Import-Module ActiveDirectory -ErrorAction Stop
+Import-Module GroupPolicy -ErrorAction Stop
+
+$GpoName = "GP - Baseline - Management Workstations"
+$ManagementWorkstationsOU = "OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
+$StandardWorkstationsOU = "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
+
+if (-not (Get-ADObject -Identity $ManagementWorkstationsOU -ErrorAction SilentlyContinue)) {
+    throw "Target OU does not exist: $ManagementWorkstationsOU"
+}
+
+if (-not (Get-GPO -Name $GpoName -ErrorAction SilentlyContinue)) {
+    throw "GPO does not exist: $GpoName"
+}
+
+$ExistingLink = (Get-GPInheritance -Target $ManagementWorkstationsOU).GpoLinks |
+    Where-Object { $_.DisplayName -eq $GpoName }
+
+if (-not $ExistingLink) {
+    New-GPLink -Name $GpoName -Target $ManagementWorkstationsOU -LinkEnabled Yes -ErrorAction Stop | Out-Null
+    Write-Host "Linked GPO: $GpoName -> $ManagementWorkstationsOU" -ForegroundColor Green
+}
+
+$Computer = Get-ADComputer -Identity "HQ-MGMT01" -Properties DistinguishedName -ErrorAction Stop
+if ($Computer.DistinguishedName -like "*OU=Workstations,OU=Computers,OU=GNTECH,*") {
+    Write-Warning "HQ-MGMT01 is currently in the standard Workstations OU and will be moved."
+}
+
+if ($Computer.DistinguishedName -notlike "*$ManagementWorkstationsOU") {
+    Move-ADObject -Identity $Computer.DistinguishedName -TargetPath $ManagementWorkstationsOU -ErrorAction Stop
+}
+
+Get-GPInheritance -Target $ManagementWorkstationsOU
+Get-ADComputer -Identity "HQ-MGMT01" -Properties DistinguishedName |
+    Select-Object Name,DistinguishedName
+```
+
+#### Expected result — Step 7: Link the Management Workstations GPO and move `HQ-MGMT01`
+
+`GpoLinks` for the Management Workstations OU includes `GP - Baseline - Management Workstations`, and `HQ-MGMT01` has this distinguished name:
+
+```text
+CN=HQ-MGMT01,OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me
+```
+
+`HQ-MGMT01` must not remain in `OU=Workstations`.
+
+#### Rollback — Step 7: Link the Management Workstations GPO and move `HQ-MGMT01`
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: only if the management workstation GPO was linked to the wrong OU or the change must be backed out before validation.
+
+Expected outcome: the management workstation GPO link is removed from the Management Workstations OU.
+
+```powershell
+Remove-GPLink -Name "GP - Baseline - Management Workstations" `
+  -Target "OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
+```
+
+### Step 8: Validate resultant policy
+
+From `HQ-W11-001` for the standard workstation baseline and from `HQ-MGMT01` for the management workstation baseline after domain join and OU placement:
+
+Run on: `Windows Client and HQ-MGMT01`
+
+When: after each target computer is in its correct OU and the relevant GPO is linked.
+
+Expected outcome: `HQ-W11-001` applies `GP - Baseline - Workstations`; `HQ-MGMT01` applies `GP - Baseline - Management Workstations`.
 
 ```powershell
 Test-Path \corp.gntech.me\SYSVOL
 Test-Path \corp.gntech.me\NETLOGON
 gpupdate /force
+gpresult /r
 gpresult /h C:\Temp\geil-gpresult.html
 Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20
 ```
 
-Expected result: `GP - Baseline - Workstations` appears in applied computer policies for the test workstation.
+Expected result: `GP - Baseline - Workstations` appears in applied computer policies for `HQ-W11-001`; `GP - Baseline - Management Workstations` appears in applied computer policies for `HQ-MGMT01`. `HQ-MGMT01` must not show as a member of the standard Workstations OU. Remote Desktop is enabled with Network Level Authentication, but access must remain restricted by firewall and management-network policy.
 
 ## Validation after each major stage
 
@@ -582,8 +706,9 @@ Expected result: `GP - Baseline - Workstations` appears in applied computer poli
 - `Get-ADOrganizationalUnit` output for required OUs.
 - `Get-GPO -All` output for GEIL GPOs.
 - `Get-GPPermission` output.
-- `Get-GPInheritance` output.
-- `gpresult` HTML from a test workstation.
+- `Get-GPInheritance` output for Workstations and Management Workstations OUs.
+- `Get-ADComputer HQ-MGMT01 -Properties DistinguishedName` output.
+- `gpupdate /force`, `gpresult /r`, and `gpresult` HTML from `HQ-W11-001` and `HQ-MGMT01`.
 - Event log review output.
 
 ## Common Mistakes
@@ -593,6 +718,8 @@ Expected result: `GP - Baseline - Workstations` appears in applied computer poli
 | Link created before GPO settings reviewed | Policy applies too early | Remove link, review settings, relink when approved |
 | OU missing | `New-GPLink` fails | Create OU in AD implementation guide first |
 | Filtering too broad | Policy applies to wrong computers | Adjust security filtering before linking |
+| `HQ-MGMT01` remains in Workstations OU | Management workstation receives standard workstation GPO | Move `HQ-MGMT01` to Management Workstations OU and re-run `gpupdate /force` |
+| RDP broadly reachable | Remote Desktop exposed outside management paths | Restrict RDP with firewall/network policy; do not expose RDP to user or guest networks |
 | GPO deleted instead of disabled | Rollback evidence lost | Unlink or disable first; delete only after impact review |
 
 ## Troubleshooting
@@ -618,12 +745,14 @@ When: execute at this point in the procedure after the stated prerequisites are 
 Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
-Set-GPO -Name "GP - Baseline - Workstations" -GpoStatus AllSettingsDisabled
+foreach ($GpoName in @("GP - Baseline - Workstations","GP - Baseline - Management Workstations")) {
+    Set-GPO -Name $GpoName -GpoStatus AllSettingsDisabled
+}
 ```
 
 ## Deployment Validation
 
-Complete this validation on a pilot workstation before broad rollout.
+Complete this validation on `HQ-W11-001` and `HQ-MGMT01` before broad rollout.
 
 ### GPO application validation
 
@@ -633,33 +762,16 @@ Prove that baseline GPOs apply to the intended pilot object and do not apply bro
 
 #### Commands — GPO application validation
 
-Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+Run on: `Windows Client and HQ-MGMT01`
 
-When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
+When: after each computer is domain-joined, placed in the correct OU, and the relevant baseline GPO is linked.
 
-Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
+Expected outcome: Group Policy refresh completes and `gpresult` shows the expected baseline GPO for each computer.
 
 ```powershell
 gpupdate /force
-```
-
-Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
-
-When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
-
-Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
-
-```powershell
+gpresult /r
 gpresult /h C:\Temp\geil-gpresult.html
-```
-
-Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
-
-When: execute at this point in the procedure after the stated prerequisites are true and before continuing to the next step.
-
-Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
-
-```powershell
 Get-WinEvent -LogName "Microsoft-Windows-GroupPolicy/Operational" -MaxEvents 20
 ```
 
@@ -685,7 +797,9 @@ When: execute at this point in the procedure after the stated prerequisites are 
 Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```powershell
-Set-GPO -Name "GP - Baseline - Workstations" -GpoStatus AllSettingsDisabled
+foreach ($GpoName in @("GP - Baseline - Workstations","GP - Baseline - Management Workstations")) {
+    Set-GPO -Name $GpoName -GpoStatus AllSettingsDisabled
+}
 ```
 
 Continue only if successful.

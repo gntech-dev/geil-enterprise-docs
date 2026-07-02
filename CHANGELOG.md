@@ -11,6 +11,7 @@
 - Documented PowerShell Script Block Logging validation through `Get-GPRegistryValue`.
 - Reinforced copy/paste-safe PowerShell patterns without fragile regex or fragmented `if/else` examples.
 - Refined the Windows 11 Management Workstation guide to match the validated `HQ-MGMT01` pilot lifecycle: clone, Cloudbase-Init first boot, DHCP/DNS/AD connectivity validation, domain join/reboot, Management Workstations OU placement, Group Policy validation, RSAT/admin tooling, final validation, pilot findings, and roadmap-oriented next steps.
+- Added and documented `GP - Baseline - Management Workstations`, linked to `OU=Management Workstations,OU=Computers,OU=GNTECH`, with initial validated settings for Remote Desktop, Network Level Authentication, and PowerShell Script Block Logging; reinforced that RDP is restricted by firewall/network policy and `HQ-MGMT01` must not remain in `OU=Workstations`.
 - Added the permanent command execution context standard: operator-facing command blocks now identify where they run, when to execute them, and the expected outcome; Microsoft Core, Platform, and Security implementation guides were annotated with explicit execution contexts such as `HQ-MGMT01`, `HQ-DC01`, `PVE-HQ01`, and `HQ-FW01`.
 
 All notable changes to GEIL are documented in this file.

@@ -202,7 +202,7 @@ Standard clients such as `HQ-W11-001` and future user workstations remain in:
 
 `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
 
-This separation prepares the directory for a future dedicated management-workstation GPO without applying privileged administration settings to user endpoints.
+This separation provides a dedicated policy target for `GP - Baseline - Management Workstations` without applying privileged administration settings to user endpoints. `HQ-MGMT01` must not remain in `OU=Workstations`.
 
 ## Administrative Tiering Model
 
@@ -1721,19 +1721,19 @@ Remove incorrect delegation from the OU security ACL using Advanced Security set
 
 ## GPO Readiness
 
-Future Group Policy links use the OU structure created in this guide:
+Group Policy links use the OU structure created in this guide:
 
-| Future GPO area | Target OU |
-|---|---|
-| Domain controller baseline | Default `Domain Controllers` OU; do not move DCs under `OU=GNTECH`. |
-| Tier 0 restrictions | `OU=Tier 0,OU=Admin,OU=GNTECH,...` |
-| Tier 1 restrictions | `OU=Tier 1,OU=Admin,OU=GNTECH,...` |
-| Tier 2 restrictions | `OU=Tier 2,OU=Admin,OU=GNTECH,...` |
-| Management workstation baseline | `OU=Management Workstations,OU=Computers,OU=GNTECH,...` |
-| Workstation baseline | `OU=Workstations,OU=Computers,OU=GNTECH,...` |
-| Server baseline | `OU=Servers,OU=Computers,OU=GNTECH,...` |
-| Staging baseline | `OU=Staging,OU=Computers,OU=GNTECH,...` |
-| User baseline | `OU=Standard,OU=Users,OU=GNTECH,...` |
+| GPO area | GPO name | Target OU |
+|---|---|---|
+| Domain controller baseline | `GP - Baseline - Domain Controllers` | Default `Domain Controllers` OU; do not move DCs under `OU=GNTECH`. |
+| Tier 0 restrictions | `GP - Tier0 - Admin Restrictions` | `OU=Tier 0,OU=Admin,OU=GNTECH,...` |
+| Management workstation baseline | `GP - Baseline - Management Workstations` | `OU=Management Workstations,OU=Computers,OU=GNTECH,...` |
+| Workstation baseline | `GP - Baseline - Workstations` | `OU=Workstations,OU=Computers,OU=GNTECH,...` |
+| Server baseline | `GP - Baseline - Windows Servers` | `OU=Servers,OU=Computers,OU=GNTECH,...` |
+| Staging baseline | Future staging GPO | `OU=Staging,OU=Computers,OU=GNTECH,...` |
+| User baseline | Future user GPO | `OU=Standard,OU=Users,OU=GNTECH,...` |
+
+The Management Workstations OU exists so privileged workstation policy can be applied to `HQ-MGMT01` without applying Remote Desktop, administrative tooling, or privileged hardening settings to standard user workstations. `HQ-MGMT01` belongs in `OU=Management Workstations,OU=Computers,OU=GNTECH,...`; `HQ-W11-001` and future user endpoints remain in `OU=Workstations,OU=Computers,OU=GNTECH,...`.
 
 STOP. Do not link GPOs until the Group Policy Baseline guide validates OU existence and security filtering.
 
