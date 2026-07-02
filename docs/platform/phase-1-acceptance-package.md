@@ -113,7 +113,7 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 | SS-002 | Proxmox network view | `GEILWAN`, `GEILLAN`, and protected existing bridges; VLAN-aware state for `GEILLAN` | Proxmox UI |
 | SS-003 | `HQ-FW01` hardware | net0 on `GEILWAN`, net1 on `GEILLAN` | Proxmox UI |
 | SS-004 | `HQ-DC01` hardware | net0 on `GEILLAN` with VLAN tag 20 | Proxmox UI |
-| SS-005 | `HQ-MGMT01` hardware | net0 on `GEILLAN` with VLAN tag 30 | Proxmox UI |
+| SS-005 | `HQ-MGMT01` hardware | Windows 11 Enterprise management workstation / initial PAW; net0 on `GEILLAN` with VLAN tag 30 | Proxmox UI |
 | SS-006 | `HQ-W11-001` hardware | net0 on `GEILLAN` with VLAN tag 30 | Proxmox UI |
 | SS-007 | RouterOS interface assignments | WAN and LAN trunk parent are visible | RouterOS CLI / WinBox |
 | SS-008 | RouterOS VLAN interfaces | VLAN interfaces 10,20,30,40,50,60,70,80,90,100 | RouterOS CLI / WinBox |
@@ -132,7 +132,7 @@ GEIL-E02R05-HQ-FOUNDATION-ACCEPTANCE-YYYYMMDD/
 | CMD-004 | `PVE-HQ01` shell | `bridge vlan show dev GEILLAN` | `GEILLAN` carries VLANs 10,20,30,40,50,60,70,80,90,100 |
 | CMD-005 | `PVE-HQ01` shell | `qm config 100` | `HQ-FW01` uses `GEILWAN` and `GEILLAN` |
 | CMD-006 | `PVE-HQ01` shell | `qm config 110` | `HQ-DC01` uses VLAN tag 20 |
-| CMD-007 | `PVE-HQ01` shell | `qm config 120` | `HQ-MGMT01` uses VLAN tag 30 |
+| CMD-007 | `PVE-HQ01` shell | `qm config 120` | `HQ-MGMT01` uses VLAN tag 30 and is the Windows 11 management workstation VM |
 | CMD-008 | `PVE-HQ01` shell | `qm config 121` | `HQ-W11-001` uses VLAN tag 30 |
 | CMD-009 | `PVE-HQ01` shell | `qm listsnapshot 100` | `CP-FW-INSTALLED`, `CP-FW-VLANS`, `CP-FW-BASELINE-RULES` exist |
 | CMD-010 | `PVE-HQ01` shell | `qm listsnapshot 110` | `CP-DC01-OS` exists |
@@ -196,7 +196,7 @@ Required evidence:
 
 1. Default deny posture between zones.
 2. Management allow rules from approved sources.
-3. `HQ-MGMT01` access to `HQ-FW01`, `PVE-HQ01`, and `HQ-DC01` as approved.
+3. `HQ-MGMT01` Windows 11 Enterprise management workstation access to `HQ-FW01`, `PVE-HQ01`, and `HQ-DC01` as approved; Windows Server is not used as the daily admin workstation.
 4. Guest WiFi deny rules to `172.20.0.0/16`.
 5. No DMZ implicit allow rules.
 6. Rule order showing specific allows above denies.

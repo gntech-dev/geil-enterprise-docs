@@ -46,8 +46,8 @@ Phase 1 deploys the initial HQ foundation:
 - `PVE-HQ01` Proxmox bridge/VLAN baseline.
 - `HQ-FW01` MikroTik CHR VM, interfaces, VLAN gateways, and baseline rules.
 - `HQ-DC01` VM shell and static network settings.
-- `HQ-MGMT01` management workstation VM.
-- `HQ-W11-001` first Windows client VM.
+- `HQ-MGMT01` Windows 11 Enterprise management workstation / initial PAW deployed from the golden template.
+- `HQ-W11-001` Windows 11 Enterprise standard user/client validation VM deployed from the golden template.
 - Initial routing and DHCP relay decisions.
 - Snapshot and rollback checkpoints.
 
@@ -74,8 +74,8 @@ sequenceDiagram
     Eng->>FW: Export baseline configuration
     Eng->>DC: Create HQ-DC01 VM and apply static IP
     Eng->>DC: Capture CP-DC01-OS
-    Eng->>MGMT: Create HQ-MGMT01 VM and apply static IP
-    Eng->>MGMT: Capture CP-MGMT01-OS
+    Eng->>MGMT: Clone HQ-MGMT01 from Windows 11 template and attach VLAN 30
+    Eng->>MGMT: Validate DHCP/DNS/DC access, join domain, install RSAT, capture CP-MGMT01-OS
     Eng->>W11: Create HQ-W11-001 VM
     Eng->>W11: Capture CP-W11-001-OS
     Eng->>MGMT: Run Phase 1 validation checks
@@ -90,7 +90,7 @@ sequenceDiagram
 | G3 VLAN Gateways | VLAN gateways exist and respond on expected addresses | Revert to `CP-FW-INSTALLED` |
 | G4 Baseline Firewall Policy | Management, server, workstation, guest, backup, hypervisor zones follow baseline rules | Revert to `CP-FW-VLANS` |
 | G5 Server VM Shell | `HQ-DC01` has static `172.20.20.11` and uses expected gateway | Revert `HQ-DC01` to clean OS snapshot |
-| G6 Management Workstation | `HQ-MGMT01` has static `172.20.30.10` and reaches approved management targets | Revert `HQ-MGMT01` to clean OS snapshot |
+| G6 Management Workstation | `HQ-MGMT01` is Windows 11 Enterprise, cloned from the golden template, attached to VLAN 30, domain joined after network validation, RSAT-enabled, and reaches approved management targets | Revert `HQ-MGMT01` to clean clone snapshot |
 | G7 Client VM | `HQ-W11-001` exists on VLAN 30 and can obtain/reach expected network path when DHCP is available | Revert `HQ-W11-001` to clean OS snapshot |
 
 ## Detailed build plan
@@ -180,7 +180,9 @@ Checkpoint:
 
 - Snapshot `CP-DC01-OS` after OS installation, updates, VMware/virtio tools as applicable, and static IP configuration.
 
-### Step 6: Create `HQ-MGMT01`
+### Step 6: Deploy `HQ-MGMT01` management workstation
+
+`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation / initial PAW. Do not deploy it as Windows Server and do not use Windows Server as a daily admin workstation. Deploy it from the workgroup-only Windows 11 golden template, attach it to `GEILLAN` VLAN 30, validate DHCP/DNS/domain-controller access, join `corp.gntech.me`, install RSAT, and use it to administer `HQ-DC01` and future servers.
 
 VM specification:
 
@@ -196,7 +198,9 @@ VM specification:
 
 Checkpoint:
 
-- Snapshot `CP-MGMT01-OS` after OS installation, updates, and management tooling baseline.
+- Snapshot `CP-MGMT01-OS` after clone, VLAN30 validation, domain join, RSAT installation, and management tooling baseline.
+
+Detailed procedure: [Windows 11 Management Workstation](windows-11-management-workstation.md).
 
 ### Step 7: Create `HQ-W11-001`
 

@@ -71,6 +71,7 @@ nav:
       - Enterprise Port Reference: platform/enterprise-port-reference.md
       - Windows Server 2025 Golden Template: platform/windows-server-2025-golden-template.md
       - Windows 11 Enterprise Golden Template: platform/windows-11-enterprise-golden-template.md
+      - Windows 11 Management Workstation: platform/windows-11-management-workstation.md
       - Windows 11 Domain Join and GPO Validation: platform/windows-11-domain-join-gpo-validation.md
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md

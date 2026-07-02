@@ -66,8 +66,9 @@ Names appear in logs, certificates, DNS records, Kerberos SPNs, firewall rules, 
 | Daily users | `<first_initial><lastname>` or approved short name | `gnolasco` | Stable sign-in, simple display, aligns with `gnolasco@gntech.me`. |
 | User UPN | `<username>@gntech.me` | `gnolasco@gntech.me` | Matches Microsoft 365 and Entra ID verified domain. |
 | Admin users | `admin.<username>` or tier-specific if required | `admin.gnolasco` | Separates admin identity from daily identity. |
-| Workstations | `<SITE>-W11-<NNN>` | `HQ-W11-001` | Human-readable location and OS. |
-| Servers | `<SITE>-<ROLE><NN>` | `HQ-DC01`, `HQ-MGMT01` | Role and site are visible in logs and DNS. |
+| Workstations | `<SITE>-W11-<NNN>` | `HQ-W11-001` | Human-readable location and OS for standard client validation VMs. |
+| Management workstations | `<SITE>-MGMT<NN>` | `HQ-MGMT01` | Dedicated Windows 11 Enterprise privileged administration workstation; not a Windows Server. |
+| Servers | `<SITE>-<ROLE><NN>` | `HQ-DC01` | Role and site are visible in logs and DNS. `HQ-MGMT01` is not a server; it is a Windows 11 Enterprise management workstation / initial PAW. |
 | Domain controllers | `<SITE>-DC<NN>` | `HQ-DC01` | AD site and DC order are obvious. |
 | Groups | `GG-<Scope>-<Purpose>`, `DL-<Resource>-<Permission>`, `AG-<AdminRole>` | `GG-T1-Server-Admins` | Supports AGDLP/RBAC and access reviews. |
 | Service accounts | `svc-<service>` | `svc-monitoring` | Clearly non-human and searchable. |

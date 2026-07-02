@@ -99,7 +99,7 @@ flowchart TD
 |---:|---|---|---|---|---|
 | 10 | Management | `172.20.10.0/24` | `172.20.10.1` | High | `HQ-FW01`, switch management, management interfaces |
 | 20 | Servers | `172.20.20.0/24` | `172.20.20.1` | High | `HQ-DC01`, `HQ-DC02`, infrastructure VMs |
-| 30 | Workstations | `172.20.30.0/24` | `172.20.30.1` | Medium | `HQ-MGMT01`, `HQ-W11-001`, domain clients |
+| 30 | Workstations | `172.20.30.0/24` | `172.20.30.1` | Medium | `HQ-MGMT01` Windows 11 management workstation, `HQ-W11-001` standard client validation VM, domain clients |
 | 40 | Printers | `172.20.40.0/24` | `172.20.40.1` | Low | Printers and MFPs |
 | 50 | Voice | `172.20.50.0/24` | `172.20.50.1` | Medium | Voice devices |
 | 60 | Corporate WiFi | `172.20.60.0/24` | `172.20.60.1` | Medium | 802.1X corporate wireless clients |

@@ -146,8 +146,8 @@ Design decisions:
 |---|---|---:|---:|---:|---|---|
 | `HQ-FW01` | MikroTik CHR firewall | 2 | 4 GB | 40 GB | WAN + LAN trunk | Must boot before internal routing works |
 | `HQ-DC01` | Windows Server 2025 domain controller | 2 | 6 GB | 100 GB | VLAN 20 | Static IP `172.20.20.11` |
-| `HQ-MGMT01` | Windows 11 Enterprise management workstation | 2 | 8 GB | 100 GB | VLAN 30 | Static IP `172.20.30.10` during bootstrap |
-| `HQ-W11-001` | Windows 11 Enterprise client | 2 | 6 GB | 80 GB | VLAN 30 | DHCP after DHCP is available |
+| `HQ-MGMT01` | Windows 11 Enterprise management workstation / initial PAW | 2 | 8 GB | 100 GB | VLAN 30 | Clone from Windows 11 golden template; static/reserved `172.20.30.10`; RSAT/admin tools after domain join |
+| `HQ-W11-001` | Windows 11 Enterprise standard client validation VM | 2 | 6 GB | 80 GB | VLAN 30 | Clone from Windows 11 golden template; DHCP after DHCP is available |
 
 ## Management access path
 
@@ -163,7 +163,7 @@ flowchart LR
 
 Management rules:
 
-- Routine Proxmox administration originates from `HQ-MGMT01`.
+- Routine Proxmox and Windows infrastructure administration originates from `HQ-MGMT01`, a Windows 11 Enterprise management workstation / initial PAW. Windows Server is not used as a daily admin workstation.
 - Emergency console access may use the physical console of `PVE-HQ01`.
 - Proxmox web UI exposure is restricted to approved management sources.
 - Direct management access from Guest WiFi, DMZ, printers, voice, or normal client subnets is denied.
@@ -176,7 +176,7 @@ Management rules:
 | `CP-FW-INSTALLED` | `HQ-FW01` | After MikroTik CHR install, before VLAN policy | Return to clean firewall install |
 | `CP-FW-VLANS` | `HQ-FW01` | After VLAN gateways and baseline rules | Return to working routing baseline |
 | `CP-DC01-OS` | `HQ-DC01` | After Windows Server install, before AD DS | Return to clean server OS |
-| `CP-MGMT01-OS` | `HQ-MGMT01` | After Windows 11 install and updates | Return to clean management workstation |
+| `CP-MGMT01-OS` | `HQ-MGMT01` | After clone, VLAN30 validation, domain join, RSAT, and updates | Return to clean management workstation |
 | `CP-W11-001-OS` | `HQ-W11-001` | After Windows 11 install and updates | Return to clean test client |
 
 ## Validation requirements

@@ -81,8 +81,25 @@ Only use placeholders when the value cannot be known before deployment or must n
 | Firewall | `HQ-FW01` | MikroTik CHR / RouterOS firewall |
 | Primary domain controller | `HQ-DC01` | First Windows Server 2025 domain controller |
 | Future secondary domain controller | `HQ-DC02` | Future second domain controller |
-| Management workstation | `HQ-MGMT01` | Administrative workstation |
-| First Windows client | `HQ-W11-001` | First Windows 11 Enterprise client |
+| Management workstation / initial PAW | `HQ-MGMT01` | Windows 11 Enterprise dedicated privileged administration workstation; not a server |
+| First Windows client | `HQ-W11-001` | Windows 11 Enterprise standard user/client validation VM |
+
+
+## Management workstation architecture
+
+`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation and initial privileged access workstation (PAW) for GEIL. It is not a Windows Server. Windows Server must not be used as a daily administrative workstation. Servers host infrastructure roles; privileged administration originates from a hardened workstation.
+
+| Host | Operating System | Purpose | VLAN/IP | Administrative role |
+|---|---|---|---|---|
+| `HQ-MGMT01` | Windows 11 Enterprise | Dedicated management workstation / initial PAW | VLAN 30, `172.20.30.10` | RSAT/admin tools, privileged administration of `HQ-DC01`, `HQ-FW01`, `PVE-HQ01`, and future servers |
+| `HQ-W11-001` | Windows 11 Enterprise | Standard user and client validation VM | VLAN 30, DHCP reservation or dynamic lease | Validates DHCP, DNS, domain join, Group Policy, endpoint controls, Intune, and WHfB as a normal client |
+
+Rationale:
+
+- Remote administration from a hardened workstation reduces routine interactive server logons.
+- Administrative tiering is easier to enforce when admin activity originates from a known endpoint.
+- The model prepares for PAW hardening, LAPS, Windows Hello for Business, Microsoft Entra ID, Just-in-Time access, and Just Enough Administration.
+- `HQ-MGMT01` is deployed from the Windows 11 golden template, attached to `GEILLAN` VLAN 30, validated for DHCP/DNS/domain-controller access, joined to `corp.gntech.me` after cloning, and then equipped with RSAT/admin tools.
 
 ## DNS naming
 

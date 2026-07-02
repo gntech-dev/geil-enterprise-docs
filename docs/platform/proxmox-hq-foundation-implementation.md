@@ -1172,11 +1172,11 @@ qm destroy 110 --purge
 
 #### Goal — Create `HQ-MGMT01`
 
-Create the Windows 11 Enterprise management workstation VM shell.
+Create the VM shell or clone target for the Windows 11 Enterprise management workstation / initial PAW.
 
 #### Why this matters — Create `HQ-MGMT01`
 
-`HQ-MGMT01` is the administrative workstation used for management validation and later Microsoft deployment tasks.
+`HQ-MGMT01` is the dedicated Windows 11 Enterprise management workstation / initial PAW. Windows Server must not be used as a daily administrative workstation. After the Windows 11 golden template exists, deploy `HQ-MGMT01` from that template, validate VLAN30 DHCP/DNS/domain-controller access, join `corp.gntech.me`, install RSAT/admin tools, and use it for remote administration of `HQ-DC01` and future servers.
 
 #### Estimated time — Create `HQ-MGMT01`
 
@@ -1190,14 +1190,15 @@ Medium. Incorrect VLAN mapping prevents management validation.
 
 - `GEILLAN` validates.
 - VM ID `120` is available or an approved replacement ID is documented.
+- For full OS deployment, [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md) exists and remains workgroup-only.
 
 #### Starting state — Create `HQ-MGMT01`
 
-No Windows 11 OS is installed by this guide.
+No Windows 11 OS is installed by this Proxmox shell step. Full management workstation deployment is completed by cloning the workgroup-only Windows 11 golden template in [Windows 11 Management Workstation](windows-11-management-workstation.md).
 
 #### Expected ending state — Create `HQ-MGMT01`
 
-VM `120` exists as `HQ-MGMT01` with `net0` on `GEILLAN`, VLAN tag 30.
+VM `120` exists as `HQ-MGMT01` with `net0` on `GEILLAN`, VLAN tag 30, or is ready to be cloned from `TPL-W11-ENT-GOLD` by the management workstation guide.
 
 #### Commands — Create `HQ-MGMT01`
 
@@ -1268,7 +1269,7 @@ Create the Windows 11 Enterprise test client VM shell.
 
 #### Why this matters — Create `HQ-W11-001`
 
-`HQ-W11-001` is the first workstation test client for VLAN 30, DHCP, domain join, Group Policy, and endpoint validation.
+`HQ-W11-001` is the standard Windows 11 Enterprise client validation VM for VLAN 30, DHCP, domain join, Group Policy, and endpoint validation. It is not the privileged management workstation.
 
 #### Estimated time — Create `HQ-W11-001`
 
@@ -1285,7 +1286,7 @@ Medium. Incorrect VLAN mapping invalidates client testing.
 
 #### Starting state — Create `HQ-W11-001`
 
-No Windows 11 OS is installed by this guide.
+No Windows 11 OS is installed by this Proxmox shell step. Full standard client deployment and domain/GPO validation are completed by cloning the workgroup-only Windows 11 golden template in [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md).
 
 #### Expected ending state — Create `HQ-W11-001`
 

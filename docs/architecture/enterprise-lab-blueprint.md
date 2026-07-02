@@ -66,7 +66,7 @@ flowchart TD
     PBS[PBS-HQ01 Backup]
     DC1[HQ-DC01 Primary DC]
     DC2[HQ-DC02 Future Secondary DC]
-    MGMT[HQ-MGMT01 Management Workstation]
+    MGMT[HQ-MGMT01 Windows 11 Management Workstation / initial PAW]
     W11[HQ-W11-001 First Windows Client]
     WiFi[Corporate and Guest WiFi]
     Printers[Printers]
@@ -120,7 +120,7 @@ Physical design assumptions:
 | Core switch | VLAN transport | Redundant switch stack |
 | `PVE-HQ01` | Primary virtualization host | Member of hypervisor cluster |
 | `PBS-HQ01` | Backup repository | Replicated backup node or regional backup tier |
-| `HQ-MGMT01` | Administration endpoint | Tiered administrative workstation family |
+| `HQ-MGMT01` | Windows 11 Enterprise management workstation / initial PAW | Tiered PAW family with LAPS, WHfB, Entra ID, JIT, and JEA later |
 | Wireless APs | Corporate and guest access | 802.1X enterprise wireless estate |
 
 ## Logical topology
@@ -176,7 +176,7 @@ Phase 1 has one production site: `HQ`. The design reserves the ability to add re
 | Compute | `PVE-HQ01` | Clustered compute per region |
 | Backup | `PBS-HQ01` | Local plus replicated backup tiers |
 | Edge | `HQ-FW01` | HA edge per strategic site |
-| Management | `HQ-MGMT01` | Tiered admin workstations and privileged access tooling |
+| Management | `HQ-MGMT01` | Windows 11 Enterprise privileged administration workstation; remote administration origin, not Windows Server |
 | Documentation | `docs.gntechlabs.me` | Globally available protected engineering portal |
 
 ## Capability alignment

@@ -616,11 +616,11 @@ Install management tools.
 
 #### Goal — Step 5: Install management tools
 
-Install administration features needed by later guides.
+Install only the local administration features needed for bootstrap and role validation. Windows Server is not a daily admin workstation; routine administration must move to `HQ-MGMT01`, the Windows 11 Enterprise management workstation / initial PAW, after it is cloned, joined, validated, and equipped with RSAT/admin tools.
 
 #### Why this step matters — Step 5: Install management tools
 
-Role-specific guides require management cmdlets and consoles. Installing tools early makes validation repeatable.
+Role-specific guides sometimes require local management cmdlets during bootstrap. Installing tools early makes validation repeatable, but this does not make `HQ-DC01` or any Windows Server a routine operator workstation.
 
 #### Commands — Step 5: Install management tools
 

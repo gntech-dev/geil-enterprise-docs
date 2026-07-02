@@ -29,11 +29,14 @@ classification: Internal Confidential
 
 ## Purpose
 
-Deploy Windows Admin Center as a controlled management gateway for Windows infrastructure.
+Deploy or administer Windows Admin Center as a controlled management path for Windows infrastructure without turning Windows Server into a daily administrative workstation.
 
 ## Baseline
 
-- Install on dedicated server `HQ-MGMT01`.
+- `HQ-MGMT01` is a Windows 11 Enterprise management workstation / initial PAW, not a Windows Server.
+- Do not use Windows Server as a daily admin workstation.
+- Use `HQ-MGMT01` to administer Windows Admin Center and future Windows infrastructure.
+- If Windows Admin Center is deployed as a gateway service, use an approved dedicated gateway host; do not redefine `HQ-MGMT01` as a server.
 - Require TLS certificate from enterprise PKI.
 - Restrict access to admin workstations and VPN.
 - Use role-based access where feasible.
@@ -49,11 +52,11 @@ msiexec /i WindowsAdminCenter.msi /qn /L*v C:\Temp\WACInstall.log SME_PORT=443 S
 ## Validation
 
 ```powershell
-Test-NetConnection HQ-MGMT01.corp.gntech.me -Port 443
+Test-NetConnection <WAC-GATEWAY-FQDN> -Port 443
 Get-Service ServerManagementGateway
 ```
 
-Expected result: service is running and reachable only from approved management networks.
+Expected result: the gateway service is running on the approved WAC host and is reachable only from approved management networks such as `HQ-MGMT01`.
 
 ## Rollback
 
@@ -65,7 +68,7 @@ Uninstall from Programs and Features or with MSI product code. Revoke the gatewa
 Validate Windows Admin Center only after DNS and firewall prerequisites exist.
 
 ```powershell
-Test-NetConnection HQ-MGMT01.corp.gntech.me -Port 443
+Test-NetConnection <WAC-GATEWAY-FQDN> -Port 443
 ```
 
 Expected result:

@@ -69,6 +69,7 @@ Release `E02.R04` provides implementation-ready runbooks for deploying the initi
 - [Proxmox HQ Foundation Implementation Runbook](proxmox-hq-foundation-implementation.md)
 - [MikroTik CHR HQ Foundation Implementation Guide](mikrotik-chr-hq-foundation-implementation.md)
 - [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md)
+- [Windows 11 Management Workstation](windows-11-management-workstation.md)
 - [Windows 11 Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md)
 
 

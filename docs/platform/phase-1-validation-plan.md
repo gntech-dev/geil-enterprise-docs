@@ -57,7 +57,7 @@ This LLD is derived from and subordinate to the E02.R02 High-Level Design baseli
 | VAL-003 | WAN isolation | Only `HQ-FW01` is attached to WAN bridge | No non-firewall VM has `vmbr0` attachment | VM hardware inventory |
 | VAL-004 | MikroTik CHR gateways | Every Phase 1 VLAN gateway exists on `HQ-FW01` | `.1` gateway responds per VLAN test context | Ping or interface status evidence |
 | VAL-005 | Server VLAN | `HQ-DC01` has static `172.20.20.11/24` | Gateway is `172.20.20.1`; no DHCP dependency | OS network screenshot or command output |
-| VAL-006 | Management workstation | `HQ-MGMT01` has static `172.20.30.10/24` | Gateway is `172.20.30.1`; management targets reachable | Command output |
+| VAL-006 | Management workstation | `HQ-MGMT01` is Windows 11 Enterprise, has static/reserved `172.20.30.10/24`, and is the initial PAW | Gateway is `172.20.30.1`; DHCP/DNS/DC access validates; RSAT/admin tools installed after domain join; management targets reachable | Command output |
 | VAL-007 | First client | `HQ-W11-001` is connected to VLAN 30 | Client can reach VLAN 30 gateway; DHCP state documented | Command output |
 | VAL-008 | Guest isolation | VLAN 70 cannot reach internal RFC1918 VLANs | Access to `172.20.20.11`, `172.20.30.10`, and `172.20.100.11` is denied | Firewall log or test output |
 | VAL-009 | Management access | `HQ-MGMT01` can reach `HQ-FW01`, `PVE-HQ01`, and `HQ-DC01` as allowed | Required management flows pass; unrelated flows deny | Test output |
@@ -96,8 +96,8 @@ Validation pass criteria:
 | Source Zone | Destination | Expected Result |
 |---|---|---|
 | Management VLAN 10 | `HQ-FW01` management | Allow |
-| Workstations VLAN 30 / `HQ-MGMT01` | `PVE-HQ01` `172.20.100.11` | Allow by management rule |
-| Workstations VLAN 30 / `HQ-MGMT01` | `HQ-DC01` `172.20.20.11` | Allow required management and domain-prep flows |
+| `HQ-MGMT01` Windows 11 management workstation | `PVE-HQ01` `172.20.100.11` | Allow by management rule |
+| `HQ-MGMT01` Windows 11 management workstation | `HQ-DC01` `172.20.20.11` | Allow required management and domain-prep flows |
 | Workstations VLAN 30 / `HQ-W11-001` | `HQ-DC01` DNS/domain prerequisites | Allow after AD DS/DNS exists |
 | Guest VLAN 70 | Any `172.20.0.0/16` internal address | Deny |
 | DMZ VLAN 80 | Server VLAN 20 | Deny until explicit service approval |
@@ -170,7 +170,7 @@ Validate that the HQ foundation was implemented as designed and that no legacy P
 
 ### Before you begin
 
-- Execute validation from `HQ-MGMT01` where possible.
+- Execute privileged validation from `HQ-MGMT01`, the Windows 11 Enterprise management workstation / initial PAW, where possible. Do not use Windows Server as a daily admin workstation.
 - Use `PVE-HQ01` console only for host-local checks.
 - Record every command and result in the E02.R05 evidence package.
 
