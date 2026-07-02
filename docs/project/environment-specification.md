@@ -152,6 +152,10 @@ The canonical managed OU root is `OU=GNTECH,DC=corp,DC=gntech,DC=me`. Naming, gr
 
 Initial users and service accounts use the primary UPN suffix `gntech.me`, for example `gnolasco@gntech.me`, `admin.gnolasco@gntech.me`, `svc-backup@gntech.me`, and `svc-monitoring@gntech.me`.
 
+## Authentication format baseline
+
+GEIL separates Windows/domain authentication examples from cloud sign-in examples. Windows interactive sign-in, Remote Desktop, and default PowerShell Remoting examples use the NetBIOS identity format `GNTECH\username`, for example `GNTECH\admin.gnolasco`. Microsoft 365, Entra ID, and cloud applications use `username@gntech.me`. See [Authentication Standards](../microsoft-core/authentication-standards.md).
+
 ## Hybrid identity namespace
 
 GEIL intentionally separates the Active Directory DNS namespace from the user authentication namespace.
@@ -164,7 +168,7 @@ GEIL intentionally separates the Active Directory DNS namespace from the user au
 | Primary user UPN suffix | `gntech.me` | Default user sign-in namespace |
 | Microsoft 365 verified domain | `gntech.me` | Entra ID, Microsoft 365, Intune, WHfB, and cloud services |
 | Default user sign-in | `username@gntech.me` | Production user authentication format |
-| Legacy logon | `GNTECH\username` | Supported legacy Windows logon format |
+| Legacy / Windows interactive logon | `GNTECH\username` | Required baseline format for Windows sign-in, Remote Desktop, and default remoting examples |
 
 Production user accounts must use `username@gntech.me`. Do not use `username@corp.gntech.me` for production logons except when explaining the default Active Directory state before the hybrid UPN suffix is configured. Server FQDNs and AD DNS records remain in `corp.gntech.me`.
 

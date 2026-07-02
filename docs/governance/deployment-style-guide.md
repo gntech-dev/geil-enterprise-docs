@@ -95,6 +95,27 @@ A guide should feel like this:
 Do not force the operator to scroll to another section to find validation, rollback, or explanation.
 
 
+
+## Credential Identity Format Standard
+
+Whenever credentials or sign-in examples are shown, explicitly document the required identity format. Do not assume the reader knows whether to use NetBIOS, SAM, UPN, or cloud sign-in format.
+
+Use examples such as:
+
+```text
+Run as: GNTECH\admin.gnolasco
+```
+
+```text
+Sign in using: GNTECH\admin.gnolasco
+```
+
+```text
+Cloud sign-in: admin.gnolasco@gntech.me
+```
+
+Remote Desktop examples must use `GNTECH\username` unless that specific RDP client has been explicitly validated for UPN sign-in. Microsoft 365, Entra ID, and cloud application examples use `username@gntech.me`.
+
 ## Command Execution Context Standard
 
 Every operator-facing command block must identify the execution context immediately before the block. Do not assume the reader knows where the command runs.

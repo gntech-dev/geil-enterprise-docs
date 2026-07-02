@@ -352,6 +352,7 @@ The following register assigns every current published document to exactly one r
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-naming-standard.md` |
+| E03.R01 - Core directory services | E03 | `microsoft-core/authentication-standards.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/group-strategy.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/user-lifecycle.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/service-account-standard.md` |

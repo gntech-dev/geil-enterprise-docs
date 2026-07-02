@@ -74,6 +74,7 @@ nav:
           - Active Directory Implementation: microsoft-core/active-directory-implementation.md
           - Active Directory Organizational Foundation: microsoft-core/active-directory-organizational-foundation.md
           - Enterprise Naming Standard: microsoft-core/active-directory-naming-standard.md
+          - Authentication Standards: microsoft-core/authentication-standards.md
       - Phase 2 - Core Infrastructure Services:
           - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
           - Group Policy Baseline - Workstations and Management Workstations: microsoft-core/group-policy-baseline.md

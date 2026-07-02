@@ -41,7 +41,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-PRJ-CHARTER-001 | GEIL Project Charter | Approved | `docs/project/project-charter.md` | Scope, roles, quality rules |
 | GEIL-PRJ-MASTER-001 | GEIL Master Plan | Approved | `docs/project/master-plan.md` | North Star vision, mission, long-term goals, roadmap, target architecture, and implementation philosophy |
-| GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
+| GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, authentication formats, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
 | GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
 | GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
 | GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Capability-first Epic/Release roadmap |
@@ -119,6 +119,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Phase 1 - Identity Foundation | GEIL-MSC-AD-001 | Active Directory Implementation | Draft | `docs/microsoft-core/active-directory-implementation.md` | Microsoft Learn-style AD DS forest and first domain controller implementation guide |
 | Phase 1 - Identity Foundation | GEIL-MSC-ADORG-001 | Active Directory Organizational Foundation | Draft | `docs/microsoft-core/active-directory-organizational-foundation.md` | OU hierarchy including Management Workstations, users, groups, baseline memberships, pilot Tier 0 bootstrap nesting, delegation, service accounts, GPO readiness, Entra ID readiness, validation, and rollback |
 | Phase 1 - Identity Foundation | GEIL-MSC-NAME-001 | Enterprise Naming Standard | Draft | `docs/microsoft-core/active-directory-naming-standard.md` | Naming standards for users, computers, servers, groups, service accounts, GPOs, DNS, DFS, certificates, hypervisors, Proxmox, and MikroTik |
+| Phase 1 - Identity Foundation | GEIL-MSC-AUTHSTD-001 | Authentication Standards | Approved | `docs/microsoft-core/authentication-standards.md` | Validated identity formats for Windows sign-in, RDP, PowerShell Remoting, Microsoft 365 / Entra ID, and cloud applications |
 | Phase 2 - Core Infrastructure Services | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
 | Phase 2 - Core Infrastructure Services | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model, including `GP - Baseline - Workstations` and validated `GP - Baseline - Management Workstations` linked only to the Management Workstations OU with Remote Desktop, NLA, and PowerShell Script Block Logging settings |
 | Phase 3 - Windows Client Lifecycle | GEIL-MSC-WCL-INDEX | Windows Client Lifecycle | Approved | `docs/microsoft-core/windows-client-lifecycle/index.md` | Phase 3 Windows Client Lifecycle entry point and deployment order |
@@ -188,7 +189,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 8 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
-| E03 | E03.R01 - Core directory services | 14 |
+| E03 | E03.R01 - Core directory services | 15 |
 | E03 | E03.R02 - Trust and network authentication | 2 |
 | E03 | E03.R03 - Privileged access control plane | 3 |
 | E03 | E03.R06 - Service account lifecycle | 4 |

@@ -54,6 +54,16 @@ Pilot deployment established this model:
 - It keeps `HQ-W11-001` and future user workstations on VLAN 30 as standard clients instead of overloading them with privileged tooling.
 - Pilot validation demonstrated that a dedicated management workstation should be isolated from user networks and prepared for future PAW implementation.
 
+## RDP authentication standard
+
+Validated RDP authentication format for Microsoft Remote Desktop, Cloudflare Browser Rendering / IronRDP, and future GEIL RDP examples is the NetBIOS domain format:
+
+```text
+GNTECH\admin.gnolasco
+```
+
+Use this format when signing in to Windows systems through RDP unless that specific client has been separately validated for UPN authentication. Do not use `admin.gnolasco@gntech.me` in RDP examples unless the client-specific validation evidence exists. See [Authentication Standards](../authentication-standards.md).
+
 ## Cloudbase-Init lifecycle
 
 `HQ-MGMT01` is created from the workgroup-only [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md). The template remains generalized and never joins `corp.gntech.me`.
@@ -71,6 +81,7 @@ The authoritative template build and Cloudbase-Init configuration details remain
 - Cloudbase-Init is installed and validated in the template.
 - [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) implemented.
 - [Active Directory Organizational Foundation](../active-directory-organizational-foundation.md) completed, including `OU=Management Workstations,OU=Computers,OU=GNTECH`.
+- [Authentication Standards](../authentication-standards.md) reviewed. RDP and Windows sign-in examples use `GNTECH\username`, for example `GNTECH\admin.gnolasco`.
 - [Group Policy Baseline](../group-policy-baseline.md) completed through creation and linking of `GP - Baseline - Management Workstations`. This GPO is separate from `GP - Baseline - Workstations`.
 - Management VLAN 10 addressing, DNS, and domain-controller access are operational for `HQ-MGMT01`.
 - Domain join credentials are approved for the change window.
@@ -538,7 +549,7 @@ Run on: `HQ-MGMT01`
 
 When: after `gpupdate /force` and `gpresult /r` show `GP - Baseline - Management Workstations` applied.
 
-Expected outcome: Remote Desktop is enabled, Network Level Authentication is required, and access remains restricted to approved management paths.
+Expected outcome: Remote Desktop is enabled, Network Level Authentication is required, access remains restricted to approved management paths, and RDP sign-in uses `GNTECH\admin.gnolasco`.
 
 ```powershell
 Get-ItemProperty `
@@ -556,6 +567,7 @@ Get-ItemProperty `
 - `UserAuthentication` is `1`.
 - `EnableScriptBlockLogging` is `1`.
 - RDP access is limited by Management VLAN and firewall/network policy. It must not be broadly exposed to standard workstation, guest, or untrusted networks.
+- RDP authentication examples use `GNTECH\admin.gnolasco`, not `admin.gnolasco@gntech.me`, unless a specific RDP client is separately validated for UPN authentication.
 
 ### Stop Conditions
 
@@ -563,7 +575,7 @@ STOP if RDP is reachable from broad user or guest networks, if NLA is not requir
 
 ### Evidence
 
-Capture registry policy output and firewall/network validation evidence showing RDP is constrained to approved management paths.
+Capture registry policy output, firewall/network validation evidence showing RDP is constrained to approved management paths, and sign-in evidence using `GNTECH\admin.gnolasco`.
 
 ## Step 12: Install RSAT and administration tools
 
@@ -663,13 +675,18 @@ Capture command output for RSAT, DNS, and management path validation.
 
 Validated pilot lessons incorporated into this guide:
 
-- Golden Template remains in Workgroup.
-- Domain Join occurs only after cloning.
-- Cloudbase-Init password injection validated.
-- Management VLAN architecture adopted for `HQ-MGMT01`.
-- Dedicated `OU=Management Workstations,OU=Computers,OU=GNTECH` introduced.
+- Golden Image remains in Workgroup.
+- Domain Join occurs only after Cloudbase-Init completes on the clone.
+- Cloudbase-Init successfully injects the local Administrator password.
+- Management Workstations use a dedicated OU: `OU=Management Workstations,OU=Computers,OU=GNTECH,...`.
+- Management Workstations use a dedicated GPO: `GP - Baseline - Management Workstations`.
+- Management Workstations are deployed in the Management VLAN.
+- MikroTik firewall and DHCP relay were validated for the pilot path.
+- Active Directory firewall rules were validated; DHCP/routing alone did not prove AD readiness.
+- RDP connectivity was validated from `HQ-DC01` during pilot testing.
+- RDP authentication was validated with the NetBIOS format `GNTECH\admin.gnolasco`.
+- Cloudflare Browser Rendering / IronRDP was successfully validated with `GNTECH\admin.gnolasco`.
 - Baseline privileged group assignment corrected so intended privileged accounts can administer as designed.
-- Active Directory firewall rules required adjustment; DHCP/routing alone did not prove AD readiness.
 - `HQ-MGMT01` established as the initial Privileged Access Workstation.
 
 Pilot findings belong in this implementation guide when they affect the deployment sequence or stop conditions. Do not create separate pilot documents for these lessons.
@@ -708,6 +725,8 @@ Capture:
 - Firewall/network evidence showing RDP is restricted to approved management paths.
 - RSAT installed capability output.
 - Remote administration validation output.
+- RDP sign-in evidence using `GNTECH\admin.gnolasco`.
+- Cloudflare Browser Rendering / IronRDP validation evidence when used.
 
 ## Troubleshooting
 

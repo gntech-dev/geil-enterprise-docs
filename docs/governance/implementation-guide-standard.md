@@ -183,6 +183,10 @@ Use the heading pattern:
 #### Rollback
 ```
 
+### Credential identity format
+
+Whenever a guide shows a credential, sign-in, RDP, or remoting example, it must state the required identity format using `Run as:`, `Sign in using:`, or equivalent wording. Windows interactive, RDP, and default remoting examples use `GNTECH\username` unless a client-specific UPN flow is explicitly validated. Microsoft 365, Entra ID, and cloud examples use `username@gntech.me`.
+
 ### Command execution context
 
 Every operator-facing command block must be introduced with `Run on:`, `When:`, and `Expected outcome:`. The execution host must be explicit, for example `HQ-MGMT01`, `HQ-DC01`, `PVE-HQ01`, `HQ-FW01`, `Windows Client`, or `Management Workstation`. Routine administration originates from `HQ-MGMT01` whenever possible; domain-controller-local execution is limited to initial deployment, bootstrap, disaster recovery, break-glass, or Microsoft-required local execution.

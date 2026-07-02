@@ -95,7 +95,8 @@ flowchart LR
 - VirtIO driver ISO is available.
 - Cloudbase-Init Windows installer is available.
 - Local template administrator password is stored in the approved password manager.
-- No domain credentials are used during template build.
+- [Authentication Standards](../authentication-standards.md) reviewed for post-clone Windows, RDP, remoting, and cloud sign-in formats.
+- No domain credentials are used during template build; the template remains workgroup-only and has no domain sign-in format.
 
 ## Starting state
 

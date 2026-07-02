@@ -41,6 +41,7 @@ Before implementing changes in this area, read the applicable standard, confirm 
 | 2 | [Active Directory Implementation](active-directory-implementation.md) | Create the forest, domain, DNS-integrated AD DS foundation, and first domain controller. |
 | 3 | [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) | Create canonical OUs, baseline users, groups, memberships, service-account containers, and computer placement. |
 | 4 | [Enterprise Naming Standard](active-directory-naming-standard.md) | Define naming standards for identities, computers, groups, GPOs, DNS, certificates, and infrastructure objects. |
+| 5 | [Authentication Standards](authentication-standards.md) | Define validated identity formats for Windows sign-in, RDP, PowerShell Remoting, Microsoft 365 / Entra ID, and cloud applications. |
 
 ### Phase 2 - Core Infrastructure Services
 
@@ -110,6 +111,10 @@ Group Strategy, User Lifecycle, and Service Account Standard are not loose Micro
 - [Enterprise Group Strategy](group-strategy.md)
 - [Enterprise User Lifecycle](user-lifecycle.md)
 - [Enterprise Service Account Standard](service-account-standard.md)
+
+## Authentication standard
+
+GEIL Windows and RDP examples use the validated NetBIOS format `GNTECH\username`, for example `GNTECH\admin.gnolasco`, unless a specific client has explicitly validated UPN authentication. Microsoft 365, Entra ID, and cloud applications use `username@gntech.me`. See [Authentication Standards](authentication-standards.md).
 
 ## Documentation quality gate
 

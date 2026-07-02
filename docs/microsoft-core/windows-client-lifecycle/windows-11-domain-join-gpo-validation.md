@@ -66,6 +66,7 @@ The Windows 11 template must remain workgroup-only. Domain join happens only aft
 - [Group Policy Baseline](../group-policy-baseline.md) created and linked to the Workstations OU.
 - `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` exists.
 - Domain join credentials are approved and available for the change window.
+- [Authentication Standards](../authentication-standards.md) reviewed: Windows sign-in and Remote Desktop examples use `GNTECH\username`; Microsoft 365 / Entra ID examples use `username@gntech.me`.
 
 ## Starting state
 
