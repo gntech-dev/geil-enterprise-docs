@@ -49,23 +49,17 @@ plugins:
   - search
 nav:
   - Home: index.md
-  - Project:
-      - project/index.md
-      - Project Charter: project/project-charter.md
-      - Master Plan: project/master-plan.md
-      - Environment Specification: project/environment-specification.md
-      - Document Index: project/document-index.md
-      - Documentation Backlog: project/documentation-backlog.md
-      - Documentation Roadmap: project/documentation-roadmap.md
-      - Epic and Release Architecture: project/epic-release-architecture.md
-      - Implementation Guide Audit Report: project/implementation-guide-audit-report.md
-      - Documentation Quality Report: project/documentation-quality-report.md
-      - Production Readiness Audit Report: project/production-readiness-audit-report.md
+  - Foundation:
+      - foundation/index.md
+      - Phase 0 Prerequisites: foundation/phase-0-prerequisites.md
+      - Proxmox VE Baseline: foundation/proxmox-ve-baseline.md
   - Platform:
       - platform/index.md
       - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
       - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
+      - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
       - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
+      - MikroTik CHR HQ Foundation Implementation: platform/mikrotik-chr-hq-foundation-implementation.md
       - Firewall Rule Matrix: platform/firewall-rule-matrix.md
       - Active Directory Network Requirements: platform/active-directory-network-requirements.md
       - Enterprise Port Reference: platform/enterprise-port-reference.md
@@ -75,49 +69,7 @@ nav:
       - Windows 11 Domain Join and GPO Validation: platform/windows-11-domain-join-gpo-validation.md
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
-      - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
-      - MikroTik CHR HQ Foundation Implementation: platform/mikrotik-chr-hq-foundation-implementation.md
       - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
-  - Governance:
-      - governance/index.md
-      - Documentation Standard: governance/documentation-standard.md
-      - Visual Documentation Standard: governance/visual-documentation-standard.md
-      - Implementation Guide Standard: governance/implementation-guide-standard.md
-      - Educational Documentation Standard: governance/educational-documentation-standard.md
-      - Deployment Style Guide: governance/deployment-style-guide.md
-      - Code Block Quality Standard: governance/code-block-quality-standard.md
-      - Naming and Addressing Standard: governance/naming-addressing-standard.md
-      - Roadmap: governance/roadmap.md
-      - Backlog: governance/backlog.md
-      - ADRs:
-          - governance/adrs/index.md
-          - ADR-0001 MkDocs Material: governance/adrs/ADR-0001-mkdocs-material.md
-          - ADR-0002 MikroTik CHR Firewall: governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md
-          - ADR-0003 Hybrid Identity Namespace: governance/adrs/ADR-0003-hybrid-identity-namespace.md
-  - Security:
-      - security/index.md
-      - Privileged Access Model: security/privileged-access-model.md
-      - Enterprise Administrative Tiering: security/administrative-tiering.md
-  - Architecture:
-      - architecture/index.md
-      - Architecture Principles: architecture/architecture-principles.md
-      - Enterprise Lab Blueprint HLD: architecture/enterprise-lab-blueprint.md
-      - Enterprise Lab Network HLD: architecture/enterprise-lab-network-hld.md
-      - Enterprise Lab Identity HLD: architecture/enterprise-lab-identity-hld.md
-      - Enterprise Lab Operations HLD: architecture/enterprise-lab-operations-hld.md
-      - Implementation Philosophy: architecture/implementation-philosophy.md
-      - Technology Selection Matrix: architecture/technology-selection-matrix.md
-      - Enterprise Reference Architecture: architecture/enterprise-reference-architecture.md
-      - Enterprise Capability Model: architecture/enterprise-capability-model.md
-      - Reference Architecture: architecture/reference-architecture.md
-      - Environment Tiers: architecture/environment-tiers.md
-      - Identity Architecture: architecture/identity-architecture.md
-      - Network Architecture: architecture/network-architecture.md
-  - Foundation:
-      - foundation/index.md
-      - Phase 0 Prerequisites: foundation/phase-0-prerequisites.md
-      - Proxmox VE Baseline: foundation/proxmox-ve-baseline.md
-      - Superseded OPNsense Edge Firewall: foundation/opnsense-edge-firewall.md
   - Microsoft Core:
       - microsoft-core/index.md
       - Windows Server 2025 Baseline: microsoft-core/windows-server-2025-baseline.md
@@ -129,17 +81,28 @@ nav:
       - Enterprise Service Account Standard: microsoft-core/service-account-standard.md
       - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
       - Group Policy Baseline: microsoft-core/group-policy-baseline.md
-      - AD CS PKI: microsoft-core/ad-cs-pki.md
-      - NPS RADIUS 802.1X: microsoft-core/nps-radius-8021x.md
       - Windows Admin Center: microsoft-core/windows-admin-center.md
       - PowerShell Operations: microsoft-core/powershell-operations.md
-  - Cloud and Endpoint:
-      - cloud-endpoint/index.md
-      - Microsoft 365 Tenant Foundation: cloud-endpoint/microsoft-365-tenant-foundation.md
-      - Entra ID Hybrid Identity: cloud-endpoint/entra-id-hybrid-identity.md
-      - Intune Windows 11 Enterprise: cloud-endpoint/intune-windows11-enterprise.md
-      - Windows Hello for Business: cloud-endpoint/windows-hello-for-business.md
-      - Microsoft Defender: cloud-endpoint/microsoft-defender.md
+  - Security:
+      - security/index.md
+      - Privileged Access Model: security/privileged-access-model.md
+      - Enterprise Administrative Tiering: security/administrative-tiering.md
+  - Architecture:
+      - architecture/index.md
+      - Enterprise Blueprint: architecture/enterprise-lab-blueprint.md
+      - Network Architecture: architecture/network-architecture.md
+      - Identity Architecture: architecture/identity-architecture.md
+      - Source Material Pending Merge:
+          - Architecture Principles: architecture/architecture-principles.md
+          - Enterprise Lab Network HLD: architecture/enterprise-lab-network-hld.md
+          - Enterprise Lab Identity HLD: architecture/enterprise-lab-identity-hld.md
+          - Enterprise Lab Operations HLD: architecture/enterprise-lab-operations-hld.md
+          - Implementation Philosophy: architecture/implementation-philosophy.md
+          - Technology Selection Matrix: architecture/technology-selection-matrix.md
+          - Enterprise Reference Architecture: architecture/enterprise-reference-architecture.md
+          - Enterprise Capability Model: architecture/enterprise-capability-model.md
+          - Reference Architecture: architecture/reference-architecture.md
+          - Environment Tiers: architecture/environment-tiers.md
   - Operations:
       - operations/index.md
       - Monitoring and Alerting: operations/monitoring-alerting.md
@@ -148,3 +111,48 @@ nav:
       - Troubleshooting: operations/troubleshooting.md
       - Scaling Model: operations/scaling-model.md
       - Security Operations: operations/security-operations.md
+  - Project:
+      - project/index.md
+      - Project Charter: project/project-charter.md
+      - Master Plan: project/master-plan.md
+      - Environment Specification: project/environment-specification.md
+      - Document Index: project/document-index.md
+      - Documentation Backlog: project/documentation-backlog.md
+      - Documentation Roadmap: project/documentation-roadmap.md
+      - Epic and Release Architecture: project/epic-release-architecture.md
+      - Documentation Architecture Review: project/documentation-architecture-review.md
+      - Audit Reports:
+          - Implementation Guide Audit Report: project/implementation-guide-audit-report.md
+          - Documentation Quality Report: project/documentation-quality-report.md
+          - Production Readiness Audit Report: project/production-readiness-audit-report.md
+      - Governance Standards:
+          - governance/index.md
+          - Documentation Standard: governance/documentation-standard.md
+          - Visual Documentation Standard: governance/visual-documentation-standard.md
+          - Implementation Guide Standard: governance/implementation-guide-standard.md
+          - Educational Documentation Standard: governance/educational-documentation-standard.md
+          - Deployment Style Guide: governance/deployment-style-guide.md
+          - Code Block Quality Standard: governance/code-block-quality-standard.md
+          - Naming and Addressing Standard: governance/naming-addressing-standard.md
+      - ADRs:
+          - governance/adrs/index.md
+          - ADR-0001 MkDocs Material: governance/adrs/ADR-0001-mkdocs-material.md
+          - ADR-0002 MikroTik CHR Firewall: governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md
+          - ADR-0003 Hybrid Identity Namespace: governance/adrs/ADR-0003-hybrid-identity-namespace.md
+  - Future:
+      - future/index.md
+      - Cloud and Endpoint Planning: cloud-endpoint/index.md
+      - Microsoft 365 Tenant Foundation: cloud-endpoint/microsoft-365-tenant-foundation.md
+      - Entra ID Hybrid Identity: cloud-endpoint/entra-id-hybrid-identity.md
+      - Intune Windows 11 Enterprise: cloud-endpoint/intune-windows11-enterprise.md
+      - Windows Hello for Business: cloud-endpoint/windows-hello-for-business.md
+      - Microsoft Defender: cloud-endpoint/microsoft-defender.md
+      - AD CS PKI: microsoft-core/ad-cs-pki.md
+      - NPS RADIUS 802.1X: microsoft-core/nps-radius-8021x.md
+  - Archive:
+      - archive/index.md
+      - Superseded OPNsense Edge Firewall: foundation/opnsense-edge-firewall.md
+      - Superseded OPNsense HQ Foundation LLD: platform/opnsense-hq-foundation-lld.md
+      - Superseded OPNsense HQ Foundation Implementation: platform/opnsense-hq-foundation-implementation.md
+      - Legacy Governance Roadmap: governance/roadmap.md
+      - Legacy Governance Backlog: governance/backlog.md

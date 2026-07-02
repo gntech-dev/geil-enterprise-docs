@@ -90,6 +90,10 @@ Rules:
 7. Microsoft best practices are the default; deviations require an ADR recommendation or approved ADR.
 8. Related index, backlog, roadmap, navigation, and changelog files must be updated in the same change set.
 9. Secrets, private keys, exported certificates, tenant IDs, real IP inventories, recovery codes, and passwords must never be committed.
+10. One concept has one authoritative document; duplicate technical explanations must be merged into the concept owner.
+11. New Markdown documents require a new platform, major capability, required section index, or approved control-plane/architecture record.
+12. Roadmap items remain in Future until the laboratory implements or explicitly promotes them.
+13. Pilot findings update existing authoritative documents instead of creating parallel reports.
 
 ## Definition of done
 

@@ -77,6 +77,7 @@ All notable changes to GEIL are documented in this file.
 
 ### Changed
 
+- Completed the GEIL documentation architecture review: added a repository-wide classification report, permanent single-source-of-truth rules, Future and Archive sections, and reorganized MkDocs navigation around Foundation, Platform, Microsoft Core, Security, Architecture, Operations, Project, Future, and Archive.
 - Added baseline Active Directory group-membership assignment to the Organizational Foundation guide: `admin.gnolasco -> GG-T0-Domain-Admins`, `gnolasco -> GG-IT-Operations`, optional VPN/WiFi memberships, and pilot/bootstrap-only `GG-T0-Domain-Admins -> Domain Admins` nesting without direct user membership in `Domain Admins`.
 - Corrected HQ-MGMT01 architecture: documented `HQ-MGMT01` as a Windows 11 Enterprise management workstation / initial PAW, separated it from `HQ-W11-001` standard client validation, added RSAT/admin-tool deployment from the golden template after VLAN30/DHCP/DNS/DC validation and domain join, and clarified that Windows Server must not be used as a daily admin workstation.
 - Separated Windows 11 golden-template documentation from domain-join/GPO validation: the template guide is now workgroup-only with Cloudbase-Init/Sysprep/template conversion, and a new clone-stage Windows 11 Domain Join and GPO Validation guide covers VLAN30, DHCP, DNS, AD firewall validation, `corp.gntech.me` join, Workstations OU placement, `gpupdate`, `gpresult`, SYSVOL/NETLOGON, and `GP - Baseline - Workstations`.

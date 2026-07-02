@@ -271,6 +271,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `project/implementation-guide-audit-report.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/documentation-quality-report.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/production-readiness-audit-report.md` |
+| E00.R01 - Documentation governance foundation | E00 | `project/documentation-architecture-review.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/epic-release-architecture.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/documentation-standard.md` |
@@ -285,6 +286,8 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0001-mkdocs-material.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0003-hybrid-identity-namespace.md` |
+| E00.R01 - Documentation governance foundation | E00 | `future/index.md` |
+| E00.R01 - Documentation governance foundation | E00 | `archive/index.md` |
 | E00.R02 - Documentation delivery platform | E00 | `platform/index.md` |
 | E00.R02 - Documentation delivery platform | E00 | `platform/cloudflare-pages-deployment.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/index.md` |

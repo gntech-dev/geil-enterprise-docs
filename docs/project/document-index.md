@@ -47,6 +47,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Capability-first Epic/Release roadmap |
 | GEIL-PRJ-ERA-001 | Epic and Release Architecture | Approved | `docs/project/epic-release-architecture.md` | Epics, Releases, document assignments, dependency graphs, and scale model |
 | GEIL-PRJ-PROD-AUDIT-001 | Production Readiness Audit Report | Draft | `docs/project/production-readiness-audit-report.md` | Repository-wide engineering audit, code-block audit counts, corrected dependency/syntax/logic defects, remaining manual validation, and future quality-gate recommendations |
+| GEIL-PRJ-DOCARCH-001 | Documentation Architecture Review | Draft | `docs/project/documentation-architecture-review.md` | Repository-wide single-source-of-truth audit, document classification register, merge/archive/future recommendations, proposed structure, and navigation simplification plan |
 
 ## Platform documents
 
@@ -126,20 +127,30 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Standard service accounts, gMSA, scheduled tasks, IIS, SQL, NPS, Entra Connect, backup, monitoring, rotation, and least privilege |
 | GEIL-MSC-DNSDHCP-001 | DNS and DHCP Implementation | Draft | `docs/microsoft-core/dns-dhcp-implementation.md` | Microsoft Learn-style AD DNS, DNS forwarder, DHCP scope, and relay implementation guide |
 | GEIL-MSC-GPO-001 | Group Policy Baseline | Draft | `docs/microsoft-core/group-policy-baseline.md` | Baseline GPO model |
-| GEIL-MSC-PKI-001 | AD CS PKI | Draft | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI architecture |
-| GEIL-MSC-NPS-001 | NPS RADIUS 802.1X | Draft | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication |
 | GEIL-MSC-WAC-001 | Windows Admin Center | Draft | `docs/microsoft-core/windows-admin-center.md` | Management gateway |
 | GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
 
-## Cloud and Endpoint documents
+## Cloud and Endpoint / Future documents
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-CLD-M365-001 | Microsoft 365 Tenant Foundation | Draft | `docs/cloud-endpoint/microsoft-365-tenant-foundation.md` | Tenant baseline |
-| GEIL-CLD-ENTRA-001 | Entra ID Hybrid Identity | Draft | `docs/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync |
-| GEIL-CLD-INTUNE-001 | Intune Windows 11 Enterprise | Draft | `docs/cloud-endpoint/intune-windows11-enterprise.md` | Endpoint management |
-| GEIL-CLD-WHFB-001 | Windows Hello for Business | Draft | `docs/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in |
-| GEIL-CLD-DEF-001 | Microsoft Defender | Draft | `docs/cloud-endpoint/microsoft-defender.md` | Endpoint protection |
+| GEIL-FUT-INDEX | Future | Draft | `docs/future/index.md` | Planning section for technologies and capabilities not yet laboratory-validated |
+| GEIL-CLD-M365-001 | Microsoft 365 Tenant Foundation | Future | `docs/cloud-endpoint/microsoft-365-tenant-foundation.md` | Tenant baseline planning; promote only after implementation |
+| GEIL-CLD-ENTRA-001 | Entra ID Hybrid Identity | Future | `docs/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync planning; promote only after implementation |
+| GEIL-CLD-INTUNE-001 | Intune Windows 11 Enterprise | Future | `docs/cloud-endpoint/intune-windows11-enterprise.md` | Endpoint management planning; promote only after implementation |
+| GEIL-CLD-WHFB-001 | Windows Hello for Business | Future | `docs/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in planning; promote only after implementation |
+| GEIL-CLD-DEF-001 | Microsoft Defender | Future | `docs/cloud-endpoint/microsoft-defender.md` | Endpoint protection planning; promote only after implementation |
+| GEIL-MSC-PKI-001 | AD CS PKI | Future | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI planning; promote only after implementation |
+| GEIL-MSC-NPS-001 | NPS RADIUS 802.1X | Future | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication planning; promote only after implementation |
+
+## Archive documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-ARC-INDEX | Archive | Draft | `docs/archive/index.md` | Superseded and historical references retained for traceability |
+| GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
+| GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
+| GEIL-FND-OPN-001 | Superseded OPNsense Edge Firewall | Superseded | `docs/foundation/opnsense-edge-firewall.md` | Historical alternative edge firewall baseline superseded by ADR-0002 |
 
 ## Operations documents
 
@@ -159,14 +170,14 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 
 | Epic | Release | Current Document Count |
 |---|---|---:|
-| E00 | E00.R01 - Documentation governance foundation | 20 |
+| E00 | E00.R01 - Documentation governance foundation | 27 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 7 |
-| E02 | E02.R04 - HQ Foundation Implementation Runbook | 5 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 8 |
+| E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 11 |
 | E03 | E03.R02 - Trust and network authentication | 2 |

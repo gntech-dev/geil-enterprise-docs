@@ -27,6 +27,19 @@ classification: Internal Confidential
 
 This standard defines how GEIL documentation is authored, reviewed, published, and maintained.
 
+## Single-source-of-truth architecture rules
+
+GEIL uses a single-source-of-truth documentation architecture:
+
+1. One concept has one authoritative document.
+2. New Markdown documents may be created only for an entirely new platform, a major capability, a required section landing page, or an approved architecture/control-plane record.
+3. If information naturally belongs in an existing document, update that document instead of creating another file.
+4. Do not duplicate technical explanations across documents. Link to the authoritative document instead.
+5. Keep implementation, validation, troubleshooting, rollback, evidence, and pilot findings together whenever practical.
+6. Roadmap items must not become operational documentation until implemented or explicitly moved from Future into the active laboratory sequence.
+7. Before creating a Markdown document, search for the existing concept owner and update it if one exists.
+8. The laboratory is the source of truth. Pilot findings update the existing authoritative document, not a new parallel report.
+
 ## Required document structure
 
 Every production document must include:
