@@ -83,6 +83,14 @@ The golden template must never be domain-joined. Domain join, OU placement, and 
 | 4 | [Enterprise WinRM Management](administration/enterprise-winrm-management.md) | Define Kerberos-based WinRM / PowerShell Remoting from `HQ-MGMT01` to managed Windows clients and future servers. |
 | 5 | [WinRM / PowerShell Remoting Baseline](windows-server-management/winrm-powershell-remoting-baseline.md) | Practical implementation baseline for enabling and validating WinRM / PowerShell Remoting in the GNTECH AD lab. |
 
+### Windows Security Baselines
+
+These baselines translate the security and management roadmap into practical Microsoft Core controls. They are introduced incrementally after the remote administration foundation is documented and validated.
+
+| Order | Document | Purpose |
+|---:|---|---|
+| 1 | [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md) | Define host-based firewall expectations for Domain Controllers, member servers, management workstations, and standard workstations. |
+
 ### Phase 5 - File Services (Future)
 
 These items are future planning entries, not active deployment steps.
@@ -113,7 +121,7 @@ The current Windows Infrastructure Lab Deployment roadmap is tracked in [Epic an
 
 1. [Network and Active Directory Services Matrix](../project/network-and-ad-services-matrix.md).
 2. Enterprise WinRM Management.
-3. Windows Firewall Baseline.
+3. [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md).
 4. Windows LAPS.
 5. Microsoft Defender Baseline.
 6. Windows Event Forwarding.
