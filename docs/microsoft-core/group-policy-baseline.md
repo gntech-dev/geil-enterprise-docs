@@ -965,3 +965,8 @@ Continue to:
 - Canonical GEIL values are visible in outputs.
 - No active OPNsense deployment path remains for Phase 1 firewall work.
 - `10.10.x.x` remains limited to existing non-GEIL `PROD`/`TEST` references only.
+
+
+## Windows LAPS reference
+
+Use [Windows LAPS Baseline](windows-security/windows-laps-baseline.md) for the authoritative `GP - Security - Windows LAPS` configuration, schema requirements, OU permissions, validation, operations, and troubleshooting.

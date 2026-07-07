@@ -85,11 +85,14 @@ The golden template must never be domain-joined. Domain join, OU placement, and 
 
 ### Windows Security Baselines
 
+See [Windows Security Baselines](windows-security/index.md) for the section index.
+
 These baselines translate the security and management roadmap into practical Microsoft Core controls. They are introduced incrementally after the remote administration foundation is documented and validated.
 
 | Order | Document | Purpose |
 |---:|---|---|
 | 1 | [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md) | Define host-based firewall expectations for Domain Controllers, member servers, management workstations, and standard workstations. |
+| 2 | [Windows LAPS Baseline](windows-security/windows-laps-baseline.md) | Implement built-in Windows LAPS for local Administrator password management across domain-joined Windows client devices. |
 
 ### Phase 5 - File Services (Future)
 
@@ -122,7 +125,7 @@ The current Windows Infrastructure Lab Deployment roadmap is tracked in [Epic an
 1. [Network and Active Directory Services Matrix](../project/network-and-ad-services-matrix.md).
 2. Enterprise WinRM Management.
 3. [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md).
-4. Windows LAPS.
+4. [Windows LAPS Baseline](windows-security/windows-laps-baseline.md).
 5. Microsoft Defender Baseline.
 6. Windows Event Forwarding.
 7. Enterprise Identity & Privileged Access Tier 0/1/2.

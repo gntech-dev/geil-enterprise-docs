@@ -34,9 +34,11 @@ This section is the Microsoft Core entry point for Windows 11 Enterprise client 
 3. Domain Join after cloning
 4. Move to the correct OU
 5. Apply GPO
-6. Validate RDP
-7. Validate WinRM
-8. Ready for Enterprise Management
+6. Apply Windows LAPS
+7. Validate password backup
+8. Validate RDP
+9. Validate WinRM
+10. Ready for Enterprise Management
 
 Implementation documents:
 
@@ -46,6 +48,7 @@ Implementation documents:
 4. [Windows Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md)
 5. [Standard Windows Client - HQ-W11-001](standard-windows-client-hq-w11-001.md)
 6. [Enterprise WinRM Management](../administration/enterprise-winrm-management.md)
+7. [Windows LAPS Baseline](../windows-security/windows-laps-baseline.md)
 
 ## Architecture rules
 
@@ -74,4 +77,5 @@ Domain join, OU placement, and GPO validation happen only after cloning.
 - [Environment Specification](../../project/environment-specification.md)
 - [Active Directory Organizational Foundation](../active-directory-organizational-foundation.md)
 - [Group Policy Baseline](../group-policy-baseline.md)
+- [Windows LAPS Baseline](../windows-security/windows-laps-baseline.md)
 - [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md)

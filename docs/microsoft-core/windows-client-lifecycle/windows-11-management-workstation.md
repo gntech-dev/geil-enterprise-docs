@@ -83,6 +83,7 @@ The authoritative template build and Cloudbase-Init configuration details remain
 - [Active Directory Organizational Foundation](../active-directory-organizational-foundation.md) completed, including `OU=Management Workstations,OU=Computers,OU=GNTECH`.
 - [Authentication Standards](../authentication-standards.md) reviewed. RDP and Windows sign-in examples use `GNTECH\username`, for example `GNTECH\admin.gnolasco`.
 - [Group Policy Baseline](../group-policy-baseline.md) completed through creation and linking of `GP - Baseline - Management Workstations`. This GPO is separate from `GP - Baseline - Workstations`.
+- [Windows LAPS Baseline](../windows-security/windows-laps-baseline.md) reviewed; `HQ-MGMT01` is the approved workstation for retrieving and rotating local Administrator passwords.
 - Management VLAN 10 addressing, DNS, and domain-controller access are operational for `HQ-MGMT01`.
 - Domain join credentials are approved for the change window.
 
@@ -101,8 +102,9 @@ The authoritative template build and Cloudbase-Init configuration details remain
 11. Validate Remote Desktop and Network Level Authentication policy state without broadly exposing RDP.
 12. Validate Remote Desktop service, Windows Firewall rules, and TCP 3389 listener.
 13. Validate WinRM / PowerShell Remoting to `HQ-W11-001`.
-14. Install RSAT and administration tools.
-15. Final validation.
+14. Validate Windows LAPS retrieval and rotation workflow.
+15. Install RSAT and administration tools.
+16. Final validation.
 
 ## Step 1: Clone from Windows 11 Enterprise Golden Template
 
@@ -709,7 +711,7 @@ STOP if Windows capability installation fails, Windows Update/FoD source is unav
 
 Capture RSAT capability output and installed tool validation.
 
-## Step 15: Final validation
+## Step 16: Final validation
 
 ### Purpose
 
@@ -772,6 +774,8 @@ Validated pilot lessons incorporated into this guide:
 - `IPv4Filter` is not an ACL; WinRM listener configuration is different from access authorization.
 - Windows Defender Firewall, MikroTik firewall policy, VLAN segmentation, and Kerberos control WinRM access.
 - RDP remains available for interactive administration while WinRM is preferred for remote administration and automation.
+- Windows LAPS replaces manual local Administrator password management for domain-joined clients.
+- `HQ-MGMT01` is the standard workstation for `Get-LapsADPassword`, `Reset-LapsPassword`, and Windows LAPS operational validation.
 - Baseline privileged group assignment corrected so intended privileged accounts can administer as designed.
 - `HQ-MGMT01` established as the initial Privileged Access Workstation.
 
@@ -812,6 +816,7 @@ Capture:
 - Windows Firewall Remote Desktop rule output.
 - `Test-NetConnection localhost -Port 3389` output.
 - WinRM validation output: `Test-NetConnection HQ-W11-001 -Port 5985`, `Test-WSMan HQ-W11-001`, `Invoke-Command`, and `Enter-PSSession`.
+- Windows LAPS validation output: `Get-LapsADPassword`, `Reset-LapsPassword`, `Invoke-LapsPolicyProcessing`, and `Get-LapsDiagnostics`.
 - Firewall/network evidence showing RDP is restricted to approved management paths.
 - RSAT installed capability output.
 - Remote administration validation output.
@@ -869,5 +874,5 @@ Entra Hybrid
 | RouterOS version | RouterOS v7 target through `HQ-FW01` |
 | Proxmox version | Proxmox VE 9 target |
 | Deployment date | 2026-07-01 pilot decision incorporated |
-| Deployment notes | `HQ-MGMT01` is the initial PAW, Management Workstations OU member, and remote administration origin. |
-| Known caveats | Future PAW hardening, LAPS, WHfB, Entra ID, JIT, JEA, Credential Guard, administrative hardening, and management firewall refinements should build on the validated `GP - Baseline - Management Workstations` model. |
+| Deployment notes | `HQ-MGMT01` is the initial PAW, Management Workstations OU member, remote administration origin, and Windows LAPS retrieval/rotation workstation. |
+| Known caveats | Future PAW hardening, WHfB, Entra ID, JIT, JEA, Credential Guard, administrative hardening, and management firewall refinements should build on the validated `GP - Baseline - Management Workstations` model. |
