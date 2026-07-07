@@ -43,7 +43,7 @@ Windows Server hosts infrastructure roles. It is not a daily administrative work
 Use remote methods instead of routine console or interactive server sign-in:
 
 - RSAT consoles from `HQ-MGMT01`.
-- PowerShell remoting where enabled and approved.
+- PowerShell remoting where enabled and approved. See [Enterprise WinRM Management](enterprise-winrm-management.md).
 - Windows Admin Center when implemented.
 - RDP only for approved administrative scenarios where no safer remote method is practical.
 
@@ -57,6 +57,7 @@ Expected outcome: the command completes successfully and the following expected 
 
 ```powershell
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 5985
+Test-WSMan HQ-DC01.corp.gntech.me
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 3389
 ```
 
@@ -66,4 +67,5 @@ Expected result: approved management ports are reachable from `HQ-MGMT01` only w
 
 - [Windows Server 2025 Baseline](../windows-server-2025-baseline.md)
 - [Windows Management Workstation - HQ-MGMT01](../windows-client-lifecycle/windows-11-management-workstation.md)
+- [Enterprise WinRM Management](enterprise-winrm-management.md)
 - [Windows Admin Center](../windows-admin-center.md)

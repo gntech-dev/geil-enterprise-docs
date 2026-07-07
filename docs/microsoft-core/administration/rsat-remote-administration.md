@@ -65,10 +65,12 @@ Get-Command Get-ADDomain
 Get-Command Get-GPO
 Resolve-DnsName HQ-DC01.corp.gntech.me
 Test-NetConnection HQ-DC01.corp.gntech.me -Port 5985
+Test-WSMan HQ-W11-001
 ```
 
 ## Related documents
 
 - [Windows Management Workstation - HQ-MGMT01](../windows-client-lifecycle/windows-11-management-workstation.md)
 - [PowerShell Operations](../powershell-operations.md)
+- [Enterprise WinRM Management](enterprise-winrm-management.md)
 - [Privileged Access Model](../../security/privileged-access-model.md)

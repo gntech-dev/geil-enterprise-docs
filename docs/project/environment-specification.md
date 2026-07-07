@@ -173,7 +173,14 @@ GEIL intentionally separates the Active Directory DNS namespace from the user au
 Production user accounts must use `username@gntech.me`. Do not use `username@corp.gntech.me` for production logons except when explaining the default Active Directory state before the hybrid UPN suffix is configured. Server FQDNs and AD DNS records remain in `corp.gntech.me`.
 
 
+## Enterprise WinRM management baseline
+
+Validated WinRM management uses `HQ-MGMT01` on VLAN 10 to manage `HQ-W11-001` and future domain-joined Windows endpoints over TCP `5985` with Kerberos. The canonical listener configuration is `IPv4Filter = *` and empty `IPv6Filter`; `IPv4Filter` is not a source ACL. Access is controlled by Windows Defender Firewall remote address scope `172.20.10.0/24`, MikroTik inter-VLAN firewall policy, VLAN segmentation, and Kerberos authentication. See [Enterprise WinRM Management](../microsoft-core/administration/enterprise-winrm-management.md).
+
 ## Network baseline
+
+Detailed VLAN, service-port, management-port, and access-control expectations are maintained in the [Network and Active Directory Services Matrix](network-and-ad-services-matrix.md).
+
 
 | VLAN | Name | CIDR | Gateway Convention | Primary Use |
 |---:|---|---|---|---|

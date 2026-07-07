@@ -80,6 +80,8 @@ The golden template must never be domain-joined. Domain join, OU placement, and 
 | 1 | [PowerShell Operations](powershell-operations.md) | Define safe PowerShell execution, object-creation patterns, validation, and rollback expectations. |
 | 2 | [RSAT / Remote Administration](administration/rsat-remote-administration.md) | Define RSAT and admin-tool placement on `HQ-MGMT01`. |
 | 3 | [Windows Server Remote Management](administration/windows-server-remote-management.md) | Define remote server administration from `HQ-MGMT01` instead of daily server logons. |
+| 4 | [Enterprise WinRM Management](administration/enterprise-winrm-management.md) | Define Kerberos-based WinRM / PowerShell Remoting from `HQ-MGMT01` to managed Windows clients and future servers. |
+| 5 | [WinRM / PowerShell Remoting Baseline](windows-server-management/winrm-powershell-remoting-baseline.md) | Practical implementation baseline for enabling and validating WinRM / PowerShell Remoting in the GNTECH AD lab. |
 
 ### Phase 5 - File Services (Future)
 
@@ -104,6 +106,21 @@ These items are future planning entries unless explicitly promoted after laborat
 | 4 | [Windows Hello for Business](../cloud-endpoint/windows-hello-for-business.md) | Future |
 | 5 | [Windows Admin Center](windows-admin-center.md) | Future |
 
+
+## Windows Infrastructure Lab Deployment security and management roadmap
+
+The current Windows Infrastructure Lab Deployment roadmap is tracked in [Epic and Release Architecture](../project/epic-release-architecture.md) and [Documentation Roadmap](../project/documentation-roadmap.md). Microsoft Core implementation should follow this order:
+
+1. [Network and Active Directory Services Matrix](../project/network-and-ad-services-matrix.md).
+2. Enterprise WinRM Management.
+3. Windows Firewall Baseline.
+4. Windows LAPS.
+5. Microsoft Defender Baseline.
+6. Windows Event Forwarding.
+7. Enterprise Identity & Privileged Access Tier 0/1/2.
+
+Introduce Tier 0/1/2 concepts early for naming, admin-account behavior, and management-workstation usage. Enforce strict tiering gradually as the lab matures.
+
 ## Identity and Access references
 
 Group Strategy, User Lifecycle, and Service Account Standard are not loose Microsoft Core deployment steps. They are identity and access references pending consolidation into the future Identity and Access Standard:
@@ -111,6 +128,10 @@ Group Strategy, User Lifecycle, and Service Account Standard are not loose Micro
 - [Enterprise Group Strategy](group-strategy.md)
 - [Enterprise User Lifecycle](user-lifecycle.md)
 - [Enterprise Service Account Standard](service-account-standard.md)
+
+## Network and service access reference
+
+Use the [Network and Active Directory Services Matrix](../project/network-and-ad-services-matrix.md) for canonical GNTECH VLANs, subnets, administrative access paths, AD DS service ports, Windows management ports, and firewall expectations.
 
 ## Authentication standard
 

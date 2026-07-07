@@ -42,6 +42,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PRJ-CHARTER-001 | GEIL Project Charter | Approved | `docs/project/project-charter.md` | Scope, roles, quality rules |
 | GEIL-PRJ-MASTER-001 | GEIL Master Plan | Approved | `docs/project/master-plan.md` | North Star vision, mission, long-term goals, roadmap, target architecture, and implementation philosophy |
 | GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, authentication formats, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
+| GEIL-PRJ-NETAD-MATRIX-001 | Network and Active Directory Services Matrix | Approved | `docs/project/network-and-ad-services-matrix.md` | Canonical GNTECH VLANs, subnets, server names, AD service ports, Windows management ports, and inter-VLAN access expectations |
 | GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
 | GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
 | GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Capability-first Epic/Release roadmap |
@@ -131,6 +132,8 @@ The document index is the authoritative register of GEIL documents, their owners
 | Phase 4 - Administration | GEIL-MSC-PS-001 | PowerShell Operations | Draft | `docs/microsoft-core/powershell-operations.md` | Safe scripting standard |
 | Phase 4 - Administration | GEIL-MSC-ADMIN-RSAT-001 | RSAT / Remote Administration | Approved | `docs/microsoft-core/administration/rsat-remote-administration.md` | RSAT and remote administration tooling on `HQ-MGMT01` |
 | Phase 4 - Administration | GEIL-MSC-ADMIN-WSRM-001 | Windows Server Remote Management | Approved | `docs/microsoft-core/administration/windows-server-remote-management.md` | Remote server administration model from approved management workstations |
+| Phase 4 - Administration | GEIL-MSC-ADMIN-WINRM-001 | Enterprise WinRM Management | Approved | `docs/microsoft-core/administration/enterprise-winrm-management.md` | Kerberos-based WinRM / PowerShell Remoting management model, including listener, firewall, MikroTik, VLAN segmentation, validation, and pilot findings |
+| Phase 4 - Administration | GEIL-MSC-WSMGMT-WINRM-001 | WinRM / PowerShell Remoting Baseline | Draft | `docs/microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md` | Practical WinRM / PowerShell Remoting baseline for the GNTECH AD lab, including Kerberos, TrustedHosts guidance, GPO settings, validation, troubleshooting, and checklist |
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-FS-001 | File Server | Future | `docs/microsoft-core/file-services/file-server.md` | Future file server capability placeholder; not active deployment guidance |
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-DFS-001 | DFS | Future | `docs/microsoft-core/file-services/dfs.md` | Future DFS capability placeholder; not active deployment guidance |
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-SMB-001 | SMB Shares and Permissions | Future | `docs/microsoft-core/file-services/smb-shares-permissions.md` | Future SMB permissions capability placeholder; not active deployment guidance |
@@ -143,6 +146,13 @@ The document index is the authoritative register of GEIL documents, their owners
 | Identity and Access Reference | GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
 | Identity and Access Reference | GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
 | Identity and Access Reference | GEIL-MSC-SVCACCT-001 | Enterprise Service Account Standard | Draft | `docs/microsoft-core/service-account-standard.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
+
+## Network documents
+
+| Document ID | Title | Status | Path | Notes |
+|---|---|---|---|---|
+| GEIL-NET-INDEX | Network | Draft | `docs/network/index.md` | Entry point for practical network policy documents |
+| GEIL-NET-MTK-WINMGMT-001 | MikroTik Windows Management Firewall Policy | Draft | `docs/network/mikrotik/windows-management-firewall-policy.md` | RouterOS firewall policy for Windows administration traffic between VLANs, including RDP, WinRM, AD services, validation, and checklist |
 
 ## Cloud and Endpoint / Future documents
 
@@ -174,6 +184,18 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-OPS-SEC-001 | Security Operations | Draft | `docs/operations/security-operations.md` | Security checks and response |
 
 
+
+## Windows Infrastructure Lab Deployment roadmap tracking
+
+| Epic | Status | Current documents | Future documents |
+|---|---|---|---|
+| Enterprise WinRM Management | In progress | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md`; `docs/microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md`; `docs/network/mikrotik/windows-management-firewall-policy.md`; `docs/project/network-and-ad-services-matrix.md` | GPO/Windows Firewall refinements as implementation matures |
+| Windows Firewall Baseline | Planned | Network and AD services matrix; MikroTik Windows management firewall policy | docs/microsoft-core/windows-security/windows-firewall-baseline.md; docs/microsoft-core/windows-security/domain-controller-firewall-baseline.md; docs/microsoft-core/windows-security/member-server-firewall-baseline.md |
+| Windows LAPS | Planned | Active Directory baseline; Management Workstation baseline; privileged access references | docs/microsoft-core/windows-security/windows-laps-baseline.md |
+| Microsoft Defender Baseline | Planned | Existing cloud endpoint Microsoft Defender planning reference | docs/microsoft-core/windows-security/microsoft-defender-baseline.md |
+| Windows Event Forwarding | Planned | Enterprise WinRM Management; Windows Firewall future baseline | docs/microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md |
+| Enterprise Identity & Privileged Access Tier 0/1/2 | Planned | `docs/security/privileged-access-model.md`; `docs/security/administrative-tiering.md`; Management Workstation baseline | docs/microsoft-core/identity/privileged-access-tier-model.md |
+
 ## Release assignment summary
 
 The authoritative document-to-release mapping is maintained in [Epic and Release Architecture](epic-release-architecture.md). Every published document must appear exactly once in that register.
@@ -186,7 +208,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 8 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 11 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 15 |
@@ -194,7 +216,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E03 | E03.R03 - Privileged access control plane | 3 |
 | E03 | E03.R06 - Service account lifecycle | 4 |
 | E04 | E04.R01 - Cloud identity and endpoint management | 6 |
-| E05 | E05.R01 - Operations readiness | 10 |
+| E05 | E05.R01 - Operations readiness | 12 |
 
 ## Index maintenance procedure
 

@@ -40,3 +40,10 @@ Before authoring or changing production implementation documentation:
 ## Current priority
 
 The current highest-priority deliverable is the Cloudflare Pages deployment runbook, tracked as `DOC-001`.
+
+## Core project references
+
+- [Environment Specification](environment-specification.md)
+- [Network and Active Directory Services Matrix](network-and-ad-services-matrix.md)
+- [Document Index](document-index.md)
+- [Epic and Release Architecture](epic-release-architecture.md)

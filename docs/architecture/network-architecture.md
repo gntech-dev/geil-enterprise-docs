@@ -135,3 +135,7 @@ Expected result: required AD ports succeed from VLAN 30; approved management por
 ## Rollback
 
 Export the RouterOS configuration before rule changes. If authentication, DNS, or management access breaks, restore the previous firewall address-list/rule set and reload filters from the console or an approved out-of-band path.
+
+## WinRM management flow
+
+Enterprise WinRM management flows from `HQ-MGMT01` on VLAN 10 Management to domain-joined Windows clients such as `HQ-W11-001` on VLAN 30 Workstations using TCP `5985`. Access control is layered: WinRM listener, Windows Defender Firewall remote address scope, MikroTik inter-VLAN firewall policy, VLAN segmentation, and Kerberos authentication. `IPv4Filter = *` is required because it selects local listener interfaces and is not a source ACL.

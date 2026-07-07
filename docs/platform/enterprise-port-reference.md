@@ -46,7 +46,7 @@ Document Microsoft Core and enterprise management ports required before firewall
 | RPC endpoint mapper | TCP | 135 | Clients/admin to servers | RPC discovery | AD/GPO operations |
 | RPC dynamic | TCP | 49152-65535 | Windows RPC | AD/GPO/management | Event logs/gpupdate |
 | NTP | UDP | 123 | Clients to time source | Time sync | `w32tm /query /status` |
-| WinRM HTTP/HTTPS | TCP | 5985,5986 | Admin to servers | PowerShell remoting | `Test-WSMan` |
+| WinRM HTTP | TCP | 5985 | Management VLAN to managed Windows endpoints | Kerberos PowerShell Remoting / automation | `Test-WSMan`, `Invoke-Command` |
 | RDP | TCP/UDP | 3389 | Admin to servers | Remote admin | `Test-NetConnection` |
 | NPS RADIUS | UDP | 1812,1813 | Network devices to NPS | Auth/accounting | NPS event logs |
 | AD CS Web/CRL | TCP | 80,443 | Clients to CA/CDP | CRL/AIA/cert enrollment | `certutil -urlfetch -verify` |
@@ -100,3 +100,7 @@ Capture port tests, RouterOS rule output, Windows Firewall rule output, and serv
 ## Next Guide
 
 Use this with [Firewall Rule Matrix](firewall-rule-matrix.md), [Active Directory Network Requirements](active-directory-network-requirements.md), and Microsoft Core implementation guides.
+
+## WinRM note
+
+GEIL validated WinRM HTTP on TCP `5985` inside the AD domain with Kerberos. WinRM HTTPS TCP `5986` is not required for the current design. Restrict TCP `5985` with Windows Defender Firewall remote address scope `172.20.10.0/24` and MikroTik inter-VLAN policy.

@@ -67,6 +67,9 @@ nav:
       - Phase 1 Build Plan: platform/phase-1-build-plan.md
       - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
       - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
+  - Network:
+      - network/index.md
+      - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
   - Microsoft Core:
       - microsoft-core/index.md
       - Phase 1 - Identity Foundation:
@@ -89,6 +92,8 @@ nav:
           - PowerShell Operations: microsoft-core/powershell-operations.md
           - RSAT / Remote Administration: microsoft-core/administration/rsat-remote-administration.md
           - Windows Server Remote Management: microsoft-core/administration/windows-server-remote-management.md
+          - Enterprise WinRM Management: microsoft-core/administration/enterprise-winrm-management.md
+          - WinRM / PowerShell Remoting Baseline: microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md
       - Phase 5 - File Services (Future):
           - File Server: microsoft-core/file-services/file-server.md
           - DFS: microsoft-core/file-services/dfs.md
@@ -137,6 +142,7 @@ nav:
       - Project Charter: project/project-charter.md
       - Master Plan: project/master-plan.md
       - Environment Specification: project/environment-specification.md
+      - Network and AD Services Matrix: project/network-and-ad-services-matrix.md
       - Document Index: project/document-index.md
       - Documentation Backlog: project/documentation-backlog.md
       - Documentation Roadmap: project/documentation-roadmap.md

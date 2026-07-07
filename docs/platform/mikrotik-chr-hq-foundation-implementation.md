@@ -988,6 +988,7 @@ Expected outcome: the command completes successfully and the following expected 
 /ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="AD TCP clients to DCs"
 /ip firewall filter add chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=udp dst-port=53,88,389,123 comment="AD UDP clients to DCs"
 /ip firewall filter add chain=forward action=accept disabled=yes src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=636 comment="OPTIONAL AD LDAPS clients to DCs if enabled"
+/ip firewall filter add chain=forward action=accept src-address-list=ManagementNetworks dst-address=172.20.30.0/24 protocol=tcp dst-port=5985 comment="WinRM management to workstations"
 /ip firewall filter add chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
@@ -1017,6 +1018,7 @@ chain=forward action=accept src-address=172.20.10.10 dst-address=172.20.100.11 p
 chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=53,88,389,445,135,49152-65535,3268,3269 comment="AD TCP clients to DCs"
 chain=forward action=accept src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=udp dst-port=53,88,389,123 comment="AD UDP clients to DCs"
 chain=forward action=accept disabled=yes src-address-list=AD-ClientNetworks dst-address-list=AD-DomainControllers protocol=tcp dst-port=636 comment="OPTIONAL AD LDAPS clients to DCs if enabled"
+chain=forward action=accept src-address-list=ManagementNetworks dst-address=172.20.30.0/24 protocol=tcp dst-port=5985 comment="WinRM management to workstations"
 chain=forward action=drop comment="Default deny unapproved forwarding"
 ```
 
@@ -1028,6 +1030,10 @@ chain=forward action=drop comment="Default deny unapproved forwarding"
 !!! warning "DHCP relay is not Active Directory connectivity"
 
     Pilot validation proved that DHCP relay can succeed while domain join still fails. A VLAN 30 client received an address and DNS server option `172.20.20.11`, but DNS queries and domain join failed because the old design treated `172.20.30.10` as the only management/client source allowed to reach `HQ-DC01`; all other workstation addresses hit the default deny rule. Production policy must allow required AD service ports from `172.20.30.0/24` to `172.20.20.11` before the default deny rule.
+
+!!! implementation "WinRM inter-VLAN authorization"
+
+    WinRM source authorization is enforced here and on the Windows Defender Firewall, not with WinRM `IPv4Filter`. MikroTik must allow Management VLAN sources to reach workstation targets on TCP `5985` before the default deny rule. Do not allow guest or untrusted VLANs to reach WinRM.
 
 #### Temporary pilot validation rule — do not keep for production
 

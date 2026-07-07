@@ -99,8 +99,10 @@ The authoritative template build and Cloudbase-Init configuration details remain
 9. Force Group Policy.
 10. Validate applied GPOs, including `GP - Baseline - Management Workstations`.
 11. Validate Remote Desktop and Network Level Authentication policy state without broadly exposing RDP.
-12. Install RSAT and administration tools.
-13. Final validation.
+12. Validate Remote Desktop service, Windows Firewall rules, and TCP 3389 listener.
+13. Validate WinRM / PowerShell Remoting to `HQ-W11-001`.
+14. Install RSAT and administration tools.
+15. Final validation.
 
 ## Step 1: Clone from Windows 11 Enterprise Golden Template
 
@@ -537,7 +539,7 @@ STOP if the computer remains in the default `Computers` container, lands in `OU=
 
 Capture `gpresult /r`, `whoami /groups`, optional HTML GPResult, and AD distinguished name output.
 
-## Step 11: Validate Remote Desktop and NLA policy state
+## Step 11: Management Workstation Baseline Validation
 
 ### Purpose
 
@@ -552,9 +554,17 @@ When: after `gpupdate /force` and `gpresult /r` show `GP - Baseline - Management
 Expected outcome: Remote Desktop is enabled, Network Level Authentication is required, access remains restricted to approved management paths, and RDP sign-in uses `GNTECH\admin.gnolasco`.
 
 ```powershell
+# Remote Desktop
+
+Get-ItemProperty `
+    -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" `
+    -Name fDenyTSConnections
+
 Get-ItemProperty `
     -Path "HKLM:\Software\Policies\Microsoft\Windows NT\Terminal Services" `
-    -Name fDenyTSConnections,UserAuthentication
+    -Name UserAuthentication
+
+# PowerShell Script Block Logging
 
 Get-ItemProperty `
     -Path "HKLM:\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
@@ -566,18 +576,88 @@ Get-ItemProperty `
 - `fDenyTSConnections` is `0`.
 - `UserAuthentication` is `1`.
 - `EnableScriptBlockLogging` is `1`.
-- RDP access is limited by Management VLAN and firewall/network policy. It must not be broadly exposed to standard workstation, guest, or untrusted networks.
+- RDP access is limited by Management VLAN and firewall policy. The GPO enables Remote Desktop, but exposure is controlled by VLAN segmentation and firewall policy.
+- Remote Desktop is not broadly accessible from workstation, guest, or untrusted networks.
 - RDP authentication examples use `GNTECH\admin.gnolasco`, not `admin.gnolasco@gntech.me`, unless a specific RDP client is separately validated for UPN authentication.
+
+## Step 12: Validate Remote Desktop service, firewall rules, and listener
+
+### Purpose
+
+Confirm the operating system is actually ready to accept approved RDP sessions after the Management Workstations GPO applies.
+
+### Commands
+
+Run on: `HQ-MGMT01`
+
+When: after Step 11 confirms Remote Desktop, NLA, and Script Block Logging policy values.
+
+Expected outcome: Remote Desktop Services is running, Windows Firewall Remote Desktop rules are enabled, and TCP 3389 responds locally.
+
+```powershell
+Get-Service TermService
+
+Get-NetFirewallRule -DisplayGroup "Remote Desktop" |
+    Select DisplayName, Enabled
+
+Test-NetConnection localhost -Port 3389
+```
+
+### Expected Result
+
+- `TermService` status is `Running`.
+- Remote Desktop firewall rules are `Enabled`.
+- TCP port `3389` responds successfully.
+- Microsoft Remote Desktop and Cloudflare Browser Rendering / IronRDP authenticate with `GNTECH\admin.gnolasco`.
 
 ### Stop Conditions
 
-STOP if RDP is reachable from broad user or guest networks, if NLA is not required, or if Script Block Logging is not enabled.
+STOP if RDP is reachable from broad user or guest networks, if NLA is not required, if Script Block Logging is not enabled, if `TermService` is not running, if firewall rules are disabled, or if TCP 3389 does not respond locally.
 
 ### Evidence
 
-Capture registry policy output, firewall/network validation evidence showing RDP is constrained to approved management paths, and sign-in evidence using `GNTECH\admin.gnolasco`.
+Capture registry policy output, `TermService` state, Windows Firewall Remote Desktop rule state, local TCP 3389 validation, firewall/network validation evidence showing RDP is constrained to approved management paths, and sign-in evidence using `GNTECH\admin.gnolasco`.
 
-## Step 12: Install RSAT and administration tools
+## Step 13: Validate WinRM / PowerShell Remoting
+
+### Purpose
+
+Confirm that `HQ-MGMT01` can administer `HQ-W11-001` using Kerberos-based WinRM / PowerShell Remoting. This validates the enterprise automation path after RDP is available for interactive administration.
+
+### Commands
+
+Run on: `HQ-MGMT01`
+
+When: after `HQ-W11-001` has applied `GP - Security - WinRM`, Windows Defender Firewall allows TCP `5985` from `172.20.10.0/24`, and MikroTik allows Management VLAN to Workstations TCP `5985`.
+
+Expected outcome: TCP `5985`, WSMan, one-shot remoting, and interactive remoting all succeed using Kerberos.
+
+```powershell
+Test-NetConnection HQ-W11-001 -Port 5985
+Test-WSMan HQ-W11-001
+Invoke-Command -ComputerName HQ-W11-001 -ScriptBlock {
+    hostname
+    whoami
+}
+Enter-PSSession HQ-W11-001
+```
+
+### Expected Result
+
+- `Test-NetConnection` returns `TcpTestSucceeded : True`.
+- `Test-WSMan` returns a WSMan response.
+- `Invoke-Command` returns `HQ-W11-001` and the authenticated domain identity.
+- `Enter-PSSession` opens an interactive PowerShell session.
+
+### Stop Conditions
+
+STOP if DNS resolution fails, TCP `5985` is blocked, `Test-WSMan` fails, Kerberos authentication fails, or the command falls back to an unapproved authentication method.
+
+### Evidence
+
+Capture `Test-NetConnection`, `Test-WSMan`, `Invoke-Command`, and `Enter-PSSession` output. See [Enterprise WinRM Management](../administration/enterprise-winrm-management.md) for the full WinRM architecture.
+
+## Step 14: Install RSAT and administration tools
 
 ### Purpose
 
@@ -629,7 +709,7 @@ STOP if Windows capability installation fails, Windows Update/FoD source is unav
 
 Capture RSAT capability output and installed tool validation.
 
-## Step 13: Final validation
+## Step 15: Final validation
 
 ### Purpose
 
@@ -686,6 +766,12 @@ Validated pilot lessons incorporated into this guide:
 - RDP connectivity was validated from `HQ-DC01` during pilot testing.
 - RDP authentication was validated with the NetBIOS format `GNTECH\admin.gnolasco`.
 - Cloudflare Browser Rendering / IronRDP was successfully validated with `GNTECH\admin.gnolasco`.
+- `HQ-MGMT01` successfully manages `HQ-W11-001` using WinRM.
+- Kerberos authentication is used for PowerShell Remoting.
+- `Test-WSMan`, `Invoke-Command`, and `Enter-PSSession` succeed.
+- `IPv4Filter` is not an ACL; WinRM listener configuration is different from access authorization.
+- Windows Defender Firewall, MikroTik firewall policy, VLAN segmentation, and Kerberos control WinRM access.
+- RDP remains available for interactive administration while WinRM is preferred for remote administration and automation.
 - Baseline privileged group assignment corrected so intended privileged accounts can administer as designed.
 - `HQ-MGMT01` established as the initial Privileged Access Workstation.
 
@@ -722,6 +808,10 @@ Capture:
 - `gpresult /r` output and optional HTML GPResult showing `GP - Baseline - Management Workstations`.
 - `whoami /groups` output.
 - Registry policy output for Remote Desktop, NLA, and Script Block Logging.
+- `TermService` status output.
+- Windows Firewall Remote Desktop rule output.
+- `Test-NetConnection localhost -Port 3389` output.
+- WinRM validation output: `Test-NetConnection HQ-W11-001 -Port 5985`, `Test-WSMan HQ-W11-001`, `Invoke-Command`, and `Enter-PSSession`.
 - Firewall/network evidence showing RDP is restricted to approved management paths.
 - RSAT installed capability output.
 - Remote administration validation output.

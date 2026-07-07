@@ -57,6 +57,7 @@ Excluded:
 
 - Domain join.
 - Group Policy validation.
+- WinRM / PowerShell Remoting enablement.
 - Intune enrollment.
 - Windows Hello for Business.
 - Production user sign-in.

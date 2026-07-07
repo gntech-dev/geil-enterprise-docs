@@ -31,9 +31,21 @@ This section is the Microsoft Core entry point for Windows 11 Enterprise client 
 
 1. [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md)
 2. [Cloudbase-Init for Proxmox](cloudbase-init-for-proxmox.md)
+3. Domain Join after cloning
+4. Move to the correct OU
+5. Apply GPO
+6. Validate RDP
+7. Validate WinRM
+8. Ready for Enterprise Management
+
+Implementation documents:
+
+1. [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md)
+2. [Cloudbase-Init for Proxmox](cloudbase-init-for-proxmox.md)
 3. [Windows Management Workstation - HQ-MGMT01](windows-11-management-workstation.md)
 4. [Windows Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md)
 5. [Standard Windows Client - HQ-W11-001](standard-windows-client-hq-w11-001.md)
+6. [Enterprise WinRM Management](../administration/enterprise-winrm-management.md)
 
 ## Architecture rules
 

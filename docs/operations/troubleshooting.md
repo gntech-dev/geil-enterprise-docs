@@ -58,6 +58,12 @@ If evidence shows an active OPNsense path, the old `CORP` NetBIOS namespace, or 
 
 ## AD health commands
 
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: troubleshooting domain health, replication, or authentication failures.
+
+Expected outcome: domain controller diagnostics and replication summary complete without critical failures.
+
 ```powershell
 dcdiag /e /c /v
 repadmin /replsummary
@@ -66,10 +72,51 @@ Get-ADReplicationFailure -Scope Forest
 
 ## DNS commands
 
+Run on: `HQ-MGMT01 or affected Windows Client`
+
+When: troubleshooting DNS, domain discovery, or client connectivity failures.
+
+Expected outcome: AD DNS records resolve and the DNS client cache is available for review.
+
 ```powershell
 Resolve-DnsName corp.gntech.me
 Resolve-DnsName _ldap._tcp.dc._msdcs.corp.gntech.me -Type SRV
 ipconfig /displaydns
+```
+
+## WinRM troubleshooting quick checks
+
+Use the authoritative [Enterprise WinRM Management](../microsoft-core/administration/enterprise-winrm-management.md) guide for design and validation details. The common failure pattern is treating WinRM `IPv4Filter` as a source ACL. It is not. Source access is controlled by Windows Defender Firewall, MikroTik firewall policy, VLAN segmentation, and Kerberos authentication.
+
+Run on: `HQ-MGMT01`
+
+When: troubleshooting WinRM management from the Management VLAN to a domain-joined Windows client.
+
+Expected outcome: DNS resolves, TCP `5985` responds, WSMan responds, and PowerShell Remoting succeeds with Kerberos.
+
+```powershell
+Resolve-DnsName HQ-W11-001
+Test-NetConnection HQ-W11-001 -Port 5985
+Test-WSMan HQ-W11-001
+Invoke-Command -ComputerName HQ-W11-001 -ScriptBlock {
+    hostname
+    whoami
+}
+```
+
+Run on: `Windows Client`
+
+When: the management workstation cannot reach WinRM on the target client.
+
+Expected outcome: WinRM listener uses `IPv4Filter = *`, Windows Firewall allows TCP `5985` from `172.20.10.0/24`, and Kerberos/domain connectivity is healthy.
+
+```powershell
+winrm enumerate winrm/config/listener
+Get-NetFirewallRule -DisplayGroup "Windows Remote Management" |
+    Select DisplayName, Enabled, Profile
+Get-NetFirewallAddressFilter -AssociatedNetFirewallRule (
+    Get-NetFirewallRule -DisplayGroup "Windows Remote Management"
+) | Select RemoteAddress
 ```
 
 ## Expected result

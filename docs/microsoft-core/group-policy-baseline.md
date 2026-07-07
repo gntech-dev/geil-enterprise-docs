@@ -382,6 +382,7 @@ $Gpos = @(
     "GP - Baseline - Management Workstations",
     "GP - Security - PowerShell Logging",
     "GP - Security - Windows Firewall",
+    "GP - Security - WinRM",
     "GP - Security - Microsoft Defender",
     "GP - Security - Windows Update",
     "GP - Tier0 - Admin Restrictions",
@@ -673,6 +674,65 @@ Remove-GPLink -Name "GP - Baseline - Management Workstations" `
   -Target "OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 ```
 
+### WinRM security baseline
+
+`GP - Security - WinRM` documents and configures the validated WinRM management baseline. It should be linked to the same managed Windows client scope as the applicable workstation/server baseline after pilot validation.
+
+| Policy area | Configured setting | Expected behavior |
+|---|---|---|
+| Service | Enable remote server management through WinRM | WinRM service can accept domain remoting requests after policy applies. |
+| Listener | `IPv4Filter = *`; `IPv6Filter =` | WinRM creates HTTP listeners on local IPv4 interfaces; IPv6 is out of current scope. |
+| Authentication | Kerberos / domain authentication | `HQ-MGMT01` authenticates to `HQ-W11-001` using Kerberos. |
+| Firewall | TCP `5985`, Domain Profile, remote address `172.20.10.0/24` | Only Management VLAN sources can reach WinRM on the target host. |
+| Validation | `Test-WSMan`, `Invoke-Command`, `Enter-PSSession` | PowerShell Remoting succeeds from `HQ-MGMT01`. |
+
+Expected registry keys on the client after policy applies:
+
+```text
+HKLM\Software\Policies\Microsoft\Windows\WinRM\Service\AllowAutoConfig = 1
+HKLM\Software\Policies\Microsoft\Windows\WinRM\Service\IPv4Filter = *
+HKLM\Software\Policies\Microsoft\Windows\WinRM\Service\IPv6Filter =
+```
+
+!!! warning "IPv4Filter is not a source ACL"
+
+    `IPv4Filter` selects local interfaces for WinRM listeners. It does not authorize source networks. Use `IPv4Filter = *` and enforce access through Windows Defender Firewall, MikroTik firewall policy, VLAN segmentation, and Kerberos authentication. Do not document `IPv4Filter = 172.20.10.0/24`.
+
+Configure the WinRM service policy values in the GPO:
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: after `GP - Security - WinRM` exists and before linking/validating the GPO.
+
+Expected outcome: the GPO contains the validated WinRM service listener policy values.
+
+```powershell
+$GpoName = "GP - Security - WinRM"
+
+Set-GPRegistryValue `
+    -Name $GpoName `
+    -Key "HKLM\Software\Policies\Microsoft\Windows\WinRM\Service" `
+    -ValueName AllowAutoConfig `
+    -Type DWord `
+    -Value 1
+
+Set-GPRegistryValue `
+    -Name $GpoName `
+    -Key "HKLM\Software\Policies\Microsoft\Windows\WinRM\Service" `
+    -ValueName IPv4Filter `
+    -Type String `
+    -Value "*"
+
+Set-GPRegistryValue `
+    -Name $GpoName `
+    -Key "HKLM\Software\Policies\Microsoft\Windows\WinRM\Service" `
+    -ValueName IPv6Filter `
+    -Type String `
+    -Value ""
+```
+
+Windows Defender Firewall must allow inbound TCP `5985` on the Domain Profile from remote address `172.20.10.0/24`. This is the endpoint-side source restriction. MikroTik provides inter-VLAN authorization. See [Enterprise WinRM Management](administration/enterprise-winrm-management.md) for the full architecture and validation commands.
+
 ### Step 8: Validate resultant policy
 
 From `HQ-W11-001` for the standard workstation baseline and from `HQ-MGMT01` for the management workstation baseline after domain join and OU placement:
@@ -704,7 +764,7 @@ Expected result: `GP - Baseline - Workstations` appears in applied computer poli
 ## Evidence to capture
 
 - `Get-ADOrganizationalUnit` output for required OUs.
-- `Get-GPO -All` output for GEIL GPOs.
+- `Get-GPO -All` output for GEIL GPOs, including `GP - Security - WinRM`.
 - `Get-GPPermission` output.
 - `Get-GPInheritance` output for Workstations and Management Workstations OUs.
 - `Get-ADComputer HQ-MGMT01 -Properties DistinguishedName` output.
@@ -720,6 +780,7 @@ Expected result: `GP - Baseline - Workstations` appears in applied computer poli
 | Filtering too broad | Policy applies to wrong computers | Adjust security filtering before linking |
 | `HQ-MGMT01` remains in Workstations OU | Management workstation receives standard workstation GPO | Move `HQ-MGMT01` to Management Workstations OU and re-run `gpupdate /force` |
 | RDP broadly reachable | Remote Desktop exposed outside management paths | Restrict RDP with firewall/network policy; do not expose RDP to user or guest networks |
+| WinRM unreachable from `HQ-MGMT01` | GPO, Windows Firewall, MikroTik firewall, DNS, or Kerberos issue | Validate `GP - Security - WinRM`, TCP 5985 firewall scope, MikroTik VLAN rule, DNS name resolution, and `Test-WSMan`. |
 | GPO deleted instead of disabled | Rollback evidence lost | Unlink or disable first; delete only after impact review |
 
 ## Troubleshooting

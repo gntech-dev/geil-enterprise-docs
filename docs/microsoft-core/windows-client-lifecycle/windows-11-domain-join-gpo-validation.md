@@ -64,6 +64,7 @@ The Windows 11 template must remain workgroup-only. Domain join happens only aft
 - [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) implemented on `HQ-FW01`.
 - [DNS and DHCP Implementation](../dns-dhcp-implementation.md) completed for VLAN 30.
 - [Group Policy Baseline](../group-policy-baseline.md) created and linked to the Workstations OU.
+- [Enterprise WinRM Management](../administration/enterprise-winrm-management.md) reviewed when validating post-domain-join enterprise remoting.
 - `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me` exists.
 - Domain join credentials are approved and available for the change window.
 - [Authentication Standards](../authentication-standards.md) reviewed: Windows sign-in and Remote Desktop examples use `GNTECH\username`; Microsoft 365 / Entra ID examples use `username@gntech.me`.
@@ -85,6 +86,7 @@ The Windows 11 template must remain workgroup-only. Domain join happens only aft
 - The workstation is joined to `corp.gntech.me`.
 - The computer object is in the canonical Workstations OU.
 - `GP - Baseline - Workstations` applies to the workstation.
+- `GP - Security - WinRM` applies when enterprise remoting is in scope, enabling Kerberos-based PowerShell Remoting from `HQ-MGMT01`.
 
 ## Architecture Overview
 

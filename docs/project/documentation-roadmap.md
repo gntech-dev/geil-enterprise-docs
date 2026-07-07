@@ -105,6 +105,50 @@ GEIL now follows a single-source-of-truth architecture recorded in [Documentatio
 | E05 Operations and Resilience | E05.R02 | Monitoring deep dives | Open | AD, certificate, and Microsoft 365 monitoring runbooks |
 | E06 Security Assurance and Compliance | E06.R01 | Security assurance evidence | Open | Control mapping and exception governance |
 | E07 Scale and Expansion | E07.R02 | Regional operations model | Open | Multi-site delegated operations |
+| E05 Operations and Resilience | WIN.R01 | Secure Remote Administration Foundation | In Progress | [Windows Management Workstation](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md), [WinRM / PowerShell Remoting Baseline](../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md), [MikroTik Windows Management Firewall Policy](../network/mikrotik/windows-management-firewall-policy.md), [Network and AD Services Matrix](network-and-ad-services-matrix.md) |
+| E06 Security Assurance and Compliance | WIN.R02 | Host Firewall and Local Admin Protection | Planned | Future Windows Firewall Baseline and Windows LAPS documents |
+| E06 Security Assurance and Compliance | WIN.R03 | Endpoint Protection and Monitoring | Planned | Future Microsoft Defender Baseline and Windows Event Forwarding documents |
+| E03 Identity, Trust, and Access | WIN.R04 | Privileged Access Maturity | Planned | [Privileged Access Model](../security/privileged-access-model.md), [Enterprise Administrative Tiering](../security/administrative-tiering.md), future Tier 0/1/2 Microsoft Core model |
+
+
+
+## Windows Infrastructure Lab Deployment roadmap
+
+This roadmap tracks the security and management layers that turn the Windows lab from functional infrastructure into a manageable, defensible operating environment. It is intentionally incremental: the lab should not jump straight to a full enterprise PAW/JEA/PAM model before the foundational controls are documented, validated, and maintainable.
+
+### Recommended implementation order
+
+| Order | Epic | Status | Why this order matters |
+|---:|---|---|---|
+| 1 | Network and AD services matrix | In progress | Defines canonical GNTECH VLANs, subnets, host names, AD DS ports, Windows management ports, and firewall expectations before downstream baselines depend on them. |
+| 2 | Enterprise WinRM Management | In progress | Standardizes secure command-based administration from `HQ-MGMT01` using Kerberos, WinRM, PowerShell Remoting, Windows Firewall scoping, and MikroTik segmentation. |
+| 3 | Windows Firewall Baseline | Planned | Converts the network matrix and WinRM model into host-based firewall baselines by system role. |
+| 4 | Windows LAPS | Planned | Secures local Administrator credentials after remote administration and firewall scope are understood. |
+| 5 | Microsoft Defender Baseline | Planned | Establishes practical endpoint protection after firewall behavior and local admin control are defined. |
+| 6 | Windows Event Forwarding | Planned | Centralizes events once WinRM and firewall dependencies are in place. |
+| 7 | Enterprise Identity & Privileged Access Tier 0/1/2 | Planned | Matures role separation, admin accounts, PAW usage, and tiering after the operational controls exist. |
+
+The Tier 0/1/2 model can be introduced early as a concept, especially for account naming and administrative behavior. Strict enforcement should mature gradually as the lab grows from small business scale toward multi-site and multinational operations.
+
+### Epic tracking
+
+| Epic | Purpose | Status | Dependencies | Required / expected documents | Validation checkpoints |
+|---|---|---|---|---|---|
+| Enterprise WinRM Management | Standardize secure remote administration using WinRM / PowerShell Remoting. | In progress | Management Workstation baseline; Network and AD services matrix; MikroTik Windows management firewall policy; GPO-based WinRM enablement; Windows Firewall scoping to Management VLAN. | [Windows Management Workstation](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md); [WinRM / PowerShell Remoting Baseline](../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md); [MikroTik Windows Management Firewall Policy](../network/mikrotik/windows-management-firewall-policy.md); [Network and AD Services Matrix](network-and-ad-services-matrix.md). | `Test-NetConnection`, `Test-WSMan`, `Enter-PSSession`, `Invoke-Command`; confirm WinRM succeeds from Management VLAN and fails from non-management VLANs. |
+| Windows Firewall Baseline | Create host-based Windows Firewall baselines by system role. | Planned | Network and AD services matrix; Enterprise WinRM Management; MikroTik firewall policy. | Future: docs/microsoft-core/windows-security/windows-firewall-baseline.md; docs/microsoft-core/windows-security/domain-controller-firewall-baseline.md; docs/microsoft-core/windows-security/member-server-firewall-baseline.md. | Role-based firewall profiles; inbound management rules scoped to Management VLAN; separation of AD DS service ports, Windows management ports, and application-specific ports. |
+| Windows LAPS | Secure local Administrator passwords across domain-joined Windows systems. | Planned | Active Directory baseline; Management Workstation baseline; Privileged access model. | Future: docs/microsoft-core/windows-security/windows-laps-baseline.md. | GPO configuration; AD-backed password storage; permissions model; recovery workflow; validation commands; separation of helpdesk access from domain admin access. |
+| Microsoft Defender Baseline | Create a practical Microsoft Defender baseline for small business Windows infrastructure. | Planned | Windows Firewall Baseline; Windows Event Forwarding for later monitoring. | Future: docs/microsoft-core/windows-security/microsoft-defender-baseline.md. | Defender Antivirus state; cloud-delivered protection; Tamper Protection notes; ASR rules; Controlled Folder Access evaluation; exclusions; PowerShell validation; event IDs. |
+| Windows Event Forwarding | Centralize important Windows security and operational events. | Planned | Enterprise WinRM Management; Windows Firewall Baseline; Domain Controller baseline; Member Server baseline. | Future: docs/microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md. | WEF collector design; source-initiated subscriptions; DC/member server/workstation event collection; security-relevant Event IDs; retention and forwarding strategy; future SIEM integration. |
+| Enterprise Identity & Privileged Access Tier 0/1/2 | Define a scalable privileged access model as the lab grows from small business to multi-site / multinational design. | Planned | Management Workstation baseline; Windows LAPS; WinRM Management; Event Forwarding; Defender baseline. | Existing references: [Privileged Access Model](../security/privileged-access-model.md), [Enterprise Administrative Tiering](../security/administrative-tiering.md). Future: docs/microsoft-core/identity/privileged-access-tier-model.md. | Tier 0/1/2 definitions; dedicated admin accounts; no daily-driver admin use; PAW model; admin logon restrictions; GPO delegation; future JEA/JIT/PAM. |
+
+### Practical release grouping
+
+| Release | Theme | Includes | Status |
+|---|---|---|---|
+| Release 1: Secure Remote Administration Foundation | Establish trusted management paths before expanding security controls. | Management Workstation baseline; RDP validation; WinRM / PowerShell Remoting baseline; MikroTik Windows management firewall policy; Network and AD services matrix. | In progress |
+| Release 2: Host Firewall and Local Admin Protection | Lock down host-level exposure and local Administrator credentials. | Windows Firewall Baseline; Windows LAPS. | Planned |
+| Release 3: Endpoint Protection and Monitoring | Add endpoint security and centralized visibility. | Microsoft Defender Baseline; Windows Event Forwarding. | Planned |
+| Release 4: Privileged Access Maturity | Mature administrative boundaries without over-engineering the early lab. | Tier 0/1/2 model; PAW refinement; JEA; role-based administration; future certificate-based WinRM HTTPS. | Planned |
 
 ## Enterprise Identity Foundation dependency graph
 

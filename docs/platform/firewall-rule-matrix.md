@@ -56,7 +56,7 @@ Production policy must use RouterOS address lists and least-privilege Active Dir
 |---|---|---|
 | `AD-DomainControllers` | Domain controller service targets | `172.20.20.11` (`HQ-DC01`) |
 | `AD-ClientNetworks` | Networks allowed to consume domain services | `172.20.30.0/24` |
-| `ManagementNetworks` | Approved administration sources | `172.20.10.0/24`, `172.20.30.10` |
+| `ManagementNetworks` | Approved administration sources | `172.20.10.0/24` |
 | `ServerNetworks` | Server VLAN and future member-server networks | `172.20.20.0/24` |
 
 ## Rule matrix
@@ -67,6 +67,7 @@ Production policy must use RouterOS address lists and least-privilege Active Dir
 | `ManagementNetworks` | `HQ-FW01` | Approved management ports only | WinBox/SSH/HTTPS management | MikroTik CHR implementation guide | Approved admin source reaches RouterOS |
 | VLAN 20 Servers | Internet | TCP 80/443 | Updates and Microsoft cloud endpoints | Enterprise Port Reference | `Test-NetConnection` to update endpoints |
 | VLAN 10 Management | Infrastructure management targets | Approved management ports | Remote administration | Network Architecture / Windows 11 Management Workstation | Only `HQ-MGMT01` and future management workstations originate management traffic |
+| `ManagementNetworks` | VLAN 30 Workstations | TCP `5985` | WinRM / PowerShell Remoting | [Enterprise WinRM Management](../microsoft-core/administration/enterprise-winrm-management.md) | `Test-NetConnection`, `Test-WSMan`, `Invoke-Command` from `HQ-MGMT01` |
 | VLAN 30 Workstations | Internet | TCP 80/443 | User/cloud services | Endpoint guides | Browser and M365 sign-in validates |
 | Guest VLAN 70 | Internet only | DNS/HTTP/HTTPS; deny internal RFC1918 | Internet-only guest access | MikroTik CHR implementation guide | Guest cannot reach internal RFC1918 |
 | `HQ-DC01` | Microsoft cloud | TCP 443 | Future Entra sync/cloud health | Entra ID Hybrid Identity | Entra Connect health after deployment |
