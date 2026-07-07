@@ -53,9 +53,13 @@ The clone, VLAN30 validation, domain join, OU placement, `gpupdate`, `gpresult`,
 - Required AD service ports are reachable.
 - The computer object is in `OU=Workstations,OU=Computers,OU=GNTECH,...`.
 - `GP - Baseline - Workstations` appears in `gpresult`.
+- `GP - Security - Microsoft Defender` appears in applied computer policy after the Defender baseline is implemented.
+- Microsoft Defender Baseline is applied before final workstation validation.
+- `Get-MpComputerStatus` reports Microsoft Defender Antivirus and real-time protection enabled.
 
 ## Related documents
 
 - [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md)
 - [Windows Domain Join and GPO Validation](windows-11-domain-join-gpo-validation.md)
 - [Group Policy Baseline](../group-policy-baseline.md)
+- [Microsoft Defender Enterprise Baseline](../windows-security/microsoft-defender-baseline.md)

@@ -93,6 +93,7 @@ These baselines translate the security and management roadmap into practical Mic
 |---:|---|---|
 | 1 | [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md) | Define host-based firewall expectations for Domain Controllers, member servers, management workstations, and standard workstations. |
 | 2 | [Windows LAPS Baseline](windows-security/windows-laps-baseline.md) | Implement built-in Windows LAPS for local Administrator password management across domain-joined Windows client devices. |
+| 3 | [Microsoft Defender Enterprise Baseline](windows-security/microsoft-defender-baseline.md) | Configure built-in Microsoft Defender Antivirus through Active Directory Group Policy for managed Windows clients. |
 
 ### Phase 5 - File Services (Future)
 
@@ -126,7 +127,7 @@ The current Windows Infrastructure Lab Deployment roadmap is tracked in [Epic an
 2. Enterprise WinRM Management.
 3. [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md).
 4. [Windows LAPS Baseline](windows-security/windows-laps-baseline.md).
-5. Microsoft Defender Baseline.
+5. [Microsoft Defender Enterprise Baseline](windows-security/microsoft-defender-baseline.md).
 6. Windows Event Forwarding.
 7. Enterprise Identity & Privileged Access Tier 0/1/2.
 

@@ -137,6 +137,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Windows Security Baselines | GEIL-MSC-WINSEC-INDEX | Windows Security Baselines | Draft | `docs/microsoft-core/windows-security/index.md` | Microsoft Core Windows security baseline section index |
 | Windows Security Baselines | GEIL-MSC-WINSEC-FW-001 | Windows Firewall Baseline | Draft | `docs/microsoft-core/windows-security/windows-firewall-baseline.md` | Host-based Windows Defender Firewall baseline for Domain Controllers, member servers, management workstations, and standard workstations |
 | Windows Security Baselines | GEIL-MSC-WINSEC-LAPS-001 | Windows LAPS Baseline | Draft | `docs/microsoft-core/windows-security/windows-laps-baseline.md` | Built-in Windows LAPS baseline for AD schema, OU permissions, GPO, retrieval, rotation, validation, operations, and troubleshooting |
+| Windows Security Baselines | GEIL-MSC-WINSEC-DEF-001 | Microsoft Defender Enterprise Baseline | Draft | `docs/microsoft-core/windows-security/microsoft-defender-baseline.md` | Built-in Microsoft Defender Antivirus baseline managed through Active Directory Group Policy for Microsoft Core Windows clients |
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-FS-001 | File Server | Future | `docs/microsoft-core/file-services/file-server.md` | Future file server capability placeholder; not active deployment guidance |
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-DFS-001 | DFS | Future | `docs/microsoft-core/file-services/dfs.md` | Future DFS capability placeholder; not active deployment guidance |
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-SMB-001 | SMB Shares and Permissions | Future | `docs/microsoft-core/file-services/smb-shares-permissions.md` | Future SMB permissions capability placeholder; not active deployment guidance |
@@ -195,7 +196,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Enterprise WinRM Management | In progress | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md`; `docs/microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md`; `docs/network/mikrotik/windows-management-firewall-policy.md`; `docs/project/network-and-ad-services-matrix.md` | GPO/Windows Firewall refinements as implementation matures |
 | Windows Firewall Baseline | In progress | `docs/microsoft-core/windows-security/windows-firewall-baseline.md`; Network and AD services matrix; MikroTik Windows management firewall policy | Future role-specific documents: docs/microsoft-core/windows-security/domain-controller-firewall-baseline.md; docs/microsoft-core/windows-security/member-server-firewall-baseline.md |
 | Windows LAPS | In progress | `docs/microsoft-core/windows-security/windows-laps-baseline.md`; Active Directory baseline; Management Workstation baseline; privileged access references | Future delegated retrieval group refinements |
-| Microsoft Defender Baseline | Planned | Existing cloud endpoint Microsoft Defender planning reference | docs/microsoft-core/windows-security/microsoft-defender-baseline.md |
+| Microsoft Defender Baseline | In progress | `docs/microsoft-core/windows-security/microsoft-defender-baseline.md`; Windows Firewall Baseline; Windows LAPS Baseline; Group Policy Baseline | Future Windows Event Forwarding monitoring integration |
 | Windows Event Forwarding | Planned | Enterprise WinRM Management; Windows Firewall future baseline | docs/microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md |
 | Enterprise Identity & Privileged Access Tier 0/1/2 | Planned | `docs/security/privileged-access-model.md`; `docs/security/administrative-tiering.md`; Management Workstation baseline | docs/microsoft-core/identity/privileged-access-tier-model.md |
 
@@ -221,6 +222,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E04 | E04.R01 - Cloud identity and endpoint management | 6 |
 | E05 | E05.R01 - Operations readiness | 12 |
 | E06 | WIN.R02 - Host Firewall and Local Admin Protection | 3 |
+| E06 | WIN.R03 - Endpoint Protection and Monitoring | 1 |
 
 ## Index maintenance procedure
 

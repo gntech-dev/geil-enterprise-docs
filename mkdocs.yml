@@ -98,6 +98,7 @@ nav:
           - microsoft-core/windows-security/index.md
           - Windows Firewall Baseline: microsoft-core/windows-security/windows-firewall-baseline.md
           - Windows LAPS Baseline: microsoft-core/windows-security/windows-laps-baseline.md
+          - Microsoft Defender Baseline: microsoft-core/windows-security/microsoft-defender-baseline.md
       - Phase 5 - File Services (Future):
           - File Server: microsoft-core/file-services/file-server.md
           - DFS: microsoft-core/file-services/dfs.md
