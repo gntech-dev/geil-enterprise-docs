@@ -115,9 +115,15 @@ add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=A
 add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=AD_SERVERS protocol=tcp dst-port=53,88,389,636,3268,3269 comment="Allow MGMT to AD servers - AD TCP services"
 add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=MEMBER_SERVERS protocol=tcp dst-port=3389,5985,5986,445 comment="Allow MGMT to member servers - Windows management"
 add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=WORKSTATION_SUBNETS protocol=tcp dst-port=5985 comment="Allow MGMT to workstations - WinRM"
-add chain=forward action=drop dst-address-list=AD_SERVERS protocol=tcp dst-port=3389,5985,5986,445,135 comment="Block non-MGMT Windows admin access to AD servers"
+add chain=forward action=drop src-address-list=WORKSTATION_SUBNETS dst-address-list=AD_SERVERS protocol=tcp dst-port=3389,5985 comment="Drop Workstations VLAN to AD admin ports before broad allows"
+add chain=forward action=drop dst-address-list=AD_SERVERS protocol=tcp dst-port=3389,5985,5986 comment="Block non-MGMT Windows admin access to AD servers"
 add chain=forward action=drop dst-address-list=MEMBER_SERVERS protocol=tcp dst-port=3389,5985,5986,445,135 comment="Block non-MGMT Windows admin access to member servers"
 ```
+
+
+!!! warning "VLAN30 broad allow rule order"
+
+    Pilot validation found that a broad or temporary VLAN30-to-`HQ-DC01` allow rule can accidentally permit TCP `3389` and TCP `5985`. Place the Workstations VLAN to AD admin-port drop rule before any broad VLAN30-to-`HQ-DC01` allow rule. VLAN 30 should reach required AD DS ports such as TCP `53`, `88`, `389`, and `445`, but must not administer Domain Controllers over RDP or WinRM.
 
 !!! warning "Do not expose management ports from WAN"
 

@@ -271,12 +271,30 @@ Expected interpretation:
 - WinRM should fail from Workstations VLAN.
 - RDP/WinRM should succeed only from Management VLAN.
 
+
+## Pilot finding: VLAN30 administrative-port block
+
+Pilot validation from `HQ-W11-001` in VLAN 30 confirmed the desired final state:
+
+| Source | Destination | Port | Result | Interpretation |
+|---|---|---:|---|---|
+| `HQ-W11-001` / VLAN 30 | `HQ-DC01` | TCP `53` | Success | DNS/domain service access allowed. |
+| `HQ-W11-001` / VLAN 30 | `HQ-DC01` | TCP `88` | Success | Kerberos/domain service access allowed. |
+| `HQ-W11-001` / VLAN 30 | `HQ-DC01` | TCP `389` | Success | LDAP/domain service access allowed. |
+| `HQ-W11-001` / VLAN 30 | `HQ-DC01` | TCP `445` | Success | SMB/SYSVOL/Group Policy access allowed. |
+| `HQ-W11-001` / VLAN 30 | `HQ-DC01` | TCP `3389` | Failed | RDP administration blocked. |
+| `HQ-W11-001` / VLAN 30 | `HQ-DC01` | TCP `5985` | Failed | WinRM administration blocked. |
+
+Endpoint Windows Defender Firewall controls local inbound exposure. MikroTik controls inter-VLAN authorization. Both are required.
+
+If `HQ-W11-001` can reach `HQ-DC01` on TCP `3389` or TCP `5985`, check MikroTik rule order first. VLAN 30 must be allowed to use required AD DS ports, but it must not administer Domain Controllers. The required MikroTik behavior is to drop VLAN 30 Workstations to `HQ-DC01` TCP `3389,5985` before any broad or temporary VLAN30-to-`HQ-DC01` allow rule.
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Corrective action |
 |---|---|---|
-| RDP works from Workstations VLAN | RDP firewall rule has broad remote address scope or MikroTik allows workstation-to-server management traffic | Scope RDP to `172.20.10.0/24` and validate MikroTik rule order. |
-| WinRM works from Workstations VLAN | WinRM firewall rule has broad remote address scope or MikroTik allows workstation-to-server management traffic | Scope WinRM to `172.20.10.0/24` and validate `GP - Security - WinRM`. |
+| RDP works from Workstations VLAN | MikroTik rule order permits VLAN30-to-`HQ-DC01` admin ports, or the Windows Firewall rule has broad remote address scope | Check MikroTik rule order first; drop VLAN30 to `HQ-DC01` TCP `3389` before broad VLAN30 allow rules, then verify host firewall scope. |
+| WinRM works from Workstations VLAN | MikroTik rule order permits VLAN30-to-`HQ-DC01` admin ports, or the Windows Firewall rule has broad remote address scope | Check MikroTik rule order first; drop VLAN30 to `HQ-DC01` TCP `5985` before broad VLAN30 allow rules, then validate `GP - Security - WinRM`. |
 | Domain join fails but RDP/WinRM is blocked correctly | AD DS service ports are too restrictive | Review the AD service port matrix; allow required DNS/Kerberos/LDAP/SMB/GPO flows to Domain Controllers. |
 | Management workstation cannot reach WinRM | Windows Firewall scope, MikroTik policy, DNS, or WinRM service issue | Validate `Test-NetConnection`, `Test-WSMan`, WinRM service state, and firewall address filters. |
 | Firewall rule appears enabled but traffic fails | Wrong profile, wrong remote address scope, or upstream MikroTik block | Check active profile, address filters, and MikroTik counters. |

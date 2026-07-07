@@ -2,8 +2,8 @@
 title: Windows LAPS Baseline
 document_id: GEIL-MSC-WINSEC-LAPS-001
 owner: Infrastructure Engineering
-status: Draft
-version: 1.0
+status: Approved
+version: 1.1
 last_reviewed: 2026-07-02
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -17,8 +17,8 @@ classification: Internal Confidential
 |---|---|
 | Document ID | GEIL-MSC-WINSEC-LAPS-001 |
 | Owner | Infrastructure Engineering |
-| Status | Draft |
-| Version | 1.0 |
+| Status | Approved |
+| Version | 1.1 |
 | Last Reviewed | 2026-07-02 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -84,6 +84,23 @@ The management model is:
 - Passwords are stored securely in Active Directory.
 - Only delegated administrators may retrieve passwords.
 - Retrieval and rotation are performed from `HQ-MGMT01` or a future approved PAW.
+
+## Validated deployment sequence
+
+Pilot implementation validated this deployment order. Follow it exactly; do not validate a client before the schema, OU permissions, GPO creation, GPO links, and policy settings exist.
+
+| Order | Step | Validation checkpoint |
+|---:|---|---|
+| 1 | Extend AD schema | `Update-LapsADSchema` completes without error. |
+| 2 | Validate schema | `msLAPS-*` schema attributes exist. |
+| 3 | Delegate Self permissions | Workstations and Management Workstations OUs allow computer Self updates. |
+| 4 | Create `GP - Security - Windows LAPS` | GPO exists before any client validation. |
+| 5 | Link GPO | GPO is linked to Workstations and Management Workstations OUs. |
+| 6 | Configure Windows LAPS policy | Backup Directory and password policy settings are configured. |
+| 7 | Run `gpupdate /force` | Client receives current Group Policy. |
+| 8 | Run `Invoke-LapsPolicyProcessing` | Client processes Windows LAPS immediately. |
+| 9 | Run `Get-LapsDiagnostics` | Diagnostics report successful policy processing and backup. |
+| 10 | Validate password retrieval | `Get-LapsADPassword -Identity HQ-W11-001 -AsPlainText` succeeds from `HQ-MGMT01`. |
 
 ## Active Directory schema
 
@@ -200,24 +217,24 @@ Review this output before delegating password retrieval rights. Self permissions
 
 ## Group Policy baseline
 
-Create and link this GPO:
+The GPO must exist before client validation. The validated policy object is:
 
 ```text
 GP - Security - Windows LAPS
 ```
 
-Recommended links:
+Validated links:
 
 | Target OU | Purpose |
 |---|---|
-| `OU=Workstations,OU=Computers,OU=GNTECH,...` | Applies Windows LAPS to standard Windows clients. |
-| `OU=Management Workstations,OU=Computers,OU=GNTECH,...` | Applies Windows LAPS to management workstations. |
+| `OU=Workstations,OU=Computers,OU=GNTECH,...` | Applies Windows LAPS to standard Windows clients such as `HQ-W11-001`. |
+| `OU=Management Workstations,OU=Computers,OU=GNTECH,...` | Applies Windows LAPS to management workstations such as `HQ-MGMT01`. |
 
-Do not link the policy broadly until pilot validation succeeds.
+Do not begin `HQ-W11-001` client validation until this GPO exists, is linked, and has Windows LAPS policy settings configured.
 
 ## Group Policy configuration
 
-Configure these Windows LAPS policy settings:
+Configure these Windows LAPS policy settings in `GP - Security - Windows LAPS`:
 
 | Setting | Required value | Why |
 |---|---|---|
@@ -233,13 +250,82 @@ Configure these Windows LAPS policy settings:
 
     If the Golden Image renames the built-in local Administrator account, document the approved name in the Golden Template guide and configure the Windows LAPS policy accordingly. Do not create undocumented local admin account names.
 
-## GPO creation commands
+## GPMC configuration
+
+Run on: `HQ-MGMT01`
+
+When: after schema extension and OU Self permissions are validated.
+
+Expected outcome: `GP - Security - Windows LAPS` exists, is linked to the Workstations and Management Workstations OUs, and contains the validated Windows LAPS settings.
+
+1. Open **Group Policy Management**.
+2. Create `GP - Security - Windows LAPS` if it does not already exist.
+3. Link it to:
+   - `OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
+   - `OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me`
+4. Edit the GPO.
+5. Navigate to **Computer Configuration > Administrative Templates > System > LAPS**.
+6. Configure backup to Active Directory.
+7. Configure password length, complexity, age, and post-authentication actions according to this baseline.
+8. Close the editor and validate GPO links before testing a client.
+
+## Validated PowerShell GPO workflow
+
+This workflow creates and links the GPO. Use GPMC or a validated ADMX-backed method to configure the policy settings themselves; do not assume policy exists before this step.
 
 Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
 
-When: after schema and OU permissions are complete.
+When: after schema and OU permissions are complete and before client validation.
 
 Expected outcome: `GP - Security - Windows LAPS` exists and is linked to the Workstations and Management Workstations OUs.
+
+```powershell
+Import-Module GroupPolicy
+
+$GpoName = "GP - Security - Windows LAPS"
+$Targets = @(
+    "OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me",
+    "OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
+)
+
+$Gpo = Get-GPO -Name $GpoName -ErrorAction SilentlyContinue
+if (-not $Gpo) {
+    $Gpo = New-GPO -Name $GpoName
+    Write-Host "Created GPO: $GpoName"
+}
+else {
+    Write-Host "GPO already exists: $GpoName"
+}
+
+foreach ($Target in $Targets) {
+    $Links = (Get-GPInheritance -Target $Target).GpoLinks.DisplayName
+    if ($Links -notcontains $GpoName) {
+        New-GPLink -Name $GpoName -Target $Target -LinkEnabled Yes | Out-Null
+        Write-Host "Linked $GpoName to $Target"
+    }
+    else {
+        Write-Host "Link already exists: $Target"
+    }
+}
+
+Get-GPO -Name $GpoName
+```
+
+Expected output includes the created or existing GPO and link status, for example:
+
+```text
+Created GPO: GP - Security - Windows LAPS
+Linked GP - Security - Windows LAPS to OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Linked GP - Security - Windows LAPS to OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me
+DisplayName      : GP - Security - Windows LAPS
+GpoStatus        : AllSettingsEnabled
+```
+
+Run on: `HQ-MGMT01 or HQ-DC01 during bootstrap`
+
+When: after creating and linking the GPO.
+
+Expected outcome: both target OUs show `GP - Security - Windows LAPS` as a linked GPO.
 
 ```powershell
 $GpoName = "GP - Security - Windows LAPS"
@@ -248,20 +334,14 @@ $Targets = @(
     "OU=Management Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me"
 )
 
-if (-not (Get-GPO -Name $GpoName -ErrorAction SilentlyContinue)) {
-    New-GPO -Name $GpoName | Out-Null
-}
-
 foreach ($Target in $Targets) {
-    if (-not (Get-GPInheritance -Target $Target).GpoLinks.DisplayName.Contains($GpoName)) {
-        New-GPLink -Name $GpoName -Target $Target -LinkEnabled Yes | Out-Null
-    }
+    Get-GPInheritance -Target $Target |
+        Select-Object -ExpandProperty GpoLinks |
+        Where-Object { $_.DisplayName -eq $GpoName }
 }
-
-Get-GPO -Name $GpoName
 ```
 
-Policy settings may be configured through Group Policy Management Console under Windows LAPS policy settings. If registry-based automation is introduced later, validate the exact ADMX-backed registry values in a pilot before documenting copy/paste commands.
+STOP if the GPO is missing or not linked. Correct Group Policy before running `gpupdate /force`, `Invoke-LapsPolicyProcessing`, or `Get-LapsDiagnostics` on a client.
 
 ## Security model
 
@@ -371,38 +451,57 @@ Lifecycle rules:
 
 Run on: `HQ-W11-001`
 
-When: after domain join, OU placement, GPO application, and Windows LAPS policy configuration.
+When: after domain join, OU placement, Self permissions, GPO creation, GPO link, and Windows LAPS policy configuration are complete.
 
-Expected outcome: policy applies and the password is successfully backed up.
+Expected outcome: Group Policy refresh succeeds, Windows LAPS processes policy immediately, diagnostics show successful processing, and the password is backed up to Active Directory.
 
 ```powershell
 gpupdate /force
+Invoke-LapsPolicyProcessing
 Get-LapsDiagnostics
 ```
 
-Expected result:
+Expected output includes successful Group Policy processing and Windows LAPS diagnostics without schema, permission, policy, or backup errors. The exact diagnostic text can vary by Windows build, but the result must show that policy was found and password backup succeeded.
 
-- Policy applied.
-- Password successfully backed up.
-- No schema, permission, or GPO processing errors.
+Expected interpretation:
+
+- `gpupdate /force` completes without policy processing errors.
+- `Invoke-LapsPolicyProcessing` returns without error.
+- `Get-LapsDiagnostics` shows Windows LAPS policy is applied.
+- `Get-LapsDiagnostics` does not report missing schema attributes.
+- `Get-LapsDiagnostics` does not report missing computer Self permissions.
+- `Get-LapsDiagnostics` does not report missing or unconfigured policy.
+
+STOP if diagnostics show that no Windows LAPS policy is configured. The GPO must exist and be linked before client validation.
 
 ## Validation from HQ-MGMT01
 
 Run on: `HQ-MGMT01`
 
-When: after `HQ-W11-001` reports successful Windows LAPS policy processing.
+When: after `HQ-W11-001` reports successful Windows LAPS policy processing and password backup.
 
-Expected outcome: delegated retrieval succeeds and returns password metadata from Active Directory.
+Expected outcome: delegated retrieval succeeds and returns the Windows LAPS password from Active Directory.
 
 ```powershell
 Get-LapsADPassword -Identity HQ-W11-001 -AsPlainText
 ```
 
-Expected output includes:
+Expected output includes fields similar to:
 
-- Password.
-- Expiration Time.
-- Source.
+```text
+ComputerName        : HQ-W11-001
+DistinguishedName   : CN=HQ-W11-001,OU=Workstations,OU=Computers,OU=GNTECH,DC=corp,DC=gntech,DC=me
+Account             : Administrator
+Password            : <managed-password>
+ExpirationTimestamp : <timestamp>
+Source              : EncryptedPassword or Password
+```
+
+The pilot validated successful password retrieval from `HQ-MGMT01` using:
+
+```powershell
+Get-LapsADPassword -Identity HQ-W11-001 -AsPlainText
+```
 
 ## Rotation validation
 
@@ -410,7 +509,7 @@ Run on: `HQ-MGMT01`
 
 When: validating that delegated administrators can force password rotation.
 
-Expected outcome: Windows LAPS rotates the password and updates the Active Directory backup.
+Expected outcome: password rotation is requested for the target computer.
 
 ```powershell
 Reset-LapsPassword -Identity HQ-W11-001
@@ -527,6 +626,18 @@ Reset-LapsPassword -Identity HQ-W11-001
 ## Pilot Findings
 
 - Windows LAPS replaces legacy Microsoft LAPS.
+- The Windows LAPS module is present by default on Windows Server 2025.
+- Active Directory schema extension is a one-time forest-level operation.
+- The pilot successfully created the `msLAPS-*` schema attributes.
+- Self permissions are mandatory before clients can back up passwords.
+- Self permissions were validated for the Workstations and Management Workstations OUs.
+- `GP - Security - Windows LAPS` must exist before any client validation.
+- The GPO was validated when linked to the Workstations and Management Workstations OUs.
+- `HQ-W11-001` successfully processed policy with `gpupdate /force` and `Invoke-LapsPolicyProcessing`.
+- `Get-LapsDiagnostics` is the primary client-side validation command for policy and backup troubleshooting.
+- `HQ-W11-001` successfully backed up its local Administrator password to Active Directory.
+- `HQ-MGMT01` successfully retrieved the password with `Get-LapsADPassword -Identity HQ-W11-001 -AsPlainText`.
+- Documentation now reflects the validated deployment sequence instead of assuming a pre-existing policy.
 - Every workstation receives a unique local Administrator password.
 - Password retrieval is performed from `HQ-MGMT01`.
 - No manual password management is required after deployment.
@@ -548,7 +659,11 @@ Reset-LapsPassword -Identity HQ-W11-001
 - [ ] Password age set to 30 days.
 - [ ] Administrator account handling documented for renamed Golden Image accounts.
 - [ ] Post-authentication actions configured to reset password and log off after 8 hours.
+- [ ] `gpupdate /force` completed on `HQ-W11-001`.
+- [ ] `Invoke-LapsPolicyProcessing` completed on `HQ-W11-001`.
+- [ ] `Get-LapsDiagnostics` shows successful Windows LAPS policy processing.
 - [ ] `HQ-W11-001` successfully backs up a Windows LAPS password.
+- [ ] `HQ-MGMT01` can retrieve the password with `Get-LapsADPassword -Identity HQ-W11-001 -AsPlainText`.
 - [ ] `HQ-MGMT01` can retrieve and rotate the password using delegated rights.
 
 ## Future improvements

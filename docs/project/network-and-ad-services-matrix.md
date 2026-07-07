@@ -124,6 +124,22 @@ RDP and WinRM should originate only from the Management VLAN. HOME/User, Worksta
 | Guest VLAN | Internal infrastructure | No | Internet-only access | Block internal management. |
 | WAN | Internal infrastructure | No direct access | VPN/tunnel/access controls only | Never expose RDP/WinRM. |
 
+
+## Validated VLAN30 to HQ-DC01 access
+
+Pilot validation from `HQ-W11-001` in VLAN 30 confirmed this final access state to `HQ-DC01`:
+
+| Source | Destination | Service | Port | Expected result | Purpose |
+|---|---|---|---:|---|---|
+| VLAN 30 Workstations | `HQ-DC01` | DNS | TCP `53` | Allowed | Domain name resolution. |
+| VLAN 30 Workstations | `HQ-DC01` | Kerberos | TCP `88` | Allowed | Domain authentication. |
+| VLAN 30 Workstations | `HQ-DC01` | LDAP | TCP `389` | Allowed | Directory lookup and domain operations. |
+| VLAN 30 Workstations | `HQ-DC01` | SMB/SYSVOL | TCP `445` | Allowed | SYSVOL, NETLOGON, and Group Policy access. |
+| VLAN 30 Workstations | `HQ-DC01` | RDP | TCP `3389` | Denied | Workstations must not interactively administer Domain Controllers. |
+| VLAN 30 Workstations | `HQ-DC01` | WinRM HTTP | TCP `5985` | Denied | Workstations must not remotely administer Domain Controllers. |
+
+This distinction is intentional: VLAN 30 requires domain service access, not Domain Controller administration access.
+
 ## Firewall interpretation rules
 
 - AD service access is not the same as administrative access.

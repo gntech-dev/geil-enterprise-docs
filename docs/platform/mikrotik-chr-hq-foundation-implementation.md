@@ -1035,6 +1035,11 @@ chain=forward action=drop comment="Default deny unapproved forwarding"
 
     WinRM source authorization is enforced here and on the Windows Defender Firewall, not with WinRM `IPv4Filter`. MikroTik must allow Management VLAN sources to reach workstation targets on TCP `5985` before the default deny rule. Do not allow guest or untrusted VLANs to reach WinRM.
 
+
+!!! warning "Block VLAN30 administration before broad pilot allows"
+
+    Pilot firewall validation confirmed that VLAN30 Workstations must reach `HQ-DC01` for AD DS services but must not reach Domain Controller administration ports. Add a drop for VLAN30-to-`HQ-DC01` TCP `3389,5985` before any broad or temporary VLAN30-to-`HQ-DC01` allow rule. If `HQ-W11-001` can reach `HQ-DC01` on TCP `3389` or TCP `5985`, check MikroTik rule order first.
+
 #### Temporary pilot validation rule — do not keep for production
 
 If a pilot client receives DHCP but cannot query DNS or contact AD, this broad rule can prove that the firewall is the blocker. Remove it immediately after validation and replace it with the least-privilege production rules above.
@@ -1046,6 +1051,7 @@ When: execute at this point in the procedure after the stated prerequisites are 
 Expected outcome: the command completes successfully and the following expected result or validation section confirms the change.
 
 ```routeros
+/ip firewall filter add chain=forward action=drop src-address=172.20.30.0/24 dst-address=172.20.20.11 protocol=tcp dst-port=3389,5985 place-before=[find comment="Default deny unapproved forwarding"] comment="DROP VLAN30 to HQ-DC01 admin ports"
 /ip firewall filter add chain=forward action=accept src-address=172.20.30.0/24 dst-address=172.20.20.11 place-before=[find comment="Default deny unapproved forwarding"] comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"
 /ip firewall filter remove [find comment="TEMP PILOT ONLY allow VLAN30 to HQ-DC01"]
 ```
