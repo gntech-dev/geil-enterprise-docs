@@ -25,10 +25,12 @@ Network configuration authority now lives under `docs/network/`. Project, Platfo
 | 2 | [VLAN and Subnet Plan](vlan-and-subnet-plan.md) | Canonical VLAN IDs, subnets, gateways, and example systems. |
 | 3 | [Network and Active Directory Services Matrix](network-and-ad-services-matrix.md) | Canonical service ports, AD DS paths, Windows management paths, and inter-VLAN service expectations. |
 | 4 | [Firewall Rule Matrix](firewall-rule-matrix.md) | Cross-service firewall rule matrix and validation references. |
-| 5 | [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md) | Authoritative operational MikroTik firewall policy and rule order. |
-| 6 | [HQ-FW01 RouterOS Baseline](mikrotik/hq-fw01-routeros-baseline.md) | RouterOS baseline and post-deployment network authority. |
-| 7 | [Cloudflared Container Networking](mikrotik/cloudflared-container-networking.md) | Cloudflared container network boundaries and validation. |
-| 8 | [MikroTik Windows Management Firewall Policy](mikrotik/windows-management-firewall-policy.md) | Windows management firewall context; current rule truth links to HQ-FW01 Firewall Policy. |
+| 5 | [HQ-FW01 Deployment Guide](mikrotik/hq-fw01-deployment-guide.md) | Authoritative build procedure for deploying `HQ-FW01` from factory defaults to the validated pilot configuration. |
+| 6 | [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md) | Authoritative operational MikroTik firewall policy and rule order. |
+| 7 | [HQ-FW01 RouterOS Baseline](mikrotik/hq-fw01-routeros-baseline.md) | RouterOS baseline and post-deployment network authority. |
+| 8 | [HQ-FW01 RouterOS Export - Current](mikrotik/hq-fw01-routeros-export-current.md) | Sanitized current validated RouterOS export snapshot. |
+| 9 | [Cloudflared Container Networking](mikrotik/cloudflared-container-networking.md) | Cloudflared container network boundaries and validation. |
+| 10 | [MikroTik Windows Management Firewall Policy](mikrotik/windows-management-firewall-policy.md) | Windows management firewall context; current rule truth links to HQ-FW01 Firewall Policy. |
 
 ## Related deployment context
 

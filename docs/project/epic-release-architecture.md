@@ -386,6 +386,7 @@ The following register assigns every current published document to exactly one r
 | E05.R01 - Operations readiness | E05 | `legacy/microsoft-core/windows-admin-center.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/firewall-rule-matrix.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/vlan-and-subnet-plan.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-deployment-guide.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-routeros-baseline.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-routeros-export-current.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/cloudflared-container-networking.md` |

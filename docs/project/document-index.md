@@ -159,6 +159,11 @@ The document index is the authoritative register of GEIL documents, their owners
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
 | GEIL-NET-INDEX | Network | Draft | `docs/network/index.md` | Entry point for practical network policy documents |
+| GEIL-NET-MTK-HQFW01-DEPLOY-001 | HQ-FW01 Deployment Guide | Pilot Validated | `docs/network/mikrotik/hq-fw01-deployment-guide.md` | Authoritative RouterOS deployment procedure from factory defaults to the validated `HQ-FW01` pilot configuration |
+| GEIL-NET-MTK-HQFW01-POLICY-001 | HQ-FW01 Firewall Policy | Pilot Validated | `docs/network/mikrotik/hq-fw01-firewall-policy.md` | Operational MikroTik firewall policy, rule order, temporary pilot rules, and validation |
+| GEIL-NET-MTK-HQFW01-BASELINE-001 | HQ-FW01 RouterOS Baseline | Pilot Validated | `docs/network/mikrotik/hq-fw01-routeros-baseline.md` | RouterOS baseline values derived from the validated export |
+| GEIL-NET-MTK-HQFW01-EXPORT-001 | HQ-FW01 RouterOS Export - Current Validated Snapshot | Pilot Validated | `docs/network/mikrotik/hq-fw01-routeros-export-current.md` | Sanitized current validated RouterOS export snapshot |
+| GEIL-NET-MTK-CF-001 | Cloudflared Container Networking | Pilot Validated | `docs/network/mikrotik/cloudflared-container-networking.md` | RouterOS Cloudflared container network boundaries and validation |
 | GEIL-NET-MTK-WINMGMT-001 | MikroTik Windows Management Firewall Policy | Draft | `docs/network/mikrotik/windows-management-firewall-policy.md` | RouterOS firewall policy for Windows administration traffic between VLANs, including RDP, WinRM, AD services, validation, and checklist |
 
 ## Cloud and Endpoint / Future documents
@@ -217,7 +222,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 16 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 17 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 15 |

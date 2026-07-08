@@ -80,6 +80,7 @@ nav:
       - Network and AD Services Matrix: network/network-and-ad-services-matrix.md
       - Firewall Rule Matrix: network/firewall-rule-matrix.md
       - MikroTik:
+          - HQ-FW01 Deployment Guide: network/mikrotik/hq-fw01-deployment-guide.md
           - HQ-FW01 Firewall Policy: network/mikrotik/hq-fw01-firewall-policy.md
           - HQ-FW01 RouterOS Baseline: network/mikrotik/hq-fw01-routeros-baseline.md
           - HQ-FW01 RouterOS Export - Current: network/mikrotik/hq-fw01-routeros-export-current.md
