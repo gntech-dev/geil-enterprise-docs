@@ -54,7 +54,7 @@ The clone, VLAN30 validation, domain join, OU placement, `gpupdate`, `gpresult`,
 - The computer object is in `OU=Workstations,OU=Computers,OU=GNTECH,...`.
 - `GP - Baseline - Workstations` appears in `gpresult`.
 - `GP - Security - Microsoft Defender` appears in applied computer policy after the Defender baseline is implemented.
-- Microsoft Defender Baseline is applied before final workstation validation.
+- Microsoft Defender Baseline is applied after Windows Firewall, Windows LAPS, and WinRM validation, and before Enterprise Validation.
 - `Get-MpComputerStatus` reports Microsoft Defender Antivirus and real-time protection enabled.
 
 ## Related documents

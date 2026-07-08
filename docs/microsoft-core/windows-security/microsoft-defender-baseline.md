@@ -2,8 +2,8 @@
 title: Microsoft Defender Enterprise Baseline
 document_id: GEIL-MSC-WINSEC-DEF-001
 owner: Infrastructure Engineering
-status: Draft
-version: 1.0
+status: Approved
+version: 1.1
 last_reviewed: 2026-07-07
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -17,8 +17,8 @@ classification: Internal Confidential
 |---|---|
 | Document ID | GEIL-MSC-WINSEC-DEF-001 |
 | Owner | Infrastructure Engineering |
-| Status | Draft |
-| Version | 1.0 |
+| Status | Approved |
+| Version | 1.1 |
 | Last Reviewed | 2026-07-07 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -50,6 +50,7 @@ Related Microsoft Core documents:
 - [Group Policy Baseline](../group-policy-baseline.md)
 - [Windows Client Lifecycle](../windows-client-lifecycle/index.md)
 - [Standard Windows Client - HQ-W11-001](../windows-client-lifecycle/standard-windows-client-hq-w11-001.md)
+- [Windows Management Workstation - HQ-MGMT01](../windows-client-lifecycle/windows-11-management-workstation.md)
 - [Windows Firewall Baseline](windows-firewall-baseline.md)
 - [Windows LAPS Baseline](windows-laps-baseline.md)
 
@@ -79,6 +80,29 @@ Baseline goals:
 - Run Network Protection in Audit mode during the lab phase.
 - Keep security intelligence updated.
 - Validate policy and health with PowerShell.
+
+## Validated deployment workflow
+
+The GEIL laboratory validated Microsoft Defender Antivirus on this infrastructure:
+
+- `HQ-DC01`
+- `HQ-MGMT01`
+- `HQ-W11-001`
+
+Validated implementation sequence:
+
+| Order | Step | Validation checkpoint |
+|---:|---|---|
+| 1 | Create `GP - Security - Microsoft Defender` | GPO exists in Group Policy Management. |
+| 2 | Link GPO | GPO is linked to Workstations and Management Workstations OUs. |
+| 3 | Configure Defender policy | Defender Antivirus settings match the validated baseline. |
+| 4 | Run `gpupdate /force` | Client processes updated computer policy. |
+| 5 | Validate GPO | `gpresult /r /scope computer` shows the Defender GPO applied. |
+| 6 | Validate Defender health | `Get-MpComputerStatus` shows Defender enabled and healthy. |
+| 7 | Update signatures | `Update-MpSignature` completes successfully. |
+| 8 | Enterprise Ready | Client passes endpoint protection validation before final workstation acceptance. |
+
+Documentation now reflects the validated deployment sequence rather than a theoretical or manual-only deployment.
 
 ## Group Policy object
 
@@ -171,37 +195,41 @@ GpoStatus        : AllSettingsEnabled
 
 Configure the following settings in `GP - Security - Microsoft Defender`.
 
-| Control | Recommended setting | Why |
+| Control | Validated setting | Why |
 |---|---|---|
+| Microsoft Defender Antivirus | Enabled | Establishes built-in Microsoft endpoint protection as the default client protection layer. |
 | Real-time protection | Enabled | Blocks malware activity as files and processes are accessed. |
 | Behavior monitoring | Enabled | Detects suspicious behavior that may not match a static signature. |
+| IOAV protection | Enabled | Scans downloaded files and attachments as they are accessed. |
 | Cloud-delivered protection | Enabled | Improves detection using Microsoft cloud intelligence when internet access is available. |
-| Automatic sample submission | Send safe samples automatically | Improves detection while avoiding unnecessary manual prompts for routine samples. |
-| PUA Protection | Enabled | Blocks potentially unwanted applications often seen in browser/download abuse. |
-| Network Protection | Audit mode | Records potential risky network destinations without blocking lab workflows during pilot validation. |
+| MAPS reporting | Advanced membership (`2`) | Enables enhanced cloud-delivered protection telemetry for Defender Antivirus. |
+| Automatic sample submission | Safe samples (`1`) | Allows safe samples to be submitted automatically while limiting unnecessary operator prompts. |
+| PUA Protection | Enabled (`1`) | Blocks potentially unwanted applications often seen in browser/download abuse. |
+| Network Protection | Audit mode (`2`) | Records risky network destinations without blocking lab workflows during pilot validation. |
+| Tamper Protection | Enabled | Validated as enabled on the pilot client; continue to record state because full enforcement is not an on-premises GPO-only control. |
 | Security intelligence updates | Enabled and automatic | Keeps signatures current without relying on manual operator action. |
 | Scheduled quick scan | Daily | Provides routine lightweight endpoint coverage. |
 | Scheduled full scan | Weekly or operationally scheduled | Provides deeper periodic coverage without disrupting daily use. |
-| Tamper Protection | Document limitation | Tamper Protection is not fully controlled by on-premises GPO; use cloud management later if required. |
 
 ## Recommended policy values
 
-| Policy area | Setting | Baseline value |
+| Policy area | Setting | Validated value |
 |---|---|---|
 | Microsoft Defender Antivirus | Turn off Microsoft Defender Antivirus | Disabled |
 | Real-time Protection | Turn off real-time protection | Disabled |
 | Real-time Protection | Turn on behavior monitoring | Enabled |
-| MAPS | Join Microsoft MAPS | Advanced MAPS |
-| MAPS | Send file samples when further analysis is required | Send safe samples |
-| Microsoft Defender Antivirus | Configure detection for potentially unwanted applications | Enabled / Block |
-| Microsoft Defender Exploit Guard > Network Protection | Prevent users and apps from accessing dangerous websites | Audit mode |
+| Real-time Protection | Scan all downloaded files and attachments | Enabled |
+| MAPS | Join Microsoft MAPS | Advanced membership (`2`) |
+| MAPS | Send file samples when further analysis is required | Safe samples (`1`) |
+| Microsoft Defender Antivirus | Configure detection for potentially unwanted applications | Enabled / Block (`1`) |
+| Microsoft Defender Exploit Guard > Network Protection | Prevent users and apps from accessing dangerous websites | Audit mode (`2`) |
 | Security Intelligence Updates | Define the order of sources for updates | Microsoft Update, WSUS if later deployed |
 | Scan | Check for the latest virus and spyware security intelligence before running a scheduled scan | Enabled |
 | Scan | Specify the scan type to use for a scheduled scan | Quick scan for routine daily schedule |
 
 ## Tamper Protection limitations
 
-Tamper Protection is important, but it is not a complete on-premises GPO control in this lab phase.
+Tamper Protection validated as enabled on the pilot client. It remains important to document it as an observed endpoint protection state because complete Tamper Protection enforcement is not an on-premises GPO-only control in this lab phase.
 
 Operational guidance:
 
@@ -231,7 +259,7 @@ Expected outcome: Group Policy refresh completes without errors.
 
 ```powershell
 gpupdate /force
-gpresult /r
+gpresult /r /scope computer
 ```
 
 STOP if `GP - Security - Microsoft Defender` does not appear in applied computer policy. Correct OU placement and GPO links before Defender validation.
@@ -240,79 +268,121 @@ STOP if `GP - Security - Microsoft Defender` does not appear in applied computer
 
 Run on: `HQ-W11-001`
 
-When: after Group Policy applies.
+When: after `GP - Security - Microsoft Defender` is created, linked, configured, and `gpupdate /force` completes.
 
-Expected outcome: Microsoft Defender Antivirus is enabled, real-time protection is enabled, behavior monitoring is enabled, and signatures are current.
+Expected outcome: the Defender GPO applies to the computer and the endpoint reports the validated healthy Defender state.
 
 ```powershell
+gpupdate /force
+gpresult /r /scope computer
 Get-MpComputerStatus
+Get-MpPreference
+Update-MpSignature
 ```
 
-Healthy output should show values similar to:
+Healthy `gpresult` output must include:
 
 ```text
-AMServiceEnabled           : True
-AntivirusEnabled           : True
-BehaviorMonitorEnabled     : True
-IoavProtectionEnabled      : True
-NISEnabled                 : True
-RealTimeProtectionEnabled  : True
-AntispywareSignatureAge    : 0
-AntivirusSignatureAge      : 0
+Applied Group Policy Objects
+-----------------------------
+    GP - Security - Microsoft Defender
+```
+
+Healthy `Get-MpComputerStatus` output must include these values:
+
+```text
+AntivirusEnabled              : True
+AntispywareEnabled            : True
+RealTimeProtectionEnabled     : True
+BehaviorMonitorEnabled        : True
+IoavProtectionEnabled         : True
+OnAccessProtectionEnabled     : True
+DefenderSignaturesOutOfDate   : False
+IsTamperProtected             : True
+```
+
+Healthy `Get-MpPreference` output must include these values:
+
+```text
+PUAProtection                 : 1
+MAPSReporting                 : 2
+SubmitSamplesConsent          : 1
+EnableNetworkProtection       : 2
+```
+
+Run on: `HQ-W11-001`
+
+When: validating only Defender health fields after policy is already known to apply.
+
+Expected outcome: Microsoft Defender Antivirus, antispyware, real-time, behavior, IOAV, and on-access protection are enabled; signatures are not out of date; Tamper Protection is enabled.
+
+```powershell
+Get-MpComputerStatus |
+    Select-Object AntivirusEnabled,
+        AntispywareEnabled,
+        RealTimeProtectionEnabled,
+        BehaviorMonitorEnabled,
+        IoavProtectionEnabled,
+        OnAccessProtectionEnabled,
+        DefenderSignaturesOutOfDate,
+        IsTamperProtected
 ```
 
 Run on: `HQ-W11-001`
 
 When: validating configured Defender preferences after Group Policy applies.
 
-Expected outcome: preferences match the baseline, including PUA Protection enabled and Network Protection in Audit mode.
+Expected outcome: PUA Protection is enabled, MAPS reporting is Advanced, automatic sample submission is Safe Samples, and Network Protection is in Audit mode.
 
 ```powershell
 Get-MpPreference |
-    Select-Object DisableRealtimeMonitoring, DisableBehaviorMonitoring, PUAProtection, EnableNetworkProtection, SignatureScheduleDay, ScanScheduleDay, ScanParameters
+    Select-Object PUAProtection,
+        MAPSReporting,
+        SubmitSamplesConsent,
+        EnableNetworkProtection
 ```
-
-Expected interpretation:
-
-- `DisableRealtimeMonitoring` is `False`.
-- `DisableBehaviorMonitoring` is `False`.
-- `PUAProtection` indicates enabled/block mode.
-- `EnableNetworkProtection` indicates Audit mode for the lab.
-- Scheduled scan values are present.
 
 Run on: `HQ-W11-001`
 
 When: validating security intelligence update capability.
 
-Expected outcome: security intelligence update completes or returns a clear update-source error that can be remediated.
+Expected outcome: security intelligence update completes and signatures are not out of date.
 
 ```powershell
 Update-MpSignature
 Get-MpComputerStatus |
-    Select-Object AntivirusSignatureLastUpdated, AntispywareSignatureLastUpdated, AntivirusSignatureAge, AntispywareSignatureAge
+    Select-Object AntivirusSignatureLastUpdated,
+        AntispywareSignatureLastUpdated,
+        AntivirusSignatureAge,
+        AntispywareSignatureAge,
+        DefenderSignaturesOutOfDate
 ```
 
-Healthy output should show recent signature timestamps and low signature ages.
+Healthy output should show recent signature timestamps, low signature ages, and `DefenderSignaturesOutOfDate` set to `False`.
 
 ## Operations
 
-### Update security intelligence
+### Update signatures
 
-Run on: `HQ-W11-001`
+Run on: `HQ-W11-001` or another managed Windows client
 
-When: routine verification, after network changes, or before pilot acceptance.
+When: routine verification, after network changes, before pilot acceptance, or when signatures appear stale.
 
-Expected outcome: Defender security intelligence is current.
+Expected outcome: Defender security intelligence updates successfully and signatures are not out of date.
 
 ```powershell
 Update-MpSignature
+Get-MpComputerStatus |
+    Select-Object AntivirusSignatureLastUpdated,
+        AntivirusSignatureAge,
+        DefenderSignaturesOutOfDate
 ```
 
-### Run a quick scan
+### Quick scan
 
-Run on: `HQ-W11-001`
+Run on: `HQ-W11-001` or another managed Windows client
 
-When: routine operational check or after policy deployment.
+When: routine operational check, after policy deployment, or after remediation.
 
 Expected outcome: quick scan starts and completes without Defender service errors.
 
@@ -320,9 +390,9 @@ Expected outcome: quick scan starts and completes without Defender service error
 Start-MpScan -ScanType QuickScan
 ```
 
-### Run a full scan
+### Full scan
 
-Run on: `HQ-W11-001`
+Run on: `HQ-W11-001` or another managed Windows client
 
 When: deeper validation is required, after suspected compromise, or during a maintenance window.
 
@@ -332,21 +402,67 @@ Expected outcome: full scan starts successfully. Schedule during a maintenance w
 Start-MpScan -ScanType FullScan
 ```
 
-### Verify after GPO application
+### Health verification
 
-Run on: `HQ-W11-001`
+Run on: `HQ-W11-001` or another managed Windows client
 
-When: after `gpupdate /force`, reboot, or OU/GPO changes.
+When: after reboot, before final workstation validation, before privileged use of a management workstation, or during periodic operations review.
 
-Expected outcome: the GPO applies and Defender health remains enabled.
+Expected outcome: Defender services and protection layers remain enabled.
+
+```powershell
+Get-MpComputerStatus |
+    Select-Object AntivirusEnabled,
+        AntispywareEnabled,
+        RealTimeProtectionEnabled,
+        BehaviorMonitorEnabled,
+        IoavProtectionEnabled,
+        OnAccessProtectionEnabled,
+        DefenderSignaturesOutOfDate,
+        IsTamperProtected
+```
+
+### Policy verification
+
+Run on: `HQ-W11-001` or another managed Windows client
+
+When: after `gpupdate /force`, OU changes, GPO edits, or troubleshooting.
+
+Expected outcome: `GP - Security - Microsoft Defender` appears in applied computer policy and Defender preferences match the validated baseline.
 
 ```powershell
 gpupdate /force
-gpresult /r
-Get-MpComputerStatus |
-    Select-Object AMServiceEnabled, AntivirusEnabled, RealTimeProtectionEnabled, BehaviorMonitorEnabled
+gpresult /r /scope computer
 Get-MpPreference |
-    Select-Object PUAProtection, EnableNetworkProtection
+    Select-Object PUAProtection,
+        MAPSReporting,
+        SubmitSamplesConsent,
+        EnableNetworkProtection
+```
+
+### Recommended periodic validation
+
+Perform this check during monthly workstation health review, before closing endpoint-protection change tickets, and after major GPO changes.
+
+Run on: representative Workstations and Management Workstations clients
+
+When: monthly, after baseline changes, and before declaring a new workstation enterprise-ready.
+
+Expected outcome: GPO applies, Defender health is enabled, signatures are current, and preferences match the validated baseline.
+
+```powershell
+gpresult /r /scope computer
+Get-MpComputerStatus |
+    Select-Object AntivirusEnabled,
+        RealTimeProtectionEnabled,
+        BehaviorMonitorEnabled,
+        DefenderSignaturesOutOfDate,
+        IsTamperProtected
+Get-MpPreference |
+    Select-Object PUAProtection,
+        MAPSReporting,
+        SubmitSamplesConsent,
+        EnableNetworkProtection
 ```
 
 ## Windows client lifecycle integration
@@ -368,9 +484,11 @@ Apply Windows Firewall Baseline
 ↓
 Apply Windows LAPS Baseline
 ↓
+Validate WinRM
+↓
 Apply Microsoft Defender Baseline
 ↓
-Validate final workstation readiness
+Enterprise Validation
 ```
 
 Lifecycle rules:
@@ -378,40 +496,57 @@ Lifecycle rules:
 - Do not domain join the golden template.
 - Do not validate Defender GPO state in the golden template.
 - Apply this baseline only after the cloned client is domain joined and moved to the correct OU.
-- Validate Microsoft Defender before final workstation acceptance.
+- Validate Microsoft Defender after Windows Firewall, Windows LAPS, and WinRM validation, and before Enterprise Validation.
 - Use [Standard Windows Client - HQ-W11-001](../windows-client-lifecycle/standard-windows-client-hq-w11-001.md) as the pilot client.
 
-## Pilot validation plan
+## Pilot Findings
 
-This EPIC will be validated on `HQ-W11-001`.
+The Microsoft Defender Enterprise Baseline was successfully validated on `HQ-W11-001` in the GEIL lab.
 
-Run on: `HQ-W11-001`
+Validated infrastructure:
 
-When: after `GP - Security - Microsoft Defender` is created, linked, configured, and Group Policy has refreshed.
+- `HQ-DC01`
+- `HQ-MGMT01`
+- `HQ-W11-001`
 
-Expected outcome: the endpoint reports healthy Microsoft Defender Antivirus state and baseline preferences.
+Validated GPO:
 
-```powershell
-gpupdate /force
-gpresult /r
-Get-MpComputerStatus
-Get-MpPreference |
-    Select-Object DisableRealtimeMonitoring, DisableBehaviorMonitoring, PUAProtection, EnableNetworkProtection
-Update-MpSignature
-Get-MpComputerStatus |
-    Select-Object AntivirusSignatureLastUpdated, AntivirusSignatureAge, RealTimeProtectionEnabled
+```text
+GP - Security - Microsoft Defender
 ```
 
-Expected healthy results:
+Validated GPO links:
 
-- `GP - Security - Microsoft Defender` appears in applied computer policy.
-- `AMServiceEnabled` is `True`.
-- `AntivirusEnabled` is `True`.
-- `RealTimeProtectionEnabled` is `True`.
-- `BehaviorMonitorEnabled` is `True`.
-- PUA Protection is enabled.
-- Network Protection is in Audit mode for the lab.
-- Signature update succeeds or the update error is documented and remediated.
+- Workstations OU.
+- Management Workstations OU.
+
+Validated deployment sequence:
+
+1. Create GPO.
+2. Link GPO.
+3. Configure policy.
+4. Run `gpupdate /force`.
+5. Validate GPO with `gpresult /r /scope computer`.
+6. Validate Defender health with `Get-MpComputerStatus`.
+7. Update signatures with `Update-MpSignature`.
+8. Mark endpoint as Enterprise Ready.
+
+Validated Defender state:
+
+| Setting | Validated value |
+|---|---|
+| Microsoft Defender Antivirus | Enabled |
+| Real-time Protection | Enabled |
+| Behavior Monitoring | Enabled |
+| IOAV Protection | Enabled |
+| Cloud-delivered Protection | Enabled |
+| MAPS Reporting | Advanced membership (`2`) |
+| Automatic Sample Submission | Safe samples (`1`) |
+| PUA Protection | Enabled (`1`) |
+| Network Protection | Audit mode (`2`) |
+| Tamper Protection | Enabled |
+
+The baseline is no longer theoretical. It reflects the validated Active Directory Group Policy deployment used in the GEIL lab.
 
 ## Security considerations
 
@@ -424,14 +559,15 @@ Expected healthy results:
 
 ## Troubleshooting
 
-| Issue | Likely cause | Validation commands | Fix |
-|---|---|---|---|
-| Defender service disabled | Local service change, third-party AV, or policy conflict | `Get-MpComputerStatus`; `Get-Service WinDefend` | Remove conflicting control, verify no third-party AV owns protection, reapply GPO. |
-| Signatures outdated | No internet/update path, proxy issue, or update source issue | `Update-MpSignature`; `Get-MpComputerStatus` signature fields | Restore update connectivity or configure an approved update source. |
-| GPO not applied | Computer in wrong OU or GPO link missing | `gpresult /r`; `Get-GPInheritance -Target <OU DN>` | Move client to correct OU and link `GP - Security - Microsoft Defender`. |
-| Third-party AV detected | Another endpoint protection product registered with Windows Security Center | `Get-MpComputerStatus`; Windows Security UI | Remove or formally approve the third-party product before relying on this baseline. |
-| Real-time protection disabled | Local tampering, policy conflict, or troubleshooting change | `Get-MpComputerStatus`; `Get-MpPreference` | Reapply policy, investigate administrative changes, and document any exception. |
-| Network Protection blocks expected workflow | Policy accidentally set to block instead of audit | `Get-MpPreference`; review Network Protection setting | Set Network Protection to Audit mode for the lab pilot. |
+| Issue | Symptoms | Validation commands | Expected output | Resolution |
+|---|---|---|---|---|
+| GPO not applied | Defender preferences do not match baseline; `GP - Security - Microsoft Defender` is missing from computer policy | `gpresult /r /scope computer`; `Get-GPInheritance -Target <OU DN>` | `GP - Security - Microsoft Defender` appears under applied computer policy and is linked to the correct OU | Move the client to the correct OU, link the GPO, wait for replication, then run `gpupdate /force`. |
+| Policies missing | Defender is enabled but MAPS, sample submission, PUA, or Network Protection values are not correct | `Get-MpPreference` | `PUAProtection = 1`, `MAPSReporting = 2`, `SubmitSamplesConsent = 1`, `EnableNetworkProtection = 2` | Correct GPO settings, confirm ADMX availability, and refresh Group Policy. |
+| Third-party AV installed | Defender reports passive/disabled behavior or Windows Security shows another provider | `Get-MpComputerStatus`; Windows Security UI | Microsoft Defender Antivirus is active for this baseline | Remove or formally approve the third-party product before relying on this baseline. |
+| Signatures outdated | `DefenderSignaturesOutOfDate` is true or signature ages are high | `Update-MpSignature`; `Get-MpComputerStatus` | `DefenderSignaturesOutOfDate = False` and recent signature timestamps | Restore internet/update connectivity or configure an approved update source. |
+| Real-time protection disabled | `RealTimeProtectionEnabled` is false | `Get-MpComputerStatus`; `Get-MpPreference` | `RealTimeProtectionEnabled = True`; `DisableRealtimeMonitoring = False` | Reapply policy, investigate local administrative changes, and remove conflicting controls. |
+| Network Protection not configured | Network Protection does not report Audit mode | `Get-MpPreference` | `EnableNetworkProtection = 2` | Configure Network Protection to Audit mode in `GP - Security - Microsoft Defender`, then run `gpupdate /force`. |
+| Tamper Protection not enabled | `IsTamperProtected` is false | `Get-MpComputerStatus` | `IsTamperProtected = True` for the validated pilot state | Record the deviation; do not claim GPO-only enforcement. Revisit cloud management only when MDE/Intune is in scope. |
 
 ## Troubleshooting command reference
 
@@ -445,7 +581,7 @@ Expected outcome: command output identifies whether the issue is service state, 
 Get-Service WinDefend
 Get-MpComputerStatus
 Get-MpPreference
-gpresult /r
+gpresult /r /scope computer
 Update-MpSignature
 ```
 
@@ -487,7 +623,20 @@ foreach ($Target in $Targets) {
 - [ ] `Get-MpComputerStatus` shows healthy Defender state.
 - [ ] `Get-MpPreference` matches baseline settings.
 - [ ] `Update-MpSignature` succeeds or update-source issue is documented.
-- [ ] `HQ-W11-001` pilot validation completed before broad rollout.
+- [ ] `gpresult /r /scope computer` shows the Defender GPO applied.
+- [ ] `AntivirusEnabled = True`.
+- [ ] `AntispywareEnabled = True`.
+- [ ] `RealTimeProtectionEnabled = True`.
+- [ ] `BehaviorMonitorEnabled = True`.
+- [ ] `IoavProtectionEnabled = True`.
+- [ ] `OnAccessProtectionEnabled = True`.
+- [ ] `DefenderSignaturesOutOfDate = False`.
+- [ ] `PUAProtection = 1`.
+- [ ] `MAPSReporting = 2`.
+- [ ] `SubmitSamplesConsent = 1`.
+- [ ] `EnableNetworkProtection = 2`.
+- [ ] `IsTamperProtected = True`.
+- [ ] `HQ-W11-001` pilot validation completed.
 
 ## Future improvements
 

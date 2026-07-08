@@ -34,12 +34,12 @@ This section is the Microsoft Core entry point for Windows 11 Enterprise client 
 3. Domain Join after cloning
 4. Move to the correct OU
 5. Apply GPO
-6. Apply Windows LAPS
-7. Validate password backup
-8. Apply Microsoft Defender Baseline
-9. Validate Defender health
-10. Validate RDP
-11. Validate WinRM
+6. Apply Windows Firewall Baseline
+7. Apply Windows LAPS
+8. Validate WinRM
+9. Apply Microsoft Defender Baseline
+10. Validate Defender health
+11. Enterprise Validation
 12. Ready for Enterprise Management
 
 Implementation documents:
