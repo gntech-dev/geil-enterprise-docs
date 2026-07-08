@@ -25,6 +25,8 @@ classification: Internal Confidential
 
 ## Purpose
 
+The [Enterprise Implementation Roadmap](enterprise-implementation-roadmap.md) is the high-level phase navigation document for GEIL implementation. This document remains the detailed documentation execution roadmap and should not duplicate the enterprise phase roadmap.
+
 The roadmap organizes GEIL by enterprise capability Epics, Releases, and Documents. It intentionally avoids technology-first sequencing so the library can scale beyond 1,000 pages without restructuring.
 
 ## Roadmap model

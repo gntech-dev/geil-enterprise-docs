@@ -303,6 +303,7 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/project-charter.md` |
+| E00.R01 - Documentation governance foundation | E00 | `project/enterprise-implementation-roadmap.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/environment-specification.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/document-index.md` |
 | E00.R01 - Documentation governance foundation | E00 | `project/documentation-backlog.md` |

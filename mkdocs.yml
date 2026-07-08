@@ -146,6 +146,7 @@ nav:
       - project/index.md
       - Project Charter: project/project-charter.md
       - Master Plan: project/master-plan.md
+      - Enterprise Implementation Roadmap: project/enterprise-implementation-roadmap.md
       - Environment Specification: project/environment-specification.md
       - Network and AD Services Matrix: project/network-and-ad-services-matrix.md
       - Document Index: project/document-index.md

@@ -41,6 +41,7 @@ The document index is the authoritative register of GEIL documents, their owners
 |---|---|---|---|---|
 | GEIL-PRJ-CHARTER-001 | GEIL Project Charter | Approved | `docs/project/project-charter.md` | Scope, roles, quality rules |
 | GEIL-PRJ-MASTER-001 | GEIL Master Plan | Approved | `docs/project/master-plan.md` | North Star vision, mission, long-term goals, roadmap, target architecture, and implementation philosophy |
+| GEIL-PRJ-ENT-ROADMAP-001 | Enterprise Implementation Roadmap | Draft | `docs/project/enterprise-implementation-roadmap.md` | Authoritative high-level implementation phase roadmap and Microsoft Core document status model |
 | GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, authentication formats, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
 | GEIL-PRJ-NETAD-MATRIX-001 | Network and Active Directory Services Matrix | Approved | `docs/project/network-and-ad-services-matrix.md` | Canonical GNTECH VLANs, subnets, server names, AD service ports, Windows management ports, and inter-VLAN access expectations |
 | GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
@@ -206,7 +207,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 
 | Epic | Release | Current Document Count |
 |---|---|---:|
-| E00 | E00.R01 - Documentation governance foundation | 27 |
+| E00 | E00.R01 - Documentation governance foundation | 28 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |

@@ -43,6 +43,7 @@ The current highest-priority deliverable is the Cloudflare Pages deployment runb
 
 ## Core project references
 
+- [Enterprise Implementation Roadmap](enterprise-implementation-roadmap.md)
 - [Environment Specification](environment-specification.md)
 - [Network and Active Directory Services Matrix](network-and-ad-services-matrix.md)
 - [Document Index](document-index.md)
