@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Network configuration authority"
+
+    Network configuration authority now lives under `docs/network/`. Use [Network](../network/index.md) for current network, VLAN, firewall, DNS, DHCP, and service-path authority.
+
 ## Purpose
 
 This document is the high-level implementation roadmap for the GEIL Enterprise project. It gives implementers a single navigation view for the order in which enterprise infrastructure capabilities should be designed, implemented, validated, and operationalized.

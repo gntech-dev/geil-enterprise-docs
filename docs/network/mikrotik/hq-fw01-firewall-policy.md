@@ -31,10 +31,10 @@ Use this document when validating or changing current `HQ-FW01` firewall behavio
 
 Related documents:
 
-- [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md)
+- [Network and Active Directory Services Matrix](../network-and-ad-services-matrix.md)
 - [MikroTik Windows Management Firewall Policy](windows-management-firewall-policy.md)
 - [MikroTik CHR HQ Foundation Implementation](../../platform/mikrotik-chr-hq-foundation-implementation.md)
-- [Firewall Rule Matrix](../../platform/firewall-rule-matrix.md)
+- [Firewall Rule Matrix](../firewall-rule-matrix.md)
 - [Enterprise Windows Firewall Baseline](../../microsoft-core/windows-security/windows-firewall-baseline.md)
 - [Windows Event Forwarding and Collector Baseline](../../microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md)
 

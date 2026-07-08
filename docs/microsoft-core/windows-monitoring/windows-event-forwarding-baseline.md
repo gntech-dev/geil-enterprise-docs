@@ -58,7 +58,7 @@ Related documents:
 
 - [Enterprise Implementation Roadmap](../../project/enterprise-implementation-roadmap.md)
 - [Deployment Style Guide](../../governance/deployment-style-guide.md)
-- [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md)
+- [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md)
 - [Windows Firewall Baseline](../windows-security/windows-firewall-baseline.md)
 - [Enterprise WinRM Management](../administration/enterprise-winrm-management.md)
 - [MikroTik Windows Management Firewall Policy](../../network/mikrotik/windows-management-firewall-policy.md)
@@ -588,3 +588,7 @@ This EPIC is complete when all criteria below are met:
 - [x] `ForwardedEvents` on `HQ-WEC01` receives events from the pilot sources.
 - [x] Event ID `111` from `Microsoft-Windows-EventForwarder` was observed.
 - [x] Pilot Findings are updated with real deployment results.
+
+!!! note "Network configuration authority"
+
+    Network configuration authority now lives under `docs/network/`. Use [Network](../../network/index.md) for current network, VLAN, firewall, DNS, DHCP, and service-path authority.

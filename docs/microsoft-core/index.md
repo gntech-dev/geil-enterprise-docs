@@ -131,7 +131,7 @@ These items are future planning entries unless explicitly promoted after laborat
 
 The current Windows Infrastructure Lab Deployment roadmap is tracked in [Epic and Release Architecture](../project/epic-release-architecture.md) and [Documentation Roadmap](../project/documentation-roadmap.md). Microsoft Core implementation should follow this order:
 
-1. [Network and Active Directory Services Matrix](../project/network-and-ad-services-matrix.md).
+1. [Network and Active Directory Services Matrix](../network/network-and-ad-services-matrix.md).
 2. Enterprise WinRM Management.
 3. [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md).
 4. [Windows LAPS Baseline](windows-security/windows-laps-baseline.md).
@@ -151,7 +151,7 @@ Group Strategy, User Lifecycle, and Service Account Standard are not loose Micro
 
 ## Network and service access reference
 
-Use the [Network and Active Directory Services Matrix](../project/network-and-ad-services-matrix.md) for canonical GNTECH VLANs, subnets, administrative access paths, AD DS service ports, Windows management ports, and firewall expectations.
+Use the [Network and Active Directory Services Matrix](../network/network-and-ad-services-matrix.md) for canonical GNTECH VLANs, subnets, administrative access paths, AD DS service ports, Windows management ports, and firewall expectations.
 
 ## Authentication standard
 

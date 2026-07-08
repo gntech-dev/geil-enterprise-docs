@@ -60,7 +60,7 @@ nav:
       - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
       - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
       - MikroTik CHR HQ Foundation Implementation: platform/mikrotik-chr-hq-foundation-implementation.md
-      - Firewall Rule Matrix: platform/firewall-rule-matrix.md
+      - Firewall Rule Matrix: network/firewall-rule-matrix.md
       - Active Directory Network Requirements: platform/active-directory-network-requirements.md
       - Enterprise Port Reference: platform/enterprise-port-reference.md
       - Windows Server 2025 Golden Template: platform/windows-server-2025-golden-template.md
@@ -69,8 +69,15 @@ nav:
       - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
   - Network:
       - network/index.md
-      - HQ-FW01 Firewall Policy: network/mikrotik/hq-fw01-firewall-policy.md
-      - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
+      - Network Architecture: network/network-architecture.md
+      - VLAN and Subnet Plan: network/vlan-and-subnet-plan.md
+      - Network and AD Services Matrix: network/network-and-ad-services-matrix.md
+      - Firewall Rule Matrix: network/firewall-rule-matrix.md
+      - MikroTik:
+          - HQ-FW01 Firewall Policy: network/mikrotik/hq-fw01-firewall-policy.md
+          - HQ-FW01 RouterOS Baseline: network/mikrotik/hq-fw01-routeros-baseline.md
+          - Cloudflared Container Networking: network/mikrotik/cloudflared-container-networking.md
+          - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
   - Microsoft Core:
       - microsoft-core/index.md
       - Phase 1 - Identity Foundation:
@@ -125,7 +132,7 @@ nav:
   - Architecture:
       - architecture/index.md
       - Enterprise Blueprint: architecture/enterprise-lab-blueprint.md
-      - Network Architecture: architecture/network-architecture.md
+      - Network Architecture: network/network-architecture.md
       - Identity Architecture: architecture/identity-architecture.md
       - Source Material Pending Merge:
           - Architecture Principles: architecture/architecture-principles.md
@@ -152,7 +159,7 @@ nav:
       - Master Plan: project/master-plan.md
       - Enterprise Implementation Roadmap: project/enterprise-implementation-roadmap.md
       - Environment Specification: project/environment-specification.md
-      - Network and AD Services Matrix: project/network-and-ad-services-matrix.md
+      - Network and AD Services Matrix: network/network-and-ad-services-matrix.md
       - Document Index: project/document-index.md
       - Documentation Backlog: project/documentation-backlog.md
       - Documentation Roadmap: project/documentation-roadmap.md

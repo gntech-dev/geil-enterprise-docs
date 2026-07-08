@@ -54,7 +54,7 @@ This document covers:
 
 Related documents:
 
-- [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md)
+- [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md)
 - [Active Directory Organizational Foundation](../active-directory-organizational-foundation.md)
 - [Group Policy Baseline](../group-policy-baseline.md)
 - [Windows Management Workstation](../windows-client-lifecycle/windows-11-management-workstation.md)

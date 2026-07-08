@@ -25,4 +25,4 @@ Windows monitoring starts with native Windows Event Forwarding and a dedicated W
 
 ## Source of truth
 
-Use the [Enterprise Implementation Roadmap](../../project/enterprise-implementation-roadmap.md) for high-level phase navigation and the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md) for canonical VLANs, host names, management ports, and firewall expectations.
+Use the [Enterprise Implementation Roadmap](../../project/enterprise-implementation-roadmap.md) for high-level phase navigation and the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md) for canonical VLANs, host names, management ports, and firewall expectations.

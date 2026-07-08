@@ -88,7 +88,7 @@ The following files were included in the repository-wide audit:
 - `docs/architecture/identity-architecture.md`
 - `docs/architecture/implementation-philosophy.md`
 - `docs/architecture/index.md`
-- `docs/architecture/network-architecture.md`
+- `docs/network/network-architecture.md`
 - `docs/architecture/reference-architecture.md`
 - `docs/architecture/technology-selection-matrix.md`
 - `docs/cloud-endpoint/entra-id-hybrid-identity.md`
@@ -138,7 +138,7 @@ The following files were included in the repository-wide audit:
 - `docs/operations/troubleshooting.md`
 - `docs/platform/cloudflare-pages-deployment.md`
 - `docs/platform/enterprise-port-reference.md`
-- `docs/platform/firewall-rule-matrix.md`
+- `docs/network/firewall-rule-matrix.md`
 - `docs/platform/index.md`
 - `docs/platform/mikrotik-chr-hq-foundation-implementation.md`
 - `docs/platform/mikrotik-chr-hq-foundation-lld.md`

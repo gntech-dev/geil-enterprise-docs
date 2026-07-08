@@ -179,7 +179,7 @@ Validated WinRM management uses `HQ-MGMT01` on VLAN 10 to manage `HQ-W11-001` an
 
 ## Network baseline
 
-Detailed VLAN, service-port, management-port, and access-control expectations are maintained in the [Network and Active Directory Services Matrix](network-and-ad-services-matrix.md).
+Detailed VLAN, service-port, management-port, and access-control expectations are maintained in the [Network and Active Directory Services Matrix](../network/network-and-ad-services-matrix.md).
 
 
 | VLAN | Name | CIDR | Gateway Convention | Primary Use |

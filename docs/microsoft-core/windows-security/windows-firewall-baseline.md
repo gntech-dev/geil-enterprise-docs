@@ -27,11 +27,15 @@ classification: Internal Confidential
 
     Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../../network/mikrotik/hq-fw01-firewall-policy.md).
 
+!!! note "Network configuration authority"
+
+    Network configuration authority now lives under `docs/network/`. Use [Network](../../network/index.md) for current network, VLAN, firewall, DNS, DHCP, and service-path authority.
+
 ## Purpose
 
 This guide defines the Windows Defender Firewall baseline for the GNTECH Windows Infrastructure Lab. It converts the network and service model into practical host-level firewall expectations for Domain Controllers, member servers, management workstations, and standard workstations.
 
-Use the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md) as the source of truth for VLANs, subnets, gateways, server names, Active Directory service ports, Windows management ports, and inter-VLAN firewall expectations. This guide does not duplicate the full matrix.
+Use the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md) as the source of truth for VLANs, subnets, gateways, server names, Active Directory service ports, Windows management ports, and inter-VLAN firewall expectations. This guide does not duplicate the full matrix.
 
 ## Scope
 
@@ -81,7 +85,7 @@ Get-NetFirewallProfile |
 
 ## Management access rules
 
-Windows management access is allowed only from the Management VLAN defined in the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md).
+Windows management access is allowed only from the Management VLAN defined in the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md).
 
 Current confirmed source:
 

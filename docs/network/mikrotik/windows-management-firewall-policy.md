@@ -31,13 +31,13 @@ classification: Internal Confidential
 
 This document defines a practical MikroTik RouterOS firewall policy for controlling Windows administration traffic between VLANs in the GNTECH Windows infrastructure lab.
 
-Windows Group Policy enables services such as RDP and WinRM on Windows systems. MikroTik controls whether those services are reachable across VLAN boundaries. Both layers are required. Canonical VLANs, subnets, and service-port expectations come from the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md).
+Windows Group Policy enables services such as RDP and WinRM on Windows systems. MikroTik controls whether those services are reachable across VLAN boundaries. Both layers are required. Canonical VLANs, subnets, and service-port expectations come from the [Network and Active Directory Services Matrix](../network-and-ad-services-matrix.md).
 
 This guide complements:
 
 - [HQ-FW01 Firewall Policy](hq-fw01-firewall-policy.md)
 - [MikroTik CHR HQ Foundation Implementation](../../platform/mikrotik-chr-hq-foundation-implementation.md)
-- [Firewall Rule Matrix](../../platform/firewall-rule-matrix.md)
+- [Firewall Rule Matrix](../firewall-rule-matrix.md)
 - [WinRM / PowerShell Remoting Baseline](../../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md)
 - [Enterprise WinRM Management](../../microsoft-core/administration/enterprise-winrm-management.md)
 - [Windows Event Forwarding and Collector Baseline](../../microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md)
@@ -62,7 +62,7 @@ This guide complements:
 | CCTV VLAN | Domain Controllers | Deny | Windows management ports blocked |
 | Guest VLAN | Internal Infrastructure | Deny | All management ports blocked |
 
-For the current GNTECH implementation, the Management VLAN is VLAN 10 (`172.20.10.0/24`), Servers are VLAN 20 (`172.20.20.0/24`), and Workstations are VLAN 30 (`172.20.30.0/24`). Actual CIDRs must come from the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md).
+For the current GNTECH implementation, the Management VLAN is VLAN 10 (`172.20.10.0/24`), Servers are VLAN 20 (`172.20.20.0/24`), and Workstations are VLAN 30 (`172.20.30.0/24`). Actual CIDRs must come from the [Network and Active Directory Services Matrix](../network-and-ad-services-matrix.md).
 
 ## Windows management ports
 
@@ -215,7 +215,7 @@ Expected result:
 ## Firewall Validation Checklist
 
 - [ ] Firewall export captured before changes.
-- [ ] Address lists match the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md).
+- [ ] Address lists match the [Network and Active Directory Services Matrix](../network-and-ad-services-matrix.md).
 - [ ] Management VLAN can reach approved Windows management ports.
 - [ ] User VLANs cannot administer infrastructure.
 - [ ] IoT, CCTV, Guest, and untrusted VLANs cannot reach Windows management ports.

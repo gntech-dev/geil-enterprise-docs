@@ -33,7 +33,7 @@ Implement certificate-backed network authentication for wired and wireless acces
 
 ## Prerequisites
 
-- [Enterprise Port Reference](../platform/enterprise-port-reference.md), [Firewall Rule Matrix](../platform/firewall-rule-matrix.md), [Enterprise Group Strategy](group-strategy.md), and [Enterprise Service Account Standard](service-account-standard.md) reviewed.
+- [Enterprise Port Reference](../platform/enterprise-port-reference.md), [Firewall Rule Matrix](../network/firewall-rule-matrix.md), [Enterprise Group Strategy](group-strategy.md), and [Enterprise Service Account Standard](service-account-standard.md) reviewed.
 
 
 - AD CS issuing CA operational.

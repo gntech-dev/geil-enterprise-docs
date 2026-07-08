@@ -25,7 +25,7 @@ classification: Internal Confidential
 
 ## Purpose and scope
 
-This guide defines the practical WinRM / PowerShell Remoting baseline for the GNTECH Active Directory lab. Network names, VLANs, and allowed source subnets come from the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md). It explains how domain-joined Windows systems are managed from the Management VLAN, how to validate the remoting path, and where firewall controls belong.
+This guide defines the practical WinRM / PowerShell Remoting baseline for the GNTECH Active Directory lab. Network names, VLANs, and allowed source subnets come from the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md). It explains how domain-joined Windows systems are managed from the Management VLAN, how to validate the remoting path, and where firewall controls belong.
 
 This document is intentionally practical. It does not redesign the validated deployment. It layers secure command-based administration on top of the existing Microsoft Core baseline.
 
@@ -125,7 +125,7 @@ Baseline settings:
 
     `IPv4Filter` controls which local interfaces WinRM listens on. It does not control who can connect. Source control belongs in Windows Defender Firewall, MikroTik firewall rules, VLAN segmentation, and Kerberos authorization.
 
-Exact subnet values must match the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md). For the current GNTECH lab, the Management VLAN is `172.20.10.0/24`.
+Exact subnet values must match the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md). For the current GNTECH lab, the Management VLAN is `172.20.10.0/24`.
 
 ## Registry and policy validation
 
@@ -192,7 +192,7 @@ Generic examples such as `DC01` are placeholders only. For implementation, use c
 - [ ] WinRM service is running.
 - [ ] WinRM listener exists on TCP `5985`.
 - [ ] `IPv4Filter = *`.
-- [ ] Windows Defender Firewall allows TCP `5985` only from the Management subnet defined in the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md).
+- [ ] Windows Defender Firewall allows TCP `5985` only from the Management subnet defined in the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md).
 - [ ] MikroTik allows Management VLAN to destination TCP `5985` using CIDRs from the canonical matrix.
 - [ ] Non-management VLANs cannot reach WinRM.
 - [ ] `Test-WSMan` succeeds from `HQ-MGMT01`.

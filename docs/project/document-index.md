@@ -43,7 +43,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PRJ-MASTER-001 | GEIL Master Plan | Approved | `docs/project/master-plan.md` | North Star vision, mission, long-term goals, roadmap, target architecture, and implementation philosophy |
 | GEIL-PRJ-ENT-ROADMAP-001 | Enterprise Implementation Roadmap | Draft | `docs/project/enterprise-implementation-roadmap.md` | Authoritative high-level implementation phase roadmap and Microsoft Core document status model |
 | GEIL-PRJ-ENV-001 | Environment Specification | Approved | `docs/project/environment-specification.md` | Canonical GNTECH domains, authentication formats, names, VLANs, IP ranges, DNS, certificates, shares, repository, and documentation URLs |
-| GEIL-PRJ-NETAD-MATRIX-001 | Network and Active Directory Services Matrix | Approved | `docs/project/network-and-ad-services-matrix.md` | Canonical GNTECH VLANs, subnets, server names, AD service ports, Windows management ports, and inter-VLAN access expectations |
+| GEIL-PRJ-NETAD-MATRIX-001 | Network and Active Directory Services Matrix | Approved | `docs/network/network-and-ad-services-matrix.md` | Network authority for canonical GNTECH VLANs, subnets, server names, AD service ports, Windows management ports, and inter-VLAN access expectations |
 | GEIL-PRJ-BACKLOG-001 | Documentation Backlog | Draft | `docs/project/documentation-backlog.md` | Work queue and priorities |
 | GEIL-PRJ-INDEX-001 | Document Index | Draft | `docs/project/document-index.md` | Authoritative register |
 | GEIL-PRJ-ROADMAP-001 | Documentation Roadmap | Draft | `docs/project/documentation-roadmap.md` | Capability-first Epic/Release roadmap |
@@ -61,7 +61,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-PLAT-MTK-HQ-IMPL-001 | MikroTik CHR HQ Foundation Implementation Guide | Approved | `docs/platform/mikrotik-chr-hq-foundation-implementation.md` | RouterOS CHR image import, hardening, VLAN gateways, NAT, firewall, DHCP relay preparation, validation, rollback, and evidence |
 | GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
 | GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
-| GEIL-PLAT-FW-MATRIX-001 | Firewall Rule Matrix | Draft | `docs/platform/firewall-rule-matrix.md` | Canonical MikroTik CHR firewall flow matrix for Microsoft Core and enterprise services |
+| GEIL-PLAT-FW-MATRIX-001 | Firewall Rule Matrix | Draft | `docs/network/firewall-rule-matrix.md` | Network authority for cross-service firewall flow matrix and validation references |
 | GEIL-PLAT-AD-NET-001 | Active Directory Network Requirements | Approved | `docs/platform/active-directory-network-requirements.md` | Authoritative address-list based client-to-domain-controller firewall architecture, required AD service ports, pilot finding, validation, rollback, and evidence |
 | GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
 | GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
@@ -103,7 +103,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/architecture/reference-architecture.md` | Overall platform architecture |
 | GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/architecture/environment-tiers.md` | Lab, pilot, production, DR |
 | GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/architecture/identity-architecture.md` | Identity authorities and admin tiers |
-| GEIL-ARCH-NET-001 | Network Architecture | Draft | `docs/architecture/network-architecture.md` | VLAN, management workstation, and firewall model |
+| GEIL-ARCH-NET-001 | Network Architecture | Draft | `docs/network/network-architecture.md` | Network architecture, VLAN, management workstation, and firewall model |
 
 ## Foundation documents
 
@@ -196,7 +196,7 @@ The document index is the authoritative register of GEIL documents, their owners
 
 | Epic | Status | Current documents | Future documents |
 |---|---|---|---|
-| Enterprise WinRM Management | In progress | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md`; `docs/microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md`; `docs/network/mikrotik/windows-management-firewall-policy.md`; `docs/project/network-and-ad-services-matrix.md` | GPO/Windows Firewall refinements as implementation matures |
+| Enterprise WinRM Management | In progress | `docs/microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md`; `docs/microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md`; `docs/network/mikrotik/windows-management-firewall-policy.md`; `docs/network/network-and-ad-services-matrix.md`; `docs/network/mikrotik/hq-fw01-firewall-policy.md` | GPO/Windows Firewall refinements as implementation matures |
 | Windows Firewall Baseline | In progress | `docs/microsoft-core/windows-security/windows-firewall-baseline.md`; Network and AD services matrix; MikroTik Windows management firewall policy | Future role-specific documents: docs/microsoft-core/windows-security/domain-controller-firewall-baseline.md; docs/microsoft-core/windows-security/member-server-firewall-baseline.md |
 | Windows LAPS | In progress | `docs/microsoft-core/windows-security/windows-laps-baseline.md`; Active Directory baseline; Management Workstation baseline; privileged access references | Future delegated retrieval group refinements |
 | Microsoft Defender Baseline | In progress | `docs/microsoft-core/windows-security/microsoft-defender-baseline.md`; Windows Firewall Baseline; Windows LAPS Baseline; Group Policy Baseline | Future Windows Event Forwarding monitoring integration |
@@ -215,7 +215,7 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 12 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 15 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 15 |

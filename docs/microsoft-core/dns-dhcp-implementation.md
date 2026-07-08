@@ -77,7 +77,7 @@ The first DHCP scope can affect clients on the target VLAN when DHCP relay is en
 
 ## Prerequisites
 
-- [Firewall Rule Matrix](../platform/firewall-rule-matrix.md) and [Enterprise Port Reference](../platform/enterprise-port-reference.md) reviewed for DNS/DHCP flows.
+- [Firewall Rule Matrix](../network/firewall-rule-matrix.md) and [Enterprise Port Reference](../platform/enterprise-port-reference.md) reviewed for DNS/DHCP flows.
 - [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) completed before DHCP authorization and scope rollout.
 
 

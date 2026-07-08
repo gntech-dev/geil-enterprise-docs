@@ -278,7 +278,7 @@ The Tier 0/1/2 model can be introduced early as a concept, especially for accoun
 
 | Epic | Purpose | Status | Dependencies | Required / expected documents | Validation checkpoints |
 |---|---|---|---|---|---|
-| Enterprise WinRM Management | Standardize secure remote administration using WinRM / PowerShell Remoting. | In progress | Management Workstation baseline; Network and AD services matrix; MikroTik Windows management firewall policy; GPO-based WinRM enablement; Windows Firewall scoping to Management VLAN. | [Windows Management Workstation](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md); [WinRM / PowerShell Remoting Baseline](../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md); [MikroTik Windows Management Firewall Policy](../network/mikrotik/windows-management-firewall-policy.md); [Network and AD Services Matrix](network-and-ad-services-matrix.md). | `Test-NetConnection`, `Test-WSMan`, `Enter-PSSession`, `Invoke-Command`; confirm WinRM succeeds from Management VLAN and fails from non-management VLANs. |
+| Enterprise WinRM Management | Standardize secure remote administration using WinRM / PowerShell Remoting. | In progress | Management Workstation baseline; Network and AD services matrix; MikroTik Windows management firewall policy; GPO-based WinRM enablement; Windows Firewall scoping to Management VLAN. | [Windows Management Workstation](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md); [WinRM / PowerShell Remoting Baseline](../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md); [MikroTik Windows Management Firewall Policy](../network/mikrotik/windows-management-firewall-policy.md); [Network and AD Services Matrix](../network/network-and-ad-services-matrix.md). | `Test-NetConnection`, `Test-WSMan`, `Enter-PSSession`, `Invoke-Command`; confirm WinRM succeeds from Management VLAN and fails from non-management VLANs. |
 | Windows Firewall Baseline | Create host-based Windows Firewall baselines by system role. | In progress | Network and AD services matrix; Enterprise WinRM Management; MikroTik firewall policy. | [Windows Firewall Baseline](../microsoft-core/windows-security/windows-firewall-baseline.md). Future role-specific documents: docs/microsoft-core/windows-security/domain-controller-firewall-baseline.md; docs/microsoft-core/windows-security/member-server-firewall-baseline.md. | Role-based firewall profiles; inbound management rules scoped to Management VLAN; separation of AD DS service ports, Windows management ports, and application-specific ports. |
 | Windows LAPS | Secure local Administrator passwords across domain-joined Windows systems. | In progress | Active Directory baseline; Management Workstation baseline; Privileged access model. | [Windows LAPS Baseline](../microsoft-core/windows-security/windows-laps-baseline.md). | GPO configuration; AD-backed password storage; permissions model; recovery workflow; validation commands; separation of helpdesk access from domain admin access. |
 | Microsoft Defender Baseline | Create a practical Microsoft Defender Antivirus baseline for small business Windows infrastructure. | Done | Windows Firewall Baseline; Windows LAPS Baseline; Group Policy Baseline; Windows Event Forwarding for later monitoring. | [Microsoft Defender Enterprise Baseline](../microsoft-core/windows-security/microsoft-defender-baseline.md). | Defender Antivirus state; cloud-delivered protection; Tamper Protection limitations; PUA Protection; Network Protection audit mode; exclusions; PowerShell validation; operational checks. |
@@ -334,7 +334,7 @@ The following register assigns every current published document to exactly one r
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/reference-architecture.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/environment-tiers.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `architecture/identity-architecture.md` |
-| E01.R01 - Enterprise reference architecture | E01 | `architecture/network-architecture.md` |
+| E01.R01 - Enterprise reference architecture | E01 | `network/network-architecture.md` |
 | E01.R02 - Enterprise Architecture Vision | E01 | `project/master-plan.md` |
 | E01.R02 - Enterprise Architecture Vision | E01 | `architecture/enterprise-capability-model.md` |
 | E01.R02 - Enterprise Architecture Vision | E01 | `architecture/enterprise-reference-architecture.md` |
@@ -384,7 +384,10 @@ The following register assigns every current published document to exactly one r
 | E05.R01 - Operations readiness | E05 | `operations/scaling-model.md` |
 | E05.R01 - Operations readiness | E05 | `operations/security-operations.md` |
 | E05.R01 - Operations readiness | E05 | `microsoft-core/windows-admin-center.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/firewall-rule-matrix.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/firewall-rule-matrix.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/vlan-and-subnet-plan.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-routeros-baseline.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/cloudflared-container-networking.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/active-directory-network-requirements.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/enterprise-port-reference.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-server-2025-golden-template.md` |
@@ -407,7 +410,7 @@ The following register assigns every current published document to exactly one r
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/index.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-firewall-policy.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/windows-management-firewall-policy.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `project/network-and-ad-services-matrix.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/network-and-ad-services-matrix.md` |
 | WIN.R02 - Host Firewall and Local Admin Protection | E06 | `microsoft-core/windows-security/index.md` |
 | WIN.R02 - Host Firewall and Local Admin Protection | E06 | `microsoft-core/windows-security/windows-firewall-baseline.md` |
 | WIN.R02 - Host Firewall and Local Admin Protection | E06 | `microsoft-core/windows-security/windows-laps-baseline.md` |

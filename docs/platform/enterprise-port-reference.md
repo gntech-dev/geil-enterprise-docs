@@ -99,7 +99,7 @@ Capture port tests, RouterOS rule output, Windows Firewall rule output, and serv
 
 ## Next Guide
 
-Use this with [Firewall Rule Matrix](firewall-rule-matrix.md), [Active Directory Network Requirements](active-directory-network-requirements.md), and Microsoft Core implementation guides.
+Use this with [Firewall Rule Matrix](../network/firewall-rule-matrix.md), [Active Directory Network Requirements](active-directory-network-requirements.md), and Microsoft Core implementation guides.
 
 ## WinRM note
 

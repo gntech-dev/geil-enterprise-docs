@@ -31,6 +31,10 @@ classification: Internal Confidential
 
     Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md).
 
+!!! note "Network configuration authority"
+
+    Network configuration authority now lives under `docs/network/`. Use [Network](../network/index.md) for current network, VLAN, firewall, DNS, DHCP, and service-path authority.
+
 ## Purpose
 
 Deploy `HQ-FW01` as a MikroTik CHR firewall/router for the Phase 1 HQ foundation. This guide supersedes all active OPNsense deployment instructions.

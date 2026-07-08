@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "Network configuration authority"
+
+    Network configuration authority now lives under `docs/network/`. Use [Network](../network/network-and-ad-services-matrix.md) for current network, VLAN, firewall, DNS, DHCP, and service-path authority.
+
 ## Purpose
 
 Define the authoritative GEIL network communication standard for Active Directory clients, domain controllers, and the MikroTik CHR firewall.
@@ -285,7 +289,7 @@ Capture:
 Use this standard from:
 
 - [MikroTik CHR HQ Foundation Implementation](mikrotik-chr-hq-foundation-implementation.md)
-- [Firewall Rule Matrix](firewall-rule-matrix.md)
+- [Firewall Rule Matrix](../network/firewall-rule-matrix.md)
 - [DNS and DHCP Implementation](../microsoft-core/dns-dhcp-implementation.md)
 - [Group Policy Baseline](../microsoft-core/group-policy-baseline.md)
 - [Phase 1 Validation Plan](phase-1-validation-plan.md)

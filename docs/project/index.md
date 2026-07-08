@@ -45,6 +45,6 @@ The current highest-priority deliverable is the Cloudflare Pages deployment runb
 
 - [Enterprise Implementation Roadmap](enterprise-implementation-roadmap.md)
 - [Environment Specification](environment-specification.md)
-- [Network and Active Directory Services Matrix](network-and-ad-services-matrix.md)
+- [Network and Active Directory Services Matrix](../network/network-and-ad-services-matrix.md)
 - [Document Index](document-index.md)
 - [Epic and Release Architecture](epic-release-architecture.md)

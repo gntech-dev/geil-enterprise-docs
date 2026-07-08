@@ -27,4 +27,4 @@ These baselines are intentionally incremental. They start with host firewall and
 
 ## Source of truth
 
-Use the [Network and Active Directory Services Matrix](../../project/network-and-ad-services-matrix.md) for canonical VLANs, subnets, AD service ports, Windows management ports, and inter-VLAN firewall expectations.
+Use the [Network and Active Directory Services Matrix](../../network/network-and-ad-services-matrix.md) for canonical VLANs, subnets, AD service ports, Windows management ports, and inter-VLAN firewall expectations.

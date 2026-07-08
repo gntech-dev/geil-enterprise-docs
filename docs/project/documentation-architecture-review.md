@@ -132,7 +132,7 @@ If the recommended merges are completed, GEIL can reduce active document count b
 | `architecture/identity-architecture.md` | Identity Architecture | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `architecture/implementation-philosophy.md` | Implementation Philosophy | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
 | `architecture/index.md` | Architecture | KEEP | Section landing page required for MkDocs navigation. |
-| `architecture/network-architecture.md` | Network Architecture | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `network/network-architecture.md` | Network Architecture | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `architecture/reference-architecture.md` | Reference Architecture | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
 | `architecture/technology-selection-matrix.md` | Technology Selection Matrix | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
 | `archive/index.md` | Archive | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
@@ -186,7 +186,7 @@ If the recommended merges are completed, GEIL can reduce active document count b
 | `platform/active-directory-network-requirements.md` | Active Directory Network Requirements | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
 | `platform/cloudflare-pages-deployment.md` | Cloudflare Pages Deployment Runbook | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `platform/enterprise-port-reference.md` | Enterprise Port Reference | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
-| `platform/firewall-rule-matrix.md` | Firewall Rule Matrix | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
+| `network/firewall-rule-matrix.md` | Firewall Rule Matrix | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
 | `platform/index.md` | Platform | KEEP | Section landing page required for MkDocs navigation. |
 | `platform/mikrotik-chr-hq-foundation-implementation.md` | MikroTik CHR HQ Foundation Implementation Guide | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `platform/mikrotik-chr-hq-foundation-lld.md` | MikroTik CHR HQ Foundation LLD | KEEP | Current authoritative document or required control-plane/implementation guide. |
@@ -239,7 +239,7 @@ If the recommended merges are completed, GEIL can reduce active document count b
 - `operations/security-operations.md` — Security Operations: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
 - `platform/active-directory-network-requirements.md` — Active Directory Network Requirements: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
 - `platform/enterprise-port-reference.md` — Enterprise Port Reference: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
-- `platform/firewall-rule-matrix.md` — Firewall Rule Matrix: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
+- `network/firewall-rule-matrix.md` — Firewall Rule Matrix: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
 - `platform/phase-1-acceptance-package.md` — Phase 1 Acceptance Package: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
 - `platform/phase-1-build-plan.md` — Phase 1 Build Plan: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
 - `platform/phase-1-validation-plan.md` — Phase 1 Validation Plan: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
