@@ -78,13 +78,13 @@ This guide creates the first GEIL directory service before production users or w
 
 ## Prerequisites
 
-- [Windows Server 2025 Golden Template](../platform/windows-server-2025-golden-template.md) used or consciously bypassed with documented exception.
+- [Windows Server 2025 Golden Template](../legacy/platform/windows-server-2025-golden-template.md) used or consciously bypassed with documented exception.
 - [Windows Server 2025 Baseline](windows-server-2025-baseline.md) completed and validated on `HQ-DC01`.
-- [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) reviewed so client VLANs can reach `HQ-DC01` after AD DS is installed.
+- [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md) reviewed so client VLANs can reach `HQ-DC01` after AD DS is installed.
 - [Enterprise Naming Standard](active-directory-naming-standard.md) reviewed.
 
-- [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md) reviewed.
-- [Phase 1 Acceptance Package](../platform/phase-1-acceptance-package.md) approved or approved with accepted exceptions.
+- [Enterprise Lab Identity HLD](../legacy/architecture/enterprise-lab-identity-hld.md) reviewed.
+- [Phase 1 Acceptance Package](../legacy/platform/phase-1-acceptance-package.md) approved or approved with accepted exceptions.
 - `HQ-DC01` VM created from the Phase 1 build plan.
 - Windows Server 2025 installed and updated on `HQ-DC01`.
 - `HQ-DC01` static IP configured as `172.20.20.11/24`.
@@ -129,7 +129,7 @@ flowchart LR
 
 !!! info "Architecture references"
 
-    This guide implements the identity baseline from [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md) and depends on the E02 HQ foundation build and validation documents.
+    This guide implements the identity baseline from [Enterprise Lab Identity HLD](../legacy/architecture/enterprise-lab-identity-hld.md) and depends on the E02 HQ foundation build and validation documents.
 
 ## Background Knowledge
 

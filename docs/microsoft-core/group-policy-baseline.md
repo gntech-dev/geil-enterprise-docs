@@ -74,7 +74,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 
 - [Active Directory Implementation](active-directory-implementation.md) completed.
 - [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) completed and validated.
-- [Enterprise Naming Standard](active-directory-naming-standard.md), [Enterprise Group Strategy](group-strategy.md), and [Enterprise Administrative Tiering](../security/administrative-tiering.md) reviewed.
+- [Enterprise Naming Standard](active-directory-naming-standard.md), [Enterprise Group Strategy](group-strategy.md), and [Enterprise Administrative Tiering](../legacy/security/administrative-tiering.md) reviewed.
 - `corp.gntech.me` forest exists.
 - Baseline OUs exist under `OU=GNTECH,DC=corp,DC=gntech,DC=me`, especially `Admin`, `Users`, `Groups`, `Computers`, `Service Accounts`, and `Policies`.
 - Group Policy Management Console is installed.
@@ -86,7 +86,7 @@ Maintenance window recommended for broad policy rollout. Creating unlinked GPOs 
 
 - Domain exists.
 - OUs exist.
-- [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) is implemented so workstation clients can reach DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, and Global Catalog services on `HQ-DC01`.
+- [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md) is implemented so workstation clients can reach DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, and Global Catalog services on `HQ-DC01`.
 - No GEIL baseline GPO is linked to production OUs unless it was created by a previous approved change.
 
 ## Expected Ending State
@@ -946,7 +946,7 @@ When a GUI action appears in this guide, capture the screenshot at that point in
 
 Continue to:
 
-- [Privileged Access Model](../security/privileged-access-model.md)
+- [Privileged Access Model](../legacy/security/privileged-access-model.md)
 
 
 ## Audit Correction Notes

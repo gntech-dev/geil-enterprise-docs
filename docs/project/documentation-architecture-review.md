@@ -75,8 +75,8 @@ The following should become a single authoritative **Identity and Access Standar
 - `microsoft-core/group-strategy.md`
 - `microsoft-core/user-lifecycle.md`
 - `microsoft-core/service-account-standard.md`
-- `security/administrative-tiering.md`
-- `security/privileged-access-model.md`
+- `legacy/security/administrative-tiering.md`
+- `legacy/security/privileged-access-model.md`
 
 Required sections: Users, Groups, AGDLP, Service Accounts, Administrative Tiering, Privileged Access, Delegation, Naming Standards.
 
@@ -121,32 +121,32 @@ If the recommended merges are completed, GEIL can reduce active document count b
 | Path | Title | Decision | Rationale |
 |---|---|---|---|
 
-| `architecture/architecture-principles.md` | Architecture Principles | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/enterprise-capability-model.md` | Enterprise Capability Model | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/enterprise-lab-blueprint.md` | Enterprise Lab Blueprint HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/enterprise-lab-identity-hld.md` | Enterprise Lab Identity HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/enterprise-lab-network-hld.md` | Enterprise Lab Network HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/enterprise-lab-operations-hld.md` | Enterprise Lab Operations HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/enterprise-reference-architecture.md` | Enterprise Reference Architecture | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/environment-tiers.md` | Environment Tiers | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/identity-architecture.md` | Identity Architecture | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `architecture/implementation-philosophy.md` | Implementation Philosophy | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/index.md` | Architecture | KEEP | Section landing page required for MkDocs navigation. |
+| `legacy/architecture/architecture-principles.md` | Architecture Principles | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/enterprise-capability-model.md` | Enterprise Capability Model | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/enterprise-lab-blueprint.md` | Enterprise Lab Blueprint HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/enterprise-lab-identity-hld.md` | Enterprise Lab Identity HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/enterprise-lab-network-hld.md` | Enterprise Lab Network HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/enterprise-lab-operations-hld.md` | Enterprise Lab Operations HLD | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/enterprise-reference-architecture.md` | Enterprise Reference Architecture | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/environment-tiers.md` | Environment Tiers | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/identity-architecture.md` | Identity Architecture | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/architecture/implementation-philosophy.md` | Implementation Philosophy | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/index.md` | Architecture | KEEP | Section landing page required for MkDocs navigation. |
 | `network/network-architecture.md` | Network Architecture | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `architecture/reference-architecture.md` | Reference Architecture | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `architecture/technology-selection-matrix.md` | Technology Selection Matrix | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
-| `archive/index.md` | Archive | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
-| `cloud-endpoint/entra-id-hybrid-identity.md` | Entra ID Hybrid Identity | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
-| `cloud-endpoint/index.md` | Cloud and Endpoint | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
-| `cloud-endpoint/intune-windows11-enterprise.md` | Intune Windows 11 Enterprise | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
-| `cloud-endpoint/microsoft-365-tenant-foundation.md` | Microsoft 365 Tenant Foundation | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
-| `cloud-endpoint/microsoft-defender.md` | Microsoft Defender | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
-| `cloud-endpoint/windows-hello-for-business.md` | Windows Hello for Business | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
-| `foundation/index.md` | Foundation | KEEP | Section landing page required for MkDocs navigation. |
-| `foundation/opnsense-edge-firewall.md` | Superseded OPNsense Edge Firewall | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
-| `foundation/phase-0-prerequisites.md` | Phase 0 Prerequisites | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `foundation/proxmox-ve-baseline.md` | Proxmox VE Baseline | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `future/index.md` | Future | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/architecture/reference-architecture.md` | Reference Architecture | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/architecture/technology-selection-matrix.md` | Technology Selection Matrix | MERGE | Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material. |
+| `legacy/archive/index.md` | Archive | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
+| `legacy/cloud-endpoint/entra-id-hybrid-identity.md` | Entra ID Hybrid Identity | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/cloud-endpoint/index.md` | Cloud and Endpoint | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/cloud-endpoint/intune-windows11-enterprise.md` | Intune Windows 11 Enterprise | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/cloud-endpoint/microsoft-365-tenant-foundation.md` | Microsoft 365 Tenant Foundation | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/cloud-endpoint/microsoft-defender.md` | Microsoft Defender | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/cloud-endpoint/windows-hello-for-business.md` | Windows Hello for Business | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/foundation/index.md` | Foundation | KEEP | Section landing page required for MkDocs navigation. |
+| `legacy/foundation/opnsense-edge-firewall.md` | Superseded OPNsense Edge Firewall | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
+| `legacy/foundation/phase-0-prerequisites.md` | Phase 0 Prerequisites | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/foundation/proxmox-ve-baseline.md` | Proxmox VE Baseline | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/future/index.md` | Future | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
 | `governance/adrs/ADR-0001-mkdocs-material.md` | ADR-0001 MkDocs Material Documentation Platform | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` | ADR-0002 Use MikroTik CHR for Phase 1 HQ Firewall | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `governance/adrs/ADR-0003-hybrid-identity-namespace.md` | ADR-0003 Hybrid Identity Namespace | KEEP | Current authoritative document or required control-plane/implementation guide. |
@@ -165,42 +165,42 @@ If the recommended merges are completed, GEIL can reduce active document count b
 | `microsoft-core/active-directory-implementation.md` | Active Directory Implementation | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/active-directory-naming-standard.md` | Enterprise Naming Standard | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
 | `microsoft-core/active-directory-organizational-foundation.md` | Active Directory Organizational Foundation | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `microsoft-core/ad-cs-pki.md` | AD CS PKI | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/microsoft-core/ad-cs-pki.md` | AD CS PKI | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
 | `microsoft-core/dns-dhcp-implementation.md` | DNS and DHCP Implementation | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/group-policy-baseline.md` | Group Policy Baseline | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/group-strategy.md` | Enterprise Group Strategy | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
 | `microsoft-core/index.md` | Microsoft Core | KEEP | Section landing page required for MkDocs navigation. |
-| `microsoft-core/nps-radius-8021x.md` | NPS RADIUS 802.1X | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
+| `legacy/microsoft-core/nps-radius-8021x.md` | NPS RADIUS 802.1X | MOVE TO FUTURE | Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it. |
 | `microsoft-core/powershell-operations.md` | PowerShell Operations | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/service-account-standard.md` | Enterprise Service Account Standard | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
 | `microsoft-core/user-lifecycle.md` | Enterprise User Lifecycle | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
-| `microsoft-core/windows-admin-center.md` | Windows Admin Center | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/microsoft-core/windows-admin-center.md` | Windows Admin Center | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/windows-server-2025-baseline.md` | Windows Server 2025 Baseline | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `operations/backup-recovery.md` | Backup and Recovery | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `operations/domain-controller-backup.md` | Domain Controller Backup and Recovery | MERGE | Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations. |
-| `operations/index.md` | Operations | KEEP | Section landing page required for MkDocs navigation. |
-| `operations/monitoring-alerting.md` | Monitoring and Alerting | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `operations/scaling-model.md` | Scaling Model | MERGE | Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations. |
-| `operations/security-operations.md` | Security Operations | MERGE | Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations. |
-| `operations/troubleshooting.md` | Troubleshooting | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/active-directory-network-requirements.md` | Active Directory Network Requirements | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
-| `platform/cloudflare-pages-deployment.md` | Cloudflare Pages Deployment Runbook | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/enterprise-port-reference.md` | Enterprise Port Reference | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
+| `legacy/operations/backup-recovery.md` | Backup and Recovery | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/operations/domain-controller-backup.md` | Domain Controller Backup and Recovery | MERGE | Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations. |
+| `legacy/operations/index.md` | Operations | KEEP | Section landing page required for MkDocs navigation. |
+| `legacy/operations/monitoring-alerting.md` | Monitoring and Alerting | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/operations/scaling-model.md` | Scaling Model | MERGE | Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations. |
+| `legacy/operations/security-operations.md` | Security Operations | MERGE | Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations. |
+| `legacy/operations/troubleshooting.md` | Troubleshooting | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/active-directory-network-requirements.md` | Active Directory Network Requirements | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
+| `legacy/platform/cloudflare-pages-deployment.md` | Cloudflare Pages Deployment Runbook | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/enterprise-port-reference.md` | Enterprise Port Reference | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
 | `network/firewall-rule-matrix.md` | Firewall Rule Matrix | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
-| `platform/index.md` | Platform | KEEP | Section landing page required for MkDocs navigation. |
-| `platform/mikrotik-chr-hq-foundation-implementation.md` | MikroTik CHR HQ Foundation Implementation Guide | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/mikrotik-chr-hq-foundation-lld.md` | MikroTik CHR HQ Foundation LLD | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/opnsense-hq-foundation-implementation.md` | OPNsense HQ Foundation Implementation Runbook | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
-| `platform/opnsense-hq-foundation-lld.md` | OPNsense HQ Foundation LLD | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
-| `platform/phase-1-acceptance-package.md` | Phase 1 Acceptance Package | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
-| `platform/phase-1-build-plan.md` | Phase 1 Build Plan | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
-| `platform/phase-1-validation-plan.md` | Phase 1 Validation Plan | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
-| `platform/proxmox-hq-foundation-implementation.md` | Proxmox HQ Foundation Implementation Runbook | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/proxmox-hq-foundation-lld.md` | Proxmox HQ Foundation LLD | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/index.md` | Platform | KEEP | Section landing page required for MkDocs navigation. |
+| `legacy/platform/mikrotik-chr-hq-foundation-implementation.md` | MikroTik CHR HQ Foundation Implementation Guide | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/mikrotik-chr-hq-foundation-lld.md` | MikroTik CHR HQ Foundation LLD | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/opnsense-hq-foundation-implementation.md` | OPNsense HQ Foundation Implementation Runbook | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
+| `legacy/platform/opnsense-hq-foundation-lld.md` | OPNsense HQ Foundation LLD | ARCHIVE | Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path. |
+| `legacy/platform/phase-1-acceptance-package.md` | Phase 1 Acceptance Package | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
+| `legacy/platform/phase-1-build-plan.md` | Phase 1 Build Plan | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
+| `legacy/platform/phase-1-validation-plan.md` | Phase 1 Validation Plan | MERGE | Fold design/validation/reference content into the authoritative platform implementation guide where practical. |
+| `legacy/platform/proxmox-hq-foundation-implementation.md` | Proxmox HQ Foundation Implementation Runbook | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/proxmox-hq-foundation-lld.md` | Proxmox HQ Foundation LLD | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` | Windows 11 Domain Join and GPO Validation | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` | Windows 11 Enterprise Golden Template | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` | Windows 11 Management Workstation | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `platform/windows-server-2025-golden-template.md` | Windows Server 2025 Golden Template | KEEP | Current authoritative document or required control-plane/implementation guide. |
+| `legacy/platform/windows-server-2025-golden-template.md` | Windows Server 2025 Golden Template | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `project/document-index.md` | Document Index | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `project/documentation-architecture-review.md` | Documentation Architecture Review | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `project/documentation-backlog.md` | Documentation Backlog | KEEP | Current authoritative document or required control-plane/implementation guide. |
@@ -213,62 +213,62 @@ If the recommended merges are completed, GEIL can reduce active document count b
 | `project/master-plan.md` | GEIL Master Plan | KEEP | Current authoritative document or required control-plane/implementation guide. |
 | `project/production-readiness-audit-report.md` | Production Readiness Audit Report | MERGE | Historical audit/report content; retain as evidence but stop creating new parallel reports for future pilot findings. |
 | `project/project-charter.md` | GEIL Project Charter | KEEP | Current authoritative document or required control-plane/implementation guide. |
-| `security/administrative-tiering.md` | Enterprise Administrative Tiering | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
-| `security/index.md` | Security | KEEP | Section landing page required for MkDocs navigation. |
-| `security/privileged-access-model.md` | Privileged Access Model | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
+| `legacy/security/administrative-tiering.md` | Enterprise Administrative Tiering | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
+| `legacy/security/index.md` | Security | KEEP | Section landing page required for MkDocs navigation. |
+| `legacy/security/privileged-access-model.md` | Privileged Access Model | MERGE | Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost. |
 
 ## Documents to merge
 
-- `architecture/architecture-principles.md` — Architecture Principles: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/enterprise-capability-model.md` — Enterprise Capability Model: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/enterprise-lab-blueprint.md` — Enterprise Lab Blueprint HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/enterprise-lab-identity-hld.md` — Enterprise Lab Identity HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/enterprise-lab-network-hld.md` — Enterprise Lab Network HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/enterprise-lab-operations-hld.md` — Enterprise Lab Operations HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/enterprise-reference-architecture.md` — Enterprise Reference Architecture: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/environment-tiers.md` — Environment Tiers: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/implementation-philosophy.md` — Implementation Philosophy: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/reference-architecture.md` — Reference Architecture: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
-- `architecture/technology-selection-matrix.md` — Technology Selection Matrix: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/architecture-principles.md` — Architecture Principles: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/enterprise-capability-model.md` — Enterprise Capability Model: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/enterprise-lab-blueprint.md` — Enterprise Lab Blueprint HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/enterprise-lab-identity-hld.md` — Enterprise Lab Identity HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/enterprise-lab-network-hld.md` — Enterprise Lab Network HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/enterprise-lab-operations-hld.md` — Enterprise Lab Operations HLD: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/enterprise-reference-architecture.md` — Enterprise Reference Architecture: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/environment-tiers.md` — Environment Tiers: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/implementation-philosophy.md` — Implementation Philosophy: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/reference-architecture.md` — Reference Architecture: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
+- `legacy/architecture/technology-selection-matrix.md` — Technology Selection Matrix: Consolidate into Enterprise Blueprint, Network Architecture, or Identity Architecture; current file remains source material.
 - `microsoft-core/active-directory-naming-standard.md` — Enterprise Naming Standard: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
 - `microsoft-core/group-strategy.md` — Enterprise Group Strategy: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
 - `microsoft-core/service-account-standard.md` — Enterprise Service Account Standard: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
 - `microsoft-core/user-lifecycle.md` — Enterprise User Lifecycle: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
-- `operations/domain-controller-backup.md` — Domain Controller Backup and Recovery: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
-- `operations/scaling-model.md` — Scaling Model: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
-- `operations/security-operations.md` — Security Operations: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
-- `platform/active-directory-network-requirements.md` — Active Directory Network Requirements: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
-- `platform/enterprise-port-reference.md` — Enterprise Port Reference: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
+- `legacy/operations/domain-controller-backup.md` — Domain Controller Backup and Recovery: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
+- `legacy/operations/scaling-model.md` — Scaling Model: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
+- `legacy/operations/security-operations.md` — Security Operations: Fold into the primary operations guide for the concept: Backup/Recovery, Troubleshooting, or Security Operations.
+- `legacy/platform/active-directory-network-requirements.md` — Active Directory Network Requirements: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
+- `legacy/platform/enterprise-port-reference.md` — Enterprise Port Reference: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
 - `network/firewall-rule-matrix.md` — Firewall Rule Matrix: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
-- `platform/phase-1-acceptance-package.md` — Phase 1 Acceptance Package: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
-- `platform/phase-1-build-plan.md` — Phase 1 Build Plan: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
-- `platform/phase-1-validation-plan.md` — Phase 1 Validation Plan: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
+- `legacy/platform/phase-1-acceptance-package.md` — Phase 1 Acceptance Package: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
+- `legacy/platform/phase-1-build-plan.md` — Phase 1 Build Plan: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
+- `legacy/platform/phase-1-validation-plan.md` — Phase 1 Validation Plan: Fold design/validation/reference content into the authoritative platform implementation guide where practical.
 - `project/documentation-quality-report.md` — Documentation Quality Report: Historical audit/report content; retain as evidence but stop creating new parallel reports for future pilot findings.
 - `project/implementation-guide-audit-report.md` — Implementation Guide Audit Report: Historical audit/report content; retain as evidence but stop creating new parallel reports for future pilot findings.
 - `project/production-readiness-audit-report.md` — Production Readiness Audit Report: Historical audit/report content; retain as evidence but stop creating new parallel reports for future pilot findings.
-- `security/administrative-tiering.md` — Enterprise Administrative Tiering: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
-- `security/privileged-access-model.md` — Privileged Access Model: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
+- `legacy/security/administrative-tiering.md` — Enterprise Administrative Tiering: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
+- `legacy/security/privileged-access-model.md` — Privileged Access Model: Merge into proposed Identity and Access Standard; keep temporarily until merged so no technical knowledge is lost.
 
 ## Documents to move to Future
 
-- `cloud-endpoint/entra-id-hybrid-identity.md` — Entra ID Hybrid Identity: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `cloud-endpoint/index.md` — Cloud and Endpoint: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `cloud-endpoint/intune-windows11-enterprise.md` — Intune Windows 11 Enterprise: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `cloud-endpoint/microsoft-365-tenant-foundation.md` — Microsoft 365 Tenant Foundation: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `cloud-endpoint/microsoft-defender.md` — Microsoft Defender: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `cloud-endpoint/windows-hello-for-business.md` — Windows Hello for Business: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `future/index.md` — Future: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `microsoft-core/ad-cs-pki.md` — AD CS PKI: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
-- `microsoft-core/nps-radius-8021x.md` — NPS RADIUS 802.1X: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/cloud-endpoint/entra-id-hybrid-identity.md` — Entra ID Hybrid Identity: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/cloud-endpoint/index.md` — Cloud and Endpoint: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/cloud-endpoint/intune-windows11-enterprise.md` — Intune Windows 11 Enterprise: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/cloud-endpoint/microsoft-365-tenant-foundation.md` — Microsoft 365 Tenant Foundation: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/cloud-endpoint/microsoft-defender.md` — Microsoft Defender: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/cloud-endpoint/windows-hello-for-business.md` — Windows Hello for Business: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/future/index.md` — Future: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/microsoft-core/ad-cs-pki.md` — AD CS PKI: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
+- `legacy/microsoft-core/nps-radius-8021x.md` — NPS RADIUS 802.1X: Not yet fully laboratory-implemented; preserve content as future planning until the lab validates it.
 
 ## Documents to archive
 
-- `archive/index.md` — Archive: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
-- `foundation/opnsense-edge-firewall.md` — Superseded OPNsense Edge Firewall: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
+- `legacy/archive/index.md` — Archive: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
+- `legacy/foundation/opnsense-edge-firewall.md` — Superseded OPNsense Edge Firewall: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
 - `governance/backlog.md` — Backlog: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
 - `governance/roadmap.md` — Roadmap: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
-- `platform/opnsense-hq-foundation-implementation.md` — OPNsense HQ Foundation Implementation Runbook: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
-- `platform/opnsense-hq-foundation-lld.md` — OPNsense HQ Foundation LLD: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
+- `legacy/platform/opnsense-hq-foundation-implementation.md` — OPNsense HQ Foundation Implementation Runbook: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
+- `legacy/platform/opnsense-hq-foundation-lld.md` — OPNsense HQ Foundation LLD: Superseded, historical, or legacy control-plane document; retain for traceability but remove from active implementation path.
 
 ## Documents to remove
 

@@ -286,4 +286,4 @@ Start with read-only validation. Confirm prerequisites, object existence, canoni
 
 Continue to:
 
-- [Windows Admin Center](windows-admin-center.md)
+- [Windows Admin Center](../legacy/microsoft-core/windows-admin-center.md)

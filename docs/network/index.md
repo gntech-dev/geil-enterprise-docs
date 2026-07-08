@@ -32,5 +32,5 @@ Network configuration authority now lives under `docs/network/`. Project, Platfo
 
 ## Related deployment context
 
-- [MikroTik CHR HQ Foundation Implementation](../platform/mikrotik-chr-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation](../legacy/platform/mikrotik-chr-hq-foundation-implementation.md)
 - [Enterprise WinRM Management](../microsoft-core/administration/enterprise-winrm-management.md)

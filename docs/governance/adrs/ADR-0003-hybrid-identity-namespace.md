@@ -133,7 +133,7 @@ Administrator  Administrator@gntech.me
 ## Related documents
 
 - [Environment Specification](../../project/environment-specification.md)
-- [Enterprise Lab Identity HLD](../../architecture/enterprise-lab-identity-hld.md)
-- [Identity Architecture](../../architecture/identity-architecture.md)
+- [Enterprise Lab Identity HLD](../../legacy/architecture/enterprise-lab-identity-hld.md)
+- [Identity Architecture](../../legacy/architecture/identity-architecture.md)
 - [Active Directory Implementation](../../microsoft-core/active-directory-implementation.md)
-- [Entra ID Hybrid Identity](../../cloud-endpoint/entra-id-hybrid-identity.md)
+- [Entra ID Hybrid Identity](../../legacy/cloud-endpoint/entra-id-hybrid-identity.md)

@@ -79,7 +79,7 @@ The authoritative template build and Cloudbase-Init configuration details remain
 
 - [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md) completed and validated as workgroup-only.
 - Cloudbase-Init is installed and validated in the template.
-- [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) implemented.
+- [Active Directory Network Requirements](../../legacy/platform/active-directory-network-requirements.md) implemented.
 - [Active Directory Organizational Foundation](../active-directory-organizational-foundation.md) completed, including `OU=Management Workstations,OU=Computers,OU=GNTECH`.
 - [Authentication Standards](../authentication-standards.md) reviewed. RDP and Windows sign-in examples use `GNTECH\username`, for example `GNTECH\admin.gnolasco`.
 - [Group Policy Baseline](../group-policy-baseline.md) completed through creation and linking of `GP - Baseline - Management Workstations`. This GPO is separate from `GP - Baseline - Workstations`.
@@ -296,7 +296,7 @@ Domain-controller services are reachable through the address-list based firewall
 
 ### Stop Conditions
 
-STOP if DHCP/addressing works but DNS, Kerberos, LDAP, SMB/SYSVOL, RPC Endpoint Mapper, Global Catalog, or DC discovery fails. Return to [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md).
+STOP if DHCP/addressing works but DNS, Kerberos, LDAP, SMB/SYSVOL, RPC Endpoint Mapper, Global Catalog, or DC discovery fails. Return to [Active Directory Network Requirements](../../legacy/platform/active-directory-network-requirements.md).
 
 ### Evidence
 

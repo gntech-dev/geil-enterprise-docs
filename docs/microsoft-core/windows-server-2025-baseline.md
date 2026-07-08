@@ -77,13 +77,13 @@ This baseline is performed before the server provides production services.
 
 ## Prerequisites
 
-- [Windows Server 2025 Golden Template](../platform/windows-server-2025-golden-template.md) reviewed if this server is cloned from a template.
+- [Windows Server 2025 Golden Template](../legacy/platform/windows-server-2025-golden-template.md) reviewed if this server is cloned from a template.
 - [Enterprise Naming Standard](active-directory-naming-standard.md) reviewed for server naming, DNS, certificates, and evidence naming.
-- [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) reviewed before domain clients are introduced.
+- [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md) reviewed before domain clients are introduced.
 
 
-- [Phase 1 Build Plan](../platform/phase-1-build-plan.md) completed for the target VM.
-- [Phase 1 Validation Plan](../platform/phase-1-validation-plan.md) passed for network reachability.
+- [Phase 1 Build Plan](../legacy/platform/phase-1-build-plan.md) completed for the target VM.
+- [Phase 1 Validation Plan](../legacy/platform/phase-1-validation-plan.md) passed for network reachability.
 - Windows Server 2025 ISO available in Proxmox.
 - VirtIO driver ISO available if VirtIO storage or network adapters are used.
 - Console access to the target VM.

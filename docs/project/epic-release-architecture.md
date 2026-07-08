@@ -283,7 +283,7 @@ The Tier 0/1/2 model can be introduced early as a concept, especially for accoun
 | Windows LAPS | Secure local Administrator passwords across domain-joined Windows systems. | In progress | Active Directory baseline; Management Workstation baseline; Privileged access model. | [Windows LAPS Baseline](../microsoft-core/windows-security/windows-laps-baseline.md). | GPO configuration; AD-backed password storage; permissions model; recovery workflow; validation commands; separation of helpdesk access from domain admin access. |
 | Microsoft Defender Baseline | Create a practical Microsoft Defender Antivirus baseline for small business Windows infrastructure. | Done | Windows Firewall Baseline; Windows LAPS Baseline; Group Policy Baseline; Windows Event Forwarding for later monitoring. | [Microsoft Defender Enterprise Baseline](../microsoft-core/windows-security/microsoft-defender-baseline.md). | Defender Antivirus state; cloud-delivered protection; Tamper Protection limitations; PUA Protection; Network Protection audit mode; exclusions; PowerShell validation; operational checks. |
 | Windows Event Forwarding | Centralize important Windows security and operational events using dedicated collector `HQ-WEC01`. | Done | Enterprise WinRM Management; Windows Firewall Baseline; Microsoft Defender Baseline; Windows LAPS Baseline. | [Windows Event Forwarding and Collector Baseline](../microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md). | WEC collector design; source-initiated subscriptions; `HQ-W11-001` and `HQ-MGMT01` pilot sources; client-to-collector TCP `5985`; Forwarded Events validation; future SIEM integration. |
-| Enterprise Identity & Privileged Access Tier 0/1/2 | Define a scalable privileged access model as the lab grows from small business to multi-site / multinational design. | Planned | Management Workstation baseline; Windows LAPS; WinRM Management; Event Forwarding; Defender baseline. | Existing references: [Privileged Access Model](../security/privileged-access-model.md), [Enterprise Administrative Tiering](../security/administrative-tiering.md). Future: docs/microsoft-core/identity/privileged-access-tier-model.md. | Tier 0/1/2 definitions; dedicated admin accounts; no daily-driver admin use; PAW model; admin logon restrictions; GPO delegation; future JEA/JIT/PAM. |
+| Enterprise Identity & Privileged Access Tier 0/1/2 | Define a scalable privileged access model as the lab grows from small business to multi-site / multinational design. | Planned | Management Workstation baseline; Windows LAPS; WinRM Management; Event Forwarding; Defender baseline. | Existing references: [Privileged Access Model](../legacy/security/privileged-access-model.md), [Enterprise Administrative Tiering](../legacy/security/administrative-tiering.md). Future: docs/microsoft-core/identity/privileged-access-tier-model.md. | Tier 0/1/2 definitions; dedicated admin accounts; no daily-driver admin use; PAW model; admin logon restrictions; GPO delegation; future JEA/JIT/PAM. |
 
 ### Practical release grouping
 
@@ -326,39 +326,39 @@ The following register assigns every current published document to exactly one r
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0001-mkdocs-material.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md` |
 | E00.R01 - Documentation governance foundation | E00 | `governance/adrs/ADR-0003-hybrid-identity-namespace.md` |
-| E00.R01 - Documentation governance foundation | E00 | `future/index.md` |
-| E00.R01 - Documentation governance foundation | E00 | `archive/index.md` |
-| E00.R02 - Documentation delivery platform | E00 | `platform/index.md` |
-| E00.R02 - Documentation delivery platform | E00 | `platform/cloudflare-pages-deployment.md` |
-| E01.R01 - Enterprise reference architecture | E01 | `architecture/index.md` |
-| E01.R01 - Enterprise reference architecture | E01 | `architecture/reference-architecture.md` |
-| E01.R01 - Enterprise reference architecture | E01 | `architecture/environment-tiers.md` |
-| E01.R01 - Enterprise reference architecture | E01 | `architecture/identity-architecture.md` |
+| E00.R01 - Documentation governance foundation | E00 | `legacy/future/index.md` |
+| E00.R01 - Documentation governance foundation | E00 | `legacy/archive/index.md` |
+| E00.R02 - Documentation delivery platform | E00 | `legacy/platform/index.md` |
+| E00.R02 - Documentation delivery platform | E00 | `legacy/platform/cloudflare-pages-deployment.md` |
+| E01.R01 - Enterprise reference architecture | E01 | `legacy/architecture/index.md` |
+| E01.R01 - Enterprise reference architecture | E01 | `legacy/architecture/reference-architecture.md` |
+| E01.R01 - Enterprise reference architecture | E01 | `legacy/architecture/environment-tiers.md` |
+| E01.R01 - Enterprise reference architecture | E01 | `legacy/architecture/identity-architecture.md` |
 | E01.R01 - Enterprise reference architecture | E01 | `network/network-architecture.md` |
 | E01.R02 - Enterprise Architecture Vision | E01 | `project/master-plan.md` |
-| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/enterprise-capability-model.md` |
-| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/enterprise-reference-architecture.md` |
-| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/technology-selection-matrix.md` |
-| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/implementation-philosophy.md` |
-| E01.R02 - Enterprise Architecture Vision | E01 | `architecture/architecture-principles.md` |
-| E02.R01 - Site foundation and edge platform | E02 | `foundation/index.md` |
-| E02.R01 - Site foundation and edge platform | E02 | `foundation/phase-0-prerequisites.md` |
-| E02.R01 - Site foundation and edge platform | E02 | `foundation/proxmox-ve-baseline.md` |
-| E02.R01 - Site foundation and edge platform | E02 | `foundation/opnsense-edge-firewall.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `legacy/architecture/enterprise-capability-model.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `legacy/architecture/enterprise-reference-architecture.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `legacy/architecture/technology-selection-matrix.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `legacy/architecture/implementation-philosophy.md` |
+| E01.R02 - Enterprise Architecture Vision | E01 | `legacy/architecture/architecture-principles.md` |
+| E02.R01 - Site foundation and edge platform | E02 | `legacy/foundation/index.md` |
+| E02.R01 - Site foundation and edge platform | E02 | `legacy/foundation/phase-0-prerequisites.md` |
+| E02.R01 - Site foundation and edge platform | E02 | `legacy/foundation/proxmox-ve-baseline.md` |
+| E02.R01 - Site foundation and edge platform | E02 | `legacy/foundation/opnsense-edge-firewall.md` |
 | E02.R01 - Site foundation and edge platform | E02 | `governance/naming-addressing-standard.md` |
-| E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-blueprint.md` |
-| E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-network-hld.md` |
-| E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-identity-hld.md` |
-| E02.R02 - Enterprise Lab Blueprint | E02 | `architecture/enterprise-lab-operations-hld.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/proxmox-hq-foundation-lld.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/mikrotik-chr-hq-foundation-lld.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/opnsense-hq-foundation-lld.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-build-plan.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/phase-1-validation-plan.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/proxmox-hq-foundation-implementation.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/mikrotik-chr-hq-foundation-implementation.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/opnsense-hq-foundation-implementation.md` |
-| E02.R05 - HQ Foundation Evidence and Acceptance Package | E02 | `platform/phase-1-acceptance-package.md` |
+| E02.R02 - Enterprise Lab Blueprint | E02 | `legacy/architecture/enterprise-lab-blueprint.md` |
+| E02.R02 - Enterprise Lab Blueprint | E02 | `legacy/architecture/enterprise-lab-network-hld.md` |
+| E02.R02 - Enterprise Lab Blueprint | E02 | `legacy/architecture/enterprise-lab-identity-hld.md` |
+| E02.R02 - Enterprise Lab Blueprint | E02 | `legacy/architecture/enterprise-lab-operations-hld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/proxmox-hq-foundation-lld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/mikrotik-chr-hq-foundation-lld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/opnsense-hq-foundation-lld.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/phase-1-build-plan.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/phase-1-validation-plan.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `legacy/platform/proxmox-hq-foundation-implementation.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `legacy/platform/mikrotik-chr-hq-foundation-implementation.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `legacy/platform/opnsense-hq-foundation-implementation.md` |
+| E02.R05 - HQ Foundation Evidence and Acceptance Package | E02 | `legacy/platform/phase-1-acceptance-package.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/index.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-server-2025-baseline.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/active-directory-implementation.md` |
@@ -367,30 +367,30 @@ The following register assigns every current published document to exactly one r
 | E03.R01 - Core directory services | E03 | `microsoft-core/group-policy-baseline.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-client-lifecycle/index.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/powershell-operations.md` |
-| E03.R02 - Trust and network authentication | E03 | `microsoft-core/ad-cs-pki.md` |
-| E03.R02 - Trust and network authentication | E03 | `microsoft-core/nps-radius-8021x.md` |
-| E03.R03 - Privileged access control plane | E03 | `security/index.md` |
-| E03.R03 - Privileged access control plane | E03 | `security/privileged-access-model.md` |
-| E04.R01 - Cloud identity and endpoint management | E04 | `cloud-endpoint/index.md` |
-| E04.R01 - Cloud identity and endpoint management | E04 | `cloud-endpoint/microsoft-365-tenant-foundation.md` |
-| E04.R01 - Cloud identity and endpoint management | E04 | `cloud-endpoint/entra-id-hybrid-identity.md` |
-| E04.R01 - Cloud identity and endpoint management | E04 | `cloud-endpoint/intune-windows11-enterprise.md` |
-| E04.R01 - Cloud identity and endpoint management | E04 | `cloud-endpoint/windows-hello-for-business.md` |
-| E04.R01 - Cloud identity and endpoint management | E04 | `cloud-endpoint/microsoft-defender.md` |
-| E05.R01 - Operations readiness | E05 | `operations/index.md` |
-| E05.R01 - Operations readiness | E05 | `operations/monitoring-alerting.md` |
-| E05.R01 - Operations readiness | E05 | `operations/backup-recovery.md` |
-| E05.R01 - Operations readiness | E05 | `operations/troubleshooting.md` |
-| E05.R01 - Operations readiness | E05 | `operations/scaling-model.md` |
-| E05.R01 - Operations readiness | E05 | `operations/security-operations.md` |
-| E05.R01 - Operations readiness | E05 | `microsoft-core/windows-admin-center.md` |
+| E03.R02 - Trust and network authentication | E03 | `legacy/microsoft-core/ad-cs-pki.md` |
+| E03.R02 - Trust and network authentication | E03 | `legacy/microsoft-core/nps-radius-8021x.md` |
+| E03.R03 - Privileged access control plane | E03 | `legacy/security/index.md` |
+| E03.R03 - Privileged access control plane | E03 | `legacy/security/privileged-access-model.md` |
+| E04.R01 - Cloud identity and endpoint management | E04 | `legacy/cloud-endpoint/index.md` |
+| E04.R01 - Cloud identity and endpoint management | E04 | `legacy/cloud-endpoint/microsoft-365-tenant-foundation.md` |
+| E04.R01 - Cloud identity and endpoint management | E04 | `legacy/cloud-endpoint/entra-id-hybrid-identity.md` |
+| E04.R01 - Cloud identity and endpoint management | E04 | `legacy/cloud-endpoint/intune-windows11-enterprise.md` |
+| E04.R01 - Cloud identity and endpoint management | E04 | `legacy/cloud-endpoint/windows-hello-for-business.md` |
+| E04.R01 - Cloud identity and endpoint management | E04 | `legacy/cloud-endpoint/microsoft-defender.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/index.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/monitoring-alerting.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/backup-recovery.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/troubleshooting.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/scaling-model.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/security-operations.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/microsoft-core/windows-admin-center.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/firewall-rule-matrix.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/vlan-and-subnet-plan.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-routeros-baseline.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/cloudflared-container-networking.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/active-directory-network-requirements.md` |
-| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `platform/enterprise-port-reference.md` |
-| E02.R04 - HQ Foundation Implementation Runbook | E02 | `platform/windows-server-2025-golden-template.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/active-directory-network-requirements.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `legacy/platform/enterprise-port-reference.md` |
+| E02.R04 - HQ Foundation Implementation Runbook | E02 | `legacy/platform/windows-server-2025-golden-template.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md` |
 | E02.R04 - HQ Foundation Implementation Runbook | E02 | `microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md` |
@@ -399,8 +399,8 @@ The following register assigns every current published document to exactly one r
 | E03.R01 - Core directory services | E03 | `microsoft-core/group-strategy.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/user-lifecycle.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/service-account-standard.md` |
-| E03.R03 - Privileged access control plane | E03 | `security/administrative-tiering.md` |
-| E05.R01 - Operations readiness | E05 | `operations/domain-controller-backup.md` |
+| E03.R03 - Privileged access control plane | E03 | `legacy/security/administrative-tiering.md` |
+| E05.R01 - Operations readiness | E05 | `legacy/operations/domain-controller-backup.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-client-lifecycle/cloudbase-init-for-proxmox.md` |
 | E03.R01 - Core directory services | E03 | `microsoft-core/windows-client-lifecycle/standard-windows-client-hq-w11-001.md` |
 | E05.R01 - Operations readiness | E05 | `microsoft-core/administration/rsat-remote-administration.md` |
@@ -417,10 +417,10 @@ The following register assigns every current published document to exactly one r
 | WIN.R03 - Endpoint Protection and Monitoring | E06 | `microsoft-core/windows-security/microsoft-defender-baseline.md` |
 | WIN.R03 - Endpoint Protection and Monitoring | E06 | `microsoft-core/windows-monitoring/index.md` |
 | WIN.R03 - Endpoint Protection and Monitoring | E06 | `microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md` |
-| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/file-server.md` |
-| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/dfs.md` |
-| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/smb-shares-permissions.md` |
-| E03.R06 - Service account lifecycle | E03 | `microsoft-core/file-services/agdlp-access-model.md` |
+| E03.R06 - Service account lifecycle | E03 | `legacy/microsoft-core/file-services/file-server.md` |
+| E03.R06 - Service account lifecycle | E03 | `legacy/microsoft-core/file-services/dfs.md` |
+| E03.R06 - Service account lifecycle | E03 | `legacy/microsoft-core/file-services/smb-shares-permissions.md` |
+| E03.R06 - Service account lifecycle | E03 | `legacy/microsoft-core/file-services/agdlp-access-model.md` |
 
 ## Future release slots
 
@@ -454,3 +454,8 @@ When adding a document:
 3. Add the document to the release assignment register.
 4. Update the roadmap, backlog, document index, and navigation.
 5. Run `mkdocs build --strict`.
+
+### Temporary assignment for active simplification
+
+| E00.R05 - Legacy Documentation | E00 | `legacy/index.md` |
+| E00.R02 - Governance and Standards | E00 | `project/active-documentation-scope.md` |

@@ -59,7 +59,7 @@ Create implementation-ready documentation that allows GNTECH Infrastructure Engi
 
 ## Capability-first mandate
 
-Every future implementation document must support one or more enterprise capabilities from the [Enterprise Capability Model](../architecture/enterprise-capability-model.md). Technology-specific documents are allowed only when they implement, operate, secure, validate, or recover a defined capability.
+Every future implementation document must support one or more enterprise capabilities from the [Enterprise Capability Model](../legacy/architecture/enterprise-capability-model.md). Technology-specific documents are allowed only when they implement, operate, secure, validate, or recover a defined capability.
 
 ## Documentation architecture model
 
@@ -133,6 +133,6 @@ A GEIL documentation change is complete only when:
 - [Documentation Roadmap](documentation-roadmap.md)
 - [Document Index](document-index.md)
 
-- [Enterprise Reference Architecture](../architecture/enterprise-reference-architecture.md)
+- [Enterprise Reference Architecture](../legacy/architecture/enterprise-reference-architecture.md)
 
-- [Architecture Principles](../architecture/architecture-principles.md)
+- [Architecture Principles](../legacy/architecture/architecture-principles.md)

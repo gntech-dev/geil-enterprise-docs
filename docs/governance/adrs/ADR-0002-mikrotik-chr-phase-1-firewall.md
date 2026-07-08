@@ -76,12 +76,12 @@ Tradeoffs:
 
 ## Superseded implementation
 
-- `docs/platform/opnsense-hq-foundation-lld.md` is superseded by `docs/platform/mikrotik-chr-hq-foundation-lld.md`.
-- `docs/platform/opnsense-hq-foundation-implementation.md` is superseded by `docs/platform/mikrotik-chr-hq-foundation-implementation.md`.
+- `docs/legacy/platform/opnsense-hq-foundation-lld.md` is superseded by `docs/legacy/platform/mikrotik-chr-hq-foundation-lld.md`.
+- `docs/legacy/platform/opnsense-hq-foundation-implementation.md` is superseded by `docs/legacy/platform/mikrotik-chr-hq-foundation-implementation.md`.
 
 ## Related documents
 
-- [Technology Selection Matrix](../../architecture/technology-selection-matrix.md)
-- [Enterprise Lab Network HLD](../../architecture/enterprise-lab-network-hld.md)
-- [MikroTik CHR HQ Foundation LLD](../../platform/mikrotik-chr-hq-foundation-lld.md)
-- [MikroTik CHR HQ Foundation Implementation](../../platform/mikrotik-chr-hq-foundation-implementation.md)
+- [Technology Selection Matrix](../../legacy/architecture/technology-selection-matrix.md)
+- [Enterprise Lab Network HLD](../../legacy/architecture/enterprise-lab-network-hld.md)
+- [MikroTik CHR HQ Foundation LLD](../../legacy/platform/mikrotik-chr-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation Implementation](../../legacy/platform/mikrotik-chr-hq-foundation-implementation.md)

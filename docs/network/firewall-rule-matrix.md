@@ -35,7 +35,7 @@ classification: Internal Confidential
 
 Provide a platform-level firewall policy matrix for `HQ-FW01` MikroTik CHR / RouterOS while avoiding duplicated rule definitions.
 
-Authoritative current `HQ-FW01` operational firewall rules are maintained in [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md). Detailed Active Directory client-to-domain-controller requirements are authoritative in [Active Directory Network Requirements](../platform/active-directory-network-requirements.md). This matrix points to those shared standards instead of redefining rule details in multiple guides.
+Authoritative current `HQ-FW01` operational firewall rules are maintained in [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md). Detailed Active Directory client-to-domain-controller requirements are authoritative in [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md). This matrix points to those shared standards instead of redefining rule details in multiple guides.
 
 ## Architecture Overview
 
@@ -52,7 +52,7 @@ flowchart LR
 
 During pilot deployment, VLAN30 clients received DHCP leases and DNS option `172.20.20.11`, but could not reach `HQ-DC01` because the firewall only allowed the former single management workstation address `172.20.30.10` to communicate with the domain controller. DHCP relay, routing, and internet access were correct; the failure was forward-chain firewall policy.
 
-Production policy must use RouterOS address lists and least-privilege Active Directory service rules from [Active Directory Network Requirements](../platform/active-directory-network-requirements.md). Do not keep broad pilot rules as production policy.
+Production policy must use RouterOS address lists and least-privilege Active Directory service rules from [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md). Do not keep broad pilot rules as production policy.
 
 ## Shared address-list model
 
@@ -67,7 +67,7 @@ Production policy must use RouterOS address lists and least-privilege Active Dir
 
 | Source | Destination | Policy | Purpose | Authoritative reference | Validation |
 |---|---|---|---|---|---|
-| `AD-ClientNetworks` | `AD-DomainControllers` | Least-privilege AD service ports | DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, GC, optional LDAPS | [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md), [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) | DNS, domain join, SYSVOL, NETLOGON, `gpupdate`, `gpresult` |
+| `AD-ClientNetworks` | `AD-DomainControllers` | Least-privilege AD service ports | DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, GC, optional LDAPS | [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md), [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md) | DNS, domain join, SYSVOL, NETLOGON, `gpupdate`, `gpresult` |
 | `ManagementNetworks` | `HQ-FW01` | Approved management ports only | WinBox/SSH/HTTPS management | MikroTik CHR implementation guide | Approved admin source reaches RouterOS |
 | VLAN 20 Servers | Internet | TCP 80/443 | Updates and Microsoft cloud endpoints | Enterprise Port Reference | `Test-NetConnection` to update endpoints |
 | VLAN 10 Management | Infrastructure management targets | Approved management ports | Remote administration | Network Architecture / Windows 11 Management Workstation | Only `HQ-MGMT01` and future management workstations originate management traffic |
@@ -124,9 +124,9 @@ Capture firewall address-list output, filter output with counters, NAT output, r
 | Symptom | Cause | Fix |
 |---|---|---|
 | Windows cannot reach internet | LAN-to-WAN rule or NAT missing | Validate forward allow and NAT. |
-| DHCP works but domain join fails | AD client-to-domain-controller service rules missing or below default deny | Apply [Active Directory Network Requirements](../platform/active-directory-network-requirements.md) address-list model and validate DNS/SYSVOL/NETLOGON/GPUpdate. |
+| DHCP works but domain join fails | AD client-to-domain-controller service rules missing or below default deny | Apply [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md) address-list model and validate DNS/SYSVOL/NETLOGON/GPUpdate. |
 | Guest reaches internal network | Missing deny or wrong rule order | Move deny before broad allow. |
 
 ## Next Guide
 
-Use this with [Enterprise Port Reference](../platform/enterprise-port-reference.md), [Active Directory Network Requirements](../platform/active-directory-network-requirements.md), and Microsoft Core implementation guides.
+Use this with [Enterprise Port Reference](../legacy/platform/enterprise-port-reference.md), [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md), and Microsoft Core implementation guides.

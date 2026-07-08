@@ -61,7 +61,7 @@ The Windows 11 template must remain workgroup-only. Domain join happens only aft
 ## Prerequisites
 
 - [Windows 11 Enterprise Golden Template](windows-11-enterprise-golden-template.md) completed.
-- [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) implemented on `HQ-FW01`.
+- [Active Directory Network Requirements](../../legacy/platform/active-directory-network-requirements.md) implemented on `HQ-FW01`.
 - [DNS and DHCP Implementation](../dns-dhcp-implementation.md) completed for VLAN 30.
 - [Group Policy Baseline](../group-policy-baseline.md) created and linked to the Workstations OU.
 - [Enterprise WinRM Management](../administration/enterprise-winrm-management.md) reviewed when validating post-domain-join enterprise remoting.
@@ -226,7 +226,7 @@ nltest /dsgetdc:corp.gntech.me
 
 #### Stop condition
 
-STOP if DHCP works but these tests fail. DHCP relay is not sufficient for domain join. Return to [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md) and verify address lists and service rules before continuing.
+STOP if DHCP works but these tests fail. DHCP relay is not sufficient for domain join. Return to [Active Directory Network Requirements](../../legacy/platform/active-directory-network-requirements.md) and verify address lists and service rules before continuing.
 
 ### Step 4: Rename or confirm hostname
 
@@ -456,7 +456,7 @@ Capture:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| DHCP works but DNS times out | AD service firewall rules missing or below default deny | Apply [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md). |
+| DHCP works but DNS times out | AD service firewall rules missing or below default deny | Apply [Active Directory Network Requirements](../../legacy/platform/active-directory-network-requirements.md). |
 | Domain join cannot locate domain | DNS/SRV lookup failure | Validate DNS option `172.20.20.11` and SRV records. |
 | GPUpdate fails with SYSVOL error | SMB TCP 445 blocked or SYSVOL unavailable | Validate `Test-Path \\corp.gntech.me\SYSVOL`. |
 | GPUpdate fails with RPC error | RPC 135 or dynamic RPC blocked | Validate address-list based AD rules on `HQ-FW01`. |

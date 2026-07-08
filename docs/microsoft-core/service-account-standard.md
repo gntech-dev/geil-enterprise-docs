@@ -254,4 +254,4 @@ Capture account properties, group membership, service owner, service binding, ro
 
 ## Next Guide
 
-Continue to [Enterprise Administrative Tiering](../security/administrative-tiering.md).
+Continue to [Enterprise Administrative Tiering](../legacy/security/administrative-tiering.md).

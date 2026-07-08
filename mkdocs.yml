@@ -48,25 +48,31 @@ markdown_extensions:
 plugins:
   - search
 nav:
-  - Home: index.md
-  - Foundation:
-      - foundation/index.md
-      - Phase 0 Prerequisites: foundation/phase-0-prerequisites.md
-      - Proxmox VE Baseline: foundation/proxmox-ve-baseline.md
-  - Platform:
-      - platform/index.md
-      - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
-      - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
-      - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
-      - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
-      - MikroTik CHR HQ Foundation Implementation: platform/mikrotik-chr-hq-foundation-implementation.md
-      - Firewall Rule Matrix: network/firewall-rule-matrix.md
-      - Active Directory Network Requirements: platform/active-directory-network-requirements.md
-      - Enterprise Port Reference: platform/enterprise-port-reference.md
-      - Windows Server 2025 Golden Template: platform/windows-server-2025-golden-template.md
-      - Phase 1 Build Plan: platform/phase-1-build-plan.md
-      - Phase 1 Validation Plan: platform/phase-1-validation-plan.md
-      - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
+  - Project:
+      - project/index.md
+      - Active Documentation Scope: project/active-documentation-scope.md
+      - Enterprise Implementation Roadmap: project/enterprise-implementation-roadmap.md
+      - Environment Specification: project/environment-specification.md
+      - Document Index: project/document-index.md
+      - Documentation Roadmap: project/documentation-roadmap.md
+      - Epic and Release Architecture: project/epic-release-architecture.md
+      - Documentation Backlog: project/documentation-backlog.md
+      - Project Charter: project/project-charter.md
+      - Master Plan: project/master-plan.md
+  - Governance:
+      - governance/index.md
+      - Documentation Standard: governance/documentation-standard.md
+      - Deployment Style Guide: governance/deployment-style-guide.md
+      - Implementation Guide Standard: governance/implementation-guide-standard.md
+      - Code Block Quality Standard: governance/code-block-quality-standard.md
+      - Naming and Addressing Standard: governance/naming-addressing-standard.md
+      - Visual Documentation Standard: governance/visual-documentation-standard.md
+      - Educational Documentation Standard: governance/educational-documentation-standard.md
+      - ADRs:
+          - governance/adrs/index.md
+          - ADR-0001 MkDocs Material: governance/adrs/ADR-0001-mkdocs-material.md
+          - ADR-0002 MikroTik CHR Firewall: governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md
+          - ADR-0003 Hybrid Identity Namespace: governance/adrs/ADR-0003-hybrid-identity-namespace.md
   - Network:
       - network/index.md
       - Network Architecture: network/network-architecture.md
@@ -80,123 +86,38 @@ nav:
           - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
   - Microsoft Core:
       - microsoft-core/index.md
-      - Phase 1 - Identity Foundation:
+      - Identity and Directory:
           - Windows Server 2025 Baseline: microsoft-core/windows-server-2025-baseline.md
           - Active Directory Implementation: microsoft-core/active-directory-implementation.md
           - Active Directory Organizational Foundation: microsoft-core/active-directory-organizational-foundation.md
           - Enterprise Naming Standard: microsoft-core/active-directory-naming-standard.md
           - Authentication Standards: microsoft-core/authentication-standards.md
-      - Phase 2 - Core Infrastructure Services:
+          - Group Strategy: microsoft-core/group-strategy.md
+          - User Lifecycle: microsoft-core/user-lifecycle.md
+          - Service Account Standard: microsoft-core/service-account-standard.md
+      - Core Infrastructure:
           - DNS and DHCP Implementation: microsoft-core/dns-dhcp-implementation.md
-          - Group Policy Baseline - Workstations and Management Workstations: microsoft-core/group-policy-baseline.md
-      - Phase 3 - Windows Client Lifecycle:
+          - Group Policy Baseline: microsoft-core/group-policy-baseline.md
+          - PowerShell Operations: microsoft-core/powershell-operations.md
+      - Windows Client Lifecycle:
           - microsoft-core/windows-client-lifecycle/index.md
           - Windows 11 Enterprise Golden Template: microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md
           - Cloudbase-Init for Proxmox: microsoft-core/windows-client-lifecycle/cloudbase-init-for-proxmox.md
           - Windows Management Workstation - HQ-MGMT01: microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md
           - Windows Domain Join and GPO Validation: microsoft-core/windows-client-lifecycle/windows-11-domain-join-gpo-validation.md
           - Standard Windows Client - HQ-W11-001: microsoft-core/windows-client-lifecycle/standard-windows-client-hq-w11-001.md
-      - Phase 4 - Administration:
-          - PowerShell Operations: microsoft-core/powershell-operations.md
-          - RSAT / Remote Administration: microsoft-core/administration/rsat-remote-administration.md
+      - Administration:
+          - RSAT Remote Administration: microsoft-core/administration/rsat-remote-administration.md
           - Windows Server Remote Management: microsoft-core/administration/windows-server-remote-management.md
           - Enterprise WinRM Management: microsoft-core/administration/enterprise-winrm-management.md
           - WinRM / PowerShell Remoting Baseline: microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md
-      - Windows Security Baselines:
+      - Windows Security:
           - microsoft-core/windows-security/index.md
           - Windows Firewall Baseline: microsoft-core/windows-security/windows-firewall-baseline.md
           - Windows LAPS Baseline: microsoft-core/windows-security/windows-laps-baseline.md
-          - Microsoft Defender Baseline: microsoft-core/windows-security/microsoft-defender-baseline.md
+          - Microsoft Defender Enterprise Baseline: microsoft-core/windows-security/microsoft-defender-baseline.md
       - Windows Monitoring:
           - microsoft-core/windows-monitoring/index.md
-          - Windows Event Forwarding Baseline: microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md
-      - Phase 5 - File Services (Future):
-          - File Server: microsoft-core/file-services/file-server.md
-          - DFS: microsoft-core/file-services/dfs.md
-          - SMB Shares and Permissions: microsoft-core/file-services/smb-shares-permissions.md
-          - AGDLP Access Model: microsoft-core/file-services/agdlp-access-model.md
-      - Phase 6 - Future Identity Expansion:
-          - Future - PKI: microsoft-core/ad-cs-pki.md
-          - Future - NPS / RADIUS: microsoft-core/nps-radius-8021x.md
-          - Future - Entra Hybrid: cloud-endpoint/entra-id-hybrid-identity.md
-          - Future - Windows Hello for Business: cloud-endpoint/windows-hello-for-business.md
-          - Future - Windows Admin Center: microsoft-core/windows-admin-center.md
-  - Security:
-      - security/index.md
-      - Privileged Access Model: security/privileged-access-model.md
-      - Enterprise Administrative Tiering: security/administrative-tiering.md
-      - Identity and Access References:
-          - Enterprise Group Strategy: microsoft-core/group-strategy.md
-          - Enterprise User Lifecycle: microsoft-core/user-lifecycle.md
-          - Enterprise Service Account Standard: microsoft-core/service-account-standard.md
-  - Architecture:
-      - architecture/index.md
-      - Enterprise Blueprint: architecture/enterprise-lab-blueprint.md
-      - Network Architecture: network/network-architecture.md
-      - Identity Architecture: architecture/identity-architecture.md
-      - Source Material Pending Merge:
-          - Architecture Principles: architecture/architecture-principles.md
-          - Enterprise Lab Network HLD: architecture/enterprise-lab-network-hld.md
-          - Enterprise Lab Identity HLD: architecture/enterprise-lab-identity-hld.md
-          - Enterprise Lab Operations HLD: architecture/enterprise-lab-operations-hld.md
-          - Implementation Philosophy: architecture/implementation-philosophy.md
-          - Technology Selection Matrix: architecture/technology-selection-matrix.md
-          - Enterprise Reference Architecture: architecture/enterprise-reference-architecture.md
-          - Enterprise Capability Model: architecture/enterprise-capability-model.md
-          - Reference Architecture: architecture/reference-architecture.md
-          - Environment Tiers: architecture/environment-tiers.md
-  - Operations:
-      - operations/index.md
-      - Monitoring and Alerting: operations/monitoring-alerting.md
-      - Backup and Recovery: operations/backup-recovery.md
-      - Domain Controller Backup and Recovery: operations/domain-controller-backup.md
-      - Troubleshooting: operations/troubleshooting.md
-      - Scaling Model: operations/scaling-model.md
-      - Security Operations: operations/security-operations.md
-  - Project:
-      - project/index.md
-      - Project Charter: project/project-charter.md
-      - Master Plan: project/master-plan.md
-      - Enterprise Implementation Roadmap: project/enterprise-implementation-roadmap.md
-      - Environment Specification: project/environment-specification.md
-      - Network and AD Services Matrix: network/network-and-ad-services-matrix.md
-      - Document Index: project/document-index.md
-      - Documentation Backlog: project/documentation-backlog.md
-      - Documentation Roadmap: project/documentation-roadmap.md
-      - Epic and Release Architecture: project/epic-release-architecture.md
-      - Documentation Architecture Review: project/documentation-architecture-review.md
-      - Audit Reports:
-          - Implementation Guide Audit Report: project/implementation-guide-audit-report.md
-          - Documentation Quality Report: project/documentation-quality-report.md
-          - Production Readiness Audit Report: project/production-readiness-audit-report.md
-      - Governance Standards:
-          - governance/index.md
-          - Documentation Standard: governance/documentation-standard.md
-          - Visual Documentation Standard: governance/visual-documentation-standard.md
-          - Implementation Guide Standard: governance/implementation-guide-standard.md
-          - Educational Documentation Standard: governance/educational-documentation-standard.md
-          - Deployment Style Guide: governance/deployment-style-guide.md
-          - Code Block Quality Standard: governance/code-block-quality-standard.md
-          - Naming and Addressing Standard: governance/naming-addressing-standard.md
-      - ADRs:
-          - governance/adrs/index.md
-          - ADR-0001 MkDocs Material: governance/adrs/ADR-0001-mkdocs-material.md
-          - ADR-0002 MikroTik CHR Firewall: governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md
-          - ADR-0003 Hybrid Identity Namespace: governance/adrs/ADR-0003-hybrid-identity-namespace.md
-  - Future:
-      - future/index.md
-      - Cloud and Endpoint Planning: cloud-endpoint/index.md
-      - Microsoft 365 Tenant Foundation: cloud-endpoint/microsoft-365-tenant-foundation.md
-      - Entra ID Hybrid Identity: cloud-endpoint/entra-id-hybrid-identity.md
-      - Intune Windows 11 Enterprise: cloud-endpoint/intune-windows11-enterprise.md
-      - Windows Hello for Business: cloud-endpoint/windows-hello-for-business.md
-      - Microsoft Defender: cloud-endpoint/microsoft-defender.md
-      - AD CS PKI: microsoft-core/ad-cs-pki.md
-      - NPS RADIUS 802.1X: microsoft-core/nps-radius-8021x.md
-  - Archive:
-      - archive/index.md
-      - Superseded OPNsense Edge Firewall: foundation/opnsense-edge-firewall.md
-      - Superseded OPNsense HQ Foundation LLD: platform/opnsense-hq-foundation-lld.md
-      - Superseded OPNsense HQ Foundation Implementation: platform/opnsense-hq-foundation-implementation.md
-      - Legacy Governance Roadmap: governance/roadmap.md
-      - Legacy Governance Backlog: governance/backlog.md
+          - Windows Event Forwarding and Collector Baseline: microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md
+  - Legacy:
+      - legacy/index.md

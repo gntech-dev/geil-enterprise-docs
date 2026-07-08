@@ -74,7 +74,7 @@ Phase 1 provides the baseline identity, management, client, firewall, local admi
 | DNS | Pilot Validated / In Progress | [DNS and DHCP Implementation](../microsoft-core/dns-dhcp-implementation.md) |
 | DHCP | Pilot Validated / In Progress | [DNS and DHCP Implementation](../microsoft-core/dns-dhcp-implementation.md) |
 | Organizational Units | Pilot Validated / In Progress | [Active Directory Organizational Foundation](../microsoft-core/active-directory-organizational-foundation.md) |
-| Tier Model | Draft / In Progress | [Privileged Access Model](../security/privileged-access-model.md), [Enterprise Administrative Tiering](../security/administrative-tiering.md) |
+| Tier Model | Draft / In Progress | [Privileged Access Model](../legacy/security/privileged-access-model.md), [Enterprise Administrative Tiering](../legacy/security/administrative-tiering.md) |
 | Group Policy Framework | Pilot Validated / In Progress | [Group Policy Baseline](../microsoft-core/group-policy-baseline.md) |
 | `HQ-MGMT01` | Pilot Validated | [Windows Management Workstation - HQ-MGMT01](../microsoft-core/windows-client-lifecycle/windows-11-management-workstation.md) |
 | `HQ-W11-001` | Pilot Validated | [Standard Windows Client - HQ-W11-001](../microsoft-core/windows-client-lifecycle/standard-windows-client-hq-w11-001.md) |

@@ -77,30 +77,30 @@ The audit used the following production-readiness workflow before publishing cha
 
 The following files were included in the repository-wide audit:
 
-- `docs/architecture/architecture-principles.md`
-- `docs/architecture/enterprise-capability-model.md`
-- `docs/architecture/enterprise-lab-blueprint.md`
-- `docs/architecture/enterprise-lab-identity-hld.md`
-- `docs/architecture/enterprise-lab-network-hld.md`
-- `docs/architecture/enterprise-lab-operations-hld.md`
-- `docs/architecture/enterprise-reference-architecture.md`
-- `docs/architecture/environment-tiers.md`
-- `docs/architecture/identity-architecture.md`
-- `docs/architecture/implementation-philosophy.md`
-- `docs/architecture/index.md`
+- `docs/legacy/architecture/architecture-principles.md`
+- `docs/legacy/architecture/enterprise-capability-model.md`
+- `docs/legacy/architecture/enterprise-lab-blueprint.md`
+- `docs/legacy/architecture/enterprise-lab-identity-hld.md`
+- `docs/legacy/architecture/enterprise-lab-network-hld.md`
+- `docs/legacy/architecture/enterprise-lab-operations-hld.md`
+- `docs/legacy/architecture/enterprise-reference-architecture.md`
+- `docs/legacy/architecture/environment-tiers.md`
+- `docs/legacy/architecture/identity-architecture.md`
+- `docs/legacy/architecture/implementation-philosophy.md`
+- `docs/legacy/architecture/index.md`
 - `docs/network/network-architecture.md`
-- `docs/architecture/reference-architecture.md`
-- `docs/architecture/technology-selection-matrix.md`
-- `docs/cloud-endpoint/entra-id-hybrid-identity.md`
-- `docs/cloud-endpoint/index.md`
-- `docs/cloud-endpoint/intune-windows11-enterprise.md`
-- `docs/cloud-endpoint/microsoft-365-tenant-foundation.md`
-- `docs/cloud-endpoint/microsoft-defender.md`
-- `docs/cloud-endpoint/windows-hello-for-business.md`
-- `docs/foundation/index.md`
-- `docs/foundation/opnsense-edge-firewall.md`
-- `docs/foundation/phase-0-prerequisites.md`
-- `docs/foundation/proxmox-ve-baseline.md`
+- `docs/legacy/architecture/reference-architecture.md`
+- `docs/legacy/architecture/technology-selection-matrix.md`
+- `docs/legacy/cloud-endpoint/entra-id-hybrid-identity.md`
+- `docs/legacy/cloud-endpoint/index.md`
+- `docs/legacy/cloud-endpoint/intune-windows11-enterprise.md`
+- `docs/legacy/cloud-endpoint/microsoft-365-tenant-foundation.md`
+- `docs/legacy/cloud-endpoint/microsoft-defender.md`
+- `docs/legacy/cloud-endpoint/windows-hello-for-business.md`
+- `docs/legacy/foundation/index.md`
+- `docs/legacy/foundation/opnsense-edge-firewall.md`
+- `docs/legacy/foundation/phase-0-prerequisites.md`
+- `docs/legacy/foundation/proxmox-ve-baseline.md`
 - `docs/governance/adrs/ADR-0001-mkdocs-material.md`
 - `docs/governance/adrs/ADR-0002-mikrotik-chr-phase-1-firewall.md`
 - `docs/governance/adrs/ADR-0003-hybrid-identity-namespace.md`
@@ -129,28 +129,28 @@ The following files were included in the repository-wide audit:
 - `docs/microsoft-core/user-lifecycle.md`
 - `docs/microsoft-core/windows-admin-center.md`
 - `docs/microsoft-core/windows-server-2025-baseline.md`
-- `docs/operations/backup-recovery.md`
-- `docs/operations/domain-controller-backup.md`
-- `docs/operations/index.md`
-- `docs/operations/monitoring-alerting.md`
-- `docs/operations/scaling-model.md`
-- `docs/operations/security-operations.md`
-- `docs/operations/troubleshooting.md`
-- `docs/platform/cloudflare-pages-deployment.md`
-- `docs/platform/enterprise-port-reference.md`
+- `docs/legacy/operations/backup-recovery.md`
+- `docs/legacy/operations/domain-controller-backup.md`
+- `docs/legacy/operations/index.md`
+- `docs/legacy/operations/monitoring-alerting.md`
+- `docs/legacy/operations/scaling-model.md`
+- `docs/legacy/operations/security-operations.md`
+- `docs/legacy/operations/troubleshooting.md`
+- `docs/legacy/platform/cloudflare-pages-deployment.md`
+- `docs/legacy/platform/enterprise-port-reference.md`
 - `docs/network/firewall-rule-matrix.md`
-- `docs/platform/index.md`
-- `docs/platform/mikrotik-chr-hq-foundation-implementation.md`
-- `docs/platform/mikrotik-chr-hq-foundation-lld.md`
-- `docs/platform/opnsense-hq-foundation-implementation.md`
-- `docs/platform/opnsense-hq-foundation-lld.md`
-- `docs/platform/phase-1-acceptance-package.md`
-- `docs/platform/phase-1-build-plan.md`
-- `docs/platform/phase-1-validation-plan.md`
-- `docs/platform/proxmox-hq-foundation-implementation.md`
-- `docs/platform/proxmox-hq-foundation-lld.md`
+- `docs/legacy/platform/index.md`
+- `docs/legacy/platform/mikrotik-chr-hq-foundation-implementation.md`
+- `docs/legacy/platform/mikrotik-chr-hq-foundation-lld.md`
+- `docs/legacy/platform/opnsense-hq-foundation-implementation.md`
+- `docs/legacy/platform/opnsense-hq-foundation-lld.md`
+- `docs/legacy/platform/phase-1-acceptance-package.md`
+- `docs/legacy/platform/phase-1-build-plan.md`
+- `docs/legacy/platform/phase-1-validation-plan.md`
+- `docs/legacy/platform/proxmox-hq-foundation-implementation.md`
+- `docs/legacy/platform/proxmox-hq-foundation-lld.md`
 - `docs/microsoft-core/windows-client-lifecycle/windows-11-enterprise-golden-template.md`
-- `docs/platform/windows-server-2025-golden-template.md`
+- `docs/legacy/platform/windows-server-2025-golden-template.md`
 - `docs/project/document-index.md`
 - `docs/project/documentation-backlog.md`
 - `docs/project/documentation-quality-report.md`
@@ -162,9 +162,9 @@ The following files were included in the repository-wide audit:
 - `docs/project/master-plan.md`
 - `docs/project/production-readiness-audit-report.md`
 - `docs/project/project-charter.md`
-- `docs/security/administrative-tiering.md`
-- `docs/security/index.md`
-- `docs/security/privileged-access-model.md`
+- `docs/legacy/security/administrative-tiering.md`
+- `docs/legacy/security/index.md`
+- `docs/legacy/security/privileged-access-model.md`
 - `MASTER_PLAN.md`
 - `CHANGELOG.md`
 
@@ -197,8 +197,8 @@ Detailed fenced-code language counts:
 | PRA-001 | High | PowerShell / AD groups | `docs/microsoft-core/group-strategy.md` used `Get-ADGroup -Identity` as an existence check and created groups without first validating that `OU=Security,OU=Groups,OU=GNTECH,...` existed. |
 | PRA-002 | High | PowerShell / user lifecycle | `docs/microsoft-core/user-lifecycle.md` created a user in `OU=Standard,OU=Users,OU=GNTECH,...` without first validating the target OU. |
 | PRA-003 | High | PowerShell / service accounts | `docs/microsoft-core/service-account-standard.md` created `svc-monitoring` without first validating the service-account OU. |
-| PRA-004 | High | PowerShell / administrative tiering | `docs/security/administrative-tiering.md` created `admin.gnolasco` without first validating the Tier 0 OU. |
-| PRA-005 | High | PowerShell / privileged access | `docs/security/privileged-access-model.md` created a Tier 0 administrative account without first validating the Tier 0 OU or making the operation idempotent. |
+| PRA-004 | High | PowerShell / administrative tiering | `docs/legacy/security/administrative-tiering.md` created `admin.gnolasco` without first validating the Tier 0 OU. |
+| PRA-005 | High | PowerShell / privileged access | `docs/legacy/security/privileged-access-model.md` created a Tier 0 administrative account without first validating the Tier 0 OU or making the operation idempotent. |
 | PRA-006 | Medium | RouterOS / dependency review | Several RouterOS blocks reference interface lists. Manual sequence review confirmed these references occur after the guide creates and validates interface lists; no active RouterOS sequencing correction was required in this pass. |
 
 ## Issues corrected
@@ -308,8 +308,8 @@ The pilot deployment validated that DHCP relay on MikroTik CHR is not solved by 
 The following documentation was updated:
 
 - `docs/microsoft-core/dns-dhcp-implementation.md`
-- `docs/platform/mikrotik-chr-hq-foundation-implementation.md`
-- `docs/platform/mikrotik-chr-hq-foundation-lld.md`
+- `docs/legacy/platform/mikrotik-chr-hq-foundation-implementation.md`
+- `docs/legacy/platform/mikrotik-chr-hq-foundation-lld.md`
 
 Corrected guidance now requires:
 

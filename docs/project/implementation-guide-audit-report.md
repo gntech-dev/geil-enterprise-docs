@@ -31,11 +31,11 @@ Document the full audit and correction of GEIL implementation, deployment, valid
 
 The audit covered every Markdown guide under:
 
-- `docs/platform/`
+- `docs/legacy/platform/`
 - `docs/microsoft-core/`
-- `docs/foundation/`
-- `docs/security/`
-- `docs/operations/`
+- `docs/legacy/foundation/`
+- `docs/legacy/security/`
+- `docs/legacy/operations/`
 
 ## Guides reviewed
 
@@ -117,8 +117,8 @@ The audit covered every Markdown guide under:
 
 Continue with real-environment validation of:
 
-- [MikroTik CHR HQ Foundation Implementation Guide](../platform/mikrotik-chr-hq-foundation-implementation.md)
-- [Phase 1 Validation Plan](../platform/phase-1-validation-plan.md)
-- [Phase 1 Acceptance Package](../platform/phase-1-acceptance-package.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](../legacy/platform/mikrotik-chr-hq-foundation-implementation.md)
+- [Phase 1 Validation Plan](../legacy/platform/phase-1-validation-plan.md)
+- [Phase 1 Acceptance Package](../legacy/platform/phase-1-acceptance-package.md)
 
 Do not proceed to Active Directory promotion until the corrected Phase 1 firewall and bridge validation evidence is complete.

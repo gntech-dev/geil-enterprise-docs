@@ -55,16 +55,16 @@ The document index is the authoritative register of GEIL documents, their owners
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-PLT-INDEX | Platform | Draft | `docs/platform/index.md` | Documentation delivery platform section |
-| GEIL-PLT-CFPAGES-001 | Cloudflare Pages Deployment Runbook | Draft | `docs/platform/cloudflare-pages-deployment.md` | Private MkDocs deployment to Cloudflare Pages |
-| GEIL-PLAT-MTK-HQ-LLD-001 | MikroTik CHR HQ Foundation LLD | Approved | `docs/platform/mikrotik-chr-hq-foundation-lld.md` | Active `HQ-FW01` MikroTik CHR / RouterOS LLD replacing OPNsense for Phase 1 |
-| GEIL-PLAT-MTK-HQ-IMPL-001 | MikroTik CHR HQ Foundation Implementation Guide | Approved | `docs/platform/mikrotik-chr-hq-foundation-implementation.md` | RouterOS CHR image import, hardening, VLAN gateways, NAT, firewall, DHCP relay preparation, validation, rollback, and evidence |
-| GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
-| GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
+| GEIL-PLT-INDEX | Platform | Draft | `docs/legacy/platform/index.md` | Documentation delivery platform section |
+| GEIL-PLT-CFPAGES-001 | Cloudflare Pages Deployment Runbook | Draft | `docs/legacy/platform/cloudflare-pages-deployment.md` | Private MkDocs deployment to Cloudflare Pages |
+| GEIL-PLAT-MTK-HQ-LLD-001 | MikroTik CHR HQ Foundation LLD | Approved | `docs/legacy/platform/mikrotik-chr-hq-foundation-lld.md` | Active `HQ-FW01` MikroTik CHR / RouterOS LLD replacing OPNsense for Phase 1 |
+| GEIL-PLAT-MTK-HQ-IMPL-001 | MikroTik CHR HQ Foundation Implementation Guide | Approved | `docs/legacy/platform/mikrotik-chr-hq-foundation-implementation.md` | RouterOS CHR image import, hardening, VLAN gateways, NAT, firewall, DHCP relay preparation, validation, rollback, and evidence |
+| GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/legacy/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
+| GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/legacy/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
 | GEIL-PLAT-FW-MATRIX-001 | Firewall Rule Matrix | Draft | `docs/network/firewall-rule-matrix.md` | Network authority for cross-service firewall flow matrix and validation references |
-| GEIL-PLAT-AD-NET-001 | Active Directory Network Requirements | Approved | `docs/platform/active-directory-network-requirements.md` | Authoritative address-list based client-to-domain-controller firewall architecture, required AD service ports, pilot finding, validation, rollback, and evidence |
-| GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
-| GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
+| GEIL-PLAT-AD-NET-001 | Active Directory Network Requirements | Approved | `docs/legacy/platform/active-directory-network-requirements.md` | Authoritative address-list based client-to-domain-controller firewall architecture, required AD service ports, pilot finding, validation, rollback, and evidence |
+| GEIL-PLAT-PORTS-001 | Enterprise Port Reference | Draft | `docs/legacy/platform/enterprise-port-reference.md` | Microsoft Core, NPS, PKI, Entra, WinRM, RDP, monitoring, and management port reference |
+| GEIL-PLAT-WS2025-GOLD-001 | Windows Server 2025 Golden Template | Draft | `docs/legacy/platform/windows-server-2025-golden-template.md` | Proxmox Windows Server 2025 template build, update, drivers, security, Sysprep, clone, validation, and rollback |
 
 ## Governance documents
 
@@ -83,35 +83,35 @@ The document index is the authoritative register of GEIL documents, their owners
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-SEC-INDEX | Security | Draft | `docs/security/index.md` | Cross-platform security architecture and controls |
-| GEIL-SEC-PAM-001 | Privileged Access Model | Draft | `docs/security/privileged-access-model.md` | Tier 0/1/2 model, admin accounts, controlled group-based privileged membership, workstations, sign-in controls, emergency access |
-| GEIL-SEC-TIER-001 | Enterprise Administrative Tiering | Draft | `docs/security/administrative-tiering.md` | Tier 0/1/2, PAWs, jump hosts, allowed/forbidden logons, and credential exposure controls |
+| GEIL-SEC-INDEX | Security | Draft | `docs/legacy/security/index.md` | Cross-platform security architecture and controls |
+| GEIL-SEC-PAM-001 | Privileged Access Model | Draft | `docs/legacy/security/privileged-access-model.md` | Tier 0/1/2 model, admin accounts, controlled group-based privileged membership, workstations, sign-in controls, emergency access |
+| GEIL-SEC-TIER-001 | Enterprise Administrative Tiering | Draft | `docs/legacy/security/administrative-tiering.md` | Tier 0/1/2, PAWs, jump hosts, allowed/forbidden logons, and credential exposure controls |
 
 ## Architecture documents
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-ARCH-CAP-001 | Enterprise Capability Model | Approved | `docs/architecture/enterprise-capability-model.md` | Permanent enterprise capability model and dependencies |
-| GEIL-ARCH-ERA-001 | Enterprise Reference Architecture | Approved | `docs/architecture/enterprise-reference-architecture.md` | High-level multinational architecture layers and diagrams |
-| GEIL-ARCH-TECH-001 | Technology Selection Matrix | Approved | `docs/architecture/technology-selection-matrix.md` | Current technology choices, alternatives, pros, cons, and replacement strategy |
-| GEIL-ARCH-IMPL-001 | Implementation Philosophy | Approved | `docs/architecture/implementation-philosophy.md` | Evolution from 15-user SMB to multinational corporation |
-| GEIL-ARCH-PRINCIPLES-001 | Architecture Principles | Approved | `docs/architecture/architecture-principles.md` | Documentation First, Automation First, Zero Trust, scale, failure, and observability principles |
-| GEIL-ARCH-LAB-001 | Enterprise Lab Blueprint HLD | Approved | `docs/architecture/enterprise-lab-blueprint.md` | Complete target enterprise HLD for implementation reference |
-| GEIL-ARCH-LAB-NET-001 | Enterprise Lab Network HLD | Approved | `docs/architecture/enterprise-lab-network-hld.md` | Network, security zone, VLAN, IP addressing, WiFi, and routing HLD |
-| GEIL-ARCH-LAB-ID-001 | Enterprise Lab Identity HLD | Approved | `docs/architecture/enterprise-lab-identity-hld.md` | Forest, domain, AD site, DNS, DHCP, PKI, identity, and cloud identity HLD |
-| GEIL-ARCH-LAB-OPS-001 | Enterprise Lab Operations HLD | Approved | `docs/architecture/enterprise-lab-operations-hld.md` | Storage, backup, monitoring, DR, and operational readiness HLD |
-| GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/architecture/reference-architecture.md` | Overall platform architecture |
-| GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/architecture/environment-tiers.md` | Lab, pilot, production, DR |
-| GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/architecture/identity-architecture.md` | Identity authorities and admin tiers |
+| GEIL-ARCH-CAP-001 | Enterprise Capability Model | Approved | `docs/legacy/architecture/enterprise-capability-model.md` | Permanent enterprise capability model and dependencies |
+| GEIL-ARCH-ERA-001 | Enterprise Reference Architecture | Approved | `docs/legacy/architecture/enterprise-reference-architecture.md` | High-level multinational architecture layers and diagrams |
+| GEIL-ARCH-TECH-001 | Technology Selection Matrix | Approved | `docs/legacy/architecture/technology-selection-matrix.md` | Current technology choices, alternatives, pros, cons, and replacement strategy |
+| GEIL-ARCH-IMPL-001 | Implementation Philosophy | Approved | `docs/legacy/architecture/implementation-philosophy.md` | Evolution from 15-user SMB to multinational corporation |
+| GEIL-ARCH-PRINCIPLES-001 | Architecture Principles | Approved | `docs/legacy/architecture/architecture-principles.md` | Documentation First, Automation First, Zero Trust, scale, failure, and observability principles |
+| GEIL-ARCH-LAB-001 | Enterprise Lab Blueprint HLD | Approved | `docs/legacy/architecture/enterprise-lab-blueprint.md` | Complete target enterprise HLD for implementation reference |
+| GEIL-ARCH-LAB-NET-001 | Enterprise Lab Network HLD | Approved | `docs/legacy/architecture/enterprise-lab-network-hld.md` | Network, security zone, VLAN, IP addressing, WiFi, and routing HLD |
+| GEIL-ARCH-LAB-ID-001 | Enterprise Lab Identity HLD | Approved | `docs/legacy/architecture/enterprise-lab-identity-hld.md` | Forest, domain, AD site, DNS, DHCP, PKI, identity, and cloud identity HLD |
+| GEIL-ARCH-LAB-OPS-001 | Enterprise Lab Operations HLD | Approved | `docs/legacy/architecture/enterprise-lab-operations-hld.md` | Storage, backup, monitoring, DR, and operational readiness HLD |
+| GEIL-ARCH-REF-001 | Reference Architecture | Draft | `docs/legacy/architecture/reference-architecture.md` | Overall platform architecture |
+| GEIL-ARCH-TIER-001 | Environment Tiers | Draft | `docs/legacy/architecture/environment-tiers.md` | Lab, pilot, production, DR |
+| GEIL-ARCH-ID-001 | Identity Architecture | Draft | `docs/legacy/architecture/identity-architecture.md` | Identity authorities and admin tiers |
 | GEIL-ARCH-NET-001 | Network Architecture | Draft | `docs/network/network-architecture.md` | Network architecture, VLAN, management workstation, and firewall model |
 
 ## Foundation documents
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-FND-P0-001 | Phase 0 Prerequisites | Draft | `docs/foundation/phase-0-prerequisites.md` | Pre-implementation checklist |
-| GEIL-FND-PVE-001 | Proxmox VE Baseline | Draft | `docs/foundation/proxmox-ve-baseline.md` | Virtualization baseline |
-| GEIL-FND-OPN-001 | Superseded OPNsense Edge Firewall | Superseded | `docs/foundation/opnsense-edge-firewall.md` | Historical alternative edge firewall baseline superseded by ADR-0002 |
+| GEIL-FND-P0-001 | Phase 0 Prerequisites | Draft | `docs/legacy/foundation/phase-0-prerequisites.md` | Pre-implementation checklist |
+| GEIL-FND-PVE-001 | Proxmox VE Baseline | Draft | `docs/legacy/foundation/proxmox-ve-baseline.md` | Virtualization baseline |
+| GEIL-FND-OPN-001 | Superseded OPNsense Edge Firewall | Superseded | `docs/legacy/foundation/opnsense-edge-firewall.md` | Historical alternative edge firewall baseline superseded by ADR-0002 |
 
 ## Microsoft Core documents
 
@@ -147,8 +147,8 @@ The document index is the authoritative register of GEIL documents, their owners
 | Phase 5 - File Services (Future) | GEIL-MSC-FILE-AGDLP-001 | AGDLP Access Model | Future | `docs/microsoft-core/file-services/agdlp-access-model.md` | Future file-services AGDLP application; not active deployment guidance |
 | Phase 6 - Future Identity Expansion | GEIL-MSC-PKI-001 | PKI | Future | `docs/microsoft-core/ad-cs-pki.md` | Enterprise PKI planning; promote only after implementation |
 | Phase 6 - Future Identity Expansion | GEIL-MSC-NPS-001 | NPS / RADIUS | Future | `docs/microsoft-core/nps-radius-8021x.md` | Network authentication planning; promote only after implementation |
-| Phase 6 - Future Identity Expansion | GEIL-CLD-ENTRA-001 | Entra Hybrid | Future | `docs/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync planning; promote only after implementation |
-| Phase 6 - Future Identity Expansion | GEIL-CLD-WHFB-001 | Windows Hello for Business | Future | `docs/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in planning; promote only after implementation |
+| Phase 6 - Future Identity Expansion | GEIL-CLD-ENTRA-001 | Entra Hybrid | Future | `docs/legacy/cloud-endpoint/entra-id-hybrid-identity.md` | Identity sync planning; promote only after implementation |
+| Phase 6 - Future Identity Expansion | GEIL-CLD-WHFB-001 | Windows Hello for Business | Future | `docs/legacy/cloud-endpoint/windows-hello-for-business.md` | Passwordless sign-in planning; promote only after implementation |
 | Phase 6 - Future Identity Expansion | GEIL-MSC-WAC-001 | Windows Admin Center | Future | `docs/microsoft-core/windows-admin-center.md` | Management gateway planning; promote only after implementation |
 | Identity and Access Reference | GEIL-MSC-GROUP-001 | Enterprise Group Strategy | Draft | `docs/microsoft-core/group-strategy.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
 | Identity and Access Reference | GEIL-MSC-USERLIFE-001 | Enterprise User Lifecycle | Draft | `docs/microsoft-core/user-lifecycle.md` | Reference pending consolidation into Identity and Access Standard; not a loose deployment step |
@@ -165,30 +165,30 @@ The document index is the authoritative register of GEIL documents, their owners
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-FUT-INDEX | Future | Draft | `docs/future/index.md` | Planning section for technologies and capabilities not yet laboratory-validated |
-| GEIL-CLD-M365-001 | Microsoft 365 Tenant Foundation | Future | `docs/cloud-endpoint/microsoft-365-tenant-foundation.md` | Tenant baseline planning; promote only after implementation |
-| GEIL-CLD-INTUNE-001 | Intune Windows 11 Enterprise | Future | `docs/cloud-endpoint/intune-windows11-enterprise.md` | Endpoint management planning; promote only after implementation |
-| GEIL-CLD-DEF-001 | Microsoft Defender | Future | `docs/cloud-endpoint/microsoft-defender.md` | Endpoint protection planning; promote only after implementation |
+| GEIL-FUT-INDEX | Future | Draft | `docs/legacy/future/index.md` | Planning section for technologies and capabilities not yet laboratory-validated |
+| GEIL-CLD-M365-001 | Microsoft 365 Tenant Foundation | Future | `docs/legacy/cloud-endpoint/microsoft-365-tenant-foundation.md` | Tenant baseline planning; promote only after implementation |
+| GEIL-CLD-INTUNE-001 | Intune Windows 11 Enterprise | Future | `docs/legacy/cloud-endpoint/intune-windows11-enterprise.md` | Endpoint management planning; promote only after implementation |
+| GEIL-CLD-DEF-001 | Microsoft Defender | Future | `docs/legacy/cloud-endpoint/microsoft-defender.md` | Endpoint protection planning; promote only after implementation |
 
 ## Archive documents
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-ARC-INDEX | Archive | Draft | `docs/archive/index.md` | Superseded and historical references retained for traceability |
-| GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
-| GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
-| GEIL-FND-OPN-001 | Superseded OPNsense Edge Firewall | Superseded | `docs/foundation/opnsense-edge-firewall.md` | Historical alternative edge firewall baseline superseded by ADR-0002 |
+| GEIL-ARC-INDEX | Archive | Draft | `docs/legacy/archive/index.md` | Superseded and historical references retained for traceability |
+| GEIL-PLAT-OPN-HQ-LLD-001 | Superseded OPNsense HQ Foundation LLD | Superseded | `docs/legacy/platform/opnsense-hq-foundation-lld.md` | Historical OPNsense alternative superseded by ADR-0002 |
+| GEIL-PLAT-OPN-HQ-IMPL-001 | Superseded OPNsense HQ Foundation Implementation Runbook | Superseded | `docs/legacy/platform/opnsense-hq-foundation-implementation.md` | Historical OPNsense implementation guide superseded by ADR-0002 |
+| GEIL-FND-OPN-001 | Superseded OPNsense Edge Firewall | Superseded | `docs/legacy/foundation/opnsense-edge-firewall.md` | Historical alternative edge firewall baseline superseded by ADR-0002 |
 
 ## Operations documents
 
 | Document ID | Title | Status | Path | Notes |
 |---|---|---|---|---|
-| GEIL-OPS-MON-001 | Monitoring and Alerting | Draft | `docs/operations/monitoring-alerting.md` | Required monitoring coverage |
-| GEIL-OPS-BACKUP-001 | Backup and Recovery | Draft | `docs/operations/backup-recovery.md` | Recovery requirements |
-| GEIL-OPS-DCBACKUP-001 | Domain Controller Backup and Recovery | Draft | `docs/operations/domain-controller-backup.md` | DC snapshots, System State, Bare Metal, authoritative/non-authoritative restore, and DR guidance |
-| GEIL-OPS-TS-001 | Troubleshooting | Draft | `docs/operations/troubleshooting.md` | Incident triage workflow |
-| GEIL-OPS-SCALE-001 | Scaling Model | Draft | `docs/operations/scaling-model.md` | Growth triggers |
-| GEIL-OPS-SEC-001 | Security Operations | Draft | `docs/operations/security-operations.md` | Security checks and response |
+| GEIL-OPS-MON-001 | Monitoring and Alerting | Draft | `docs/legacy/operations/monitoring-alerting.md` | Required monitoring coverage |
+| GEIL-OPS-BACKUP-001 | Backup and Recovery | Draft | `docs/legacy/operations/backup-recovery.md` | Recovery requirements |
+| GEIL-OPS-DCBACKUP-001 | Domain Controller Backup and Recovery | Draft | `docs/legacy/operations/domain-controller-backup.md` | DC snapshots, System State, Bare Metal, authoritative/non-authoritative restore, and DR guidance |
+| GEIL-OPS-TS-001 | Troubleshooting | Draft | `docs/legacy/operations/troubleshooting.md` | Incident triage workflow |
+| GEIL-OPS-SCALE-001 | Scaling Model | Draft | `docs/legacy/operations/scaling-model.md` | Growth triggers |
+| GEIL-OPS-SEC-001 | Security Operations | Draft | `docs/legacy/operations/security-operations.md` | Security checks and response |
 
 
 
@@ -201,7 +201,7 @@ The document index is the authoritative register of GEIL documents, their owners
 | Windows LAPS | In progress | `docs/microsoft-core/windows-security/windows-laps-baseline.md`; Active Directory baseline; Management Workstation baseline; privileged access references | Future delegated retrieval group refinements |
 | Microsoft Defender Baseline | In progress | `docs/microsoft-core/windows-security/microsoft-defender-baseline.md`; Windows Firewall Baseline; Windows LAPS Baseline; Group Policy Baseline | Future Windows Event Forwarding monitoring integration |
 | Windows Event Forwarding | Pilot Validated | `docs/microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md`; Enterprise WinRM Management; Windows Firewall Baseline; Microsoft Defender Baseline | Future SIEM/observability integration after WEF pilot validation |
-| Enterprise Identity & Privileged Access Tier 0/1/2 | Planned | `docs/security/privileged-access-model.md`; `docs/security/administrative-tiering.md`; Management Workstation baseline | docs/microsoft-core/identity/privileged-access-tier-model.md |
+| Enterprise Identity & Privileged Access Tier 0/1/2 | Planned | `docs/legacy/security/privileged-access-model.md`; `docs/legacy/security/administrative-tiering.md`; Management Workstation baseline | docs/microsoft-core/identity/privileged-access-tier-model.md |
 
 ## Release assignment summary
 

@@ -109,10 +109,10 @@ These items are future planning entries, not active deployment steps.
 
 | Order | Document | Status |
 |---:|---|---|
-| 1 | [File Server](file-services/file-server.md) | Future |
-| 2 | [DFS](file-services/dfs.md) | Future |
-| 3 | [SMB Shares and Permissions](file-services/smb-shares-permissions.md) | Future |
-| 4 | [AGDLP Access Model](file-services/agdlp-access-model.md) | Future |
+| 1 | [File Server](../legacy/microsoft-core/file-services/file-server.md) | Future |
+| 2 | [DFS](../legacy/microsoft-core/file-services/dfs.md) | Future |
+| 3 | [SMB Shares and Permissions](../legacy/microsoft-core/file-services/smb-shares-permissions.md) | Future |
+| 4 | [AGDLP Access Model](../legacy/microsoft-core/file-services/agdlp-access-model.md) | Future |
 
 ### Phase 6 - Future Identity Expansion
 
@@ -120,11 +120,11 @@ These items are future planning entries unless explicitly promoted after laborat
 
 | Order | Document | Status |
 |---:|---|---|
-| 1 | [PKI](ad-cs-pki.md) | Future |
-| 2 | [NPS / RADIUS](nps-radius-8021x.md) | Future |
-| 3 | [Entra Hybrid](../cloud-endpoint/entra-id-hybrid-identity.md) | Future |
-| 4 | [Windows Hello for Business](../cloud-endpoint/windows-hello-for-business.md) | Future |
-| 5 | [Windows Admin Center](windows-admin-center.md) | Future |
+| 1 | [PKI](../legacy/microsoft-core/ad-cs-pki.md) | Future |
+| 2 | [NPS / RADIUS](../legacy/microsoft-core/nps-radius-8021x.md) | Future |
+| 3 | [Entra Hybrid](../legacy/cloud-endpoint/entra-id-hybrid-identity.md) | Future |
+| 4 | [Windows Hello for Business](../legacy/cloud-endpoint/windows-hello-for-business.md) | Future |
+| 5 | [Windows Admin Center](../legacy/microsoft-core/windows-admin-center.md) | Future |
 
 
 ## Windows Infrastructure Lab Deployment security and management roadmap

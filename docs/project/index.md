@@ -25,6 +25,9 @@ classification: Internal Confidential
 
 ## Purpose
 
+Active documentation is limited to the current pilot-validated Windows Infrastructure Lab. See [Active Documentation Scope](active-documentation-scope.md).
+
+
 This section controls the GEIL documentation program itself: scope, charter, document inventory, delivery roadmap, and documentation backlog.
 
 ## Required use

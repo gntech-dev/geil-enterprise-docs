@@ -31,11 +31,11 @@ This report records the first GEIL Documentation Quality Initiative audit. The i
 
 The audit reviewed every Markdown guide under:
 
-- `docs/platform/`
+- `docs/legacy/platform/`
 - `docs/microsoft-core/`
-- `docs/security/`
-- `docs/operations/`
-- `docs/foundation/`
+- `docs/legacy/security/`
+- `docs/legacy/operations/`
+- `docs/legacy/foundation/`
 
 ## Quality scoring method
 
@@ -64,38 +64,38 @@ Guides were scored from 0 to 100 using the [Deployment Style Guide](../governanc
 
 | Guide | Before | After | Improved this pass | Remaining weakness |
 |---|---:|---:|---|---|
-| `platform/cloudflare-pages-deployment.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `platform/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
-| `platform/mikrotik-chr-hq-foundation-implementation.md` | 90 | 100 | Yes | Minor polish only |
-| `platform/mikrotik-chr-hq-foundation-lld.md` | 45 | 19 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `platform/opnsense-hq-foundation-implementation.md` | 69 | 72 | No | Superseded alternative reference; keep out of active deployment path |
-| `platform/opnsense-hq-foundation-lld.md` | 62 | 65 | No | Superseded alternative reference; keep out of active deployment path |
-| `platform/phase-1-acceptance-package.md` | 76 | 79 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `platform/phase-1-build-plan.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `platform/phase-1-validation-plan.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `platform/proxmox-hq-foundation-implementation.md` | 90 | 100 | Yes | Minor polish only |
-| `platform/proxmox-hq-foundation-lld.md` | 45 | 29 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/platform/cloudflare-pages-deployment.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/platform/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
+| `legacy/platform/mikrotik-chr-hq-foundation-implementation.md` | 90 | 100 | Yes | Minor polish only |
+| `legacy/platform/mikrotik-chr-hq-foundation-lld.md` | 45 | 19 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/platform/opnsense-hq-foundation-implementation.md` | 69 | 72 | No | Superseded alternative reference; keep out of active deployment path |
+| `legacy/platform/opnsense-hq-foundation-lld.md` | 62 | 65 | No | Superseded alternative reference; keep out of active deployment path |
+| `legacy/platform/phase-1-acceptance-package.md` | 76 | 79 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/platform/phase-1-build-plan.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/platform/phase-1-validation-plan.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/platform/proxmox-hq-foundation-implementation.md` | 90 | 100 | Yes | Minor polish only |
+| `legacy/platform/proxmox-hq-foundation-lld.md` | 45 | 29 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
 | `microsoft-core/active-directory-implementation.md` | 90 | 100 | Yes | Minor polish only |
-| `microsoft-core/ad-cs-pki.md` | 45 | 37 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/microsoft-core/ad-cs-pki.md` | 45 | 37 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
 | `microsoft-core/dns-dhcp-implementation.md` | 85 | 95 | Yes | Needs inline screenshot placeholders |
 | `microsoft-core/group-policy-baseline.md` | 85 | 95 | Yes | Needs inline screenshot placeholders |
 | `microsoft-core/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
-| `microsoft-core/nps-radius-8021x.md` | 45 | 38 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/microsoft-core/nps-radius-8021x.md` | 45 | 38 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
 | `microsoft-core/powershell-operations.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `microsoft-core/windows-admin-center.md` | 45 | 37 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/microsoft-core/windows-admin-center.md` | 45 | 37 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
 | `microsoft-core/windows-server-2025-baseline.md` | 90 | 100 | Yes | Minor polish only |
-| `security/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
-| `security/privileged-access-model.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `operations/backup-recovery.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `operations/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
-| `operations/monitoring-alerting.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `operations/scaling-model.md` | 45 | 33 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `operations/security-operations.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `operations/troubleshooting.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `foundation/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
-| `foundation/opnsense-edge-firewall.md` | 62 | 65 | No | Superseded alternative reference; keep out of active deployment path |
-| `foundation/phase-0-prerequisites.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
-| `foundation/proxmox-ve-baseline.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/security/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
+| `legacy/security/privileged-access-model.md` | 84 | 87 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/operations/backup-recovery.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/operations/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
+| `legacy/operations/monitoring-alerting.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/operations/scaling-model.md` | 45 | 33 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/operations/security-operations.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/operations/troubleshooting.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/foundation/index.md` | 62 | 65 | No | Section index; not a deployment guide, but should point readers to DQI-ready guides |
+| `legacy/foundation/opnsense-edge-firewall.md` | 62 | 65 | No | Superseded alternative reference; keep out of active deployment path |
+| `legacy/foundation/phase-0-prerequisites.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
+| `legacy/foundation/proxmox-ve-baseline.md` | 80 | 83 | No | Needs full DQI step-by-step refactor; Needs inline screenshot placeholders |
 
 ## Major improvements made
 
@@ -109,11 +109,11 @@ Guides were scored from 0 to 100 using the [Deployment Style Guide](../governanc
 
 | Priority | Guide | Improvement |
 |---:|---|---|
-| 1 | `docs/platform/proxmox-hq-foundation-implementation.md` | Convert long legacy sections into strict one-objective steps with inline screenshots and expected output blocks. |
+| 1 | `docs/legacy/platform/proxmox-hq-foundation-implementation.md` | Convert long legacy sections into strict one-objective steps with inline screenshots and expected output blocks. |
 | 2 | `docs/microsoft-core/active-directory-implementation.md` | Expand forest promotion and DNS client transition into smaller Microsoft Learn-style operator steps. |
 | 3 | `docs/microsoft-core/dns-dhcp-implementation.md` | Add more real expected output examples for DHCP authorization, scope creation, and MikroTik relay validation. |
-| 4 | `docs/security/privileged-access-model.md` | Convert architecture/control guidance into an operator-facing deployment workflow for Tier 0/1/2 groups and access validation. |
-| 5 | `docs/operations/backup-recovery.md` | Expand backup job creation and restore validation into hands-on step-by-step operations. |
+| 4 | `docs/legacy/security/privileged-access-model.md` | Convert architecture/control guidance into an operator-facing deployment workflow for Tier 0/1/2 groups and access validation. |
+| 5 | `docs/legacy/operations/backup-recovery.md` | Expand backup job creation and restore validation into hands-on step-by-step operations. |
 
 ## Remaining weaknesses
 
@@ -135,7 +135,7 @@ Guides were scored from 0 to 100 using the [Deployment Style Guide](../governanc
 
 Refactor next:
 
-- [Proxmox HQ Foundation Implementation](../platform/proxmox-hq-foundation-implementation.md)
+- [Proxmox HQ Foundation Implementation](../legacy/platform/proxmox-hq-foundation-implementation.md)
 
 Rationale: Proxmox networking is the highest-risk dependency. It protects existing public access, creates `GEILWAN` and `GEILLAN`, and determines whether all later MikroTik, Windows, AD, DNS, DHCP, and management deployment steps are possible.
 

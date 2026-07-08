@@ -218,16 +218,16 @@ The following existing Mermaid diagrams should be prioritized for replacement wi
 
 | Priority | Document | Diagram / Section | Recommended Asset |
 |---:|---|---|---|
-| P0 | `docs/architecture/enterprise-lab-network-hld.md` | Security zone model | `docs/assets/diagrams/enterprise-lab-network-hld/security-zone-model.webp` |
-| P0 | `docs/architecture/enterprise-lab-identity-hld.md` | PKI hierarchy | `docs/assets/diagrams/enterprise-lab-identity-hld/pki-hierarchy.webp` |
+| P0 | `docs/legacy/architecture/enterprise-lab-network-hld.md` | Security zone model | `docs/assets/diagrams/enterprise-lab-network-hld/security-zone-model.webp` |
+| P0 | `docs/legacy/architecture/enterprise-lab-identity-hld.md` | PKI hierarchy | `docs/assets/diagrams/enterprise-lab-identity-hld/pki-hierarchy.webp` |
 | P0 | `docs/project/epic-release-architecture.md` | Document dependency graph | `docs/assets/diagrams/epic-release-architecture/document-dependency-graph.webp` |
-| P1 | `docs/architecture/enterprise-reference-architecture.md` | Integrated target architecture and layer diagrams | `docs/assets/diagrams/enterprise-reference-architecture/integrated-target-architecture.webp` |
-| P1 | `docs/architecture/enterprise-capability-model.md` | Capability dependency overview | `docs/assets/diagrams/enterprise-capability-model/capability-dependency-map.webp` |
-| P1 | `docs/architecture/enterprise-lab-blueprint.md` | Target enterprise overview and physical topology | `docs/assets/diagrams/enterprise-lab-blueprint/target-enterprise-overview.webp` |
-| P1 | `docs/platform/mikrotik-chr-hq-foundation-lld.md` | RouterOS interface and VLAN topology | `docs/assets/diagrams/mikrotik-chr-hq-foundation-lld/interface-vlan-topology.webp` |
-| P1 | `docs/platform/proxmox-hq-foundation-lld.md` | Proxmox bridge topology | `docs/assets/diagrams/proxmox-hq-foundation-lld/proxmox-bridge-topology.webp` |
-| P2 | `docs/architecture/implementation-philosophy.md` | Stage evolution diagrams | Dedicated stage-by-stage visual set |
-| P2 | `docs/architecture/enterprise-lab-operations-hld.md` | Monitoring and disaster recovery architecture | Focused operations visual assets |
+| P1 | `docs/legacy/architecture/enterprise-reference-architecture.md` | Integrated target architecture and layer diagrams | `docs/assets/diagrams/enterprise-reference-architecture/integrated-target-architecture.webp` |
+| P1 | `docs/legacy/architecture/enterprise-capability-model.md` | Capability dependency overview | `docs/assets/diagrams/enterprise-capability-model/capability-dependency-map.webp` |
+| P1 | `docs/legacy/architecture/enterprise-lab-blueprint.md` | Target enterprise overview and physical topology | `docs/assets/diagrams/enterprise-lab-blueprint/target-enterprise-overview.webp` |
+| P1 | `docs/legacy/platform/mikrotik-chr-hq-foundation-lld.md` | RouterOS interface and VLAN topology | `docs/assets/diagrams/mikrotik-chr-hq-foundation-lld/interface-vlan-topology.webp` |
+| P1 | `docs/legacy/platform/proxmox-hq-foundation-lld.md` | Proxmox bridge topology | `docs/assets/diagrams/proxmox-hq-foundation-lld/proxmox-bridge-topology.webp` |
+| P2 | `docs/legacy/architecture/implementation-philosophy.md` | Stage evolution diagrams | Dedicated stage-by-stage visual set |
+| P2 | `docs/legacy/architecture/enterprise-lab-operations-hld.md` | Monitoring and disaster recovery architecture | Focused operations visual assets |
 
 ## Migration approach for existing diagrams
 
@@ -243,7 +243,7 @@ The following existing Mermaid diagrams should be prioritized for replacement wi
 
 - [Documentation Standard](documentation-standard.md)
 - [Environment Specification](../project/environment-specification.md)
-- [Enterprise Lab Blueprint HLD](../architecture/enterprise-lab-blueprint.md)
-- [Enterprise Lab Network HLD](../architecture/enterprise-lab-network-hld.md)
-- [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md)
+- [Enterprise Lab Blueprint HLD](../legacy/architecture/enterprise-lab-blueprint.md)
+- [Enterprise Lab Network HLD](../legacy/architecture/enterprise-lab-network-hld.md)
+- [Enterprise Lab Identity HLD](../legacy/architecture/enterprise-lab-identity-hld.md)
 - [Epic and Release Architecture](../project/epic-release-architecture.md)

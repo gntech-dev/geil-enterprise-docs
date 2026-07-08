@@ -68,4 +68,4 @@ Expected result: approved management ports are reachable from `HQ-MGMT01` only w
 - [Windows Server 2025 Baseline](../windows-server-2025-baseline.md)
 - [Windows Management Workstation - HQ-MGMT01](../windows-client-lifecycle/windows-11-management-workstation.md)
 - [Enterprise WinRM Management](enterprise-winrm-management.md)
-- [Windows Admin Center](../windows-admin-center.md)
+- [Windows Admin Center](../../legacy/microsoft-core/windows-admin-center.md)

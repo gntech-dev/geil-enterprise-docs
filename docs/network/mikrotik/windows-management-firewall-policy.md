@@ -36,7 +36,7 @@ Windows Group Policy enables services such as RDP and WinRM on Windows systems. 
 This guide complements:
 
 - [HQ-FW01 Firewall Policy](hq-fw01-firewall-policy.md)
-- [MikroTik CHR HQ Foundation Implementation](../../platform/mikrotik-chr-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation](../../legacy/platform/mikrotik-chr-hq-foundation-implementation.md)
 - [Firewall Rule Matrix](../firewall-rule-matrix.md)
 - [WinRM / PowerShell Remoting Baseline](../../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md)
 - [Enterprise WinRM Management](../../microsoft-core/administration/enterprise-winrm-management.md)

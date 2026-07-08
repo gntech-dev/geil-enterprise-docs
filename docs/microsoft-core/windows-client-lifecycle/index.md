@@ -85,4 +85,4 @@ Domain join, OU placement, and GPO validation happen only after cloning.
 - [Windows LAPS Baseline](../windows-security/windows-laps-baseline.md)
 - [Microsoft Defender Enterprise Baseline](../windows-security/microsoft-defender-baseline.md)
 - [Windows Event Forwarding and Collector Baseline](../windows-monitoring/windows-event-forwarding-baseline.md)
-- [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md)
+- [Active Directory Network Requirements](../../legacy/platform/active-directory-network-requirements.md)

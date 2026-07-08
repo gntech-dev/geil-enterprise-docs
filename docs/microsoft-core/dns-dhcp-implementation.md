@@ -77,7 +77,7 @@ The first DHCP scope can affect clients on the target VLAN when DHCP relay is en
 
 ## Prerequisites
 
-- [Firewall Rule Matrix](../network/firewall-rule-matrix.md) and [Enterprise Port Reference](../platform/enterprise-port-reference.md) reviewed for DNS/DHCP flows.
+- [Firewall Rule Matrix](../network/firewall-rule-matrix.md) and [Enterprise Port Reference](../legacy/platform/enterprise-port-reference.md) reviewed for DNS/DHCP flows.
 - [Active Directory Organizational Foundation](active-directory-organizational-foundation.md) completed before DHCP authorization and scope rollout.
 
 
@@ -127,7 +127,7 @@ flowchart LR
 
 !!! info "Architecture references"
 
-    This guide implements the DNS and DHCP capabilities described in [Enterprise Lab Identity HLD](../architecture/enterprise-lab-identity-hld.md) and relies on the HQ foundation guides in the Platform section.
+    This guide implements the DNS and DHCP capabilities described in [Enterprise Lab Identity HLD](../legacy/architecture/enterprise-lab-identity-hld.md) and relies on the HQ foundation guides in the Platform section.
 
 ## Background Knowledge
 
@@ -562,7 +562,7 @@ MikroTik CHR processes DHCP relay traffic as router-local traffic. During the pi
 
 Guest VLAN 70 must remain isolated and must never relay to AD DHCP. VLAN 40 and VLAN 60 relays must remain disabled until their scopes exist.
 
-DHCP relay is only the address-assignment path. It does not authorize workstation traffic to reach Active Directory after a lease is issued. VLAN 30 clients must also be permitted through the `HQ-FW01` forward chain to reach required `HQ-DC01` services. The authoritative address-list model and service rules are defined in [Active Directory Network Requirements](../platform/active-directory-network-requirements.md).
+DHCP relay is only the address-assignment path. It does not authorize workstation traffic to reach Active Directory after a lease is issued. VLAN 30 clients must also be permitted through the `HQ-FW01` forward chain to reach required `HQ-DC01` services. The authoritative address-list model and service rules are defined in [Active Directory Network Requirements](../legacy/platform/active-directory-network-requirements.md).
 
 !!! implementation "Pilot deployment validated"
 

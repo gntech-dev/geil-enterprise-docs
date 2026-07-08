@@ -83,7 +83,7 @@ GEIL covers enterprise capabilities for:
 
 ## Enterprise capability model
 
-The permanent capability model is defined in [Enterprise Capability Model](../architecture/enterprise-capability-model.md). The model organizes GEIL into capability domains such as Enterprise Identity, Networking, Compute, Storage, Endpoint Management, Messaging, PKI, Security, Monitoring, Backup, Disaster Recovery, Automation, Governance, Compliance, and Collaboration.
+The permanent capability model is defined in [Enterprise Capability Model](../legacy/architecture/enterprise-capability-model.md). The model organizes GEIL into capability domains such as Enterprise Identity, Networking, Compute, Storage, Endpoint Management, Messaging, PKI, Security, Monitoring, Backup, Disaster Recovery, Automation, Governance, Compliance, and Collaboration.
 
 ## Multi-year roadmap
 
@@ -188,21 +188,21 @@ GEIL evolves through maturity stages:
 4. International Enterprise: compliance boundaries, regional resilience, cross-border identity and data controls.
 5. Multinational Corporation: platform engineering, regional autonomy, centralized governance, and formal assurance.
 
-The full philosophy is defined in [Implementation Philosophy](../architecture/implementation-philosophy.md).
+The full philosophy is defined in [Implementation Philosophy](../legacy/architecture/implementation-philosophy.md).
 
 ## Required strategic architecture documents
 
-- [Enterprise Capability Model](../architecture/enterprise-capability-model.md)
-- [Enterprise Reference Architecture](../architecture/enterprise-reference-architecture.md)
-- [Technology Selection Matrix](../architecture/technology-selection-matrix.md)
-- [Implementation Philosophy](../architecture/implementation-philosophy.md)
-- [Architecture Principles](../architecture/architecture-principles.md)
+- [Enterprise Capability Model](../legacy/architecture/enterprise-capability-model.md)
+- [Enterprise Reference Architecture](../legacy/architecture/enterprise-reference-architecture.md)
+- [Technology Selection Matrix](../legacy/architecture/technology-selection-matrix.md)
+- [Implementation Philosophy](../legacy/architecture/implementation-philosophy.md)
+- [Architecture Principles](../legacy/architecture/architecture-principles.md)
 - [Epic and Release Architecture](epic-release-architecture.md)
 
 
 ## Phase 1 High-Level Design
 
-GEIL Phase 1 is governed by the [Enterprise Lab Blueprint HLD](docs/architecture/enterprise-lab-blueprint.md) and its supporting Network, Identity, and Operations HLDs. Future implementation documents must reference the HLD before defining product-specific configuration.
+GEIL Phase 1 is governed by the [Enterprise Lab Blueprint HLD](docs/legacy/architecture/enterprise-lab-blueprint.md) and its supporting Network, Identity, and Operations HLDs. Future implementation documents must reference the HLD before defining product-specific configuration.
 
 
 ## Phase 1 Low-Level Design
@@ -211,10 +211,10 @@ Release `E02.R03 HQ Foundation Low-Level Design and Build Plan` translates the E
 
 Authoritative E02.R03 documents:
 
-- [Proxmox HQ Foundation LLD](docs/platform/proxmox-hq-foundation-lld.md)
-- [MikroTik CHR HQ Foundation LLD](docs/platform/mikrotik-chr-hq-foundation-lld.md)
-- [Phase 1 Build Plan](docs/platform/phase-1-build-plan.md)
-- [Phase 1 Validation Plan](docs/platform/phase-1-validation-plan.md)
+- [Proxmox HQ Foundation LLD](docs/legacy/platform/proxmox-hq-foundation-lld.md)
+- [MikroTik CHR HQ Foundation LLD](docs/legacy/platform/mikrotik-chr-hq-foundation-lld.md)
+- [Phase 1 Build Plan](docs/legacy/platform/phase-1-build-plan.md)
+- [Phase 1 Validation Plan](docs/legacy/platform/phase-1-validation-plan.md)
 
 
 ## Phase 1 Foundation Implementation
@@ -223,8 +223,8 @@ Release `E02.R04 HQ Foundation Implementation Runbook` provides implementation-r
 
 Authoritative E02.R04 documents:
 
-- [Proxmox HQ Foundation Implementation Runbook](docs/platform/proxmox-hq-foundation-implementation.md)
-- [MikroTik CHR HQ Foundation Implementation Guide](docs/platform/mikrotik-chr-hq-foundation-implementation.md)
+- [Proxmox HQ Foundation Implementation Runbook](docs/legacy/platform/proxmox-hq-foundation-implementation.md)
+- [MikroTik CHR HQ Foundation Implementation Guide](docs/legacy/platform/mikrotik-chr-hq-foundation-implementation.md)
 
 
 ## Phase 1 Acceptance Gate
@@ -233,4 +233,4 @@ Release `E02.R05 HQ Foundation Evidence and Acceptance Package` defines the form
 
 Authoritative E02.R05 document:
 
-- [Phase 1 Acceptance Package](docs/platform/phase-1-acceptance-package.md)
+- [Phase 1 Acceptance Package](docs/legacy/platform/phase-1-acceptance-package.md)
