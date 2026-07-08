@@ -35,6 +35,7 @@ This guide complements:
 - [Firewall Rule Matrix](../../platform/firewall-rule-matrix.md)
 - [WinRM / PowerShell Remoting Baseline](../../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md)
 - [Enterprise WinRM Management](../../microsoft-core/administration/enterprise-winrm-management.md)
+- [Windows Event Forwarding and Collector Baseline](../../microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md)
 
 ## Management plane principle
 
@@ -93,6 +94,7 @@ add list=MGMT_SUBNETS address=172.20.10.0/24 comment="Management VLAN"
 add list=AD_SERVERS address=172.20.20.11 comment="HQ-DC01"
 add list=AD_SERVERS address=172.20.20.12 comment="HQ-DC02 future"
 add list=MEMBER_SERVERS address=172.20.20.0/24 comment="Member servers - adjust when dedicated server hosts exist"
+add list=WEC_SERVERS address=172.20.20.21 comment="HQ-WEC01 - Windows Event Collector"
 add list=WORKSTATION_SUBNETS address=172.20.30.0/24 comment="Windows workstation VLAN"
 ```
 
@@ -115,11 +117,17 @@ add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=A
 add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=AD_SERVERS protocol=tcp dst-port=53,88,389,636,3268,3269 comment="Allow MGMT to AD servers - AD TCP services"
 add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=MEMBER_SERVERS protocol=tcp dst-port=3389,5985,5986,445 comment="Allow MGMT to member servers - Windows management"
 add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=WORKSTATION_SUBNETS protocol=tcp dst-port=5985 comment="Allow MGMT to workstations - WinRM"
+add chain=forward action=accept src-address-list=MGMT_SUBNETS dst-address-list=WEC_SERVERS protocol=tcp dst-port=5985 comment="Allow MGMT clients to HQ-WEC01 - WEF"
+add chain=forward action=accept src-address-list=WORKSTATION_SUBNETS dst-address-list=WEC_SERVERS protocol=tcp dst-port=5985 comment="Allow workstation clients to HQ-WEC01 - WEF"
 add chain=forward action=drop src-address-list=WORKSTATION_SUBNETS dst-address-list=AD_SERVERS protocol=tcp dst-port=3389,5985 comment="Drop Workstations VLAN to AD admin ports before broad allows"
 add chain=forward action=drop dst-address-list=AD_SERVERS protocol=tcp dst-port=3389,5985,5986 comment="Block non-MGMT Windows admin access to AD servers"
 add chain=forward action=drop dst-address-list=MEMBER_SERVERS protocol=tcp dst-port=3389,5985,5986,445,135 comment="Block non-MGMT Windows admin access to member servers"
 ```
 
+
+!!! info "Windows Event Forwarding to HQ-WEC01"
+
+    WEF source-initiated subscriptions require clients to connect to `HQ-WEC01` on TCP `5985`. Pilot validation found that Windows Firewall was not the issue; missing connectivity was caused by MikroTik inter-VLAN forwarding rules. Allow VLAN 10 (`172.20.10.0/24`) and VLAN 30 (`172.20.30.0/24`) to `HQ-WEC01` (`172.20.20.21`) on TCP `5985` without opening broad workstation-to-server administrative access.
 
 !!! warning "VLAN30 broad allow rule order"
 

@@ -64,7 +64,7 @@ The values below are confirmed in the current repository where specific GNTECH l
 | VLAN / Zone | VLAN ID | Subnet/CIDR | Gateway | Purpose | Example Systems | Management Direction | Notes |
 |---|---:|---|---|---|---|---|---|
 | Management VLAN | 10 | `172.20.10.0/24` | `172.20.10.1` | Management workstations and infrastructure management interfaces | `HQ-MGMT01`, `HQ-FW01` gateway interface | Initiates administration to servers, clients, hypervisors, firewall, and approved infrastructure | Only approved management systems should initiate Windows administrative sessions. |
-| Servers VLAN | 20 | `172.20.20.0/24` | `172.20.20.1` | Domain controllers and Windows infrastructure services | `HQ-DC01` (`172.20.20.11`), `HQ-WEC01`, future `HQ-DC02`, future `HQ-FS01` | Receives management from Management VLAN; provides AD DS services to domain clients | Do not use as a daily administration workstation network. |
+| Servers VLAN | 20 | `172.20.20.0/24` | `172.20.20.1` | Domain controllers and Windows infrastructure services | `HQ-DC01` (`172.20.20.11`), `HQ-WEC01` (`172.20.20.21`), future `HQ-DC02`, future `HQ-FS01` | Receives management from Management VLAN; provides AD DS services to domain clients | Do not use as a daily administration workstation network. |
 | Workstations VLAN | 30 | `172.20.30.0/24` | `172.20.30.1` | Windows 11 Enterprise clients | `HQ-W11-001` | Consumes AD DS services; does not administer infrastructure | No RDP/WinRM initiation to infrastructure. |
 | Printers VLAN | 40 | `172.20.40.0/24` | `172.20.40.1` | Printers and MFPs | Future printers | No Windows administration | AD/DNS access only if a future print design requires it. |
 | Voice VLAN | 50 | `172.20.50.0/24` | `172.20.50.1` | Voice devices | Future phones | No Windows administration | Placeholder for future voice design. |
@@ -142,6 +142,17 @@ Pilot validation from `HQ-W11-001` in VLAN 30 confirmed this final access state 
 | VLAN 30 Workstations | `HQ-DC01` | WinRM HTTP | TCP `5985` | Denied | Workstations must not remotely administer Domain Controllers. |
 
 This distinction is intentional: VLAN 30 requires domain service access, not Domain Controller administration access.
+
+## Validated WEF access to HQ-WEC01
+
+Pilot validation confirmed source-initiated Windows Event Forwarding to `HQ-WEC01` at `172.20.20.21`:
+
+| Source | Destination | Service | Port | Expected result | Purpose |
+|---|---|---|---:|---|---|
+| VLAN 10 Management | `HQ-WEC01` | WEF / WinRM HTTP | TCP `5985` | Allowed | `HQ-MGMT01` forwards events to the collector. |
+| VLAN 30 Workstations | `HQ-WEC01` | WEF / WinRM HTTP | TCP `5985` | Allowed | `HQ-W11-001` forwards events to the collector. |
+
+WEF source-initiated subscriptions require clients to reach the collector. `HQ-WEC01` does not initiate collection connections to clients.
 
 ## Firewall interpretation rules
 

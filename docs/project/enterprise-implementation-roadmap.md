@@ -51,7 +51,7 @@ Related governance documents:
 | Phase | Name | Purpose | Status |
 |---:|---|---|---|
 | 1 | Enterprise Foundation | Establish a secure and manageable Windows enterprise foundation. | Pilot Validated / In Progress |
-| 2 | Security Monitoring | Centralized auditing and security visibility. | Planned |
+| 2 | Security Monitoring | Centralized auditing and security visibility. | Pilot Validated / In Progress |
 | 3 | Enterprise Hardening | Reduce attack surface. | Planned |
 | 4 | Enterprise Operations | Operational management. | Planned |
 | 5 | Enterprise Monitoring & Automation | Monitoring, observability, and automation. | Planned |
@@ -92,14 +92,14 @@ Phase 1 acceptance intent:
 
 Purpose: provide centralized auditing and security visibility.
 
-Status: Planned.
+Status: Pilot Validated / In Progress.
 
 Phase 2 builds on Phase 1 by collecting important security and operational events from domain controllers, workstations, and management systems.
 
 | Capability | Target status | Notes |
 |---|---|---|
-| Windows Event Forwarding | Pilot In Progress | Source-initiated event forwarding to dedicated collector `HQ-WEC01`. |
-| Windows Event Collector | Pilot In Progress | Dedicated collector `HQ-WEC01` on VLAN 20 Servers. |
+| Windows Event Forwarding | Pilot Validated | Source-initiated event forwarding to dedicated collector `HQ-WEC01`. |
+| Windows Event Collector | Pilot Validated | Dedicated collector `HQ-WEC01` on VLAN 20 Servers at `172.20.20.21`. |
 | Advanced Audit Policy | Planned | Domain and workstation audit settings for meaningful event collection. |
 | PowerShell Logging | Planned | Script block, module, and transcript logging where appropriate. |
 | Security Event Collection | Planned | Security-relevant event IDs for authentication, privilege use, and policy change. |

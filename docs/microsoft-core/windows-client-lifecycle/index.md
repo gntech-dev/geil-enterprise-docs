@@ -39,8 +39,9 @@ This section is the Microsoft Core entry point for Windows 11 Enterprise client 
 8. Validate WinRM
 9. Apply Microsoft Defender Baseline
 10. Validate Defender health
-11. Enterprise Validation
-12. Ready for Enterprise Management
+11. Validate Windows Event Forwarding
+12. Enterprise Validation
+13. Ready for Enterprise Management
 
 Implementation documents:
 
@@ -52,6 +53,7 @@ Implementation documents:
 6. [Enterprise WinRM Management](../administration/enterprise-winrm-management.md)
 7. [Windows LAPS Baseline](../windows-security/windows-laps-baseline.md)
 8. [Microsoft Defender Enterprise Baseline](../windows-security/microsoft-defender-baseline.md)
+9. [Windows Event Forwarding and Collector Baseline](../windows-monitoring/windows-event-forwarding-baseline.md)
 
 ## Architecture rules
 
@@ -82,4 +84,5 @@ Domain join, OU placement, and GPO validation happen only after cloning.
 - [Group Policy Baseline](../group-policy-baseline.md)
 - [Windows LAPS Baseline](../windows-security/windows-laps-baseline.md)
 - [Microsoft Defender Enterprise Baseline](../windows-security/microsoft-defender-baseline.md)
+- [Windows Event Forwarding and Collector Baseline](../windows-monitoring/windows-event-forwarding-baseline.md)
 - [Active Directory Network Requirements](../../platform/active-directory-network-requirements.md)

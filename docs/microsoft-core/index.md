@@ -101,7 +101,7 @@ Windows monitoring begins with native Windows Event Forwarding and a dedicated W
 
 | Order | Document | Purpose |
 |---:|---|---|
-| 1 | [Windows Event Forwarding and Collector Baseline](windows-monitoring/windows-event-forwarding-baseline.md) | Pilot architecture for source-initiated Windows Event Forwarding to dedicated collector `HQ-WEC01`. |
+| 1 | [Windows Event Forwarding and Collector Baseline](windows-monitoring/windows-event-forwarding-baseline.md) | Pilot-validated source-initiated Windows Event Forwarding to dedicated collector `HQ-WEC01` at `172.20.20.21`. |
 
 ### Phase 5 - File Services (Future)
 

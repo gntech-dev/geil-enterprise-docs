@@ -54,6 +54,7 @@ This is not a full enterprise firewall architecture. It is the small-business-la
 - MikroTik controls inter-VLAN routing exposure.
 - Windows Defender Firewall controls host-level exposure.
 - Both the network firewall and host firewall are required.
+- WEF pilot validation confirmed Windows Firewall was not the issue for `HQ-WEC01`; MikroTik inter-VLAN forwarding must allow approved clients to reach the collector on TCP `5985`.
 
 ## Required firewall profiles
 

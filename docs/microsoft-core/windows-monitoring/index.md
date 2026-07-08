@@ -2,8 +2,8 @@
 title: Windows Monitoring
 document_id: GEIL-MSC-WINMON-INDEX
 owner: Infrastructure Engineering
-status: Draft
-version: 1.0
+status: Pilot Validated
+version: 1.1
 last_reviewed: 2026-07-08
 review_cycle: Quarterly
 classification: Internal Confidential
@@ -21,7 +21,7 @@ Windows monitoring starts with native Windows Event Forwarding and a dedicated W
 
 | Order | Document | Purpose |
 |---:|---|---|
-| 1 | [Windows Event Forwarding and Collector Baseline](windows-event-forwarding-baseline.md) | Designs the pilot Windows Event Forwarding architecture using dedicated collector `HQ-WEC01`. |
+| 1 | [Windows Event Forwarding and Collector Baseline](windows-event-forwarding-baseline.md) | Pilot-validated Windows Event Forwarding architecture using dedicated collector `HQ-WEC01` at `172.20.20.21`. |
 
 ## Source of truth
 
