@@ -73,11 +73,7 @@ nav:
       - VLAN and Subnet Plan: network/vlan-and-subnet-plan.md
       - Network and AD Services Matrix: network/network-and-ad-services-matrix.md
       - Firewall Rule Matrix: network/firewall-rule-matrix.md
-      - MikroTik:
-          - HQ-FW01 Firewall Policy: network/mikrotik/hq-fw01-firewall-policy.md
-          - HQ-FW01 RouterOS Baseline: network/mikrotik/hq-fw01-routeros-baseline.md
-          - Cloudflared Container Networking: network/mikrotik/cloudflared-container-networking.md
-          - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
+      - MikroTik: []
   - Microsoft Core:
       - microsoft-core/index.md
       - Phase 1 - Identity Foundation:
@@ -195,8 +191,13 @@ nav:
       - NPS RADIUS 802.1X: microsoft-core/nps-radius-8021x.md
   - Archive:
       - archive/index.md
-      - Superseded OPNsense Edge Firewall: foundation/opnsense-edge-firewall.md
-      - Superseded OPNsense HQ Foundation LLD: platform/opnsense-hq-foundation-lld.md
-      - Superseded OPNsense HQ Foundation Implementation: platform/opnsense-hq-foundation-implementation.md
+      - Vendor Cleanup:
+          - Superseded OPNsense Edge Firewall: archive/vendor-cleanup/foundation/opnsense-edge-firewall.md
+          - Superseded OPNsense HQ Foundation LLD: archive/vendor-cleanup/platform/opnsense-hq-foundation-lld.md
+          - Superseded OPNsense HQ Foundation Implementation: archive/vendor-cleanup/platform/opnsense-hq-foundation-implementation.md
+          - HQ-FW01 Firewall Policy (archived): archive/vendor-cleanup/network/mikrotik/hq-fw01-firewall-policy.md
+          - HQ-FW01 RouterOS Baseline (archived): archive/vendor-cleanup/network/mikrotik/hq-fw01-routeros-baseline.md
+          - Cloudflared Container Networking (archived): archive/vendor-cleanup/network/mikrotik/cloudflared-container-networking.md
+          - MikroTik Windows Management Firewall Policy (archived): archive/vendor-cleanup/network/mikrotik/windows-management-firewall-policy.md
       - Legacy Governance Roadmap: governance/roadmap.md
       - Legacy Governance Backlog: governance/backlog.md
