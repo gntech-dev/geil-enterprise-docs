@@ -99,6 +99,9 @@ nav:
           - Windows Firewall Baseline: microsoft-core/windows-security/windows-firewall-baseline.md
           - Windows LAPS Baseline: microsoft-core/windows-security/windows-laps-baseline.md
           - Microsoft Defender Baseline: microsoft-core/windows-security/microsoft-defender-baseline.md
+      - Windows Monitoring:
+          - microsoft-core/windows-monitoring/index.md
+          - Windows Event Forwarding Baseline: microsoft-core/windows-monitoring/windows-event-forwarding-baseline.md
       - Phase 5 - File Services (Future):
           - File Server: microsoft-core/file-services/file-server.md
           - DFS: microsoft-core/file-services/dfs.md

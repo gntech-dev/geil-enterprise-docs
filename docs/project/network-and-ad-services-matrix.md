@@ -53,6 +53,7 @@ The repository uses a site-role-sequence naming pattern for implementation syste
 | Windows Client | `HQ-W11-001` | Standard domain-joined Windows 11 workstation |
 | Firewall | `HQ-FW01` | MikroTik routing/firewall device |
 | File Server | `HQ-FS01` | Future member server file services role |
+| Windows Event Collector | `HQ-WEC01` | Dedicated Windows Event Collector for source-initiated Windows Event Forwarding |
 | Hypervisor | `PVE-HQ01` | Primary Proxmox VE host |
 | Backup Server | `PBS-HQ01` | Proxmox Backup Server |
 
@@ -63,7 +64,7 @@ The values below are confirmed in the current repository where specific GNTECH l
 | VLAN / Zone | VLAN ID | Subnet/CIDR | Gateway | Purpose | Example Systems | Management Direction | Notes |
 |---|---:|---|---|---|---|---|---|
 | Management VLAN | 10 | `172.20.10.0/24` | `172.20.10.1` | Management workstations and infrastructure management interfaces | `HQ-MGMT01`, `HQ-FW01` gateway interface | Initiates administration to servers, clients, hypervisors, firewall, and approved infrastructure | Only approved management systems should initiate Windows administrative sessions. |
-| Servers VLAN | 20 | `172.20.20.0/24` | `172.20.20.1` | Domain controllers and Windows infrastructure services | `HQ-DC01` (`172.20.20.11`), future `HQ-DC02`, future `HQ-FS01` | Receives management from Management VLAN; provides AD DS services to domain clients | Do not use as a daily administration workstation network. |
+| Servers VLAN | 20 | `172.20.20.0/24` | `172.20.20.1` | Domain controllers and Windows infrastructure services | `HQ-DC01` (`172.20.20.11`), `HQ-WEC01`, future `HQ-DC02`, future `HQ-FS01` | Receives management from Management VLAN; provides AD DS services to domain clients | Do not use as a daily administration workstation network. |
 | Workstations VLAN | 30 | `172.20.30.0/24` | `172.20.30.1` | Windows 11 Enterprise clients | `HQ-W11-001` | Consumes AD DS services; does not administer infrastructure | No RDP/WinRM initiation to infrastructure. |
 | Printers VLAN | 40 | `172.20.40.0/24` | `172.20.40.1` | Printers and MFPs | Future printers | No Windows administration | AD/DNS access only if a future print design requires it. |
 | Voice VLAN | 50 | `172.20.50.0/24` | `172.20.50.1` | Voice devices | Future phones | No Windows administration | Placeholder for future voice design. |
@@ -116,8 +117,10 @@ RDP and WinRM should originate only from the Management VLAN. HOME/User, Worksta
 |---|---|---|---|---|
 | Management VLAN | Domain Controllers | Yes | RDP, WinRM, AD administration | Restricted to admin systems such as `HQ-MGMT01`. |
 | Management VLAN | Member Servers | Yes | RDP, WinRM, SMB admin | Restricted to admin systems. |
+| Management VLAN | `HQ-WEC01` | Limited | Windows Event Forwarding over TCP `5985`; administration only from approved admin systems | WEF clients initiate to collector. |
 | Management VLAN | Workstations | Limited | WinRM/RDP only where justified for management | Current pilot validates `HQ-MGMT01` to `HQ-W11-001` WinRM. |
 | Workstations VLAN | Domain Controllers | Limited | DNS, Kerberos, LDAP, GPO | No RDP/WinRM. |
+| Workstations VLAN | `HQ-WEC01` | Limited | Windows Event Forwarding over TCP `5985` | Clients initiate to collector; this is not administrative WinRM to Domain Controllers. |
 | HOME/User VLAN | Domain Controllers | Limited | Only if domain-joined systems exist there | Placeholder; no RDP/WinRM. |
 | IoT VLAN | Domain Controllers | No or highly restricted | Avoid AD dependency | Block admin ports. |
 | CCTV VLAN | Domain Controllers | No or highly restricted | Cameras/NVR should not administer AD | Block admin ports. |

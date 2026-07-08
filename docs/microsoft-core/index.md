@@ -95,6 +95,14 @@ These baselines translate the security and management roadmap into practical Mic
 | 2 | [Windows LAPS Baseline](windows-security/windows-laps-baseline.md) | Implement built-in Windows LAPS for local Administrator password management across domain-joined Windows client devices. |
 | 3 | [Microsoft Defender Enterprise Baseline](windows-security/microsoft-defender-baseline.md) | Configure built-in Microsoft Defender Antivirus through Active Directory Group Policy for managed Windows clients. |
 
+### Windows Monitoring
+
+Windows monitoring begins with native Windows Event Forwarding and a dedicated Windows Event Collector before future SIEM or observability integrations.
+
+| Order | Document | Purpose |
+|---:|---|---|
+| 1 | [Windows Event Forwarding and Collector Baseline](windows-monitoring/windows-event-forwarding-baseline.md) | Pilot architecture for source-initiated Windows Event Forwarding to dedicated collector `HQ-WEC01`. |
+
 ### Phase 5 - File Services (Future)
 
 These items are future planning entries, not active deployment steps.
@@ -128,7 +136,7 @@ The current Windows Infrastructure Lab Deployment roadmap is tracked in [Epic an
 3. [Windows Firewall Baseline](windows-security/windows-firewall-baseline.md).
 4. [Windows LAPS Baseline](windows-security/windows-laps-baseline.md).
 5. [Microsoft Defender Enterprise Baseline](windows-security/microsoft-defender-baseline.md).
-6. Windows Event Forwarding.
+6. [Windows Event Forwarding and Collector Baseline](windows-monitoring/windows-event-forwarding-baseline.md).
 7. Enterprise Identity & Privileged Access Tier 0/1/2.
 
 Introduce Tier 0/1/2 concepts early for naming, admin-account behavior, and management-workstation usage. Enforce strict tiering gradually as the lab matures.

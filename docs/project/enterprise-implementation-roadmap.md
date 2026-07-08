@@ -98,8 +98,8 @@ Phase 2 builds on Phase 1 by collecting important security and operational event
 
 | Capability | Target status | Notes |
 |---|---|---|
-| Windows Event Forwarding | Planned | Source-initiated event forwarding for Windows systems. |
-| Windows Event Collector | Planned | Central collector role and subscription model. |
+| Windows Event Forwarding | Pilot In Progress | Source-initiated event forwarding to dedicated collector `HQ-WEC01`. |
+| Windows Event Collector | Pilot In Progress | Dedicated collector `HQ-WEC01` on VLAN 20 Servers. |
 | Advanced Audit Policy | Planned | Domain and workstation audit settings for meaningful event collection. |
 | PowerShell Logging | Planned | Script block, module, and transcript logging where appropriate. |
 | Security Event Collection | Planned | Security-relevant event IDs for authentication, privilege use, and policy change. |
