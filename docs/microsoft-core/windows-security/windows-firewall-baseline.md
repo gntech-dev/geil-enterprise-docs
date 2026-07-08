@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "HQ-FW01 firewall source of truth"
+
+    Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../../network/mikrotik/hq-fw01-firewall-policy.md).
+
 ## Purpose
 
 This guide defines the Windows Defender Firewall baseline for the GNTECH Windows Infrastructure Lab. It converts the network and service model into practical host-level firewall expectations for Domain Controllers, member servers, management workstations, and standard workstations.

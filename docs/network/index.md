@@ -17,6 +17,7 @@ This section contains practical network policy documents that support the GEIL W
 
 ## Documents
 
+- [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md)
 - [MikroTik Windows Management Firewall Policy](mikrotik/windows-management-firewall-policy.md)
 
 ## Related documents

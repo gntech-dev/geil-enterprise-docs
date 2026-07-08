@@ -11,6 +11,11 @@ classification: Internal Confidential
 
 # Windows Event Forwarding and Collector Baseline
 
+!!! note "HQ-FW01 firewall source of truth"
+
+    Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../../network/mikrotik/hq-fw01-firewall-policy.md).
+
+
 ## Document Control
 
 | Field | Value |

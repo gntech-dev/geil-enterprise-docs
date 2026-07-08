@@ -405,6 +405,7 @@ The following register assigns every current published document to exactly one r
 | E05.R01 - Operations readiness | E05 | `microsoft-core/administration/enterprise-winrm-management.md` |
 | E05.R01 - Operations readiness | E05 | `microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/index.md` |
+| E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/hq-fw01-firewall-policy.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `network/mikrotik/windows-management-firewall-policy.md` |
 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | E02 | `project/network-and-ad-services-matrix.md` |
 | WIN.R02 - Host Firewall and Local Admin Protection | E06 | `microsoft-core/windows-security/index.md` |

@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "HQ-FW01 firewall source of truth"
+
+    Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md).
+
 ## Purpose
 
 This document defines the canonical reference for the GNTECH Windows Infrastructure Lab network, Active Directory service access, and Windows management access model.
@@ -38,7 +42,7 @@ Use this matrix as the source of truth for:
 - Windows management ports.
 - Firewall expectations between VLANs.
 
-Other documents, including WinRM, RDP, Windows Firewall, MikroTik firewall policy, Windows LAPS, Microsoft Defender, and Windows Event Forwarding baselines, should reference this matrix instead of redefining port and VLAN assumptions separately.
+Other documents, including WinRM, RDP, Windows Firewall, MikroTik firewall policy, Windows LAPS, Microsoft Defender, and Windows Event Forwarding baselines, should reference this matrix instead of redefining port and VLAN assumptions separately. Current validated `HQ-FW01` RouterOS firewall rules are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md).
 
 GEIL is the documentation library and repository namespace. GNTECH is the canonical organization, lab, and environment identity. Implementation documents must use GNTECH environment values unless they are explicitly describing GEIL document IDs, the GEIL repository, or the GEIL documentation library.
 

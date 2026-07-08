@@ -27,11 +27,15 @@ classification: Internal Confidential
 
     Forest: `corp.gntech.me`; NetBIOS: `GNTECH`; primary UPN suffix: `gntech.me`; Microsoft 365 primary domain: `gntech.me`; hybrid identity plane: Microsoft Entra ID; primary firewall: MikroTik CHR `HQ-FW01`.
 
+!!! note "HQ-FW01 firewall source of truth"
+
+    Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md).
+
 ## Purpose
 
-Provide the canonical firewall policy matrix for `HQ-FW01` MikroTik CHR / RouterOS while avoiding duplicated rule definitions.
+Provide a platform-level firewall policy matrix for `HQ-FW01` MikroTik CHR / RouterOS while avoiding duplicated rule definitions.
 
-Detailed Active Directory client-to-domain-controller requirements are authoritative in [Active Directory Network Requirements](active-directory-network-requirements.md). This matrix points to that shared standard instead of redefining AD ports in multiple guides.
+Authoritative current `HQ-FW01` operational firewall rules are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md). Detailed Active Directory client-to-domain-controller requirements are authoritative in [Active Directory Network Requirements](active-directory-network-requirements.md). This matrix points to those shared standards instead of redefining rule details in multiple guides.
 
 ## Architecture Overview
 
@@ -63,7 +67,7 @@ Production policy must use RouterOS address lists and least-privilege Active Dir
 
 | Source | Destination | Policy | Purpose | Authoritative reference | Validation |
 |---|---|---|---|---|---|
-| `AD-ClientNetworks` | `AD-DomainControllers` | Least-privilege AD service ports | DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, GC, optional LDAPS | [Active Directory Network Requirements](active-directory-network-requirements.md) | DNS, domain join, SYSVOL, NETLOGON, `gpupdate`, `gpresult` |
+| `AD-ClientNetworks` | `AD-DomainControllers` | Least-privilege AD service ports | DNS, Kerberos, LDAP, SMB/SYSVOL/NETLOGON, RPC, NTP, GC, optional LDAPS | [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md), [Active Directory Network Requirements](active-directory-network-requirements.md) | DNS, domain join, SYSVOL, NETLOGON, `gpupdate`, `gpresult` |
 | `ManagementNetworks` | `HQ-FW01` | Approved management ports only | WinBox/SSH/HTTPS management | MikroTik CHR implementation guide | Approved admin source reaches RouterOS |
 | VLAN 20 Servers | Internet | TCP 80/443 | Updates and Microsoft cloud endpoints | Enterprise Port Reference | `Test-NetConnection` to update endpoints |
 | VLAN 10 Management | Infrastructure management targets | Approved management ports | Remote administration | Network Architecture / Windows 11 Management Workstation | Only `HQ-MGMT01` and future management workstations originate management traffic |

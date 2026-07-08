@@ -23,6 +23,10 @@ classification: Internal Confidential
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
+!!! note "HQ-FW01 firewall source of truth"
+
+    Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](hq-fw01-firewall-policy.md).
+
 ## Purpose and scope
 
 This document defines a practical MikroTik RouterOS firewall policy for controlling Windows administration traffic between VLANs in the GNTECH Windows infrastructure lab.
@@ -31,6 +35,7 @@ Windows Group Policy enables services such as RDP and WinRM on Windows systems. 
 
 This guide complements:
 
+- [HQ-FW01 Firewall Policy](hq-fw01-firewall-policy.md)
 - [MikroTik CHR HQ Foundation Implementation](../../platform/mikrotik-chr-hq-foundation-implementation.md)
 - [Firewall Rule Matrix](../../platform/firewall-rule-matrix.md)
 - [WinRM / PowerShell Remoting Baseline](../../microsoft-core/windows-server-management/winrm-powershell-remoting-baseline.md)
@@ -101,6 +106,9 @@ add list=WORKSTATION_SUBNETS address=172.20.30.0/24 comment="Windows workstation
 If adapting this document, replace example subnets with the actual VLAN plan from the canonical matrix before applying rules.
 
 ## RouterOS rule examples
+
+For current validated HQ-FW01 rule order and operational policy, use [HQ-FW01 Firewall Policy](hq-fw01-firewall-policy.md). The examples below are retained as historical implementation context.
+
 
 Rules must be placed before broad drop rules. Existing `established,related` accept rules should remain near the top. Do not blindly paste into production without reviewing current firewall order.
 

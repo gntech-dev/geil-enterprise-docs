@@ -69,6 +69,7 @@ nav:
       - Phase 1 Acceptance Package: platform/phase-1-acceptance-package.md
   - Network:
       - network/index.md
+      - HQ-FW01 Firewall Policy: network/mikrotik/hq-fw01-firewall-policy.md
       - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
   - Microsoft Core:
       - microsoft-core/index.md

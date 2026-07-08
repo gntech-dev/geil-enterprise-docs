@@ -27,6 +27,10 @@ classification: Internal Confidential
 
     This guide uses canonical GEIL values from the [Environment Specification](../project/environment-specification.md). `HQ-FW01` is MikroTik CHR / RouterOS. `ether1` connects to `GEILWAN`, `ether2` connects to `GEILLAN`, CHR WAN is `172.31.255.2/30`, and internal VLAN gateways use `172.20.x.1/24`.
 
+!!! note "HQ-FW01 firewall source of truth"
+
+    Authoritative MikroTik firewall rules are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md).
+
 ## Purpose
 
 Deploy `HQ-FW01` as a MikroTik CHR firewall/router for the Phase 1 HQ foundation. This guide supersedes all active OPNsense deployment instructions.
@@ -966,6 +970,9 @@ Expected outcome: the command completes successfully and the following expected 
 ```
 
 #### Commands: forwarding policy
+
+Authoritative current `HQ-FW01` firewall rule intent and validated rule order are maintained in [HQ-FW01 Firewall Policy](../network/mikrotik/hq-fw01-firewall-policy.md). The baseline commands below are retained as foundation deployment context.
+
 
 Run on: `HQ-FW01`
 
