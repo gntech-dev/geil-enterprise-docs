@@ -40,6 +40,52 @@ GEIL uses a single-source-of-truth documentation architecture:
 7. Before creating a Markdown document, search for the existing concept owner and update it if one exists.
 8. The laboratory is the source of truth. Pilot findings update the existing authoritative document, not a new parallel report.
 
+
+## Deployment Guide Principle
+
+GEIL is a pilot-first documentation project. Documentation is not limited to describing an existing environment; its primary purpose is to let another engineer reproduce the validated pilot from scratch.
+
+Every Deployment Guide must allow an engineer to deploy a brand new component from factory defaults or from a clean operating system installation to the validated pilot configuration using only documentation in this repository. The guide must not assume previous manual configuration.
+
+A Deployment Guide begins with one of these states:
+
+- Factory defaults.
+- Clean operating system installation.
+
+A Deployment Guide ends with this state:
+
+- Pilot Validated configuration.
+
+The Deployment Workflow must answer this question:
+
+> Could a new engineer rebuild this component from scratch using only this document?
+
+If the answer is no, the Deployment Guide is incomplete.
+
+## Pilot validation completion rule
+
+A component is not considered complete until:
+
+1. It has been deployed in the GEIL lab.
+2. It has been validated.
+3. Pilot findings have been incorporated.
+4. Documentation has been updated.
+5. Validation commands succeed.
+6. Changes have been committed and pushed.
+
+## Infrastructure component documentation model
+
+Each major infrastructure component should eventually contain these document types, either as separate documents or clearly separated sections in the authoritative document set:
+
+| Document type | Purpose |
+|---|---|
+| Design | Explains the intended architecture, dependencies, and decisions. |
+| Deployment Guide | Explains how to build the component from factory defaults or a clean OS to the validated pilot configuration. |
+| Pilot Findings | Records lessons learned during implementation and validation. |
+| Current Configuration Snapshot | Records the sanitized current validated configuration state when applicable. |
+
+Examples of components that should follow this model as they mature include `HQ-FW01`, `HQ-DC01`, `HQ-WEC01`, `HQ-MGMT01`, `HQ-W11-001`, DNS, DHCP, Windows LAPS, Microsoft Defender, Windows Event Forwarding, WinRM, and Active Directory.
+
 ## Required document structure
 
 Every production document must include:
@@ -53,6 +99,8 @@ Every production document must include:
 7. Rollback or recovery guidance.
 8. Security considerations.
 9. Related documents.
+
+When a document is a Pilot Validated Deployment Guide, it should use the structure defined in [Deployment Style Guide](deployment-style-guide.md): Purpose, Architecture, Prerequisites, Deployment Workflow, Validation Workflow, Pilot Findings, Operations, Troubleshooting, and Acceptance Criteria.
 
 ## Document ID standard
 

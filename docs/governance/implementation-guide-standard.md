@@ -37,6 +37,21 @@ This standard applies to documents that install, configure, integrate, validate,
 
 It does not replace HLD, LLD, architecture, policy, ADR, evidence, or acceptance package formats. Those documents may reference this standard when they contain procedural implementation sections.
 
+For major infrastructure components, the preferred long-term document model is Design, Deployment Guide, Pilot Findings, and Current Configuration Snapshot. These may be separate documents or clearly separated sections depending on component complexity and single-source-of-truth ownership.
+
+
+## Deployment Guide philosophy
+
+GEIL implementation documentation must be reproducible, not merely descriptive. When an implementation document reaches Pilot Validation and functions as a Deployment Guide, it must allow a new engineer to rebuild the component from factory defaults or a clean operating system installation to the validated pilot configuration using only this repository.
+
+The guide must not depend on undocumented manual configuration, inherited lab state, or personal operator memory. If a required setting exists only because someone manually configured it during the pilot, the Deployment Workflow must include that setting or link to the authoritative document that does.
+
+The Deployment Workflow must answer:
+
+> Could a new engineer rebuild this component from scratch using only this document?
+
+If the answer is no, the guide is incomplete and must not be treated as Pilot Validated.
+
 ## Required guide sections
 
 Every implementation guide must contain the following sections in this order unless a documented exception is approved:
@@ -326,6 +341,9 @@ Before an implementation guide is published:
 5. Confirm the guide includes a knowledge check and next guide.
 6. Confirm links pass `mkdocs build --strict`.
 7. Confirm `site/` is not tracked in Git.
+8. For Pilot Validated guides, confirm the Deployment Workflow starts from factory defaults or a clean operating system installation and ends at the validated pilot configuration.
+9. Confirm pilot findings are incorporated before marking the component complete.
+10. Confirm validation commands pass and the documentation changes are committed and pushed.
 
 ## Related documents
 

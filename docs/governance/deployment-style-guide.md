@@ -48,6 +48,35 @@ Every guide must:
 
     GEIL deployment documentation must be comparable to Microsoft Learn, Microsoft Operations Guides, VMware vSphere documentation, Cisco Enterprise Design Guides, Red Hat Enterprise Linux documentation, and HashiCorp Learn.
 
+
+## Deployment Guide Principle
+
+GEIL is a pilot-first project. Deployment documentation must let another engineer reproduce the validated pilot from scratch, not merely understand the environment that already exists.
+
+Every Deployment Guide must allow an engineer to deploy a brand new component from factory defaults or from a clean operating system installation to the validated pilot configuration using only documentation in this repository.
+
+A Deployment Guide must not assume:
+
+- Previous undocumented manual configuration.
+- Operator memory from the pilot.
+- Hidden inherited lab state.
+- Unrecorded firewall, identity, DNS, GPO, or service changes.
+
+A Deployment Guide must begin with one of these states:
+
+- Factory defaults.
+- Clean operating system installation.
+
+A Deployment Guide must end with this state:
+
+- Pilot Validated configuration.
+
+The Deployment Workflow must answer:
+
+> Could a new engineer rebuild this component from scratch using only this document?
+
+If the answer is no, the Deployment Guide is incomplete.
+
 ## Pilot Validated documentation model
 
 Microsoft Core implementation documentation is transitioning to a Pilot Validated model. Do not refactor the entire repository to match this model at once. Apply it gradually when an EPIC is actively implemented or when a validated pilot correction updates an existing EPIC.
@@ -61,30 +90,57 @@ Rules:
 - Do not create duplicate roadmap or architecture documents.
 - Record corrections learned during lab validation in the existing implementation guide.
 
-Every newly validated Microsoft Core implementation must use this top-level structure where applicable:
+Every newly validated implementation must use this top-level structure where applicable:
 
-1. **Purpose** - what the EPIC implements and what is explicitly out of scope.
+1. **Purpose** - what the component or EPIC implements and what is explicitly out of scope.
 2. **Architecture** - the operating model, participating systems, and dependencies.
-3. **Prerequisites** - required infrastructure, identity, GPOs, permissions, and access.
-4. **Deployment Workflow** - complete deployment sequence from an empty or pre-baseline environment.
-5. **PowerShell Automation** - validated automation used during implementation.
-6. **GUI / GPMC Implementation** - GUI or Group Policy Management Console workflow when applicable.
-7. **Validation Workflow** - every validation step with expected results.
-8. **Pilot Findings** - lessons learned, corrections made, and final validated state from the lab.
-9. **Operations** - routine administration, periodic checks, and lifecycle guidance.
-10. **Troubleshooting** - symptoms, validation commands or GUI checks, expected output, and resolution.
-11. **Acceptance Criteria** - conditions required before the EPIC is considered complete.
+3. **Prerequisites** - required infrastructure, identity, GPOs, permissions, files, approvals, and access.
+4. **Deployment Workflow** - reproducible deployment sequence from factory defaults, a clean operating system installation, or a documented prerequisite baseline to the validated pilot configuration.
+5. **Validation Workflow** - every validation step with expected results.
+6. **Pilot Findings** - lessons learned, corrections made, temporary rules, known pilot exceptions, and final validated state from the lab.
+7. **Operations** - routine administration, periodic checks, backup/export, update, and lifecycle guidance.
+8. **Troubleshooting** - symptoms, validation commands or GUI checks, expected output, and resolution.
+9. **Acceptance Criteria** - conditions required before the component or EPIC is considered complete.
+
+Add optional sections such as PowerShell Automation, RouterOS Configuration, GUI / GPMC Implementation, or Current Configuration Snapshot only when they improve implementation clarity. Do not use optional sections to avoid the required reproducible Deployment Workflow.
 
 Definitions:
 
 | Section | Definition |
 |---|---|
-| Deployment Workflow | Documents the complete deployment sequence from an empty environment or from the last validated prerequisite baseline. |
+| Deployment Workflow | Documents the complete deployment sequence from factory defaults, a clean operating system installation, or a documented prerequisite baseline to the validated pilot configuration. |
 | Validation Workflow | Documents every validation step together with the expected result. |
 | Pilot Findings | Documents everything learned during laboratory implementation, including corrections made after validation. |
 | Acceptance Criteria | Defines the conditions required before an EPIC can be considered complete. |
 
 This model does not replace the step-level requirements below. It defines the document-level structure for implemented and pilot-validated EPICs; individual deployment actions must still follow the step contract, command execution context standard, validation, rollback, and troubleshooting requirements.
+
+
+## Pilot Validation Completion Rule
+
+A component is not complete until all of the following are true:
+
+1. It has been deployed in the GEIL lab.
+2. It has been validated with documented commands or GUI checks.
+3. Pilot findings have been incorporated into the authoritative documentation.
+4. Documentation has been updated to reflect the validated state.
+5. Validation commands succeed.
+6. Changes have been committed and pushed.
+
+Do not mark a component as Pilot Validated based on design intent alone. Pilot Validated means the lab implementation happened, evidence-producing validation succeeded, and the documentation now reflects what was learned.
+
+## Infrastructure Component Documentation Model
+
+Each major infrastructure component should eventually have the following documentation coverage:
+
+| Document type | Purpose |
+|---|---|
+| Design | Intended architecture, dependencies, service ownership, and decisions. |
+| Deployment Guide | Reproducible build from factory defaults or clean OS to validated pilot configuration. |
+| Pilot Findings | Lessons learned, temporary rules, deviations, corrections, and readiness gaps discovered during validation. |
+| Current Configuration Snapshot | Sanitized current validated configuration state, export, or evidence snapshot when applicable. |
+
+This model applies as components mature. Examples include `HQ-FW01`, `HQ-DC01`, `HQ-WEC01`, `HQ-MGMT01`, `HQ-W11-001`, DNS, DHCP, Windows LAPS, Microsoft Defender, Windows Event Forwarding, WinRM, and Active Directory.
 
 ## Mandatory Step Contract
 
@@ -333,6 +389,11 @@ Minimum quality gates:
 No deployment documentation change is complete until:
 
 1. Related guides are updated.
-2. Document index, backlog, roadmap, release assignment register, and changelog are synchronized when needed.
-3. `mkdocs build --strict` passes.
-4. Generated `site/` remains untracked.
+2. Pilot findings are incorporated when the change comes from lab validation.
+3. Validation commands succeed.
+4. Document index, backlog, roadmap, release assignment register, and changelog are synchronized when needed.
+5. `./tools/audit-doc-codeblocks.sh .` passes.
+6. `mkdocs build --strict` passes.
+7. `git diff --check` passes.
+8. Generated `site/` remains untracked.
+9. The changes are committed and pushed when the task requires publication.
