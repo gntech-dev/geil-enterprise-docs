@@ -55,9 +55,7 @@ nav:
       - Proxmox VE Baseline: foundation/proxmox-ve-baseline.md
   - Platform:
       - platform/index.md
-      - Cloudflare Pages Deployment Runbook: platform/cloudflare-pages-deployment.md
-      - Proxmox HQ Foundation LLD: platform/proxmox-hq-foundation-lld.md
-      - Proxmox HQ Foundation Implementation: platform/proxmox-hq-foundation-implementation.md
+      - []
       - MikroTik CHR HQ Foundation LLD: platform/mikrotik-chr-hq-foundation-lld.md
       - MikroTik CHR HQ Foundation Implementation: platform/mikrotik-chr-hq-foundation-implementation.md
       - Firewall Rule Matrix: network/firewall-rule-matrix.md
