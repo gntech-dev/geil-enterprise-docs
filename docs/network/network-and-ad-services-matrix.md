@@ -2,9 +2,9 @@
 title: Network and Active Directory Services Matrix
 document_id: GEIL-PRJ-NETAD-MATRIX-001
 owner: Infrastructure Engineering
-status: Approved
-version: 1.1
-last_reviewed: 2026-07-02
+status: Pilot Validated
+version: 1.2
+last_reviewed: 2026-07-08
 review_cycle: Quarterly
 classification: Internal Confidential
 ---
@@ -17,8 +17,8 @@ classification: Internal Confidential
 |---|---|
 | Document ID | GEIL-PRJ-NETAD-MATRIX-001 |
 | Owner | Infrastructure Engineering |
-| Status | Approved |
-| Version | 1.1 |
+| Status | Pilot Validated |
+| Version | 1.2 |
 | Last Reviewed | 2026-07-02 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
@@ -45,6 +45,10 @@ Use this matrix as the source of truth for:
 Other documents, including Project, Platform, Microsoft Core, WinRM, RDP, Windows Firewall, MikroTik firewall policy, Windows LAPS, Microsoft Defender, and Windows Event Forwarding baselines, should reference this Network document instead of redefining port and VLAN assumptions separately. Current validated `HQ-FW01` RouterOS firewall rules are maintained in [HQ-FW01 Firewall Policy](mikrotik/hq-fw01-firewall-policy.md).
 
 GEIL is the documentation library and repository namespace. GNTECH is the canonical organization, lab, and environment identity. Implementation documents must use GNTECH environment values unless they are explicitly describing GEIL document IDs, the GEIL repository, or the GEIL documentation library.
+
+## Current RouterOS export authority
+
+The current validated `HQ-FW01` RouterOS snapshot is documented in [HQ-FW01 RouterOS Export - Current Validated Snapshot](mikrotik/hq-fw01-routeros-export-current.md). Where older documentation differs from that export, the export wins unless a Pilot Finding explicitly explains the difference.
 
 ## Naming standard
 
@@ -168,6 +172,19 @@ WEF source-initiated subscriptions require clients to reach the collector. `HQ-W
 - Windows Defender Firewall controls host-level exposure.
 - Both layers are required.
 - WinRM `IPv4Filter` is not a source ACL; source restriction belongs in Windows Defender Firewall, MikroTik firewall policy, VLAN segmentation, and Kerberos authorization.
+
+## Current DHCP relay and DNS configuration
+
+The validated export shows:
+
+| Function | Current export value |
+|---|---|
+| DNS remote requests | Enabled |
+| DNS upstream servers | `1.1.1.1`, `1.0.0.1` |
+| DHCP relay VLAN10 | `relay-vlan10` to `172.20.20.11`, local address `172.20.10.1` |
+| DHCP relay VLAN30 | `relay-vlan30` to `172.20.20.11`, local address `172.20.30.1` |
+| DHCP relay VLAN40 | `relay-vlan40` to `172.20.20.11` |
+| DHCP relay VLAN60 | `relay-vlan60` to `172.20.20.11` |
 
 ## Validation commands
 

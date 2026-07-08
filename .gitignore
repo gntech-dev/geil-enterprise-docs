@@ -18,3 +18,5 @@ __pycache__/
 *.pem
 *.rdp
 *.ovpn
+# Local RouterOS exports may contain secrets
+mikrotik-export.txt

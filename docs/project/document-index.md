@@ -211,11 +211,13 @@ The authoritative document-to-release mapping is maintained in [Epic and Release
 |---|---|---:|
 | E00 | E00.R01 - Documentation governance foundation | 28 |
 | E00 | E00.R02 - Documentation delivery platform | 2 |
+| E00 | E00.R02 - Governance and Standards | 1 |
+| E00 | E00.R05 - Legacy Documentation | 1 |
 | E01 | E01.R01 - Enterprise reference architecture | 5 |
 | E01 | E01.R02 - Enterprise Architecture Vision | 6 |
 | E02 | E02.R01 - Site foundation and edge platform | 5 |
 | E02 | E02.R02 - Enterprise Lab Blueprint | 4 |
-| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 15 |
+| E02 | E02.R03 - HQ Foundation Low-Level Design and Build Plan | 16 |
 | E02 | E02.R04 - HQ Foundation Implementation Runbook | 7 |
 | E02 | E02.R05 - HQ Foundation Evidence and Acceptance Package | 1 |
 | E03 | E03.R01 - Core directory services | 15 |

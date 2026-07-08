@@ -82,6 +82,7 @@ nav:
       - MikroTik:
           - HQ-FW01 Firewall Policy: network/mikrotik/hq-fw01-firewall-policy.md
           - HQ-FW01 RouterOS Baseline: network/mikrotik/hq-fw01-routeros-baseline.md
+          - HQ-FW01 RouterOS Export - Current: network/mikrotik/hq-fw01-routeros-export-current.md
           - Cloudflared Container Networking: network/mikrotik/cloudflared-container-networking.md
           - MikroTik Windows Management Firewall Policy: network/mikrotik/windows-management-firewall-policy.md
   - Microsoft Core:
