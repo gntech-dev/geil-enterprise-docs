@@ -3,8 +3,8 @@ title: Deployment Style Guide
 document_id: GEIL-GOV-DEPLOY-001
 owner: Infrastructure Engineering
 status: Approved
-version: 1.0
-last_reviewed: 2026-06-30
+version: 1.1
+last_reviewed: 2026-07-07
 review_cycle: Quarterly
 classification: Internal Confidential
 ---
@@ -18,8 +18,8 @@ classification: Internal Confidential
 | Document ID | GEIL-GOV-DEPLOY-001 |
 | Owner | Infrastructure Engineering |
 | Status | Approved |
-| Version | 1.0 |
-| Last Reviewed | 2026-06-30 |
+| Version | 1.1 |
+| Last Reviewed | 2026-07-07 |
 | Review Cycle | Quarterly |
 | Classification | Internal Confidential |
 
@@ -47,6 +47,44 @@ Every guide must:
 !!! enterprise "Quality target"
 
     GEIL deployment documentation must be comparable to Microsoft Learn, Microsoft Operations Guides, VMware vSphere documentation, Cisco Enterprise Design Guides, Red Hat Enterprise Linux documentation, and HashiCorp Learn.
+
+## Pilot Validated documentation model
+
+Microsoft Core implementation documentation is transitioning to a Pilot Validated model. Do not refactor the entire repository to match this model at once. Apply it gradually when an EPIC is actively implemented or when a validated pilot correction updates an existing EPIC.
+
+Rules:
+
+- Update the existing authoritative document for the EPIC.
+- Preserve existing content whenever possible.
+- Avoid unnecessary rewrites and architecture churn.
+- Do not update documents for EPICs that have not yet been implemented.
+- Do not create duplicate roadmap or architecture documents.
+- Record corrections learned during lab validation in the existing implementation guide.
+
+Every newly validated Microsoft Core implementation must use this top-level structure where applicable:
+
+1. **Purpose** - what the EPIC implements and what is explicitly out of scope.
+2. **Architecture** - the operating model, participating systems, and dependencies.
+3. **Prerequisites** - required infrastructure, identity, GPOs, permissions, and access.
+4. **Deployment Workflow** - complete deployment sequence from an empty or pre-baseline environment.
+5. **PowerShell Automation** - validated automation used during implementation.
+6. **GUI / GPMC Implementation** - GUI or Group Policy Management Console workflow when applicable.
+7. **Validation Workflow** - every validation step with expected results.
+8. **Pilot Findings** - lessons learned, corrections made, and final validated state from the lab.
+9. **Operations** - routine administration, periodic checks, and lifecycle guidance.
+10. **Troubleshooting** - symptoms, validation commands or GUI checks, expected output, and resolution.
+11. **Acceptance Criteria** - conditions required before the EPIC is considered complete.
+
+Definitions:
+
+| Section | Definition |
+|---|---|
+| Deployment Workflow | Documents the complete deployment sequence from an empty environment or from the last validated prerequisite baseline. |
+| Validation Workflow | Documents every validation step together with the expected result. |
+| Pilot Findings | Documents everything learned during laboratory implementation, including corrections made after validation. |
+| Acceptance Criteria | Defines the conditions required before an EPIC can be considered complete. |
+
+This model does not replace the step-level requirements below. It defines the document-level structure for implemented and pilot-validated EPICs; individual deployment actions must still follow the step contract, command execution context standard, validation, rollback, and troubleshooting requirements.
 
 ## Mandatory Step Contract
 
